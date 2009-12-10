@@ -23,44 +23,41 @@
  *
  */
 
-#include "winsparkle.h"
+#ifndef _settings_h_
+#define _settings_h_
 
-#include "settings.h"
-#include "error.h"
+#include "threads.h"
 
-using namespace winsparkle;
+#include <string>
 
-/*--------------------------------------------------------------------------*
-                       Initialization and shutdown
- *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_init()
+namespace winsparkle
 {
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
 
+/**
+    Holds all of WinSparkle configuration.
 
-WIN_SPARKLE_API void win_sparkle_cleanup()
+    It is used both for storing explicitly set configuration values (e.g.
+    using win_sparkle_set_appcast_url()) and for retrieving them from default
+    locations (e.g. from resources or registry).
+
+    Note that it is only allowed to modify the settings before the first
+    call to win_sparkle_init().
+ */
+class Settings
 {
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
+public:
+    /// Returns the Settings singleton.
+    static Settings& Get();
 
+    /// Location of the appcast
+    /// @todo retrieve this from resources
+    std::string AppcastURL;
 
-/*--------------------------------------------------------------------------*
-                               Configuration
- *--------------------------------------------------------------------------*/
+private:
+    Settings() {}
+};
 
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
-{
-    try
-    {
-        Settings::Get().AppcastURL = url;
-    }
-    CATCH_ALL_EXCEPTIONS
-}
+} // namespace winsparkle
+
+#endif // _settings_h_

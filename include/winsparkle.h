@@ -26,6 +26,9 @@
 #ifndef _winsparkle_h_
 #define _winsparkle_h_
 
+/*--------------------------------------------------------------------------*
+                         Version information
+ *--------------------------------------------------------------------------*/
 
 #define WIN_SPARKLE_VERSION_MAJOR   0
 #define WIN_SPARKLE_VERSION_MINOR   1
@@ -51,6 +54,11 @@
  *--------------------------------------------------------------------------*/
 
 /**
+    @name Initialization functions
+ */
+//@{
+
+/**
     Starts WinSparkle.
 
     If WinSparkle is configured to check for updates on startup, proceeds
@@ -69,5 +77,36 @@ WIN_SPARKLE_API void win_sparkle_init();
  */
 WIN_SPARKLE_API void win_sparkle_cleanup();
 
+
+/*--------------------------------------------------------------------------*
+                               Configuration
+ *--------------------------------------------------------------------------*/
+
+/**
+    @name Configuration functions
+
+    Functions for setting up WinSparkle.
+
+    All functions in this category can only be called @em before the first
+    call to win_sparkle_init()! Additionally, they aren't MT-safe and cannot
+    be called in parallel.
+
+    Typically, the application would configure WinSparkle on startup and then
+    call win_sparkle_init(), all from its main thread.
+ */
+//@{
+
+/**
+    Sets URL for the app's appcast.
+
+    Only http and https schemes are supported.
+
+    Currently, this function must be called (@todo - get it from resources).
+
+    @param url  URL of the appcast.
+ */
+WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
+
+//@}
 
 #endif // _winsparkle_h_

@@ -23,44 +23,4 @@
  *
  */
 
-#include "winsparkle.h"
-
-#include "settings.h"
-#include "error.h"
-
-using namespace winsparkle;
-
-/*--------------------------------------------------------------------------*
-                       Initialization and shutdown
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_init()
-{
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-
-WIN_SPARKLE_API void win_sparkle_cleanup()
-{
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-
-/*--------------------------------------------------------------------------*
-                               Configuration
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
-{
-    try
-    {
-        Settings::Get().AppcastURL = url;
-    }
-    CATCH_ALL_EXCEPTIONS
-}
+UpdateAvailable ICON "../artwork/software-update-available.ico"

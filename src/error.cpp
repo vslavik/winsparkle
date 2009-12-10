@@ -23,44 +23,69 @@
  *
  */
 
-#include "winsparkle.h"
-
-#include "settings.h"
 #include "error.h"
 
-using namespace winsparkle;
+#include <string>
+#include <windows.h>
+
+namespace winsparkle
+{
 
 /*--------------------------------------------------------------------------*
-                       Initialization and shutdown
+                                 Helpers
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_init()
+namespace
 {
-    try
+
+std::string GetWin32ErrorMessage(DWORD err)
+{
+    std::string msg;
+
+    LPSTR buf;
+    bool ok = FormatMessageA
+              (
+                  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                  0, // source - not set
+                  err,
+                  0, // language - use best
+                  (LPSTR)&buf,
+                  0,
+                  NULL
+              ) != 0;
+
+    if ( ok )
     {
+        msg = buf;
+        LocalFree(buf);
     }
-    CATCH_ALL_EXCEPTIONS
+
+    return msg;
 }
 
+} // anonymous namespace
 
-WIN_SPARKLE_API void win_sparkle_cleanup()
+
+/*--------------------------------------------------------------------------*
+                          Win32Exception class
+ *--------------------------------------------------------------------------*/
+
+Win32Exception::Win32Exception()
+    : std::runtime_error(GetWin32ErrorMessage(GetLastError()))
 {
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
 }
 
 
 /*--------------------------------------------------------------------------*
-                               Configuration
+                                 Logging
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
+void LogError(const char *msg)
 {
-    try
-    {
-        Settings::Get().AppcastURL = url;
-    }
-    CATCH_ALL_EXCEPTIONS
+    std::string err("WinSparkle: ");
+    err.append(msg);
+
+    OutputDebugStringA(err.c_str());
 }
+
+} // namespace winsparkle

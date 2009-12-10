@@ -23,44 +23,18 @@
  *
  */
 
-#include "winsparkle.h"
-
 #include "settings.h"
-#include "error.h"
 
-using namespace winsparkle;
 
-/*--------------------------------------------------------------------------*
-                       Initialization and shutdown
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_init()
+namespace winsparkle
 {
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
+
+
+Settings& Settings::Get()
+{
+    static Settings s_instance;
+    return s_instance;
 }
 
 
-WIN_SPARKLE_API void win_sparkle_cleanup()
-{
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-
-/*--------------------------------------------------------------------------*
-                               Configuration
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
-{
-    try
-    {
-        Settings::Get().AppcastURL = url;
-    }
-    CATCH_ALL_EXCEPTIONS
-}
+} // namespace winsparkle
