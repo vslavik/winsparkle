@@ -26,6 +26,10 @@
 #ifndef _winsparkle_h_
 #define _winsparkle_h_
 
+#if !BUILDING_WIN_SPARKLE && defined(_MSC_VER)
+#pragma comment(lib, "WinSparkle.lib")
+#endif
+
 /*--------------------------------------------------------------------------*
                          Version information
  *--------------------------------------------------------------------------*/
