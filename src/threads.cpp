@@ -103,6 +103,8 @@ Thread::Thread(const char *name)
 
     if ( !m_handle )
         throw Win32Exception();
+
+    SetThreadName(m_id, name);
 }
 
 
