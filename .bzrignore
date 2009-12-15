@@ -1,0 +1,4 @@
+wxWidgets/build/bakefiles/.bakefile_gen.state
+wxWidgets/lib/vc_lib
+*.vcproj.*.user
+wxWidgets/build/msw/*_*/
