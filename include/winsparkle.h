@@ -85,6 +85,8 @@ WIN_SPARKLE_API void win_sparkle_init();
  */
 WIN_SPARKLE_API void win_sparkle_cleanup();
 
+//@}
+
 
 /*--------------------------------------------------------------------------*
                                Configuration
@@ -114,6 +116,34 @@ WIN_SPARKLE_API void win_sparkle_cleanup();
     @param url  URL of the appcast.
  */
 WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
+
+//@}
+
+
+/*--------------------------------------------------------------------------*
+                              Manual usage
+ *--------------------------------------------------------------------------*/
+
+/**
+    @name Manually using WinSparkle
+ */
+//@{
+
+/**
+    Checks if an update is available, showing progress UI to the user.
+
+    Normally, WinSparkle checks for updates on startup and only shows its UI
+    when it finds an update. If the application disables this behavior, it
+    can hook this function to "Check for updates..." menu item.
+
+    When called, background thread is started to check for updates. A small
+    window is shown to let the user know the progress. If no update is found,
+    the user is told so. If there is an update, the usual "update available"
+    window is shown.
+
+    This function returns immediately.
+ */
+WIN_SPARKLE_API void win_sparkle_check_update_with_ui();
 
 //@}
 

@@ -3,3 +3,4 @@ Release
 *.ncb
 *.suo
 *.vcproj.*.user
+deps

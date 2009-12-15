@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="include;deps\wxWidgets\include\msvc;deps\wxWidgets\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDING_WIN_SPARKLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib rpcrt4.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="deps\wxWidgets\lib\vc_lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -115,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="include;deps\wxWidgets\include\msvc;deps\wxWidgets\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDING_WIN_SPARKLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -134,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib rpcrt4.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="deps\wxWidgets\lib\vc_lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -177,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dllmain.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\error.cpp"
 				>
 			</File>
@@ -186,6 +194,14 @@
 			</File>
 			<File
 				RelativePath=".\src\threads.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ui.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\updatechecker.cpp"
 				>
 			</File>
 		</Filter>
@@ -215,6 +231,14 @@
 				</File>
 				<File
 					RelativePath=".\src\threads.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\ui.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\updatechecker.h"
 					>
 				</File>
 			</Filter>

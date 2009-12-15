@@ -91,6 +91,39 @@ protected:
     HANDLE m_signalEvent;
 };
 
+
+/**
+    C++ wrapper for win32 critical section object.
+ */
+class CriticalSection
+{
+public:
+    CriticalSection()   { InitializeCriticalSection(&m_cs); }
+    ~CriticalSection()  { DeleteCriticalSection(&m_cs); }
+
+    void Enter()        { EnterCriticalSection(&m_cs); }
+    void Leave()        { LeaveCriticalSection(&m_cs); }
+
+private:
+    CRITICAL_SECTION m_cs;
+};
+
+
+/**
+    Locks a critical section as RIIA. Use this instead of manually calling
+    CriticalSection::Enter() and CriticalSection::Leave().
+ */
+class CriticalSectionLocker
+{
+public:
+    CriticalSectionLocker(CriticalSection& cs) : m_cs(cs) { cs.Enter(); }
+    ~CriticalSectionLocker() { m_cs.Leave(); }
+
+private:
+    CriticalSection& m_cs;
+};
+
+
 } // namespace winsparkle
 
 #endif // _threads_h_

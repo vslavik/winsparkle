@@ -23,70 +23,20 @@
  *
  */
 
-#include "winsparkle.h"
-
 #include "settings.h"
-#include "error.h"
 #include "ui.h"
-#include "updatechecker.h"
 
-using namespace winsparkle;
+/*--------------------------------------------------------------------------*
+                               DllMain() hook
+ *--------------------------------------------------------------------------*/
 
 extern "C"
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
-
-/*--------------------------------------------------------------------------*
-                       Initialization and shutdown
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_init()
-{
-    try
+    if ( dwReason == DLL_PROCESS_ATTACH )
     {
+        winsparkle::UI::SetDllHINSTANCE(hInstance);
     }
-    CATCH_ALL_EXCEPTIONS
+
+    return TRUE;
 }
-
-
-WIN_SPARKLE_API void win_sparkle_cleanup()
-{
-    try
-    {
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-
-/*--------------------------------------------------------------------------*
-                               Configuration
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
-{
-    try
-    {
-        Settings::Get().AppcastURL = url;
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-
-/*--------------------------------------------------------------------------*
-                              Manual usage
- *--------------------------------------------------------------------------*/
-
-WIN_SPARKLE_API void win_sparkle_check_update_with_ui()
-{
-    try
-    {
-        // Initialize UI thread and show progress indicator.
-        UI::ShowCheckingUpdates();
-
-        // Then run the actual check in the background.
-        UpdateChecker *check = new UpdateChecker();
-        check->Start();
-    }
-    CATCH_ALL_EXCEPTIONS
-}
-
-} // extern "C"
