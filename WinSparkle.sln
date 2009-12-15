@@ -11,6 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "deps\wxWidgets\buil
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "deps\wxWidgets\build\msw\wx_vc9_core.vcproj", "{6744DAD8-9C70-574A-BFF2-9F8DDDB24A75}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_psdk", "examples\psdk\example_psdk.vcproj", "{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F00FBD5D-F9FD-40A0-BCCE-1D619ADCA5A3} = {F00FBD5D-F9FD-40A0-BCCE-1D619ADCA5A3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -71,6 +76,22 @@ Global
 		{6744DAD8-9C70-574A-BFF2-9F8DDDB24A75}.Universal Debug|Win32.Build.0 = Universal Debug|Win32
 		{6744DAD8-9C70-574A-BFF2-9F8DDDB24A75}.Universal Release|Win32.ActiveCfg = Universal Release|Win32
 		{6744DAD8-9C70-574A-BFF2-9F8DDDB24A75}.Universal Release|Win32.Build.0 = Universal Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Debug|Win32.Build.0 = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Release|Win32.Build.0 = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Universal Debug|Win32.ActiveCfg = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Universal Debug|Win32.Build.0 = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Universal Release|Win32.ActiveCfg = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.DLL Universal Release|Win32.Build.0 = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Release|Win32.ActiveCfg = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Release|Win32.Build.0 = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Universal Debug|Win32.ActiveCfg = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Universal Debug|Win32.Build.0 = Debug|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Universal Release|Win32.ActiveCfg = Release|Win32
+		{1C6A0960-D5A1-4A8F-854D-8CFA999C5A25}.Universal Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
