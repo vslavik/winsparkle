@@ -30,6 +30,9 @@
 
 using namespace winsparkle;
 
+extern "C"
+{
+
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/
@@ -64,3 +67,5 @@ WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
     }
     CATCH_ALL_EXCEPTIONS
 }
+
+} // extern "C"

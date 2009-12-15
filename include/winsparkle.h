@@ -30,6 +30,10 @@
 #pragma comment(lib, "WinSparkle.lib")
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*--------------------------------------------------------------------------*
                          Version information
  *--------------------------------------------------------------------------*/
@@ -47,9 +51,9 @@
 
 
 #ifdef BUILDING_WIN_SPARKLE
-    #define WIN_SPARKLE_API extern "C" __declspec(dllexport)
+    #define WIN_SPARKLE_API __declspec(dllexport)
 #else
-    #define WIN_SPARKLE_API extern "C" __declspec(dllimport)
+    #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
 
@@ -112,5 +116,9 @@ WIN_SPARKLE_API void win_sparkle_cleanup();
 WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
 
 //@}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _winsparkle_h_
