@@ -23,10 +23,10 @@
  *
  */
 
-#include "ui.h"
-
 // silence warnings in wxWidgets' CRT wrappers
 #define _CRT_SECURE_NO_WARNINGS
+
+#include "ui.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
