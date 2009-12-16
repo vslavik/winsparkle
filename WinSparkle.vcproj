@@ -115,10 +115,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="1"
 				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="2"
 				AdditionalIncludeDirectories="include;deps\wxWidgets\include\msvc;deps\wxWidgets\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDING_WIN_SPARKLE"
+				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
