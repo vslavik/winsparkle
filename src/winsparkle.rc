@@ -23,4 +23,57 @@
  *
  */
 
+/*--------------------------------------------------------------------------*
+                                 Resources
+ *--------------------------------------------------------------------------*/
+
 UpdateAvailable ICON "../artwork/software-update-available.ico"
+
+
+
+/*--------------------------------------------------------------------------*
+                              Version information
+ *--------------------------------------------------------------------------*/
+
+#include <winver.h>
+#include "winsparkle-version.h"
+
+#define MAKE_STR(x) #x
+#define VER_MAKE_STR(a,b,c) \
+            MAKE_STR(a) "." MAKE_STR(b) "." MAKE_STR(c)
+
+#define VER_NUM     WIN_SPARKLE_VERSION_MAJOR,WIN_SPARKLE_VERSION_MINOR,WIN_SPARKLE_VERSION_MICRO,0
+#define VER_STR     VER_MAKE_STR(WIN_SPARKLE_VERSION_MAJOR,WIN_SPARKLE_VERSION_MINOR,WIN_SPARKLE_VERSION_MICRO)
+
+#ifdef DEBUG
+#define VER_DEBUG    VS_FF_DEBUG
+#else
+#define VER_DEBUG    0
+#endif
+
+1 VERSIONINFO
+ FILEVERSION     VER_NUM
+ PRODUCTVERSION  VER_NUM
+ FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+ FILEFLAGS       VER_DEBUG
+ FILEOS          VOS_NT_WINDOWS32
+ FILETYPE        VFT_DLL
+ FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4" // US English, multilingual
+        BEGIN
+            VALUE "Comments", "WinSparkle updates checking library (http://winsparkle.org)."
+            VALUE "CompanyName", "winsparkle.org\0"
+            VALUE "FileDescription", "WinSparkle updater\0"
+            VALUE "FileVersion", VER_STR "\0"
+            VALUE "InternalName", "WinSparkle\0"
+            VALUE "OriginalFilename", "WinSparkle.dll\0"
+            VALUE "LegalCopyright", "Copyright (C) 2009 Vaclav Slavik\0"
+            VALUE "ProductName", "WinSparkle\0"
+            VALUE "ProductVersion", VER_STR "\0"
+        END
+    END
+END
+

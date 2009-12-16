@@ -26,6 +26,8 @@
 #ifndef _winsparkle_h_
 #define _winsparkle_h_
 
+#include "winsparkle-version.h"
+
 #if !BUILDING_WIN_SPARKLE && defined(_MSC_VER)
 #pragma comment(lib, "WinSparkle.lib")
 #endif
@@ -34,36 +36,11 @@
 extern "C" {
 #endif
 
-/*--------------------------------------------------------------------------*
-                         Version information
- *--------------------------------------------------------------------------*/
-
-#define WIN_SPARKLE_VERSION_MAJOR   0
-#define WIN_SPARKLE_VERSION_MINOR   1
-#define WIN_SPARKLE_VERSION_MICRO   0
-
-/**
-    Checks if WinSparkle version is at least @a major.@a minor.@a micro.
- */
-#define WIN_SPARKLE_VERSION(major, minor, micro)                 \
-        (                                                        \
-            WIN_SPARKLE_VERSION_MAJOR > (major)                  \
-            ||                                                   \
-            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
-             WIN_SPARKLE_VERSION_MINOR >= (minor))               \
-            ||                                                   \
-            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
-            (WIN_SPARKLE_VERSION_MINOR == (minor) &&             \
-             WIN_SPARKLE_VERSION_MICRO >= (micro))               \
-        )
-
-
 #ifdef BUILDING_WIN_SPARKLE
     #define WIN_SPARKLE_API __declspec(dllexport)
 #else
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
-
 
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown

@@ -55,6 +55,8 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;DEBUG"
+				AdditionalIncludeDirectories="include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -132,6 +134,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -212,6 +215,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\winsparkle-version.h"
+				>
+			</File>
 			<File
 				RelativePath=".\include\winsparkle.h"
 				>
