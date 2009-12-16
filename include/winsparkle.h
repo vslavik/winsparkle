@@ -40,14 +40,22 @@ extern "C" {
 
 #define WIN_SPARKLE_VERSION_MAJOR   0
 #define WIN_SPARKLE_VERSION_MINOR   1
+#define WIN_SPARKLE_VERSION_MICRO   0
 
 /**
-    Checks if WinSparkle version is at least @a major.@a minor.
+    Checks if WinSparkle version is at least @a major.@a minor.@a micro.
  */
-#define WIN_SPARKLE_VERSION(major, minor)                        \
-            (WIN_SPARKLE_VERSION_MAJOR > (major) ||              \
-               (WIN_SPARKLE_VERSION_MAJOR == (major) &&          \
-                WIN_SPARKLE_VERSION_MINOR >= (minor)))
+#define WIN_SPARKLE_VERSION(major, minor, micro)                 \
+        (                                                        \
+            WIN_SPARKLE_VERSION_MAJOR > (major)                  \
+            ||                                                   \
+            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
+             WIN_SPARKLE_VERSION_MINOR >= (minor))               \
+            ||                                                   \
+            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
+            (WIN_SPARKLE_VERSION_MINOR == (minor) &&             \
+             WIN_SPARKLE_VERSION_MICRO >= (micro))               \
+        )
 
 
 #ifdef BUILDING_WIN_SPARKLE
