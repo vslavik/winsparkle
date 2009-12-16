@@ -48,7 +48,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswud"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS"
@@ -128,8 +128,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswu"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				ExceptionHandling="1"
@@ -206,7 +206,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswunivud"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS"
@@ -286,8 +286,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswunivu"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				ExceptionHandling="1"
@@ -364,7 +364,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswud"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS"
@@ -444,8 +444,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswu"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				ExceptionHandling="1"
@@ -522,7 +522,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswunivud"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS"
@@ -602,8 +602,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswunivu"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				ExceptionHandling="1"

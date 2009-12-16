@@ -238,7 +238,7 @@
     </set>
     <set var="OPTIMIZEFLAG">
         <if cond="BUILD=='debug'">off</if>
-        <if cond="BUILD=='release'">speed</if>
+        <if cond="BUILD=='release'">size</if>
     </set>
     <set var="EXCEPTIONSFLAG">
         <if cond="USE_EXCEPTIONS=='1'">on</if>
@@ -313,6 +313,12 @@
     </set>
 
     <template id="common_settings">
+        <!-- WinSparkle-specific flags:
+               /GF /GL   global optimization
+               /Os       favor small code (for global optim.)
+          -->
+        <cxxflags-msvc>/GF /GL /Os</cxxflags-msvc>
+
         <debug-info>$(DEBUGINFO)</debug-info>
         <debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
         <optimize>$(OPTIMIZEFLAG)</optimize>

@@ -49,7 +49,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswud;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXMSW__;_UNICODE;WXBUILDING"
@@ -133,8 +133,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswu;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__;_UNICODE;WXBUILDING"
 				ExceptionHandling="1"
@@ -215,7 +215,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswunivud;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;__WXMSW__;__WXUNIVERSAL__;_UNICODE;WXBUILDING"
@@ -299,8 +299,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib\mswunivu;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__;__WXUNIVERSAL__;_UNICODE;WXBUILDING"
 				ExceptionHandling="1"
@@ -381,7 +381,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswud;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;__WXMSW__;_UNICODE;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_XRC"
@@ -474,8 +474,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswu;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;_UNICODE;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_XRC"
 				ExceptionHandling="1"
@@ -567,7 +567,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswunivud;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;_DEBUG;__WXMSW__;__WXUNIVERSAL__;_UNICODE;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_XRC"
@@ -660,8 +660,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll\mswunivu;..\..\include;..\..\src\tiff\libtiff;..\..\src\jpeg;..\..\src\png;..\..\src\zlib;..\..\src\regex;..\..\src\expat\lib"
 				PreprocessorDefinitions="WIN32;_USRDLL;DLL_EXPORTS;__WXMSW__;__WXUNIVERSAL__;_UNICODE;WXBUILDING;WXUSINGDLL;WXMAKINGDLL_XRC"
 				ExceptionHandling="1"

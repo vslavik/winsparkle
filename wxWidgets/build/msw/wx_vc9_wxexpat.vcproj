@@ -48,7 +48,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
@@ -128,8 +128,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
 				ExceptionHandling="1"
@@ -206,7 +206,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
@@ -286,8 +286,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_lib"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
 				ExceptionHandling="1"
@@ -364,7 +364,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
@@ -444,8 +444,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
 				ExceptionHandling="1"
@@ -522,7 +522,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll"
 				PreprocessorDefinitions="WIN32;_LIB;_DEBUG;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
@@ -602,8 +602,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
-				Optimization="2"
+				AdditionalOptions="/MP /GF /GL /Os /GF /GL /Os"
+				Optimization="1"
 				AdditionalIncludeDirectories="..\..\lib\vc_dll"
 				PreprocessorDefinitions="WIN32;_LIB;NDEBUG;_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP"
 				ExceptionHandling="1"
