@@ -61,8 +61,8 @@ void OnCheckForUpdates(HWND hwnd,
 void OnDestroy(HWND hwnd)
 {
     /* Perform proper shutdown of WinSparkle. Notice that it's done while
-	   the main window is still visible, so that the app doesn't do 
-	   things when it appears to have quit already. */
+       the main window is still visible, so that the app doesn't do 
+       things when it appears to have quit already. */
     win_sparkle_cleanup();
 
     PostQuitMessage(0);
@@ -142,9 +142,9 @@ int CreateMainWindow()
  *-------------------------------------------------------------------------*/
 
 int APIENTRY WinMain(HINSTANCE hInstance,
-					 HINSTANCE hPrevInstance,
-					 LPSTR lpCmdLine,
-					 int nCmdShow)
+                     HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine,
+                     int nCmdShow)
 {
     g_hInstance = hInstance;
 
@@ -160,14 +160,14 @@ int APIENTRY WinMain(HINSTANCE hInstance,
        before entering the event loop: */
     win_sparkle_init();
 
-	{
-		MSG msg;
-		while ( GetMessage(&msg, NULL, 0, 0) )
-		{
-	        TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
+    {
+        MSG msg;
+        while ( GetMessage(&msg, NULL, 0, 0) )
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
 
     return 0;
 }
