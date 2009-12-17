@@ -110,6 +110,8 @@ Thread::Thread(const char *name)
 
 Thread::~Thread()
 {
+    if ( m_signalEvent )
+        CloseHandle(m_signalEvent);
     if ( m_handle )
         CloseHandle(m_handle);
 }
@@ -154,9 +156,8 @@ void Thread::Start()
     }
 
     // Wait until Run() signals that it is fully initialized.
+    // Note that this must be the last manipulation of 'this' in this function!
     WaitForSingleObject(m_signalEvent, INFINITE);
-    CloseHandle(m_signalEvent);
-    m_signalEvent = NULL;
 }
 
 
