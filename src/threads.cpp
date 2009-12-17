@@ -117,13 +117,17 @@ Thread::~Thread()
 
 /*static*/ unsigned __stdcall Thread::ThreadEntryPoint(void *data)
 {
-    Thread *thread = reinterpret_cast<Thread*>(data);
-    thread->Run();
+    try
+    {
+        Thread *thread = reinterpret_cast<Thread*>(data);
+        thread->Run();
 
-    if ( !thread->IsJoinable() )
-        delete thread;
+        if ( !thread->IsJoinable() )
+            delete thread;
+    }
+    CATCH_ALL_EXCEPTIONS
 
-	return 0;
+    return 0;
 }
 
 
