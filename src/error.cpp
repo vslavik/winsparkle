@@ -84,6 +84,7 @@ void LogError(const char *msg)
 {
     std::string err("WinSparkle: ");
     err.append(msg);
+    err.append("\n");
 
     OutputDebugStringA(err.c_str());
 }
