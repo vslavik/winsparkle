@@ -37,7 +37,7 @@
 /**
     Checks if WinSparkle version is at least @a major.@a minor.@a micro.
  */
-#define WIN_SPARKLE_VERSION(major, minor, micro)                 \
+#define WIN_SPARKLE_CHECK_VERSION(major, minor, micro)           \
         (                                                        \
             WIN_SPARKLE_VERSION_MAJOR > (major)                  \
             ||                                                   \
