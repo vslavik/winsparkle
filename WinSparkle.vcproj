@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib rpcrt4.lib"
+				AdditionalDependencies="comctl32.lib rpcrt4.lib wininet.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="deps\wxWidgets\lib\vc_lib"
 				GenerateDebugInformation="true"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib rpcrt4.lib"
+				AdditionalDependencies="comctl32.lib rpcrt4.lib wininet.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="deps\wxWidgets\lib\vc_lib"
 				GenerateDebugInformation="true"
@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\download.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\error.cpp"
 				>
 			</File>
@@ -228,6 +232,10 @@
 				>
 				<File
 					RelativePath=".\src\appcast.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\download.h"
 					>
 				</File>
 				<File

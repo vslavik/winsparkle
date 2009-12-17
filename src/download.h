@@ -23,47 +23,50 @@
  *
  */
 
-#include "updatechecker.h"
-#include "ui.h"
-#include "error.h"
-#include "settings.h"
-#include "download.h"
+#ifndef _download_h_
+#define _download_h_
+
+#include <string>
 
 namespace winsparkle
 {
 
-UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
+/**
+    Abstraction for storing downloaded data.
+ */
+struct IDownloadSink
 {
-}
+    /// Add chunk of downloaded data
+    virtual void Add(const void *data, size_t len) = 0;
+};
 
-
-void UpdateChecker::Run()
+/**
+    IDownloadSink imlementation for storing data in a string.
+ */
+struct StringDownloadSink : public IDownloadSink
 {
-    // no initialization to do, so signal readiness immediately
-    SignalReady();
-
-    try
+    virtual void Add(const void *data, size_t len)
     {
-        const std::string url = Settings::Get().AppcastURL;
-        if ( url.empty() )
-            throw std::runtime_error("Appcast URL not specified.");
-
-        StringDownloadSink appcast;
-        DownloadFile(url, &appcast);
-
-        // FIXME: really check appcast data...
-        OutputDebugStringA("WinSparkle appcast data:\n");
-        OutputDebugStringA("\n================================\n");
-        OutputDebugStringA(appcast.data.c_str());
-        OutputDebugStringA("\n================================\n");
-
-        UI::NotifyNoUpdates();
+        this->data.append(reinterpret_cast<const char*>(data), len);
     }
-    catch ( ... )
-    {
-        UI::NotifyNoUpdates();
-        throw;
-    }
-}
+
+    /// Downloaded data, as a string.
+    std::string data;
+};
+
+
+/**
+    Downloads a HTTP resource.
+
+    Throws on error.
+
+    @param url   URL of the resource to download.
+    @param sink  Where to put downloaded data.
+
+    @see CheckConnection()
+ */
+void DownloadFile(const std::string& url, IDownloadSink *sink);
 
 } // namespace winsparkle
+
+#endif // _download_h_
