@@ -44,6 +44,10 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 
+#if !wxCHECK_VERSION(2,9,0)
+#error "wxWidgets >= 2.9 is required to compile this code"
+#endif
+
 namespace winsparkle
 {
 
