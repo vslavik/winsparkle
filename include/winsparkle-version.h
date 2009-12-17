@@ -49,4 +49,16 @@
              WIN_SPARKLE_VERSION_MICRO >= (micro))               \
         )
 
+#define _WIN_SPARKLE_MAKE_STR(x) #x
+#define _WIN_SPARKLE_MAKE_VERSION_STR(a,b,c) \
+        _WIN_SPARKLE_MAKE_STR(a) "." _WIN_SPARKLE_MAKE_STR(b) "." _WIN_SPARKLE_MAKE_STR(c)
+
+/**
+    WinSparkle version as a string in the form of e.g. "0.1.3".
+ */
+#define WIN_SPARKLE_VERSION_STRING \
+        _WIN_SPARKLE_MAKE_VERSION_STR(WIN_SPARKLE_VERSION_MAJOR, \
+                                      WIN_SPARKLE_VERSION_MINOR, \
+                                      WIN_SPARKLE_VERSION_MICRO)
+
 #endif // _winsparkle_version_h_
