@@ -312,7 +312,7 @@
 // Default is 1
 //
 // Recommended setting: 1 if you want to support multiple languages
-#define wxUSE_PRINTF_POS_PARAMS      1
+#define wxUSE_PRINTF_POS_PARAMS      0
 
 // ----------------------------------------------------------------------------
 // non GUI features selection
@@ -347,7 +347,7 @@
 // Default is 1.
 //
 // Recommended setting: 1 (but can be safely disabled if you don't use it)
-#define wxUSE_CONSOLE_EVENTLOOP 1
+#define wxUSE_CONSOLE_EVENTLOOP 0
 
 // Set wxUSE_(F)FILE to 1 to compile wx(F)File classes. wxFile uses low level
 // POSIX functions for file access, wxFFile uses ANSI C stdio.h functions.
@@ -375,11 +375,11 @@
 #define wxUSE_STDPATHS      1
 
 // use wxTextBuffer class: required by wxTextFile
-#define wxUSE_TEXTBUFFER    1
+#define wxUSE_TEXTBUFFER    0
 
 // use wxTextFile class: requires wxFile and wxTextBuffer, required by
 // wxFileConfig
-#define wxUSE_TEXTFILE      1
+#define wxUSE_TEXTFILE      0
 
 // i18n support: _() macro, wxLocale class. Requires wxTextFile.
 #define wxUSE_INTL          1
@@ -913,14 +913,14 @@
 //
 // Recommended setting: 1 (but can be disabled without problems as nothing
 // depends on it)
-#define wxUSE_INFOBAR       1
+#define wxUSE_INFOBAR       0
 
 // Use wxMenu, wxMenuBar, wxMenuItem.
 //
 // Default is 1.
 //
 // Recommended setting: 1 (can't be disabled under MSW)
-#define wxUSE_MENUS         1
+#define wxUSE_MENUS         0
 
 // Use wxNotificationMessage.
 //
@@ -1145,7 +1145,7 @@
 // Default is 1.
 //
 // Recommended setting: 1
-#define wxUSE_CLIPBOARD     1
+#define wxUSE_CLIPBOARD     0
 
 // Use wxDataObject and related classes. Needed for clipboard and OLE drag and
 // drop
@@ -1162,7 +1162,7 @@
 // Default is 1.
 //
 // Recommended setting: 1
-#define wxUSE_DRAG_AND_DROP 1
+#define wxUSE_DRAG_AND_DROP 0
 
 // Use wxAccessible for enhanced and customisable accessibility.
 // Depends on wxUSE_OLE.
@@ -1211,7 +1211,7 @@
 #define wxUSE_SPLINES     0
                                 // 0 for no splines
 
-#define wxUSE_MOUSEWHEEL        1
+#define wxUSE_MOUSEWHEEL        0
                                 // Include mouse wheel support
 
 // ----------------------------------------------------------------------------
@@ -1222,7 +1222,7 @@
 #define wxUSE_POSTSCRIPT  0
 
 // Set to 1 to use font metric files in GetTextExtent
-#define wxUSE_AFM_FOR_POSTSCRIPT 1
+#define wxUSE_AFM_FOR_POSTSCRIPT 0
 
 // Set to 1 to compile in support for wxSVGFileDC, a wxDC subclass which allows
 // to create files in SVG (Scalable Vector Graphics) format.
@@ -1297,7 +1297,7 @@
 #define wxUSE_ICO_CUR       0
 
 // Set to 1 to compile in wxPalette class
-#define wxUSE_PALETTE       1
+#define wxUSE_PALETTE       0
 
 // ----------------------------------------------------------------------------
 // wxUniversal-only options
@@ -1363,7 +1363,7 @@
 //
 // Recommended setting: 1 if you need to control other applications via OLE
 // Automation, can be safely set to 0 otherwise
-#define wxUSE_OLE_AUTOMATION 1
+#define wxUSE_OLE_AUTOMATION 0
 
 // Set this to 1 to enable wxActiveXContainer class allowing to embed OLE
 // controls in wx.
