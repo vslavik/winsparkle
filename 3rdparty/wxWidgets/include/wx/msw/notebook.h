@@ -3,7 +3,7 @@
 // Purpose:     MSW/GTK compatible notebook (a.k.a. property sheet)
 // Author:      Robert Roebling
 // Modified by: Vadim Zeitlin for Windows version
-// RCS-ID:      $Id: notebook.h 54895 2008-08-01 13:46:46Z VZ $
+// RCS-ID:      $Id: notebook.h 62932 2009-12-18 20:49:23Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ public:
   }
 
   // return the themed brush for painting our children
-  virtual WXHBRUSH MSWGetBgBrushForChild(WXHDC hDC, WXHWND hWnd);
+  virtual WXHBRUSH MSWGetBgBrushForChild(WXHDC hDC, wxWindow *child);
 
   // draw child background
   virtual bool MSWPrintChild(WXHDC hDC, wxWindow *win);

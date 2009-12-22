@@ -2,7 +2,7 @@
 // Name:        combobox.h
 // Purpose:     interface of wxComboBox
 // Author:      wxWidgets team
-// RCS-ID:      $Id: combobox.h 62451 2009-10-18 17:47:01Z MBN $
+// RCS-ID:      $Id: combobox.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +83,6 @@ public:
     */
     wxComboBox();
 
-    //@{
     /**
         Constructor, creating and showing a combobox.
 
@@ -174,7 +173,6 @@ public:
                long style = 0,
                const wxValidator& validator = wxDefaultValidator,
                const wxString& name = wxComboBoxNameStr);
-    //@}
 
     /**
         Destructor, destroying the combobox.

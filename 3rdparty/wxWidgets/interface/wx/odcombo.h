@@ -2,7 +2,7 @@
 // Name:        odcombo.h
 // Purpose:     interface of wxOwnerDrawnComboBox
 // Author:      wxWidgets team
-// RCS-ID:      $Id: odcombo.h 59000 2009-02-18 17:58:51Z FM $
+// RCS-ID:      $Id: odcombo.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -68,7 +68,6 @@ public:
     */
     wxOwnerDrawnComboBox();
 
-    //@{
     /**
         Constructor, creating and showing a owner-drawn combobox.
 
@@ -138,7 +137,6 @@ public:
                          long style = 0,
                          const wxValidator& validator = wxDefaultValidator,
                          const wxString& name = "comboBox");
-    //@}
 
     /**
         Destructor, destroying the owner-drawn combobox.

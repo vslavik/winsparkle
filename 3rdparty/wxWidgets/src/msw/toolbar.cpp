@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: toolbar.cpp 62850 2009-12-10 03:04:19Z VZ $
+// RCS-ID:      $Id: toolbar.cpp 62934 2009-12-18 22:31:48Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,6 @@ IMPLEMENT_DYNAMIC_CLASS(wxToolBar, wxControl)
 BEGIN_EVENT_TABLE(wxToolBar, wxToolBarBase)
     EVT_MOUSE_EVENTS(wxToolBar::OnMouseEvent)
     EVT_SYS_COLOUR_CHANGED(wxToolBar::OnSysColourChanged)
-    EVT_ERASE_BACKGROUND(wxToolBar::OnEraseBackground)
 END_EVENT_TABLE()
 
 // ----------------------------------------------------------------------------
@@ -941,6 +940,10 @@ bool wxToolBar::Realize()
                     // so we need a valid id for it and not wxID_SEPARATOR
                     // which is used by spacers by default
                     tool->AllocSpacerId();
+
+                    // also set the number of separators so that the logic in
+                    // HandlePaint() works correctly
+                    tool->SetSeparatorsCount(1);
                 }
 
                 button.idCommand = tool->GetId();
@@ -1197,7 +1200,11 @@ bool wxToolBar::Realize()
 
 void wxToolBar::UpdateStretchableSpacersSize()
 {
-    // we can't resize the spacers if TB_SETBUTTONINFO is not supported
+#ifdef TB_SETBUTTONINFO
+    // we can't resize the spacers if TB_SETBUTTONINFO is not supported (we
+    // could try to do it with multiple separators as for the controls but this
+    // is too painful and it just doesn't seem to be worth doing for the
+    // ancient systems)
     if ( wxApp::GetComCtl32Version() < 471 )
         return;
 
@@ -1264,6 +1271,7 @@ void wxToolBar::UpdateStretchableSpacersSize()
             offset += tbbi.cx - (rcOld.right - rcOld.left);
         }
     }
+#endif // TB_SETBUTTONINFO
 }
 
 // ----------------------------------------------------------------------------
@@ -1649,64 +1657,6 @@ void wxToolBar::OnMouseEvent(wxMouseEvent& event)
     }
 }
 
-// This handler is required to allow the toolbar to be set to a non-default
-// colour: for example, when it must blend in with a notebook page.
-void wxToolBar::OnEraseBackground(wxEraseEvent& event)
-{
-    RECT rect = wxGetClientRect(GetHwnd());
-
-    wxDC *dc = event.GetDC();
-    HDC hdc = GetHdcOf(*dc);
-
-#if wxUSE_UXTHEME
-    // we may need to draw themed colour so that we appear correctly on
-    // e.g. notebook page under XP with themes but only do it if the parent
-    // draws themed background itself
-    if ( !UseBgCol() && !GetParent()->UseBgCol() )
-    {
-        wxUxThemeEngine *theme = wxUxThemeEngine::GetIfActive();
-        if ( theme )
-        {
-            HRESULT
-                hr = theme->DrawThemeParentBackground(GetHwnd(), hdc, &rect);
-            if ( hr == S_OK )
-                return;
-
-            // it can also return S_FALSE which seems to simply say that it
-            // didn't draw anything but no error really occurred
-            if ( FAILED(hr) )
-            {
-                wxLogApiError(wxT("DrawThemeParentBackground(toolbar)"), hr);
-            }
-        }
-    }
-
-    if ( MSWEraseRect(*dc) )
-        return;
-#endif // wxUSE_UXTHEME
-
-    // we need to always draw our background under XP, as otherwise it doesn't
-    // appear correctly with some themes (e.g. Zune one)
-    if ( wxGetWinVersion() == wxWinVersion_XP ||
-            UseBgCol() || (GetMSWToolbarStyle() & TBSTYLE_TRANSPARENT) )
-    {
-        // do draw our background
-        //
-        // notice that this 'dumb' implementation may cause flicker for some of
-        // the controls in which case they should intercept wxEraseEvent and
-        // process it themselves somehow
-        AutoHBRUSH hBrush(wxColourToRGB(GetBackgroundColour()));
-
-        wxCHANGE_HDC_MAP_MODE(hdc, MM_TEXT);
-        ::FillRect(hdc, &rect, hBrush);
-    }
-    else // we have no non-default background colour
-    {
-        // let the system do it for us
-        event.Skip();
-    }
-}
-
 bool wxToolBar::HandleSize(WXWPARAM WXUNUSED(wParam), WXLPARAM lParam)
 {
     // wait until we have some tools
@@ -1759,175 +1709,41 @@ bool wxToolBar::HandleSize(WXWPARAM WXUNUSED(wParam), WXLPARAM lParam)
 
 #ifndef __WXWINCE__
 
-bool wxToolBar::MSWEraseRect(wxDC& dc, const wxRect *rectItem)
+bool wxToolBar::HandlePaint(WXWPARAM WXUNUSED(wParam), WXLPARAM WXUNUSED(lParam))
 {
-    // erase the given rectangle to hide the separator
-#if wxUSE_UXTHEME
-    // themed background doesn't look well under XP so only draw it for Vista
-    // and later
-    if ( !UseBgCol() && wxGetWinVersion() >= wxWinVersion_Vista )
-    {
-        wxUxThemeEngine *theme = wxUxThemeEngine::GetIfActive();
-        if ( theme )
-        {
-            wxUxThemeHandle hTheme(this, L"REBAR");
-
-            // Draw the whole background since the pattern may be position
-            // sensitive; but clip it to the area of interest.
-            RECT rcTotal;
-            wxCopyRectToRECT(GetClientSize(), rcTotal);
-
-            RECT rcItem;
-            if ( rectItem )
-                wxCopyRectToRECT(*rectItem, rcItem);
-
-            HRESULT hr = theme->DrawThemeBackground
-                                (
-                                    hTheme,
-                                    GetHdcOf(dc),
-                                    0, 0,
-                                    &rcTotal,
-                                    rectItem ? &rcItem : NULL
-                                );
-            if ( hr == S_OK )
-                return true;
-
-            // it can also return S_FALSE which seems to simply say that it
-            // didn't draw anything but no error really occurred
-            if ( FAILED(hr) )
-            {
-                wxLogApiError(wxT("DrawThemeBackground(toolbar)"), hr);
-            }
-        }
-    }
-#endif // wxUSE_UXTHEME
-
-    // this is a bit peculiar but we may simply do nothing here if no rectItem
-    // is specified (and hence we need to erase everything) as this only
-    // happens when we're called from OnEraseBackground() and in this case we
-    // may simply return false to let the systems default background erasing to
-    // take place
-    if ( rectItem )
-        dc.DrawRectangle(*rectItem);
-
-    return false;
-}
-
-bool wxToolBar::HandlePaint(WXWPARAM wParam, WXLPARAM lParam)
-{
-    // erase any dummy separators which were used only for reserving space in
-    // the toolbar (either for a control or just for a stretchable space)
-
-    // first of all, are there any controls at all?
-    wxToolBarToolsList::compatibility_iterator node;
-    for ( node = m_tools.GetFirst(); node; node = node->GetNext() )
-    {
-        wxToolBarToolBase * const tool = node->GetData();
-        if ( tool->IsControl() || tool->IsStretchableSpace() )
-            break;
-    }
-
-    if ( !node )
-    {
-        // no controls, nothing to erase
-        return false;
-    }
-
-    // prepare the DC on which we'll be drawing
-    wxClientDC dc(this);
-    dc.SetPen(*wxTRANSPARENT_PEN);
-
-    RECT rcUpdate;
-    if ( !::GetUpdateRect(GetHwnd(), &rcUpdate, FALSE) )
-    {
-        // nothing to redraw anyhow
-        return false;
-    }
-
-    const wxRect rectUpdate = wxRectFromRECT(rcUpdate);
-    dc.SetClippingRegion(rectUpdate);
-
-    // draw the toolbar tools, separators &c normally
-    wxControl::MSWWindowProc(WM_PAINT, wParam, lParam);
-
-    // for each control in the toolbar find all the separators intersecting it
-    // and erase them
-    //
-    // NB: this is really the only way to do it as we don't know if a separator
-    //     corresponds to a control (i.e. is a dummy one) or a real one
-    //     otherwise
+    // exclude the area occupied by the controls and stretchable spaces from
+    // the update region to prevent the toolbar from drawing separators in it
     int toolIndex = 0;
-    for ( node = m_tools.GetFirst(); node; node = node->GetNext(), toolIndex++ )
+    for ( wxToolBarToolsList::compatibility_iterator node = m_tools.GetFirst();
+          node;
+          node = node->GetNext() )
     {
-        wxToolBarTool *tool = (wxToolBarTool*)node->GetData();
-        if ( tool->IsControl() )
+        wxToolBarTool * const
+            tool = static_cast<wxToolBarTool *>(node->GetData());
+
+        if ( tool->IsControl() || tool->IsStretchableSpace() )
         {
-            // get the control rect in our client coords
-            wxControl *control = tool->GetControl();
-            wxStaticText *staticText = tool->GetStaticText();
-            wxRect rectCtrl = control->GetRect();
-            wxRect rectStaticText;
-            if ( staticText )
-                rectStaticText = staticText->GetRect();
-
-            if ( !rectCtrl.Intersects(rectUpdate) &&
-                    (!staticText || !rectStaticText.Intersects(rectUpdate)) )
-                continue;
-
-            // iterate over all buttons to find all separators intersecting
-            // this control
-            TBBUTTON tbb;
-            int count = ::SendMessage(GetHwnd(), TB_BUTTONCOUNT, 0, 0);
-            for ( int n = 0; n < count; n++ )
+            const size_t numSeps = tool->GetSeparatorsCount();
+            for ( size_t n = 0; n < numSeps; n++, toolIndex++ )
             {
-                // is it a separator?
-                if ( !::SendMessage(GetHwnd(), TB_GETBUTTON,
-                                    n, (LPARAM)&tbb) )
+                const RECT rcItem = wxGetTBItemRect(GetHwnd(), toolIndex);
+
+                const wxRegion rgnItem(wxRectFromRECT(rcItem));
+                if ( !ValidateRgn(GetHwnd(), GetHrgnOf(rgnItem)) )
                 {
-                    wxLogDebug(wxT("TB_GETBUTTON failed?"));
-
-                    continue;
+                    wxLogLastError(wxT("ValidateRgn()"));
                 }
-
-                if ( tbb.fsStyle != TBSTYLE_SEP )
-                    continue;
-
-                // get the bounding rect of the separator
-                RECT r = wxGetTBItemRect(GetHwnd(), n);
-                if ( !r.right )
-                    continue;
-
-                const wxRect rectItem = wxRectFromRECT(r);
-
-                // does it intersect the update region at all?
-                if ( !rectUpdate.Intersects(rectItem) )
-                    continue;
-
-                // does it intersect the control itself or its label?
-                //
-                // if it does, refresh it so it's redrawn on top of the
-                // background
-                if ( rectCtrl.Intersects(rectItem) )
-                    control->Refresh(false);
-                else if ( staticText && rectStaticText.Intersects(rectItem) )
-                    staticText->Refresh(false);
-                else
-                    continue;
-
-                MSWEraseRect(dc, &rectItem);
             }
         }
-        else if ( tool->IsStretchableSpace() )
+        else
         {
-            const wxRect
-                rectItem = wxRectFromRECT(wxGetTBItemRect(GetHwnd(), toolIndex));
-
-            if ( rectUpdate.Intersects(rectItem) )
-                MSWEraseRect(dc, &rectItem);
+            // normal tools never correspond to more than one native button
+            toolIndex++;
         }
     }
 
-    return true;
+    // still let the native control draw everything else normally
+    return false;
 }
 #endif // __WXWINCE__
 

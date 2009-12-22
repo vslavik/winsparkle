@@ -3,7 +3,7 @@
 // Purpose:     documentation of wxMouseEventsManager class
 // Author:      Vadim Zeitlin
 // Created:     2009-04-20
-// RCS-ID:      $Id: mousemanager.h 60839 2009-05-31 14:43:01Z VZ $
+// RCS-ID:      $Id: mousemanager.h 62958 2009-12-20 15:07:08Z FM $
 // Copyright:   (c) 2009 Vadim Zeitlin <vadim@wxwidgets.org>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@
     (although this is the most common case) -- it can be any value which can
     be used to uniquely identify an item.
 
-    @library{core}
+    @library{wxcore}
     @category{events}
  */
 class wxMouseEventsManager : public wxEvtHandler

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     01/02/97
-// RCS-ID:      $Id: control.cpp 62151 2009-09-26 16:43:06Z VZ $
+// RCS-ID:      $Id: control.cpp 62932 2009-12-18 20:49:23Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -367,7 +367,8 @@ WXHBRUSH wxControl::DoMSWControlColor(WXHDC pDC, wxColour colBg, WXHWND hWnd)
     WXHBRUSH hbr = 0;
     if ( !colBg.Ok() )
     {
-        hbr = MSWGetBgBrush(pDC, hWnd);
+        if ( wxWindow *win = wxFindWinFromHandle(hWnd) )
+            hbr = MSWGetBgBrush(pDC, win);
 
         // if the control doesn't have any bg colour, foreground colour will be
         // ignored as the return value would be 0 -- so forcefully give it a

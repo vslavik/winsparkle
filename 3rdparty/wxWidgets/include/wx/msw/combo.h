@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: combo.h 58229 2009-01-19 14:40:13Z VZ $
+// RCS-ID:      $Id: combo.h 62960 2009-12-21 15:20:37Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,6 @@ protected:
     // customization
     virtual void OnResize();
     virtual wxCoord GetNativeTextIndent() const;
-    virtual void OnThemeChange();
 
     // event handlers
     void OnPaintEvent( wxPaintEvent& event );

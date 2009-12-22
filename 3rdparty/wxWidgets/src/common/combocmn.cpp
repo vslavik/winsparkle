@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: combocmn.cpp 62537 2009-11-02 14:57:35Z JMS $
+// RCS-ID:      $Id: combocmn.cpp 62960 2009-12-21 15:20:37Z JMS $
 // Copyright:   (c) 2005 Jaakko Salli
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -913,8 +913,27 @@ void wxComboCtrlBase::OnThemeChange()
     // be the correct colour and themed brush.  Instead we'll use
     // wxSYS_COLOUR_WINDOW in the EVT_PAINT handler as needed.
 #ifndef __WXMAC__
-    SetOwnBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-#endif
+  #if defined(__WXMSW__) || defined(__WXGTK__)
+    wxVisualAttributes vattrs = wxComboBox::GetClassDefaultAttributes();
+  #else
+    wxVisualAttributes vattrs;
+    vattrs.colFg = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+    vattrs.colBg = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+  #endif
+
+    // Only change the colours if application has not specified
+    // custom ones.
+    if ( !m_hasFgCol )
+    {
+        SetOwnForegroundColour(vattrs.colFg);
+        m_hasFgCol = false;
+    }
+    if ( !m_hasBgCol )
+    {
+        SetOwnBackgroundColour(vattrs.colBg);
+        m_hasBgCol = false;
+    }
+#endif // !__WXMAC__
 }
 
 wxComboCtrlBase::~wxComboCtrlBase()
@@ -1353,20 +1372,46 @@ void wxComboCtrlBase::PrepareBackground( wxDC& dc, const wxRect& rect, int flags
     selRect.width -= wcp + (focusSpacingX*2);
 
     wxColour bgCol;
+    wxColour fgCol;
+
     bool doDrawSelRect = true;
 
+    // Determine foreground colour
     if ( isEnabled )
     {
-        // If popup is hidden and this control is focused,
-        // then draw the focus-indicator (selbgcolor background etc.).
         if ( doDrawFocusRect )
         {
-            dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT) );
-            bgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
+            fgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
+        }
+        else if ( m_hasFgCol )
+        {
+            // Honour the custom foreground colour
+            fgCol = GetForegroundColour();
         }
         else
         {
-            dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT) );
+            fgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+        }
+    }
+    else
+    {
+        fgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
+    }
+
+    // Determine background colour
+    if ( isEnabled )
+    {
+        if ( doDrawFocusRect )
+        {
+            bgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
+        }
+        else if ( m_hasBgCol )
+        {
+            // Honour the custom background colour
+            bgCol = GetBackgroundColour();
+        }
+        else
+        {
 #ifndef __WXMAC__  // see note in OnThemeChange
             doDrawSelRect = false;
             bgCol = GetBackgroundColour();
@@ -1377,7 +1422,6 @@ void wxComboCtrlBase::PrepareBackground( wxDC& dc, const wxRect& rect, int flags
     }
     else
     {
-        dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT) );
 #ifndef __WXMAC__  // see note in OnThemeChange
         bgCol = GetBackgroundColour();
 #else
@@ -1385,6 +1429,7 @@ void wxComboCtrlBase::PrepareBackground( wxDC& dc, const wxRect& rect, int flags
 #endif
     }
 
+    dc.SetTextForeground( fgCol );
     dc.SetBrush( bgCol );
     if ( doDrawSelRect )
     {

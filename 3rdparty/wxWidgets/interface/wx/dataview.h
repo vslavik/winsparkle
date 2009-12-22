@@ -2,7 +2,7 @@
 // Name:        dataview.h
 // Purpose:     interface of wxDataView* classes
 // Author:      wxWidgets team
-// RCS-ID:      $Id: dataview.h 62636 2009-11-14 11:03:17Z RR $
+// RCS-ID:      $Id: dataview.h 62943 2009-12-19 11:59:55Z VZ $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -596,6 +596,8 @@ public:
     @style{wxDV_VARIABLE_LINE_HEIGHT}
            Allow variable line heights.
            This can be inefficient when displaying large number of items.
+    @style{wxDV_NO_HEADER}
+           Do not show column headers (which are shown by default).
     @endStyleTable
 
     @beginEventEmissionTable{wxDataViewEvent}

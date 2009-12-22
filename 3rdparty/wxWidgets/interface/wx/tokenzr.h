@@ -2,7 +2,7 @@
 // Name:        tokenzr.h
 // Purpose:     interface of wxStringTokenizer
 // Author:      wxWidgets team
-// RCS-ID:      $Id: tokenzr.h 56553 2008-10-28 15:36:26Z FM $
+// RCS-ID:      $Id: tokenzr.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,8 +28,8 @@ enum wxStringTokenizerMode
 
     /**
         In this mode, the empty tokens in the middle of the string will be returned,
-        i.e. @c "a::b:" will be tokenized in three tokens @c 'a', " and @c 'b'. Notice
-        that all trailing delimiters are ignored in this mode, not just the last one,
+        i.e. @c "a::b:" will be tokenized in three tokens @c 'a', @c '' and @c 'b'. 
+        Notice that all trailing delimiters are ignored in this mode, not just the last one,
         i.e. a string @c "a::b::" would still result in the same set of tokens.
     */
     wxTOKEN_RET_EMPTY,

@@ -2,7 +2,7 @@
 // Name:        src/common/image.cpp
 // Purpose:     wxImage
 // Author:      Robert Roebling
-// RCS-ID:      $Id: image.cpp 62679 2009-11-18 09:56:59Z VZ $
+// RCS-ID:      $Id: image.cpp 62900 2009-12-16 17:10:52Z PC $
 // Copyright:   (c) Robert Roebling
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -2341,8 +2341,6 @@ bool wxImage::DoLoad(wxImageHandler& handler, wxInputStream& stream, int index)
     if ( !handler.LoadFile(this, stream, true/*verbose*/, index) )
         return false;
 
-    M_IMGDATA->m_type = handler.GetType();
-
     // rescale the image to the specified size if needed
     if ( maxWidth || maxHeight )
     {
@@ -2362,6 +2360,9 @@ bool wxImage::DoLoad(wxImageHandler& handler, wxInputStream& stream, int index)
         if ( width != widthOrig || height != heightOrig )
             Rescale(width, height, wxIMAGE_QUALITY_HIGH);
     }
+
+    // Set this after Rescale, which currently does not preserve it
+    M_IMGDATA->m_type = handler.GetType();
 
     return true;
 }

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     01/02/97
-// RCS-ID:      $Id: toolbar.h 62850 2009-12-10 03:04:19Z VZ $
+// RCS-ID:      $Id: toolbar.h 62934 2009-12-18 22:31:48Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,6 @@ public:
 
     void OnMouseEvent(wxMouseEvent& event);
     void OnSysColourChanged(wxSysColourChangedEvent& event);
-    void OnEraseBackground(wxEraseEvent& event);
 
     void SetFocus() {}
 
@@ -156,13 +155,6 @@ private:
     // update the sizes of stretchable spacers to consume all extra space we
     // have
     void UpdateStretchableSpacersSize();
-
-    // redraw the background of the given part of the window (or entire window
-    // if the parameter is NULL) to erase separator drawn in it
-    //
-    // return true if the background was erased using DrawThemeBackground()
-    bool MSWEraseRect(wxDC& dc, const wxRect *rectItem = NULL);
-
 
     DECLARE_EVENT_TABLE()
     DECLARE_DYNAMIC_CLASS(wxToolBar)

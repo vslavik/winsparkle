@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: accel.cpp 58757 2009-02-08 11:45:59Z VZ $
+// RCS-ID:      $Id: accel.cpp 62913 2009-12-17 16:44:09Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -33,8 +33,6 @@
 #include "wx/accel.h"
 
 #include "wx/msw/private.h"
-
-extern WXWORD wxCharCodeWXToMSW(int id, bool *isVirtual);
 
 IMPLEMENT_DYNAMIC_CLASS(wxAcceleratorTable, wxObject)
 
@@ -105,19 +103,15 @@ wxAcceleratorTable::wxAcceleratorTable(int n, const wxAcceleratorEntry entries[]
     {
         int flags = entries[i].GetFlags();
 
-        BYTE fVirt = 0;
+        BYTE fVirt = FVIRTKEY;
         if ( flags & wxACCEL_ALT )
-            fVirt |= FALT | FVIRTKEY;
+            fVirt |= FALT;
         if ( flags & wxACCEL_SHIFT )
-            fVirt |= FSHIFT | FVIRTKEY;
+            fVirt |= FSHIFT;
         if ( flags & wxACCEL_CTRL )
-            fVirt |= FCONTROL | FVIRTKEY;
+            fVirt |= FCONTROL;
 
-        bool isVirtual;
-
-        WORD key = wxCharCodeWXToMSW(entries[i].GetKeyCode(), &isVirtual);
-        if (isVirtual)
-            fVirt |= FVIRTKEY;
+        WORD key = wxCharCodeWXToMSW(entries[i].GetKeyCode());
 
         arr[i].fVirt = fVirt;
         arr[i].key = key;

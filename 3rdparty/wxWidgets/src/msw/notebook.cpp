@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     11.06.98
-// RCS-ID:      $Id: notebook.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: notebook.cpp 62932 2009-12-18 20:49:23Z VZ $
 // Copyright:   (c) 1998 Vadim Zeitlin <zeitlin@dptmaths.ens-cachan.fr>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -1248,14 +1248,14 @@ void wxNotebook::UpdateBgBrush()
     }
 }
 
-WXHBRUSH wxNotebook::MSWGetBgBrushForChild(WXHDC hDC, WXHWND hWnd)
+WXHBRUSH wxNotebook::MSWGetBgBrushForChild(WXHDC hDC, wxWindow *child)
 {
     if ( m_hbrBackground )
     {
         // before drawing with the background brush, we need to position it
         // correctly
         RECT rc;
-        ::GetWindowRect((HWND)hWnd, &rc);
+        ::GetWindowRect(GetHwndOf(child), &rc);
 
         ::MapWindowPoints(NULL, GetHwnd(), (POINT *)&rc, 1);
 
@@ -1267,7 +1267,7 @@ WXHBRUSH wxNotebook::MSWGetBgBrushForChild(WXHDC hDC, WXHWND hWnd)
         return m_hbrBackground;
     }
 
-    return wxNotebookBase::MSWGetBgBrushForChild(hDC, hWnd);
+    return wxNotebookBase::MSWGetBgBrushForChild(hDC, child);
 }
 
 bool wxNotebook::MSWPrintChild(WXHDC hDC, wxWindow *child)

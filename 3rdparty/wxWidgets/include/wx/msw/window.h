@@ -5,13 +5,15 @@
 // Modified by: Vadim Zeitlin on 13.05.99: complete refont of message handling,
 //              elimination of Default(), ...
 // Created:     01/02/97
-// RCS-ID:      $Id: window.h 61724 2009-08-21 10:41:26Z VZ $
+// RCS-ID:      $Id: window.h 62947 2009-12-19 14:47:37Z JMS $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef _WX_WINDOW_H_
 #define _WX_WINDOW_H_
+
+enum wxSystemColour;
 
 // if this is set to 1, we use deferred window sizing to reduce flicker when
 // resizing complicated window hierarchies, but this can in theory result in
@@ -399,17 +401,34 @@ public:
     // background or 0 if this window doesn't impose any particular background
     // on its children
     //
+    // the hDC parameter is the DC background will be drawn on, it can be used
+    // to call SetBrushOrgEx() on it if the returned brush is a bitmap one
+    //
+    // child parameter is never NULL
+    //
     // the base class version returns a solid brush if we have a non default
     // background colour or 0 otherwise
-    virtual WXHBRUSH MSWGetBgBrushForChild(WXHDC hDC, WXHWND hWnd);
+    virtual WXHBRUSH MSWGetBgBrushForChild(WXHDC hDC, wxWindowMSW *child);
 
     // return the background brush to use for painting the given window by
     // quering the parent windows via their MSWGetBgBrushForChild() recursively
-    //
-    // hWndToPaint is normally NULL meaning this window itself, but it can also
-    // be a child of this window which is used by the static box and could be
-    // potentially useful for other transparent controls
-    WXHBRUSH MSWGetBgBrush(WXHDC hDC, WXHWND hWndToPaint = NULL);
+    WXHBRUSH MSWGetBgBrush(WXHDC hDC) { return MSWGetBgBrush(hDC, this); }
+    WXHBRUSH MSWGetBgBrush(WXHDC hDC, wxWindowMSW *child);
+
+    enum MSWThemeColour
+    {
+        ThemeColourText = 0,
+        ThemeColourBackground,
+        ThemeColourBorder
+    };
+
+    // returns a specific theme colour, or if that is not possible then
+    // wxSystemSettings::GetColour(fallback)
+    wxColour MSWGetThemeColour(const wchar_t *themeName,
+                               int themePart,
+                               int themeState,
+                               MSWThemeColour themeColour,
+                               wxSystemColour fallback);
 
     // gives the parent the possibility to draw its children background, e.g.
     // this is used by wxNotebook to do it using DrawThemeBackground()
@@ -601,7 +620,7 @@ private:
 
 // kbd code translation
 WXDLLIMPEXP_CORE int wxCharCodeMSWToWX(int keySym, WXLPARAM lParam = 0);
-WXDLLIMPEXP_CORE WXWORD wxCharCodeWXToMSW(int id, bool *IsVirtual = NULL);
+WXDLLIMPEXP_CORE WXWORD wxCharCodeWXToMSW(int id);
 
 // window creation helper class: before creating a new HWND, instantiate an
 // object of this class on stack - this allows to process the messages sent to

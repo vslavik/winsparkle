@@ -2,7 +2,7 @@
 // Name:        ribbon/buttonbar.h
 // Purpose:     interface of wxRibbonButtonBar
 // Author:      Peter Cawley
-// RCS-ID:      $Id: buttonbar.h 61944 2009-09-16 12:06:02Z PJC $
+// RCS-ID:      $Id: buttonbar.h 62957 2009-12-20 14:50:50Z FM $
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -124,8 +124,11 @@ public:
 
     /**
         Construct a ribbon button bar with the given parameters.
+        
         @param parent
             Parent window for the button bar (typically a wxRibbonPanel).
+        @param id
+            An identifier for the button bar. @c wxID_ANY is taken to mean a default.
         @param pos
             Initial position of the button bar.
         @param size

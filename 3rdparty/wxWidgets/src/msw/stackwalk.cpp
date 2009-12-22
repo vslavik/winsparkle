@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     2005-01-08
-// RCS-ID:      $Id: stackwalk.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: stackwalk.cpp 62925 2009-12-18 14:47:08Z VZ $
 // Copyright:   (c) 2003-2005 Vadim Zeitlin <vadim@wxwindows.org>
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -300,14 +300,10 @@ void wxStackWalker::WalkFrom(const CONTEXT *pCtx, size_t skip, size_t maxDepth)
         }
     }
 
-    // this results in crashes inside ntdll.dll when called from
-    // exception handler ...
-#if 0
     if ( !wxDbgHelpDLL::SymCleanup(hProcess) )
     {
         wxDbgHelpDLL::LogError(wxT("SymCleanup"));
     }
-#endif
 }
 
 void wxStackWalker::WalkFrom(const _EXCEPTION_POINTERS *ep, size_t skip, size_t maxDepth)
