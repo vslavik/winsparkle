@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!-- $Id: htmlctrl.bkl 27349 2004-05-19 02:20:53Z KO $ -->
+
+<makefile>
+
+    <include file="../../../build/bakefiles/common_samples.bkl"/>
+
+    <exe id="htmlctrl" template="wx_sample" template_append="wx_append">
+        <sources>htmlctrl.cpp</sources>
+        <wx-lib>core</wx-lib>
+        <wx-lib>base</wx-lib>
+    </exe>
+
+</makefile>
