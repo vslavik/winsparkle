@@ -299,39 +299,58 @@ void App::OnNoUpdateFound(wxThreadEvent&)
                              winsparkle::UI class
  *--------------------------------------------------------------------------*/
 
-namespace
+// helper for accessing the UI thread
+class UIThreadAccess
 {
+public:
+    UIThreadAccess() : m_lock(ms_uiThreadCS) {}
 
-UI *gs_uiThread = NULL;
-CriticalSection gs_uiThreadCS;
+    App& App()
+    {
+        StartIfNeeded();
+        return wxGetApp();
+    };
 
-} // anonymous namespace
+    bool IsRunning() const { return ms_uiThread != NULL; }
+
+    // intentionally not static, to force locking before access
+    UI* UIThread() { return ms_uiThread; }
+
+    void ShutDownThread()
+    {
+        if ( ms_uiThread )
+        {
+            ms_uiThread->Join();
+            ms_uiThread = NULL;
+        }
+    }
+
+private:
+    void StartIfNeeded()
+    {
+        // if the thread is not running yet, we have to start it
+        if ( !ms_uiThread )
+        {
+            ms_uiThread = new UI();
+            ms_uiThread->Start();
+        }
+    }
+
+    CriticalSectionLocker m_lock;
+
+    static UI *ms_uiThread;
+    static CriticalSection ms_uiThreadCS;
+};
+
+UI *UIThreadAccess::ms_uiThread = NULL;
+CriticalSection UIThreadAccess::ms_uiThreadCS;
 
 
 HINSTANCE UI::ms_hInstance = NULL;
 
 
-UI::UI()
-    : Thread("WinSparkle UI thread"),
-      m_app(NULL)
+UI::UI() : Thread("WinSparkle UI thread")
 {
-}
-
-
-/*static*/
-UI *UI::Get()
-{
-    CriticalSectionLocker lock(gs_uiThreadCS);
-
-    // if the thread is not running yet, we have to start it
-    if ( !gs_uiThread )
-    {
-        gs_uiThread = new UI();
-        gs_uiThread->Start();
-        gs_uiThread->m_app = &wxGetApp();
-    }
-
-    return gs_uiThread;
 }
 
 
@@ -365,42 +384,35 @@ void UI::Run()
 
 
 /*static*/
-bool UI::IsRunning()
-{
-    CriticalSectionLocker lock(gs_uiThreadCS);
-    return gs_uiThread != NULL;
-}
-
-
-/*static*/
 void UI::ShutDown()
 {
-    CriticalSectionLocker lock(gs_uiThreadCS);
+    UIThreadAccess uit;
 
-    if ( !gs_uiThread )
+    if ( !uit.IsRunning() )
         return;
 
-    GetApp()->SendMsg(MSG_TERMINATE);
-    gs_uiThread->Join();
-
-    gs_uiThread = NULL;
+    uit.App().SendMsg(MSG_TERMINATE);
+    uit.ShutDownThread();
 }
 
 
 /*static*/
 void UI::NotifyNoUpdates()
 {
-    if ( !IsRunning() )
+    UIThreadAccess uit;
+
+    if ( !uit.IsRunning() )
         return;
 
-    GetApp()->SendMsg(MSG_NO_UPDATE_FOUND);
+    uit.App().SendMsg(MSG_NO_UPDATE_FOUND);
 }
 
 
 /*static*/
 void UI::ShowCheckingUpdates()
 {
-    GetApp()->SendMsg(MSG_SHOW_CHECKING_UPDATES);
+    UIThreadAccess uit;
+    uit.App().SendMsg(MSG_SHOW_CHECKING_UPDATES);
 }
 
 } // namespace winsparkle

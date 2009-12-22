@@ -31,8 +31,6 @@
 namespace winsparkle
 {
 
-class App;
-
 /**
     The main UI thread.
 
@@ -46,14 +44,6 @@ class App;
 class UI : public Thread
 {
 public:
-    /**
-        Returns the thread if it exists already, otherwise starts it.
-     */
-    static UI *Get();
-
-    /// Is the UI thread running?
-    static bool IsRunning();
-
     /**
         Shuts the UI thread down.
 
@@ -89,11 +79,10 @@ protected:
 
 private:
     UI();
-    static App *GetApp() { return Get()->m_app; }
-
-    App *m_app;
 
     static HINSTANCE ms_hInstance;
+
+    friend class UIThreadAccess;
 };
 
 } // namespace winsparkle
