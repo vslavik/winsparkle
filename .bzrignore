@@ -3,6 +3,6 @@ Release
 *.ncb
 *.suo
 *.vcproj.*.user
-deps/wxWidgets/build/bakefiles/.bakefile_gen.state
-deps/wxWidgets/lib/vc_lib
-deps/wxWidgets/build/msw/*_*/
+3rdparty/wxWidgets/build/bakefiles/.bakefile_gen.state
+3rdparty/wxWidgets/lib/vc_lib
+3rdparty/wxWidgets/build/msw/*_*/
