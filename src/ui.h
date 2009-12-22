@@ -55,6 +55,14 @@ public:
     static bool IsRunning();
 
     /**
+        Shuts the UI thread down.
+
+        @note Currently, this may only be called once, from
+              win_sparkle_cleanup().
+     */
+    static void ShutDown();
+
+    /**
         Notifies the UI that no updates were found.
 
         If the UI thread is running and WinSparkle window is currently open

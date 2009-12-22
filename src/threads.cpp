@@ -161,6 +161,16 @@ void Thread::Start()
 }
 
 
+void Thread::Join()
+{
+    if ( !m_handle )
+        throw Win32Exception();
+
+    if ( WaitForSingleObject(m_handle, INFINITE) != WAIT_OBJECT_0 )
+        throw Win32Exception();
+}
+
+
 void Thread::SignalReady()
 {
     SetEvent(m_signalEvent);

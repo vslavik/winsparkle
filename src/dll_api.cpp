@@ -52,6 +52,9 @@ WIN_SPARKLE_API void win_sparkle_cleanup()
 {
     try
     {
+        UI::ShutDown();
+
+        // FIXME: shut down any worker UpdateChecker threads too
     }
     CATCH_ALL_EXCEPTIONS
 }

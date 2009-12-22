@@ -257,10 +257,10 @@ void App::SendMsg(int msg)
 void App::ShowWindow()
 {
     if ( m_win )
-	{
-		m_win->Raise();
+    {
+        m_win->Raise();
         return;
-	}
+    }
 
     m_win = new UpdateDialog();
     m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnWindowClose, this);
@@ -369,6 +369,21 @@ bool UI::IsRunning()
 {
     CriticalSectionLocker lock(gs_uiThreadCS);
     return gs_uiThread != NULL;
+}
+
+
+/*static*/
+void UI::ShutDown()
+{
+    CriticalSectionLocker lock(gs_uiThreadCS);
+
+    if ( !gs_uiThread )
+        return;
+
+    GetApp()->SendMsg(MSG_TERMINATE);
+    gs_uiThread->Join();
+
+    gs_uiThread = NULL;
 }
 
 

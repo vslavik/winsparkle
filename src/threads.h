@@ -67,6 +67,11 @@ public:
      */
     void Start();
 
+    /**
+        Wait for the thread to terminate.
+     */
+    void Join();
+
 
 protected:
     /// Signals Start() that the thread is up and ready.
