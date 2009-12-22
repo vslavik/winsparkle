@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-23
-// RCS-ID:      $Id: property.cpp 62764 2009-12-02 17:28:45Z PC $
+// RCS-ID:      $Id: property.cpp 62955 2009-12-20 12:48:41Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -216,10 +216,10 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
 
     if ( column == 1 )
     {
+        editor = property->GetColumnEditor(column);
+
         if ( !isUnspecified )
         {
-            editor = property->GetColumnEditor(column);
-
             // Regular property value
 
             wxSize imageSize = propertyGrid->GetImageSize(property, item);
@@ -264,6 +264,10 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
             {
                 text = vInlineHelp.GetString();
                 dc.SetTextForeground(propertyGrid->GetCellDisabledTextColour());
+
+                // Must make the editor NULL to override it's own rendering
+                // code.
+                editor = NULL;
             }
         }
     }
@@ -924,8 +928,10 @@ wxString wxPGProperty::GetValueAsString( int argFlags ) const
     }
 #endif
 
+    wxPropertyGrid* pg = GetGrid();
+
     if ( IsValueUnspecified() )
-        return wxEmptyString;
+        return pg->GetUnspecifiedValueText(argFlags);
 
     if ( m_commonValue == -1 )
     {
@@ -935,7 +941,6 @@ wxString wxPGProperty::GetValueAsString( int argFlags ) const
 
     //
     // Return common value's string representation
-    wxPropertyGrid* pg = GetGrid();
     const wxPGCommonValue* cv = pg->GetCommonValue(m_commonValue);
 
     if ( argFlags & wxPG_FULL_VALUE )
@@ -1366,16 +1371,23 @@ void wxPGProperty::SetValue( wxVariant value, wxVariant* pList, int flags )
         UpdateParentValues();
 
     //
-    // Update editor control
-    //
-
-    // We need to check for these, otherwise GetGrid() may fail.
+    // Update editor control.
     if ( flags & wxPG_SETVAL_REFRESH_EDITOR )
     {
-        RefreshEditor();
         wxPropertyGrid* pg = GetGridIfDisplayed();
         if ( pg )
+        {
+            wxPGProperty* selected = pg->GetSelectedProperty();
+
+            // Only refresh the control if this was selected, or
+            // this was some parent of selected, or vice versa)
+            if ( selected && (selected == this ||
+                              selected->IsSomeParent(this) ||
+                              this->IsSomeParent(selected)) )
+                RefreshEditor();
+
             pg->DrawItemAndValueRelated(this);
+        }
     }
 }
 

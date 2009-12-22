@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: VZ on 13.05.99: no more Default(), MSWOnXXX() reorganisation
 // Created:     04/01/98
-// RCS-ID:      $Id: window.cpp 62805 2009-12-07 13:37:01Z VZ $
+// RCS-ID:      $Id: window.cpp 62948 2009-12-19 15:07:52Z JMS $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -4701,6 +4701,69 @@ extern wxCOLORMAP *wxGetStdColourMap()
     return s_cmap;
 }
 
+#if wxUSE_UXTHEME && !defined(TMT_FILLCOLOR)
+    #define TMT_FILLCOLOR       3802
+    #define TMT_TEXTCOLOR       3803
+    #define TMT_BORDERCOLOR     3801
+#endif
+
+wxColour wxWindowMSW::MSWGetThemeColour(const wchar_t *themeName,
+                                        int themePart,
+                                        int themeState,
+                                        MSWThemeColour themeColour,
+                                        wxSystemColour fallback)
+{
+#if wxUSE_UXTHEME
+    const wxUxThemeEngine* theme = wxUxThemeEngine::GetIfActive();
+    if ( theme )
+    {
+        int themeProperty = 0;
+
+        // TODO: Convert this into a table? Sure would be faster.
+        switch ( themeColour )
+        {
+            case ThemeColourBackground:
+                themeProperty = TMT_FILLCOLOR;
+                break;
+            case ThemeColourText:
+                themeProperty = TMT_TEXTCOLOR;
+                break;
+            case ThemeColourBorder:
+                themeProperty = TMT_BORDERCOLOR;
+                break;
+            default:
+                wxFAIL_MSG(wxT("unsupported theme colour"));
+        };
+
+        wxUxThemeHandle hTheme(this, themeName);
+        COLORREF col;
+        HRESULT hr = theme->GetThemeColor
+                            (
+                                hTheme,
+                                themePart,
+                                themeState,
+                                themeProperty,
+                                &col
+                            );
+
+        if ( SUCCEEDED(hr) )
+            return wxRGBToColour(col);
+
+        wxLogApiError(
+            wxString::Format(
+                "GetThemeColor(%s, %i, %i, %i)",
+                themeName, themePart, themeState, themeProperty),
+            hr);
+    }
+#else
+    wxUnusedVar(themeName);
+    wxUnusedVar(themePart);
+    wxUnusedVar(themeState);
+    wxUnusedVar(themeColour);
+#endif
+    return wxSystemSettings::GetColour(fallback);
+}
+
 // ---------------------------------------------------------------------------
 // painting
 // ---------------------------------------------------------------------------
@@ -4816,7 +4879,7 @@ bool wxWindowMSW::DoEraseBackground(WXHDC hDC)
 }
 
 WXHBRUSH
-wxWindowMSW::MSWGetBgBrushForChild(WXHDC WXUNUSED(hDC), WXHWND hWnd)
+wxWindowMSW::MSWGetBgBrushForChild(WXHDC WXUNUSED(hDC), wxWindowMSW *child)
 {
     if ( m_hasBgCol )
     {
@@ -4828,11 +4891,10 @@ wxWindowMSW::MSWGetBgBrushForChild(WXHDC WXUNUSED(hDC), WXHWND hWnd)
         //     children because it would look wrong if a child of non
         //     transparent child would show our bg colour when the child itself
         //     does not
-        wxWindow *win = wxFindWinFromHandle(hWnd);
-        if ( win == this ||
+        if ( child == this ||
                 m_inheritBgCol ||
-                    (win && win->HasTransparentBackground() &&
-                        win->GetParent() == this) )
+                    (child->HasTransparentBackground() &&
+                        child->GetParent() == this) )
         {
             // draw children with the same colour as the parent
             wxBrush *
@@ -4845,14 +4907,11 @@ wxWindowMSW::MSWGetBgBrushForChild(WXHDC WXUNUSED(hDC), WXHWND hWnd)
     return 0;
 }
 
-WXHBRUSH wxWindowMSW::MSWGetBgBrush(WXHDC hDC, WXHWND hWndToPaint)
+WXHBRUSH wxWindowMSW::MSWGetBgBrush(WXHDC hDC, wxWindowMSW *child)
 {
-    if ( !hWndToPaint )
-        hWndToPaint = GetHWND();
-
     for ( wxWindowMSW *win = this; win; win = win->GetParent() )
     {
-        WXHBRUSH hBrush = win->MSWGetBgBrushForChild(hDC, hWndToPaint);
+        WXHBRUSH hBrush = win->MSWGetBgBrushForChild(hDC, child);
         if ( hBrush )
             return hBrush;
 
@@ -6095,11 +6154,8 @@ int wxCharCodeMSWToWX(int vk, WXLPARAM lParam)
     return wxk;
 }
 
-WXWORD wxCharCodeWXToMSW(int wxk, bool *isVirtual)
+WXWORD wxCharCodeWXToMSW(int wxk)
 {
-    if ( isVirtual )
-        *isVirtual = true;
-
     // check the table first
     for ( size_t n = 0; n < WXSIZEOF(gs_specialKeys); n++ )
     {
@@ -6174,8 +6230,6 @@ WXWORD wxCharCodeWXToMSW(int wxk, bool *isVirtual)
             else
 #endif // !__WXWINCE__
             {
-                if ( isVirtual )
-                    *isVirtual = false;
                 vk = (WXWORD)wxk;
             }
     }

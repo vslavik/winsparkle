@@ -3,7 +3,7 @@
 // Purpose:     wxDataViewCtrl base classes and common parts
 // Author:      Robert Roebling
 // Created:     2006/02/20
-// RCS-ID:      $Id: datavcmn.cpp 62639 2009-11-14 15:51:50Z VZ $
+// RCS-ID:      $Id: datavcmn.cpp 62939 2009-12-19 11:17:25Z VZ $
 // Copyright:   (c) 2006, Robert Roebling
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -792,7 +792,7 @@ wxDataViewCustomRendererBase::RenderText(const wxString& text,
                                         text,
                                         *dc,
                                         GetEllipsizeMode(),
-                                        rect.width,
+                                        rectText.width,
                                         wxELLIPSIZE_FLAGS_NONE
                                     );
     }

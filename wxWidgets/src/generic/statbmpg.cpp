@@ -3,7 +3,7 @@
 // Purpose:     wxGenericStaticBitmap
 // Author:      Marcin Wojdyr, Stefan Csomor
 // Created:     2008-06-16
-// RCS-ID:      $Id: statbmpg.cpp 60864 2009-06-01 20:54:03Z VZ $
+// RCS-ID:      $Id: statbmpg.cpp 62923 2009-12-18 14:46:44Z VZ $
 // Copyright:   wxWidgets developers
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,8 +36,7 @@ bool wxGenericStaticBitmap::Create(wxWindow *parent, wxWindowID id,
 void wxGenericStaticBitmap::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc(this);
-    PrepareDC(dc);
-    if (m_bitmap.Ok())
+    if (m_bitmap.IsOk())
         dc.DrawBitmap(m_bitmap, 0, 0, true);
 }
 

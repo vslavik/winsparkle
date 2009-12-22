@@ -2,7 +2,7 @@
 // Name:        toolbar.h
 // Purpose:     interface of wxToolBar
 // Author:      wxWidgets team
-// RCS-ID:      $Id: toolbar.h 62850 2009-12-10 03:04:19Z VZ $
+// RCS-ID:      $Id: toolbar.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -257,7 +257,7 @@ public:
             The tool to be added.
 
         @remarks After you have added tools to a toolbar, you must call
-            Realize() in order to have the tools appear.
+                 Realize() in order to have the tools appear.
 
         @see AddSeparator(), AddCheckTool(), AddRadioTool(),
              InsertTool(), DeleteTool(), Realize(), SetDropdownMenu()

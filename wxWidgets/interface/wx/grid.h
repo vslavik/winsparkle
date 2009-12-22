@@ -2,7 +2,7 @@
 // Name:        grid.h
 // Purpose:     interface of wxGrid and related classes
 // Author:      wxWidgets team
-// RCS-ID:      $Id: grid.h 62728 2009-11-27 01:47:38Z VZ $
+// RCS-ID:      $Id: grid.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -784,7 +784,7 @@ class wxGridColumnHeaderRenderer : public wxGridHeaderLabelsRenderer
 
     @since 2.9.1
  */
-class wxGridRowHeaderRendererDefault : public wxGridRowHeaderRendererDefault
+class wxGridRowHeaderRendererDefault : public wxGridRowHeaderRenderer
 {
 public:
     /// Implement border drawing for the row labels.

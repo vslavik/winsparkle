@@ -4,7 +4,7 @@
 // Author:      Benjamin I. Williams
 // Modified by:
 // Created:     2005-05-17
-// RCS-ID:      $Id: framemanager.cpp 62760 2009-12-02 00:57:56Z BP $
+// RCS-ID:      $Id: framemanager.cpp 62896 2009-12-15 22:44:54Z VZ $
 // Copyright:   (C) Copyright 2005-2006, Kirix Corporation, All Rights Reserved
 // Licence:     wxWindows Library Licence, Version 3.1
 ///////////////////////////////////////////////////////////////////////////////
@@ -275,6 +275,16 @@ public:
     bool SetTransparent(wxByte WXUNUSED(alpha))
     {
         return true;
+    }
+
+protected:
+    virtual void DoSetSizeHints( int minW, int minH,
+                                 int maxW, int maxH,
+                                 int incW, int incH)
+    {
+        // the real wxFrame method doesn't work for us because we're not really
+        // a top level window so skip it
+        wxWindow::DoSetSizeHints(minW, minH, maxW, maxH, incW, incH);
     }
 
 private:

@@ -3,7 +3,7 @@
 // Purpose:     wxGenericStaticText header
 // Author:      Marcin Wojdyr
 // Created:     2008-06-26
-// Id:          $Id: stattextg.h 62821 2009-12-08 15:56:21Z VZ $
+// Id:          $Id: stattextg.h 62877 2009-12-14 12:41:55Z VZ $
 // Copyright:   Marcin Wojdyr
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -44,11 +44,12 @@ public:
                 const wxString& name = wxStaticTextNameStr);
 
 
-protected:
-    virtual wxSize DoGetBestClientSize() const;
-
+    // overridden base class virtual methods
     virtual void SetLabel(const wxString& label);
     virtual bool SetFont(const wxFont &font);
+
+protected:
+    virtual wxSize DoGetBestClientSize() const;
 
     virtual wxString DoGetLabel() const { return m_label; }
     virtual void DoSetLabel(const wxString& label);

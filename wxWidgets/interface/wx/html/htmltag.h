@@ -2,7 +2,7 @@
 // Name:        html/htmltag.h
 // Purpose:     interface of wxHtmlTag
 // Author:      wxWidgets team
-// RCS-ID:      $Id: htmltag.h 56720 2008-11-09 16:46:52Z FM $
+// RCS-ID:      $Id: htmltag.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +73,7 @@ public:
 
     /**
         Returns tag's name. The name is always in uppercase and it doesn't contain
-        " or '/' characters. (So the name of \<FONT SIZE=+2\> tag is "FONT"
+        &quot; or '/' characters. (So the name of \<FONT SIZE=+2\> tag is "FONT"
         and name of \</table\> is "TABLE").
     */
     wxString GetName() const;

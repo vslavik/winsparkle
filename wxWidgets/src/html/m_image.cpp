@@ -2,7 +2,7 @@
 // Name:        src/html/m_image.cpp
 // Purpose:     wxHtml module for displaying images
 // Author:      Vaclav Slavik
-// RCS-ID:      $Id: m_image.cpp 58757 2009-02-08 11:45:59Z VZ $
+// RCS-ID:      $Id: m_image.cpp 62927 2009-12-18 14:47:25Z VZ $
 // Copyright:   (c) 1999 Vaclav Slavik, Joel Lucsy
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -651,7 +651,7 @@ TAG_HANDLER_BEGIN(IMG, "IMG,MAP,AREA")
                 if (tag.HasParam(wxT("USEMAP")))
                 {
                     mn = tag.GetParam( wxT("USEMAP") );
-                    if (mn.GetChar(0) == wxT('#'))
+                    if ( !mn.empty() && *mn.begin() == '#' )
                     {
                         mn = mn.Mid( 1 );
                     }

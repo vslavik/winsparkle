@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by: Wlodzimierz ABX Skiba from generic/listbkg.cpp
 // Created:     15.09.04
-// RCS-ID:      $Id: choicbkg.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: choicbkg.cpp 62895 2009-12-15 21:12:06Z VZ $
 // Copyright:   (c) Vadim Zeitlin, Wlodzimierz Skiba
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -176,14 +176,16 @@ wxString wxChoicebook::GetPageText(size_t n) const
 
 int wxChoicebook::GetPageImage(size_t WXUNUSED(n)) const
 {
-    wxFAIL_MSG( wxT("wxChoicebook::GetPageImage() not implemented") );
-
     return wxNOT_FOUND;
 }
 
 bool wxChoicebook::SetPageImage(size_t WXUNUSED(n), int WXUNUSED(imageId))
 {
-    wxFAIL_MSG( wxT("wxChoicebook::SetPageImage() not implemented") );
+    // fail silently, the code may be written to use one of several book
+    // classes and call SetPageImage() unconditionally, it's better to just
+    // ignore it (which is the best we can do short of rewriting this class to
+    // use wxBitmapComboBox anyhow) than complain loudly about a rather
+    // harmless problem
 
     return false;
 }

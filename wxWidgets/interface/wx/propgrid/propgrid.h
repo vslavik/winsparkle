@@ -2,7 +2,7 @@
 // Name:        propgrid.h
 // Purpose:     interface of wxPropertyGrid
 // Author:      wxWidgets team
-// RCS-ID:      $Id: propgrid.h 62867 2009-12-13 12:00:04Z JMS $
+// RCS-ID:      $Id: propgrid.h 62955 2009-12-20 12:48:41Z JMS $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -739,6 +739,14 @@ public:
         wxOwnerDrawnComboBox into account.
     */
     wxTextCtrl* GetEditorTextCtrl() const;
+
+    /**
+        Returns (visual) text representation of the unspecified
+        property value.
+
+        @param argFlags For internal use only.
+    */
+    wxString GetUnspecifiedValueText( int argFlags = 0 ) const;
 
     /**
         Returns current vertical spacing.

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Vadim Zeitlin to derive from wxChoiceBase
 // Created:     04/01/98
-// RCS-ID:      $Id: choice.cpp 62150 2009-09-26 16:42:56Z VZ $
+// RCS-ID:      $Id: choice.cpp 62960 2009-12-21 15:20:37Z JMS $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -30,6 +30,7 @@
 
 #ifndef WX_PRECOMP
     #include "wx/utils.h"
+    #include "wx/app.h"
     #include "wx/log.h"
     #include "wx/brush.h"
     #include "wx/settings.h"
@@ -142,10 +143,6 @@ bool wxChoice::CreateAndInit(wxWindow *parent,
         return false;
 
 
-    // choice/combobox normally has "white" (depends on colour scheme, of
-    // course) background rather than inheriting the parent's background
-    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-
     // initialize the controls contents
     for ( int i = 0; i < n; i++ )
     {
@@ -222,6 +219,37 @@ WXDWORD wxChoice::MSWGetStyle(long style, WXDWORD *exstyle) const
         msStyle |= CBS_SORT;
 
     return msStyle;
+}
+
+#ifndef EP_EDITTEXT
+    #define EP_EDITTEXT         1
+    #define ETS_NORMAL          1
+#endif
+
+wxVisualAttributes
+wxChoice::GetClassDefaultAttributes(wxWindowVariant WXUNUSED(variant))
+{
+    // it is important to return valid values for all attributes from here,
+    // GetXXX() below rely on this
+    wxVisualAttributes attrs;
+
+    // FIXME: Use better dummy window?
+    wxWindow* wnd = wxTheApp->GetTopWindow();
+
+    attrs.font = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+
+    // there doesn't seem to be any way to get the text colour using themes
+    // API: TMT_TEXTCOLOR doesn't work neither for EDIT nor COMBOBOX
+    attrs.colFg = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+
+    // NB: use EDIT, not COMBOBOX (the latter works in XP but not Vista)
+    attrs.colBg = wnd->MSWGetThemeColour(L"EDIT",
+                                         EP_EDITTEXT, 
+                                         ETS_NORMAL,
+                                         ThemeColourBackground,
+                                         wxSYS_COLOUR_WINDOW);
+
+    return attrs;
 }
 
 wxChoice::~wxChoice()

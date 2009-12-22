@@ -2,7 +2,7 @@
 // Name:        ribbon/gallery.h
 // Purpose:     interface of wxRibbonGallery
 // Author:      Peter Cawley
-// RCS-ID:      $Id: gallery.h 61944 2009-09-16 12:06:02Z PJC $
+// RCS-ID:      $Id: gallery.h 62957 2009-12-20 14:50:50Z FM $
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +58,8 @@ public:
         Construct a ribbon gallery with the given parameters.
         @param parent
             Parent window for the gallery (typically a wxRibbonPanel).
+        @param id
+            An identifier for the gallery. @c wxID_ANY is taken to mean a default.
         @param pos
             Initial position of the gallery.
         @param size

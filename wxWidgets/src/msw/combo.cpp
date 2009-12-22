@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: combo.cpp 61834 2009-09-05 12:39:12Z JMS $
+// RCS-ID:      $Id: combo.cpp 62960 2009-12-21 15:20:37Z JMS $
 // Copyright:   (c) 2005 Jaakko Salli
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -221,42 +221,6 @@ wxComboCtrl::~wxComboCtrl()
 {
 }
 
-void wxComboCtrl::OnThemeChange()
-{
-    // there doesn't seem to be any way to get the text colour using themes
-    // API: TMT_TEXTCOLOR doesn't work neither for EDIT nor COMBOBOX
-    SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
-
-#if wxUSE_UXTHEME
-    wxUxThemeEngine * const theme = wxUxThemeEngine::GetIfActive();
-    if ( theme )
-    {
-        // NB: use EDIT, not COMBOBOX (the latter works in XP but not Vista)
-        wxUxThemeHandle hTheme(this, L"EDIT");
-        COLORREF col;
-        HRESULT hr = theme->GetThemeColor
-                            (
-                                hTheme,
-                                EP_EDITTEXT,
-                                ETS_NORMAL,
-                                TMT_FILLCOLOR,
-                                &col
-                            );
-        if ( SUCCEEDED(hr) )
-        {
-            SetBackgroundColour(wxRGBToColour(col));
-
-            // skip the call below
-            return;
-        }
-
-        wxLogApiError(wxT("GetThemeColor(EDIT, ETS_NORMAL, TMT_FILLCOLOR)"), hr);
-    }
-#endif
-
-    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-}
-
 void wxComboCtrl::OnResize()
 {
     //
@@ -397,6 +361,7 @@ wxComboCtrl::PrepareBackground( wxDC& dc, const wxRect& rect, int flags ) const
     //if ( hTheme )
     //    theme = wxUxThemeEngine::GetIfActive();
 
+    wxColour fgCol;
     wxColour bgCol;
     bool doDrawDottedEdge = false;
     bool doDrawSelRect = true;
@@ -422,28 +387,31 @@ wxComboCtrl::PrepareBackground( wxDC& dc, const wxRect& rect, int flags ) const
             if ( (m_iFlags & wxCC_FULL_BUTTON) && !(flags & wxCONTROL_ISSUBMENU) )
             {
                 // Vista style read-only combo
+                fgCol = GetForegroundColour();
+                bgCol = GetBackgroundColour();
                 doDrawSelRect = false;
                 doDrawDottedEdge = true;
             }
             else
             {
-                dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT) );
+                fgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT);
                 bgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
             }
         }
         else
         {
-            dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT) );
+            fgCol = GetForegroundColour();
             bgCol = GetBackgroundColour();
             doDrawSelRect = false;
         }
     }
     else
     {
-        dc.SetTextForeground( wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT) );
+        fgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
         bgCol = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
     }
 
+    dc.SetTextForeground(fgCol);
     dc.SetBrush(bgCol);
     if ( doDrawSelRect )
     {

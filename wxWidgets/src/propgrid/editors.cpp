@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2007-04-14
-// RCS-ID:      $Id: editors.cpp 62863 2009-12-12 10:10:15Z JMS $
+// RCS-ID:      $Id: editors.cpp 62955 2009-12-20 12:48:41Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -173,6 +173,9 @@ void wxPGEditor::DrawValue( wxDC& dc, const wxRect& rect, wxPGProperty* property
 {
     if ( !property->IsValueUnspecified() )
         dc.DrawText( text, rect.x+wxPG_XBEFORETEXT, rect.y );
+    else
+        dc.DrawText( property->GetGrid()->GetUnspecifiedValueText(),
+                     rect.x+wxPG_XBEFORETEXT, rect.y );
 }
 
 bool wxPGEditor::GetValueFromControl( wxVariant&, wxPGProperty*, wxWindow* ) const
@@ -232,9 +235,9 @@ wxPGWindowList wxPGTextCtrlEditor::CreateControls( wxPropertyGrid* propGrid,
          property->GetChildCount() )
         return NULL;
 
-    if ( !property->IsValueUnspecified() )
-        text = property->GetValueAsString(property->HasFlag(wxPG_PROP_READONLY) ?
-                                            0 : wxPG_EDITABLE_VALUE);
+    int argFlags = property->HasFlag(wxPG_PROP_READONLY) ? 
+        0 : wxPG_EDITABLE_VALUE;
+    text = property->GetValueAsString(argFlags);
 
     int flags = 0;
     if ( (property->GetFlags() & wxPG_PROP_PASSWORD) &&
@@ -280,6 +283,9 @@ void wxPGTextCtrlEditor::UpdateControl( wxPGProperty* property, wxWindow* ctrl )
     else
         s = property->GetDisplayedString();
 
+    wxPropertyGrid* pg = property->GetGrid();
+
+    pg->SetupTextCtrlValue(s);
     tc->SetValue(s);
 
     //
@@ -367,7 +373,11 @@ void wxPGTextCtrlEditor::SetValueToUnspecified( wxPGProperty* property, wxWindow
     wxPropertyGrid* pg = property->GetGrid();
     wxASSERT(pg);  // Really, property grid should exist if editor does
     if ( pg )
-        tc->SetValue(wxEmptyString);
+    {
+        wxString unspecValueText = pg->GetUnspecifiedValueText();
+        pg->SetupTextCtrlValue(unspecValueText);
+        tc->SetValue(unspecValueText);
+    }
 }
 
 
@@ -378,7 +388,10 @@ void wxPGTextCtrlEditor::SetControlStringValue( wxPGProperty* property, wxWindow
     wxPropertyGrid* pg = property->GetGrid();
     wxASSERT(pg);  // Really, property grid should exist if editor does
     if ( pg )
+    {
+        pg->SetupTextCtrlValue(txt);
         tc->SetValue(txt);
+    }
 }
 
 
@@ -896,9 +909,14 @@ wxWindow* wxPGChoiceEditor::CreateControlsBase( wxPropertyGrid* propGrid,
             cb->SetText( defString );
     }
     else if ( !(extraStyle & wxCB_READONLY) && defString.length() )
+    {
+        propGrid->SetupTextCtrlValue(defString);
         cb->SetValue( defString );
+    }
     else
+    {
         cb->SetSelection( -1 );
+    }
 
 #ifdef __WXMSW__
     cb->Show();
@@ -970,7 +988,12 @@ bool wxPGChoiceEditor::OnEvent( wxPropertyGrid* propGrid, wxPGProperty* property
                     propGrid->SetInternalFlag(wxPG_FL_VALUE_CHANGE_IN_EVENT);
                 property->SetValueToUnspecified();
                 if ( !cb->HasFlag(wxCB_READONLY) )
-                    cb->GetTextCtrl()->SetValue(wxEmptyString);
+                {
+                    wxString unspecValueText;
+                    unspecValueText = propGrid->GetUnspecifiedValueText();
+                    propGrid->SetupTextCtrlValue(unspecValueText);
+                    cb->GetTextCtrl()->SetValue(unspecValueText);
+                }
                 return false;
             }
         }
@@ -998,10 +1021,13 @@ bool wxPGChoiceEditor::GetValueFromControl( wxVariant& variant, wxPGProperty* pr
 }
 
 
-void wxPGChoiceEditor::SetControlStringValue( wxPGProperty* WXUNUSED(property), wxWindow* ctrl, const wxString& txt ) const
+void wxPGChoiceEditor::SetControlStringValue( wxPGProperty* property,
+                                              wxWindow* ctrl,
+                                              const wxString& txt ) const
 {
     wxOwnerDrawnComboBox* cb = (wxOwnerDrawnComboBox*)ctrl;
     wxASSERT( cb );
+    property->GetGrid()->SetupTextCtrlValue(txt);
     cb->SetValue(txt);
 }
 
@@ -1014,10 +1040,25 @@ void wxPGChoiceEditor::SetControlIntValue( wxPGProperty* WXUNUSED(property), wxW
 }
 
 
-void wxPGChoiceEditor::SetValueToUnspecified( wxPGProperty* WXUNUSED(property), wxWindow* ctrl ) const
+void wxPGChoiceEditor::SetValueToUnspecified( wxPGProperty* property,
+                                              wxWindow* ctrl ) const
 {
     wxOwnerDrawnComboBox* cb = (wxOwnerDrawnComboBox*)ctrl;
-    cb->SetSelection(-1);
+
+    if ( !cb->HasFlag(wxCB_READONLY) )
+    {
+        wxPropertyGrid* pg = property->GetGrid();
+        if ( pg )
+        {
+            wxString tcText = pg->GetUnspecifiedValueText();
+            pg->SetupTextCtrlValue(tcText);
+            cb->SetValue(tcText);
+        }
+    }
+    else
+    {
+        cb->SetSelection(-1);
+    }
 }
 
 
@@ -1043,7 +1084,9 @@ WX_PG_IMPLEMENT_INTERNAL_EDITOR_CLASS(ComboBox,
 void wxPGComboBoxEditor::UpdateControl( wxPGProperty* property, wxWindow* ctrl ) const
 {
     wxOwnerDrawnComboBox* cb = (wxOwnerDrawnComboBox*)ctrl;
-    cb->SetValue(property->GetValueAsString(wxPG_EDITABLE_VALUE));
+    wxString s = property->GetValueAsString(wxPG_EDITABLE_VALUE);
+    property->GetGrid()->SetupTextCtrlValue(s);
+    cb->SetValue(s);
 
     // TODO: If string matches any selection, then select that.
 }
@@ -1510,7 +1553,7 @@ void wxPGCheckBoxEditor::SetControlIntValue( wxPGProperty* WXUNUSED(property), w
 
 void wxPGCheckBoxEditor::SetValueToUnspecified( wxPGProperty* WXUNUSED(property), wxWindow* ctrl ) const
 {
-    ((wxSimpleCheckBox*)ctrl)->m_state = 0;
+    ((wxSimpleCheckBox*)ctrl)->m_state = wxSCB_STATE_UNSPECIFIED;
     ctrl->Refresh();
 }
 

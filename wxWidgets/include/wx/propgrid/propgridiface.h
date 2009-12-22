@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-24
-// RCS-ID:      $Id: propgridiface.h 62416 2009-10-15 16:39:19Z JMS $
+// RCS-ID:      $Id: propgridiface.h 62880 2009-12-14 15:15:35Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1053,8 +1053,7 @@ public:
     void SetPropertyValueUnspecified( wxPGPropArg id )
     {
         wxPG_PROP_ARG_CALL_PROLOG()
-        wxVariant nullVariant;
-        SetPropVal(p, nullVariant);
+        p->SetValueToUnspecified();
     }
 
 #ifndef SWIG

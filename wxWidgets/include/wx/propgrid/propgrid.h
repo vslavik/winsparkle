@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2004-09-25
-// RCS-ID:      $Id: propgrid.h 62867 2009-12-13 12:00:04Z JMS $
+// RCS-ID:      $Id: propgrid.h 62955 2009-12-20 12:48:41Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1238,6 +1238,14 @@ public:
     {
         return m_sortFunction;
     }
+
+    /**
+        Returns (visual) text representation of the unspecified
+        property value.
+
+        @param argFlags For internal use only.
+    */
+    wxString GetUnspecifiedValueText( int argFlags = 0 ) const;
 
     /** Set virtual width for this particular page. Width -1 indicates that the
         virtual width should be disabled. */

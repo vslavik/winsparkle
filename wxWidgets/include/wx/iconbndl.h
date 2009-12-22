@@ -4,7 +4,7 @@
 // Author:      Mattia barbon
 // Modified by:
 // Created:     23.03.02
-// RCS-ID:      $Id: iconbndl.h 61083 2009-06-16 21:57:23Z VZ $
+// RCS-ID:      $Id: iconbndl.h 62891 2009-12-15 11:25:11Z VS $
 // Copyright:   (c) Mattia Barbon
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,10 +32,10 @@ public:
     wxIconBundle();
 
     // initializes the bundle with the icon(s) found in the file
-#if wxUSE_STREAMS
+#if wxUSE_STREAMS && wxUSE_IMAGE
     wxIconBundle(const wxString& file, wxBitmapType type = wxBITMAP_TYPE_ANY);
     wxIconBundle(wxInputStream& stream, wxBitmapType type = wxBITMAP_TYPE_ANY);
-#endif // wxUSE_STREAMS
+#endif // wxUSE_STREAMS && wxUSE_IMAGE
 
     // initializes the bundle with a single icon
     wxIconBundle(const wxIcon& icon);
@@ -45,10 +45,10 @@ public:
     // adds all the icons contained in the file to the collection,
     // if the collection already contains icons with the same
     // width and height, they are replaced
-#if wxUSE_STREAMS
+#if wxUSE_STREAMS && wxUSE_IMAGE
     void AddIcon(const wxString& file, wxBitmapType type = wxBITMAP_TYPE_ANY);
     void AddIcon(wxInputStream& stream, wxBitmapType type = wxBITMAP_TYPE_ANY);
-#endif // wxUSE_STREAMS
+#endif // wxUSE_STREAMS && wxUSE_IMAGE
 
     // adds the icon to the collection, if the collection already
     // contains an icon with the same width and height, it is

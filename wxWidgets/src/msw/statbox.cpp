@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: statbox.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: statbox.cpp 62932 2009-12-18 20:49:23Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -365,7 +365,7 @@ void wxStaticBox::PaintBackground(wxDC& dc, const RECT& rc)
     //     see http://groups.google.com/groups?selm=4252E932.3080801%40able.es
     wxWindow *parent = GetParent();
     wxMSWDCImpl *impl = (wxMSWDCImpl*) dc.GetImpl();
-    HBRUSH hbr = (HBRUSH)parent->MSWGetBgBrush(impl->GetHDC(), GetHWND());
+    HBRUSH hbr = (HBRUSH)parent->MSWGetBgBrush(impl->GetHDC(), this);
 
     // if there is no special brush for painting this control, just use the
     // solid background colour

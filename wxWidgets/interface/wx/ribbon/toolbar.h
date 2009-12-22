@@ -2,7 +2,7 @@
 // Name:        ribbon/toolbar.h
 // Purpose:     interface of wxRibbonToolBar
 // Author:      Peter Cawley
-// RCS-ID:      $Id: toolbar.h 61944 2009-09-16 12:06:02Z PJC $
+// RCS-ID:      $Id: toolbar.h 62957 2009-12-20 14:50:50Z FM $
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,8 +39,11 @@ public:
 
     /**
         Construct a ribbon tool bar with the given parameters.
+        
         @param parent
             Parent window for the tool bar (typically a wxRibbonPanel).
+        @param id
+            An identifier for the toolbar. @c wxID_ANY is taken to mean a default.
         @param pos
             Initial position of the tool bar.
         @param size
@@ -121,9 +124,7 @@ public:
         @return An opaque pointer which can be used only with other tool bar
             methods.
             
-        @see AddDropdownTool()
-        @see AddHybridTool()
-        @saa AddSeparator()
+        @see AddDropdownTool(), AddHybridTool(), AddSeparator()
     */
     virtual wxRibbonToolBarToolBase* AddTool(
                 int tool_id,

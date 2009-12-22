@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     01/02/97
-// RCS-ID:      $Id: dc.cpp 62288 2009-10-05 22:56:27Z VZ $
+// RCS-ID:      $Id: dc.cpp 62926 2009-12-18 14:47:18Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1772,17 +1772,21 @@ void wxMSWDCImpl::DoGetTextExtent(const wxString& string, wxCoord *x, wxCoord *y
     }
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
 
-    TEXTMETRIC tm;
-    ::GetTextMetrics(GetHdc(), &tm);
-
     if (x)
         *x = sizeRect.cx;
     if (y)
         *y = sizeRect.cy;
-    if (descent)
-        *descent = tm.tmDescent;
-    if (externalLeading)
-        *externalLeading = tm.tmExternalLeading;
+
+    if ( descent || externalLeading )
+    {
+        TEXTMETRIC tm;
+        ::GetTextMetrics(GetHdc(), &tm);
+
+        if (descent)
+            *descent = tm.tmDescent;
+        if (externalLeading)
+            *externalLeading = tm.tmExternalLeading;
+    }
 
     if ( hfontOld )
     {

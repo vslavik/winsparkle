@@ -2,15 +2,15 @@
 // Name:        clntdata.h
 // Purpose:     interface of wxClientData[Container] and wxStringClientData
 // Author:      wxWidgets team
-// RCS-ID:      $Id: clntdata.h 55842 2008-09-24 23:29:43Z FM $
+// RCS-ID:      $Id: clntdata.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
 /**
     @class wxClientDataContainer
 
-    This class is a mixin that provides storage and management of "client
-    data." This data can either be of type void - in which case the data
+    This class is a mixin that provides storage and management of "client data".
+    This data can either be of type void - in which case the data
     @e container does not take care of freeing the data again or it is of
     type wxClientData or its derivatives. In that case the container will free
     the memory itself later. Note that you @e must not assign both void data

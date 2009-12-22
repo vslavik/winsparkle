@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: stattext.cpp 61169 2009-06-22 20:36:13Z VZ $
+// RCS-ID:      $Id: stattext.cpp 62935 2009-12-18 22:31:54Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -100,6 +100,11 @@ bool wxStaticText::Create(wxWindow *parent,
     // we set the label here and not through MSWCreateControl() because we
     // need to do many operation on it for ellipsization&markup support
     SetLabel(label);
+
+    // as we didn't pass the correct label to MSWCreateControl(), it didn't set
+    // the initial size correctly -- do it now
+    InvalidateBestSize();
+    SetInitialSize(size);
 
     // NOTE: if the label contains ampersand characters which are interpreted as
     //       accelerators, they will be rendered (at least on WinXP) only if the

@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2004-09-25
-// RCS-ID:      $Id: propgrid.cpp 62867 2009-12-13 12:00:04Z JMS $
+// RCS-ID:      $Id: propgrid.cpp 62955 2009-12-20 12:48:41Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -779,9 +779,12 @@ bool wxPropertyGrid::AddToSelectionFromInputEvent( wxPGProperty* prop,
                                                    wxMouseEvent* mouseEvent,
                                                    int selFlags )
 {
+    const wxArrayPGProperty& selection = GetSelectedProperties();
     bool alreadySelected = m_pState->DoIsPropertySelected(prop);
     bool res = true;
-    bool addToExistingSelection;
+
+    // Set to 2 if also add all items in between
+    int addToExistingSelection = 0;
 
     if ( GetExtraStyle() & wxPG_EX_MULTIPLE_SELECTION )
     {
@@ -799,21 +802,24 @@ bool wxPropertyGrid::AddToSelectionFromInputEvent( wxPGProperty* prop,
             }
             else
             {
-                addToExistingSelection = mouseEvent->ShiftDown();
+                if ( mouseEvent->ControlDown() )
+                {
+                    addToExistingSelection = 1;
+                }
+                else if ( mouseEvent->ShiftDown() )
+                {
+                    if ( selection.size() > 0 && !prop->IsCategory() )
+                        addToExistingSelection = 2;
+                    else
+                        addToExistingSelection = 1;
+                }
             }
         }
-        else
-        {
-            addToExistingSelection = false;
-        }
-    }
-    else
-    {
-        addToExistingSelection = false;
     }
 
-    if ( addToExistingSelection )
+    if ( addToExistingSelection == 1 )
     {
+        // Add/remove one
         if ( !alreadySelected )
         {
             res = DoAddToSelection(prop, selFlags);
@@ -821,6 +827,59 @@ bool wxPropertyGrid::AddToSelectionFromInputEvent( wxPGProperty* prop,
         else if ( GetSelectedProperties().size() > 1 )
         {
             res = DoRemoveFromSelection(prop, selFlags);
+        }
+    }
+    else if ( addToExistingSelection == 2 )
+    {
+        // Add this, and all in between
+
+        // Find top selected property
+        wxPGProperty* topSelProp = selection[0];
+        int topSelPropY = topSelProp->GetY();
+        for ( unsigned int i=1; i<selection.size(); i++ )
+        {
+            wxPGProperty* p = selection[i];
+            int y = p->GetY();
+            if ( y < topSelPropY )
+            {
+                topSelProp = p;
+                topSelPropY = y;
+            }
+        }
+
+        wxPGProperty* startFrom;
+        wxPGProperty* stopAt;
+
+        if ( prop->GetY() <= topSelPropY )
+        {
+            // Property is above selection (or same)
+            startFrom = prop;
+            stopAt = topSelProp;
+        }
+        else
+        {
+            // Property is below selection
+            startFrom = topSelProp;
+            stopAt = prop;
+        }
+
+        // Iterate through properties in-between, and select them
+        wxPropertyGridIterator it;
+
+        for ( it = GetIterator(wxPG_ITERATE_VISIBLE, startFrom);
+              !it.AtEnd();
+              it++ )
+        {
+            wxPGProperty* p = *it;
+
+            if ( !p->IsCategory() &&
+                 !m_pState->DoIsPropertySelected(p) )
+            {
+                DoAddToSelection(p, selFlags);
+            }
+
+            if ( p == stopAt )
+                break;
         }
     }
     else
@@ -3318,17 +3377,26 @@ void wxPropertyGrid::HandleCustomEditorEvent( wxEvent &event )
 
     //
     // Filter out excess wxTextCtrl modified events
-    if ( event.GetEventType() == wxEVT_COMMAND_TEXT_UPDATED &&
-         wnd &&
-         wnd->IsKindOf(CLASSINFO(wxTextCtrl)) )
+    if ( event.GetEventType() == wxEVT_COMMAND_TEXT_UPDATED && wnd )
     {
-        wxTextCtrl* tc = (wxTextCtrl*) wnd;
+        if ( wnd->IsKindOf(CLASSINFO(wxTextCtrl)) )
+        {
+            wxTextCtrl* tc = (wxTextCtrl*) wnd;
 
-        wxString newTcValue = tc->GetValue();
-        if ( m_prevTcValue == newTcValue )
-            return;
+            wxString newTcValue = tc->GetValue();
+            if ( m_prevTcValue == newTcValue )
+                return;
+            m_prevTcValue = newTcValue;
+        }
+        else if ( wnd->IsKindOf(CLASSINFO(wxComboCtrl)) )
+        {
+            wxComboCtrl* cc = (wxComboCtrl*) wnd;
 
-        m_prevTcValue = newTcValue;
+            wxString newTcValue = cc->GetTextCtrl()->GetValue();
+            if ( m_prevTcValue == newTcValue )
+                return;
+            m_prevTcValue = newTcValue;
+        }
     }
 
     SetInternalFlag(wxPG_FL_IN_HANDLECUSTOMEDITOREVENT);
@@ -3559,6 +3627,12 @@ void wxPropertyGrid::CustomSetCursor( int type, bool override )
     SetCursor( *cursor );
 
     m_curcursor = type;
+}
+
+wxString
+wxPropertyGrid::GetUnspecifiedValueText( int WXUNUSED(argFlags) ) const
+{
+    return wxEmptyString;
 }
 
 // -----------------------------------------------------------------------
@@ -4191,7 +4265,9 @@ bool wxPropertyGrid::DoHideProperty( wxPGProperty* p, bool hide, int flags )
 
 void wxPropertyGrid::RecalculateVirtualSize( int forceXPos )
 {
-    if ( (m_iFlags & wxPG_FL_RECALCULATING_VIRTUAL_SIZE) ||
+    // Don't check for !HasInternalFlag(wxPG_FL_INITIALIZED) here. Otherwise
+    // virtual size calculation may go wrong.
+    if ( HasInternalFlag(wxPG_FL_RECALCULATING_VIRTUAL_SIZE) ||
          m_frozen ||
          !m_pState )
         return;
@@ -5495,6 +5571,8 @@ bool wxPropertyGrid::IsEditorFocused() const
 void wxPropertyGrid::HandleFocusChange( wxWindow* newFocused )
 {
     unsigned int oldFlags = m_iFlags;
+    bool wasEditorFocused = false;
+    wxWindow* wndEditor = m_wndEditor;
 
     m_iFlags &= ~(wxPG_FL_FOCUSED);
 
@@ -5503,14 +5581,29 @@ void wxPropertyGrid::HandleFocusChange( wxWindow* newFocused )
     // This must be one of nextFocus' parents.
     while ( parent )
     {
+        if ( parent == wndEditor )
+        {
+            wasEditorFocused = true;
+        }
         // Use m_eventObject, which is either wxPropertyGrid or
         // wxPropertyGridManager, as appropriate.
-        if ( parent == m_eventObject )
+        else if ( parent == m_eventObject )
         {
             m_iFlags |= wxPG_FL_FOCUSED;
             break;
         }
         parent = parent->GetParent();
+    }
+
+    // Notify editor control when it receives a focus
+    if ( wasEditorFocused && m_curFocused != newFocused )
+    {
+        wxPGProperty* p = GetSelection();
+        if ( p )
+        {
+            const wxPGEditor* editor = p->GetEditorClass();
+            editor->OnFocus(p, GetEditorControl());
+        }
     }
 
     m_curFocused = newFocused;

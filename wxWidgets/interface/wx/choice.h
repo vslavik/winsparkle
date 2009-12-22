@@ -2,7 +2,7 @@
 // Name:        choice.h
 // Purpose:     interface of wxChoice
 // Author:      wxWidgets team
-// RCS-ID:      $Id: choice.h 62451 2009-10-18 17:47:01Z MBN $
+// RCS-ID:      $Id: choice.h 62958 2009-12-20 15:07:08Z FM $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,6 @@ public:
     */
     wxChoice();
 
-    //@{
     /**
         Constructor, creating and showing a choice.
 
@@ -127,7 +126,6 @@ public:
             long style = 0,
             const wxValidator& validator = wxDefaultValidator,
             const wxString& name = wxChoiceNameStr );
-    //@}
 
     /**
         Destructor, destroying the choice item.

@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-23
-// RCS-ID:      $Id: property.h 62764 2009-12-02 17:28:45Z PC $
+// RCS-ID:      $Id: property.h 62880 2009-12-14 15:15:35Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -2043,7 +2043,7 @@ public:
     void SetValueToUnspecified()
     {
         wxVariant val;  // Create NULL variant
-        SetValue(val);
+        SetValue(val, NULL, wxPG_SETVAL_REFRESH_EDITOR);
     }
 
     // Helper function (for wxPython bindings and such) for settings protected
