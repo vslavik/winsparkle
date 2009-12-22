@@ -317,12 +317,16 @@
         <if cond="TARGET_CPU=='IA64'">/MACHINE:IA64</if>
     </set>
 
+    <!-- WinSparkle-specific flags:
+           /GF /GL   global optimization
+           /Os       favor small code (for global optim.)
+      -->
+    <set var="WINSPARKLE_FLAGS">
+        <if cond="BUILD=='release'">/GF /GL /Os</if>
+    </set>
+
     <template id="common_settings">
-        <!-- WinSparkle-specific flags:
-               /GF /GL   global optimization
-               /Os       favor small code (for global optim.)
-          -->
-        <cxxflags-msvc>/GF /GL /Os</cxxflags-msvc>
+        <cxxflags-msvc>$(WINSPARKLE_FLAGS)</cxxflags-msvc>
 
         <debug-info>$(DEBUGINFO)</debug-info>
         <debug-runtime-libs>$(DEBUGRUNTIME)</debug-runtime-libs>
