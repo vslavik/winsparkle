@@ -23,51 +23,42 @@
  *
  */
 
-#include "updatechecker.h"
-#include "appcast.h"
-#include "ui.h"
-#include "error.h"
-#include "settings.h"
-#include "download.h"
+#ifndef _appcast_h_
+#define _appcast_h_
+
+#include <string>
 
 namespace winsparkle
 {
 
-UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
+/**
+    This class contains information from the appcast.
+ */
+struct Appcast
 {
-}
+    /// App version
+    std::string Version;
+
+    /// URL of the update
+    std::string DownloadURL;
+
+    /// URL of the release notes page
+    std::string ReleaseNotesURL;
 
 
-void UpdateChecker::Run()
-{
-    // no initialization to do, so signal readiness immediately
-    SignalReady();
+    /**
+        Initializes the struct with data from XML appcast feed.
 
-    try
-    {
-        const std::string url = Settings::Get().AppcastURL;
-        if ( url.empty() )
-            throw std::runtime_error("Appcast URL not specified.");
+        If the feed contains multiple entries, only the latest one is read,
+        the rest is ignored.
 
-        StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml);
+        Throws on error.
 
-        Appcast appcast;
-        appcast.Load(appcast_xml.data);
-
-        // FIXME: really check appcast data...
-        OutputDebugStringA("WinSparkle appcast data:\n");
-        OutputDebugStringA(("    Version:       " + appcast.Version + "\n").c_str());
-        OutputDebugStringA(("    Download:      " + appcast.DownloadURL + "\n").c_str());
-        OutputDebugStringA(("    Release notes: " + appcast.ReleaseNotesURL + "\n").c_str());
-
-        UI::NotifyNoUpdates();
-    }
-    catch ( ... )
-    {
-        UI::NotifyNoUpdates();
-        throw;
-    }
-}
+        @param xml Appcast feed data.
+     */
+    void Load(const std::string& xml);
+};
 
 } // namespace winsparkle
+
+#endif // _appcast_h_
