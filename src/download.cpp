@@ -27,6 +27,7 @@
 #include "error.h"
 #include "settings.h"
 
+#include <string>
 #include <windows.h>
 #include <wininet.h>
 
@@ -65,13 +66,13 @@ struct InetHandle
 
 void DownloadFile(const std::string& url, IDownloadSink *sink)
 {
-    // FIXME -- use application's name instead
-    #include "winsparkle-version.h"
-    const char *userAgent = "WinSparkle " WIN_SPARKLE_VERSION_STRING;
+    const Settings& settings = Settings::Get();
+    std::wstring userAgent =
+        settings.GetAppName() + L" " + settings.GetAppVersion();
 
-    InetHandle inet = InternetOpenA
+    InetHandle inet = InternetOpen
                       (
-                          userAgent,
+                          userAgent.c_str(),
                           INTERNET_OPEN_TYPE_PRECONFIG,
                           NULL, // lpszProxyName
                           NULL, // lpszProxyBypass

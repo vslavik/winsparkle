@@ -223,7 +223,7 @@ void UpdateChecker::Run()
 
     try
     {
-        const std::string url = Settings::Get().AppcastURL;
+        const std::string url = Settings::Get().GetAppcastURL();
         if ( url.empty() )
             throw std::runtime_error("Appcast URL not specified.");
 

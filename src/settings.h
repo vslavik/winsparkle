@@ -50,12 +50,28 @@ public:
     /// Returns the Settings singleton.
     static Settings& Get();
 
-    /// Location of the appcast
-    /// @todo retrieve this from resources
-    std::string AppcastURL;
+    /// Get location of the appcast
+    std::string GetAppcastURL() const { return m_appcastURL; }
+
+    /// Return application name
+    std::wstring GetAppName() const
+        { return GetVerInfoField(TEXT("ProductName")); }
+
+    /// Return (human-readable) application version
+    std::wstring GetAppVersion() const
+        { return GetVerInfoField(TEXT("ProductVersion")); }
+
+    /// Set appcast location
+    void SetAppcastURL(const char *url) { m_appcastURL = url; }
 
 private:
     Settings() {}
+
+    // Get given field from the VERSIONINFO/StringFileInfo resource
+    static std::wstring GetVerInfoField(const wchar_t *field);
+
+private:
+    std::string m_appcastURL;
 
     static Settings ms_instance;
 };
