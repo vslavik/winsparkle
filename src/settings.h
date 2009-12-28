@@ -56,6 +56,8 @@ public:
 
 private:
     Settings() {}
+
+    static Settings ms_instance;
 };
 
 } // namespace winsparkle

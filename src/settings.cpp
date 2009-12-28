@@ -30,10 +30,11 @@ namespace winsparkle
 {
 
 
+Settings Settings::ms_instance;
+
 Settings& Settings::Get()
 {
-    static Settings s_instance;
-    return s_instance;
+    return ms_instance;
 }
 
 
