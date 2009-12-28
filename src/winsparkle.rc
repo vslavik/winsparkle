@@ -58,7 +58,7 @@ UpdateAvailable ICON "../artwork/software-update-available.ico"
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904E4" // US English, multilingual
+        BLOCK "040904B0" // US English, Unicode
         BEGIN
             VALUE "Comments", "WinSparkle updates checking library (http://winsparkle.org)."
             VALUE "CompanyName", "winsparkle.org\0"
@@ -70,6 +70,11 @@ BEGIN
             VALUE "ProductName", "WinSparkle\0"
             VALUE "ProductVersion", VER_STR "\0"
         END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04B0
     END
 END
 
