@@ -40,7 +40,12 @@ namespace winsparkle
 class Win32Exception : public std::runtime_error
 {
 public:
-    Win32Exception();
+    /**
+        Creates the exception.
+
+        @param extraMsg  Extra message shown in front of the win32 error.
+     */
+    Win32Exception(const char *extraMsg = NULL);
 };
 
 /**

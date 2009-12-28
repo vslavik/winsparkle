@@ -38,9 +38,15 @@ namespace winsparkle
 namespace
 {
 
-std::string GetWin32ErrorMessage(DWORD err)
+std::string GetWin32ErrorMessage(const char *extraMsg, DWORD err)
 {
     std::string msg;
+
+    if ( extraMsg )
+    {
+        msg = extraMsg;
+        msg += ": ";
+    }
 
     LPSTR buf;
     bool ok = FormatMessageA
@@ -56,7 +62,7 @@ std::string GetWin32ErrorMessage(DWORD err)
 
     if ( ok )
     {
-        msg = buf;
+        msg += buf;
         LocalFree(buf);
     }
 
@@ -70,8 +76,8 @@ std::string GetWin32ErrorMessage(DWORD err)
                           Win32Exception class
  *--------------------------------------------------------------------------*/
 
-Win32Exception::Win32Exception()
-    : std::runtime_error(GetWin32ErrorMessage(GetLastError()))
+Win32Exception::Win32Exception(const char *extraMsg)
+    : std::runtime_error(GetWin32ErrorMessage(extraMsg, GetLastError()))
 {
 }
 
