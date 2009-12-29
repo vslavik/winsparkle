@@ -102,11 +102,12 @@ UpdateDialog::UpdateDialog()
     m_infoSizer = new wxBoxSizer(wxVERTICAL);
     topSizer->Add(m_infoSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
 
+    m_infoSizer->AddStretchSpacer(1);
     m_message = new wxStaticText(this, wxID_ANY, "");
-    m_infoSizer->Add(m_message, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
-
+    m_infoSizer->Add(m_message, wxSizerFlags(0).Expand());
     m_progress = new wxGauge(this, wxID_ANY, 100, wxDefaultPosition, wxSize(300, 16));
-    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand());
+    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP, 10));
+    m_infoSizer->AddStretchSpacer(1);
 
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
     m_closeButton = new wxButton(this, wxID_CANCEL);
@@ -167,6 +168,8 @@ void UpdateDialog::StateCheckingUpdates()
     SHOW(m_closeButton);
     m_closeButton->SetLabel(_("Cancel"));
     EnablePulsing(true);
+
+    Layout();
 }
 
 
@@ -192,6 +195,8 @@ void UpdateDialog::StateNoUpdateFound()
     HIDE(m_progress);
     m_closeButton->SetLabel(_("Close"));
     EnablePulsing(false);
+
+    Layout();
 }
 
 
