@@ -27,6 +27,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "ui.h"
+#include "settings.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -148,7 +149,7 @@ void UpdateDialog::OnCloseButton(wxCommandEvent&)
 
 void UpdateDialog::OnClose(wxCloseEvent&)
 {
-    // We need to override this, because by default, wxDialog doesn't 
+    // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
 }
@@ -171,9 +172,22 @@ void UpdateDialog::StateCheckingUpdates()
 
 void UpdateDialog::StateNoUpdateFound()
 {
-    // FIXME: use Sparkle string -- "<version> is currently the newest version
-    //        available..."
-    m_message->SetLabel(_("No new updates are available."));
+    wxString msg;
+    try
+    {
+        msg = wxString::Format
+              (
+                  _("%s is currently the newest version available."),
+                  Settings::Get().GetAppVersion()
+              );
+    }
+    catch ( std::exception& )
+    {
+        // GetAppVersion() may fail
+        msg = "Error: Updates checking not properly configured.";
+    }
+
+    m_message->SetLabel(msg);
 
     HIDE(m_progress);
     m_closeButton->SetLabel(_("Close"));
