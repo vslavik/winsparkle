@@ -26,6 +26,7 @@
 #include "settings.h"
 
 #include "error.h"
+#include "utils.h"
 
 
 namespace winsparkle
@@ -47,20 +48,6 @@ Settings& Settings::Get()
 
 namespace
 {
-
-struct DataBuffer
-{
-    DataBuffer(size_t size)
-    {
-        data = new unsigned char[size];
-        ZeroMemory(data, size);
-    }
-
-    ~DataBuffer() { delete[] data; }
-
-    unsigned char *data;
-};
-
 
 struct TranslationInfo
 {

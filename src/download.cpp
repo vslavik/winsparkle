@@ -24,8 +24,11 @@
  */
 
 #include "download.h"
+
 #include "error.h"
 #include "settings.h"
+#include "utils.h"
+#include "winsparkle-version.h"
 
 #include <string>
 #include <windows.h>
@@ -68,7 +71,8 @@ void DownloadFile(const std::string& url, IDownloadSink *sink)
 {
     const Settings& settings = Settings::Get();
     std::wstring userAgent =
-        settings.GetAppName() + L"/" + settings.GetAppVersion();
+        settings.GetAppName() + L"/" + settings.GetAppVersion() +
+        L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
 
     InetHandle inet = InternetOpen
                       (

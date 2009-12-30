@@ -264,6 +264,10 @@
 					RelativePath=".\src\updatechecker.h"
 					>
 				</File>
+				<File
+					RelativePath=".\src\utils.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
