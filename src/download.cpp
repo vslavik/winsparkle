@@ -68,7 +68,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink)
 {
     const Settings& settings = Settings::Get();
     std::wstring userAgent =
-        settings.GetAppName() + L" " + settings.GetAppVersion();
+        settings.GetAppName() + L"/" + settings.GetAppVersion();
 
     InetHandle inet = InternetOpen
                       (
