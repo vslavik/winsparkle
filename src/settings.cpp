@@ -131,7 +131,6 @@ std::wstring Settings::GetVerInfoField(const wchar_t *field)
     UINT len;
     if ( !VerQueryValue(fi.data, key.c_str(), (LPVOID*)&value, &len) )
     {
-        std::string err;
         throw Win32Exception("Executable doesn't have required key in StringFileInfo");
     }
 
