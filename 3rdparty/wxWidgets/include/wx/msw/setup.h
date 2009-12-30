@@ -259,7 +259,7 @@
 // Default is 1
 //
 // Recommended setting: 1 as setting it to 0 disables many other things
-#define wxUSE_STREAMS       1
+#define wxUSE_STREAMS       0
 
 // This is not a real option but is used as the default value for
 // wxUSE_STD_IOSTREAM and wxUSE_STD_STRING.
@@ -289,7 +289,7 @@
 // Recommended setting: 1 if you use the standard streams anyhow and so
 //                      dependency on the standard streams library is not a
 //                      problem
-#define wxUSE_STD_IOSTREAM  wxUSE_STD_DEFAULT
+#define wxUSE_STD_IOSTREAM  0
 
 // Enable conversion to standard C++ string if 1.
 //
@@ -357,7 +357,7 @@
 // Recommended setting: 1 (wxFile is highly recommended as it is required by
 // i18n code, wxFileConfig and others)
 #define wxUSE_FILE          1
-#define wxUSE_FFILE         1
+#define wxUSE_FFILE         0
 
 // Use wxFSVolume class providing access to the configured/active mount points
 //
@@ -382,7 +382,7 @@
 #define wxUSE_TEXTFILE      0
 
 // i18n support: _() macro, wxLocale class. Requires wxTextFile.
-#define wxUSE_INTL          1
+#define wxUSE_INTL          0
 
 // Provide wxFoo_l() functions similar to standard foo() functions but taking
 // an extra locale parameter.
@@ -706,14 +706,14 @@
 // Recommended setting: 1
 #define wxUSE_ANIMATIONCTRL 0   // wxAnimationCtrl
 #define wxUSE_BUTTON        1   // wxButton
-#define wxUSE_BMPBUTTON     1   // wxBitmapButton
+#define wxUSE_BMPBUTTON     0   // wxBitmapButton
 #define wxUSE_CALENDARCTRL  0   // wxCalendarCtrl
 #define wxUSE_CHECKBOX      1   // wxCheckBox
 #define wxUSE_CHECKLISTBOX  0   // wxCheckListBox (requires wxUSE_OWNER_DRAWN)
-#define wxUSE_CHOICE        1   // wxChoice
-#define wxUSE_COLLPANE      1   // wxCollapsiblePane
+#define wxUSE_CHOICE        0   // wxChoice
+#define wxUSE_COLLPANE      0   // wxCollapsiblePane
 #define wxUSE_COLOURPICKERCTRL 0    // wxColourPickerCtrl
-#define wxUSE_COMBOBOX      1   // wxComboBox
+#define wxUSE_COMBOBOX      0   // wxComboBox
 #define wxUSE_DATAVIEWCTRL  0   // wxDataViewCtrl
 #define wxUSE_DATEPICKCTRL  0   // wxDatePickerCtrl
 #define wxUSE_DIRPICKERCTRL 0   // wxDirPickerCtrl
@@ -733,11 +733,11 @@
 #define wxUSE_SLIDER        0   // wxSlider
 #define wxUSE_SPINBTN       0   // wxSpinButton
 #define wxUSE_SPINCTRL      0   // wxSpinCtrl
-#define wxUSE_STATBOX       1   // wxStaticBox
-#define wxUSE_STATLINE      1   // wxStaticLine
+#define wxUSE_STATBOX       0   // wxStaticBox
+#define wxUSE_STATLINE      0   // wxStaticLine
 #define wxUSE_STATTEXT      1   // wxStaticText
 #define wxUSE_STATBMP       1   // wxStaticBitmap
-#define wxUSE_TEXTCTRL      1   // wxTextCtrl
+#define wxUSE_TEXTCTRL      0   // wxTextCtrl
 #define wxUSE_TOGGLEBTN     0   // requires wxButton
 #define wxUSE_TREECTRL      0   // wxTreeCtrl
 
@@ -873,7 +873,7 @@
 // ----------------------------------------------------------------------------
 
 // wxAcceleratorTable/Entry classes and support for them in wxMenu(Bar)
-#define wxUSE_ACCEL 1
+#define wxUSE_ACCEL 0
 
 // Hotkey support (currently Windows only)
 #define wxUSE_HOTKEY 0
@@ -905,7 +905,7 @@
 //
 // Recommended setting: 1 (set it to 0 if you don't use any of the controls
 // enumerated above, then this class is mostly useless too)
-#define wxUSE_IMAGLIST      1
+#define wxUSE_IMAGLIST      0
 
 // Use wxInfoBar class.
 //
@@ -952,7 +952,7 @@
 // Default is 1.
 //
 // Recommended setting: 1
-#define wxUSE_TOOLTIPS      1
+#define wxUSE_TOOLTIPS      0
 
 // wxValidator class and related methods
 #define wxUSE_VALIDATORS 0
@@ -982,7 +982,7 @@
 // Default is 1
 //
 // Recommended setting: 1 (unless it really doesn't work)
-#define wxUSE_COMMON_DIALOGS 1
+#define wxUSE_COMMON_DIALOGS 0
 
 // wxBusyInfo displays window with message when app is busy. Works in same way
 // as wxBusyCursor
