@@ -178,9 +178,12 @@ void UpdateDialog::StateNoUpdateFound()
     wxString msg;
     try
     {
+        // FIXME: Add bold "You're up to date!" heading.
+
         msg = wxString::Format
               (
-                  _("%s is currently the newest version available."),
+                  _("%s %s is currently the newest version available."),
+                  Settings::Get().GetAppName(),
                   Settings::Get().GetAppVersion()
               );
     }
