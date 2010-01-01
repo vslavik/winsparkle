@@ -44,6 +44,7 @@
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/timer.h>
+#include <wx/settings.h>
 
 #if !wxCHECK_VERSION(2,9,0)
 #error "wxWidgets >= 2.9 is required to compile this code"
@@ -72,13 +73,18 @@ private:
     void OnCloseButton(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
+    void SetMessage(const wxString& text);
+
 private:
     wxTimer       m_timer;
     wxSizer      *m_infoSizer;
     wxSizer      *m_buttonSizer;
+    wxStaticText *m_heading;
     wxStaticText *m_message;
     wxGauge      *m_progress;
     wxButton     *m_closeButton;
+
+    static const int MESSAGE_AREA_WIDTH = 300;
 };
 
 UpdateDialog::UpdateDialog()
@@ -102,10 +108,19 @@ UpdateDialog::UpdateDialog()
     m_infoSizer = new wxBoxSizer(wxVERTICAL);
     topSizer->Add(m_infoSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
 
-    m_infoSizer->AddStretchSpacer(1);
-    m_message = new wxStaticText(this, wxID_ANY, "");
+    m_heading = new wxStaticText(this, wxID_ANY, "");
+    wxFont bold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    bold.SetPointSize(bold.GetPointSize() + 1);
+    bold.SetWeight(wxFONTWEIGHT_BOLD);
+    m_heading->SetFont(bold);
+    m_infoSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+
+    m_message = new wxStaticText(this, wxID_ANY, "",
+                                 wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1));
     m_infoSizer->Add(m_message, wxSizerFlags(0).Expand());
-    m_progress = new wxGauge(this, wxID_ANY, 100, wxDefaultPosition, wxSize(300, 16));
+
+    m_progress = new wxGauge(this, wxID_ANY, 100,
+                             wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
     m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP, 10));
     m_infoSizer->AddStretchSpacer(1);
 
@@ -156,18 +171,27 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 }
 
 
+void UpdateDialog::SetMessage(const wxString& text)
+{
+    m_message->SetLabel(text);
+    m_message->Wrap(MESSAGE_AREA_WIDTH);
+}
+
+
 
 #define SHOW(c)    (c)->GetContainingSizer()->Show(c)
 #define HIDE(c)    (c)->GetContainingSizer()->Hide(c)
 
 void UpdateDialog::StateCheckingUpdates()
 {
-    m_message->SetLabel(_("Checking for updates..."));
+    SetMessage(_("Checking for updates..."));
 
-    SHOW(m_progress);
-    SHOW(m_closeButton);
     m_closeButton->SetLabel(_("Cancel"));
     EnablePulsing(true);
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    SHOW(m_closeButton);
 
     Layout();
 }
@@ -175,11 +199,11 @@ void UpdateDialog::StateCheckingUpdates()
 
 void UpdateDialog::StateNoUpdateFound()
 {
+    m_heading->SetLabel(_("You're up to date!"));
+
     wxString msg;
     try
     {
-        // FIXME: Add bold "You're up to date!" heading.
-
         msg = wxString::Format
               (
                   _("%s %s is currently the newest version available."),
@@ -193,11 +217,13 @@ void UpdateDialog::StateNoUpdateFound()
         msg = "Error: Updates checking not properly configured.";
     }
 
-    m_message->SetLabel(msg);
+    SetMessage(msg);
 
-    HIDE(m_progress);
     m_closeButton->SetLabel(_("Close"));
     EnablePulsing(false);
+
+    SHOW(m_heading);
+    HIDE(m_progress);
 
     Layout();
 }
