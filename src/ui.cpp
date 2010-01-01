@@ -71,6 +71,7 @@ struct LayoutChangesGuard
     ~LayoutChangesGuard()
     {
         m_win->Layout();
+        m_win->GetSizer()->SetSizeHints(m_win);
         m_win->Refresh();
         m_win->Thaw();
     }
@@ -78,12 +79,29 @@ struct LayoutChangesGuard
     wxWindow *m_win;
 };
 
+
+// shows/hides layout element
+void DoShowElement(wxWindow *w, bool show)
+{
+    w->GetContainingSizer()->Show(w, show, true/*recursive*/);
+}
+
+void DoShowElement(wxSizer *s, bool show)
+{
+    s->ShowItems(show);
+}
+
+
 } // anonymous namespace
 
 
 /*--------------------------------------------------------------------------*
                        Window for communicating with the user
  *--------------------------------------------------------------------------*/
+
+const int ID_SKIP_VERSION = wxNewId();
+const int ID_REMIND_LATER = wxNewId();
+const int ID_INSTALL = wxNewId();
 
 class UpdateDialog : public wxDialog
 {
@@ -94,6 +112,8 @@ public:
     void StateCheckingUpdates();
     // change state into "no updates found"
     void StateNoUpdateFound();
+    // change state into "a new version is available"
+    void StateUpdateAvailable(const Appcast& info);
 
 private:
     void EnablePulsing(bool enable);
@@ -111,6 +131,8 @@ private:
     wxStaticText *m_message;
     wxGauge      *m_progress;
     wxButton     *m_closeButton;
+    wxSizer      *m_closeButtonSizer;
+    wxSizer      *m_updateButtonsSizer;
 
     static const int MESSAGE_AREA_WIDTH = 300;
 };
@@ -122,8 +144,6 @@ UpdateDialog::UpdateDialog()
       m_timer(this)
 {
     SetIcons(wxICON(UpdateAvailable));
-
-    wxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
     wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
@@ -153,17 +173,39 @@ UpdateDialog::UpdateDialog()
     m_infoSizer->AddStretchSpacer(1);
 
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+    m_updateButtonsSizer->Add
+                          (
+                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+                            wxSizerFlags().Border(wxRIGHT, 20)
+                          );
+    m_updateButtonsSizer->AddStretchSpacer(1);
+    m_updateButtonsSizer->Add
+                          (
+                            new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
+                            wxSizerFlags().Border(wxRIGHT, 10)
+                          );
+    m_updateButtonsSizer->Add
+                          (
+                            new wxButton(this, ID_INSTALL, _("Install update")),
+                            wxSizerFlags()
+                          );
+    m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
+
+    m_closeButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     m_closeButton = new wxButton(this, wxID_CANCEL);
-    m_buttonSizer->Add(m_closeButton, wxSizerFlags(0).Border(wxLEFT));
+    m_closeButtonSizer->AddStretchSpacer(1);
+    m_closeButtonSizer->Add(m_closeButton, wxSizerFlags(0).Border(wxLEFT));
+    m_buttonSizer->Add(m_closeButtonSizer, wxSizerFlags(1));
 
-    mainSizer->Add(topSizer, wxSizerFlags(1).Expand());
-    mainSizer->Add
-               (
-                   m_buttonSizer,
-                   wxSizerFlags(0).Right().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10)
-               );
+    m_infoSizer->Add
+                 (
+                     m_buttonSizer,
+                     wxSizerFlags(0).Expand().Border(wxTOP, 20)
+                 );
 
-    SetSizerAndFit(mainSizer);
+    SetSizerAndFit(topSizer);
 
     Bind(wxEVT_CLOSE_WINDOW, &UpdateDialog::OnClose, this);
     Bind(wxEVT_TIMER, &UpdateDialog::OnTimer, this);
@@ -206,9 +248,8 @@ void UpdateDialog::SetMessage(const wxString& text)
 }
 
 
-
-#define SHOW(c)    (c)->GetContainingSizer()->Show(c)
-#define HIDE(c)    (c)->GetContainingSizer()->Hide(c)
+#define SHOW(c)    DoShowElement(c, true)
+#define HIDE(c)    DoShowElement(c, false)
 
 void UpdateDialog::StateCheckingUpdates()
 {
@@ -221,7 +262,8 @@ void UpdateDialog::StateCheckingUpdates()
 
     HIDE(m_heading);
     SHOW(m_progress);
-    SHOW(m_closeButton);
+    SHOW(m_closeButtonSizer);
+    HIDE(m_updateButtonsSizer);
 }
 
 
@@ -254,6 +296,37 @@ void UpdateDialog::StateNoUpdateFound()
 
     SHOW(m_heading);
     HIDE(m_progress);
+    SHOW(m_closeButtonSizer);
+    HIDE(m_updateButtonsSizer);
+}
+
+
+void UpdateDialog::StateUpdateAvailable(const Appcast& info)
+{
+    LayoutChangesGuard guard(this);
+
+    const wxString appname = Settings::Get().GetAppName();
+
+    m_heading->SetLabel(
+        wxString::Format(_("A new version of %s is available!"), appname));
+
+    SetMessage
+    (
+        wxString::Format
+        (
+            _("%s %s is now available (you have %s). Would you like to download it now?"),
+            appname,
+            info.Version,
+            Settings::Get().GetAppVersion()
+        )
+    );
+
+    EnablePulsing(false);
+
+    SHOW(m_heading);
+    HIDE(m_progress);
+    HIDE(m_closeButtonSizer);
+    SHOW(m_updateButtonsSizer);
 }
 
 
@@ -270,6 +343,9 @@ const int MSG_SHOW_CHECKING_UPDATES = wxNewId();
 // Notify the UI that there were no updates
 const int MSG_NO_UPDATE_FOUND = wxNewId();
 
+// Notify the UI that a new version is available
+const int MSG_UPDATE_AVAILABLE = wxNewId();
+
 
 /*--------------------------------------------------------------------------*
                                 Application
@@ -281,7 +357,7 @@ public:
     App();
 
     // Sends a message with ID @a msg to the app.
-    void SendMsg(int msg);
+    void SendMsg(int msg, void *data = NULL);
 
 private:
     void ShowWindow();
@@ -290,6 +366,7 @@ private:
     void OnTerminate(wxThreadEvent& event);
     void OnShowCheckingUpdates(wxThreadEvent& event);
     void OnNoUpdateFound(wxThreadEvent& event);
+    void OnUpdateAvailable(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -320,12 +397,16 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnTerminate, this, MSG_TERMINATE);
     Bind(wxEVT_COMMAND_THREAD, &App::OnShowCheckingUpdates, this, MSG_SHOW_CHECKING_UPDATES);
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
 }
 
 
-void App::SendMsg(int msg)
+void App::SendMsg(int msg, void *data)
 {
     wxThreadEvent *event = new wxThreadEvent(wxEVT_COMMAND_THREAD, msg);
+    if ( data )
+        event->SetClientData(data);
+
     wxQueueEvent(this, event);
 }
 
@@ -368,6 +449,18 @@ void App::OnNoUpdateFound(wxThreadEvent&)
 {
     if ( m_win )
         m_win->StateNoUpdateFound();
+}
+
+
+void App::OnUpdateAvailable(wxThreadEvent& event)
+{
+    ShowWindow();
+
+    Appcast *appcast = static_cast<Appcast*>(event.GetClientData());
+
+    m_win->StateUpdateAvailable(*appcast);
+
+    delete appcast;
 }
 
 
@@ -481,6 +574,14 @@ void UI::NotifyNoUpdates()
         return;
 
     uit.App().SendMsg(MSG_NO_UPDATE_FOUND);
+}
+
+
+/*static*/
+void UI::NotifyUpdateAvailable(const Appcast& info)
+{
+    UIThreadAccess uit;
+    uit.App().SendMsg(MSG_UPDATE_AVAILABLE, new Appcast(info));
 }
 
 

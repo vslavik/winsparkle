@@ -27,6 +27,7 @@
 #define _ui_h_
 
 #include "threads.h"
+#include "appcast.h"
 
 namespace winsparkle
 {
@@ -60,6 +61,13 @@ public:
         message is shown. Otherwise, does nothing.
      */
     static void NotifyNoUpdates();
+
+    /**
+        Notifies the UI that a new version is available.
+
+        If the UI thread isn't running yet, it will be launched.
+     */
+    static void NotifyUpdateAvailable(const Appcast& info);
 
     /**
         Shows the WinSparkle window in "checking for updates..." state.

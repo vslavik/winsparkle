@@ -30,6 +30,7 @@
 #include "error.h"
 #include "settings.h"
 #include "download.h"
+#include "utils.h"
 
 #include <vector>
 #include <cstdlib>
@@ -239,7 +240,17 @@ void UpdateChecker::Run()
         OutputDebugStringA(("    Download:      " + appcast.DownloadURL + "\n").c_str());
         OutputDebugStringA(("    Release notes: " + appcast.ReleaseNotesURL + "\n").c_str());
 
-        UI::NotifyNoUpdates();
+        const std::string currentVersion =
+                WideToAnsi(Settings::Get().GetAppVersion());
+
+        if ( CompareVersions(currentVersion, appcast.Version) < 0 )
+        {
+            UI::NotifyUpdateAvailable(appcast);
+        }
+        else
+        {
+            UI::NotifyNoUpdates();
+        }
     }
     catch ( ... )
     {
