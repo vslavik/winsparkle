@@ -398,6 +398,7 @@ public:
     void SendMsg(int msg, void *data = NULL);
 
 private:
+    void InitWindow();
     void ShowWindow();
 
     void OnWindowClose(wxCloseEvent& event);
@@ -449,17 +450,24 @@ void App::SendMsg(int msg, void *data)
 }
 
 
+void App::InitWindow()
+{
+    if ( !m_win )
+    {
+        m_win = new UpdateDialog();
+        m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnWindowClose, this);
+    }
+}
+
+
 void App::ShowWindow()
 {
-    if ( m_win )
-    {
-        m_win->Raise();
-        return;
-    }
+    wxASSERT( m_win );
 
-    m_win = new UpdateDialog();
-    m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnWindowClose, this);
+    m_win->Freeze();
     m_win->Show();
+    m_win->Thaw();
+    m_win->Raise();
 }
 
 
@@ -478,8 +486,9 @@ void App::OnTerminate(wxThreadEvent&)
 
 void App::OnShowCheckingUpdates(wxThreadEvent&)
 {
-    ShowWindow();
+    InitWindow();
     m_win->StateCheckingUpdates();
+    ShowWindow();
 }
 
 
@@ -492,13 +501,15 @@ void App::OnNoUpdateFound(wxThreadEvent&)
 
 void App::OnUpdateAvailable(wxThreadEvent& event)
 {
-    ShowWindow();
+    InitWindow();
 
     Appcast *appcast = static_cast<Appcast*>(event.GetClientData());
 
     m_win->StateUpdateAvailable(*appcast);
 
     delete appcast;
+
+    ShowWindow();
 }
 
 
