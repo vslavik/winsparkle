@@ -54,6 +54,34 @@ namespace winsparkle
 {
 
 /*--------------------------------------------------------------------------*
+                                  helpers
+ *--------------------------------------------------------------------------*/
+
+namespace
+{
+
+// Locks window updates to reduce flicker. Redoes layout in dtor.
+struct LayoutChangesGuard
+{
+    LayoutChangesGuard(wxWindow *win) : m_win(win)
+    {
+        m_win->Freeze();
+    }
+
+    ~LayoutChangesGuard()
+    {
+        m_win->Layout();
+        m_win->Refresh();
+        m_win->Thaw();
+    }
+
+    wxWindow *m_win;
+};
+
+} // anonymous namespace
+
+
+/*--------------------------------------------------------------------------*
                        Window for communicating with the user
  *--------------------------------------------------------------------------*/
 
@@ -184,6 +212,8 @@ void UpdateDialog::SetMessage(const wxString& text)
 
 void UpdateDialog::StateCheckingUpdates()
 {
+    LayoutChangesGuard guard(this);
+
     SetMessage(_("Checking for updates..."));
 
     m_closeButton->SetLabel(_("Cancel"));
@@ -192,13 +222,13 @@ void UpdateDialog::StateCheckingUpdates()
     HIDE(m_heading);
     SHOW(m_progress);
     SHOW(m_closeButton);
-
-    Layout();
 }
 
 
 void UpdateDialog::StateNoUpdateFound()
 {
+    LayoutChangesGuard guard(this);
+
     m_heading->SetLabel(_("You're up to date!"));
 
     wxString msg;
@@ -224,8 +254,6 @@ void UpdateDialog::StateNoUpdateFound()
 
     SHOW(m_heading);
     HIDE(m_progress);
-
-    Layout();
 }
 
 
