@@ -121,6 +121,10 @@ private:
     void OnCloseButton(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
+    void OnSkipVersion(wxCommandEvent&);
+    void OnRemindLater(wxCommandEvent&);
+    void OnInstall(wxCommandEvent&);
+
     void SetMessage(const wxString& text);
 
 private:
@@ -133,6 +137,9 @@ private:
     wxButton     *m_closeButton;
     wxSizer      *m_closeButtonSizer;
     wxSizer      *m_updateButtonsSizer;
+
+    // current appcast data (only valid after StateUpdateAvailable())
+    Appcast       m_appcast;
 
     static const int MESSAGE_AREA_WIDTH = 300;
 };
@@ -175,11 +182,14 @@ UpdateDialog::UpdateDialog()
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+    // FIXME: enable this button once it is implemented
+#if 0
     m_updateButtonsSizer->Add
                           (
                             new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
                             wxSizerFlags().Border(wxRIGHT, 20)
                           );
+#endif
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
@@ -210,6 +220,9 @@ UpdateDialog::UpdateDialog()
     Bind(wxEVT_CLOSE_WINDOW, &UpdateDialog::OnClose, this);
     Bind(wxEVT_TIMER, &UpdateDialog::OnTimer, this);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnCloseButton, this, wxID_CANCEL);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnSkipVersion, this, ID_SKIP_VERSION);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRemindLater, this, ID_REMIND_LATER);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnInstall, this, ID_INSTALL);
 }
 
 
@@ -233,11 +246,34 @@ void UpdateDialog::OnCloseButton(wxCommandEvent&)
     Close();
 }
 
+
 void UpdateDialog::OnClose(wxCloseEvent&)
 {
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
+}
+
+
+void UpdateDialog::OnSkipVersion(wxCommandEvent&)
+{
+    // FIXME: record that this version should be skipped
+}
+
+
+void UpdateDialog::OnRemindLater(wxCommandEvent&)
+{
+    // Just abort the update. Next time it's scheduled to run,
+    // the user will be prompted.
+    Close();
+}
+
+
+void UpdateDialog::OnInstall(wxCommandEvent&)
+{
+    // FIXME: download the file within WinSparkle UI, stop the app,
+    // elevate privileges, launch the installer
+    wxLaunchDefaultBrowser(m_appcast.DownloadURL);
 }
 
 
@@ -303,6 +339,8 @@ void UpdateDialog::StateNoUpdateFound()
 
 void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
+    m_appcast = info;
+
     LayoutChangesGuard guard(this);
 
     const wxString appname = Settings::Get().GetAppName();
