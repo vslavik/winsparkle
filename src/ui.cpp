@@ -96,8 +96,75 @@ void DoShowElement(wxSizer *s, bool show)
     s->ShowItems(show);
 }
 
+#define SHOW(c)    DoShowElement(c, true)
+#define HIDE(c)    DoShowElement(c, false)
 
 } // anonymous namespace
+
+
+/*--------------------------------------------------------------------------*
+                       Base class for WinSparkle dialogs
+ *--------------------------------------------------------------------------*/
+
+class WinSparkleDialog : public wxDialog
+{
+protected:
+    WinSparkleDialog();
+
+    void UpdateLayout();
+    static wxFont MakeBoldFont();
+    static wxFont MakeBigBoldFont();
+
+protected:
+    // sizer for the main area of the dialog (to the right of the icon)
+    wxSizer      *m_mainAreaSizer;
+};
+
+
+WinSparkleDialog::WinSparkleDialog()
+    : wxDialog(NULL, wxID_ANY, _("Software Update"),
+               wxDefaultPosition, wxDefaultSize,
+               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+    SetIcons(wxICON(UpdateAvailable));
+
+    wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+    topSizer->Add
+              (
+                  new wxStaticBitmap(this, wxID_ANY, bigIcon),
+                  wxSizerFlags(0).Border(wxALL, 10)
+              );
+
+    m_mainAreaSizer = new wxBoxSizer(wxVERTICAL);
+    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
+
+    SetSizer(topSizer);
+}
+
+
+void WinSparkleDialog::UpdateLayout()
+{
+    Layout();
+    GetSizer()->SetSizeHints(this);
+}
+
+
+wxFont WinSparkleDialog::MakeBoldFont()
+{
+    wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
+    return f;
+}
+
+
+wxFont WinSparkleDialog::MakeBigBoldFont()
+{
+    wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
+    f.SetPointSize(f.GetPointSize() + 1);
+    return f;
+}
 
 
 /*--------------------------------------------------------------------------*
@@ -108,7 +175,7 @@ const int ID_SKIP_VERSION = wxNewId();
 const int ID_REMIND_LATER = wxNewId();
 const int ID_INSTALL = wxNewId();
 
-class UpdateDialog : public wxDialog
+class UpdateDialog : public WinSparkleDialog
 {
 public:
     UpdateDialog();
@@ -135,7 +202,6 @@ private:
 
 private:
     wxTimer       m_timer;
-    wxSizer      *m_infoSizer;
     wxSizer      *m_buttonSizer;
     wxStaticText *m_heading;
     wxStaticText *m_message;
@@ -157,47 +223,25 @@ private:
 };
 
 
-UpdateDialog::UpdateDialog()
-    : wxDialog(NULL, wxID_ANY, _("Software Update"),
-               wxDefaultPosition, wxDefaultSize,
-               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      m_timer(this)
+UpdateDialog::UpdateDialog() : m_timer(this)
 {
-    SetIcons(wxICON(UpdateAvailable));
-
-    wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
-    topSizer->Add
-              (
-                  new wxStaticBitmap(this, wxID_ANY, bigIcon),
-                  wxSizerFlags(0).Border(wxALL, 10)
-              );
-
-    m_infoSizer = new wxBoxSizer(wxVERTICAL);
-    topSizer->Add(m_infoSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
-
     m_heading = new wxStaticText(this, wxID_ANY, "");
-    wxFont bigbold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    bigbold.SetPointSize(bigbold.GetPointSize() + 1);
-    bigbold.SetWeight(wxFONTWEIGHT_BOLD);
-    m_heading->SetFont(bigbold);
-    m_infoSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+    m_heading->SetFont(MakeBigBoldFont());
+    m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
 
     m_message = new wxStaticText(this, wxID_ANY, "",
                                  wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1));
-    m_infoSizer->Add(m_message, wxSizerFlags(0).Expand());
+    m_mainAreaSizer->Add(m_message, wxSizerFlags(0).Expand());
 
     m_progress = new wxGauge(this, wxID_ANY, 100,
                              wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
-    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
-    m_infoSizer->AddStretchSpacer(1);
+    m_mainAreaSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
+    m_mainAreaSizer->AddStretchSpacer(1);
 
     m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
-    wxFont bold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    bold.SetWeight(wxFONTWEIGHT_BOLD);
-    notesLabel->SetFont(bold);
+    notesLabel->SetFont(MakeBoldFont());
     m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, 10));
 
     m_browserParent = new wxPanel(this, wxID_ANY,
@@ -210,7 +254,7 @@ UpdateDialog::UpdateDialog()
                              wxSizerFlags(1).Expand().Border(wxTOP, 10)
                          );
 
-    m_infoSizer->Add
+    m_mainAreaSizer->Add
                  (
                      m_releaseNotesSizer,
                      // proportion=10000 to overcome stretch spacer above
@@ -247,13 +291,13 @@ UpdateDialog::UpdateDialog()
     m_closeButtonSizer->Add(m_closeButton, wxSizerFlags(0).Border(wxLEFT));
     m_buttonSizer->Add(m_closeButtonSizer, wxSizerFlags(1));
 
-    m_infoSizer->Add
+    m_mainAreaSizer->Add
                  (
                      m_buttonSizer,
                      wxSizerFlags(0).Expand().Border(wxTOP, 10)
                  );
 
-    SetSizerAndFit(topSizer);
+    UpdateLayout();
 
     Bind(wxEVT_CLOSE_WINDOW, &UpdateDialog::OnClose, this);
     Bind(wxEVT_TIMER, &UpdateDialog::OnTimer, this);
@@ -321,9 +365,6 @@ void UpdateDialog::SetMessage(const wxString& text)
     m_message->Wrap(MESSAGE_AREA_WIDTH);
 }
 
-
-#define SHOW(c)    DoShowElement(c, true)
-#define HIDE(c)    DoShowElement(c, false)
 
 void UpdateDialog::StateCheckingUpdates()
 {
