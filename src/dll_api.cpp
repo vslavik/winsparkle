@@ -43,6 +43,34 @@ WIN_SPARKLE_API void win_sparkle_init()
 {
     try
     {
+        bool checkUpdates;
+        if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
+        {
+            if ( checkUpdates )
+            {
+                // Run the check in background. Only show UI if updates are
+                // available.
+                UpdateChecker *check = new UpdateChecker();
+                check->Start();
+            }
+        }
+        else // not yet configured
+        {
+            bool didRunOnce;
+            Settings::ReadConfigValue("DidRunOnce", didRunOnce, false);
+            if ( !didRunOnce )
+            {
+                // Do nothing on the first execution of the app, for better
+                // first-time impression.
+                Settings::WriteConfigValue("DidRunOnce", true);
+            }
+            else
+            {
+                // Only when the app is launched for the second time, ask the
+                // user for their permission to check for updates.
+                UI::AskForPermission();
+            }
+        }
     }
     CATCH_ALL_EXCEPTIONS
 }

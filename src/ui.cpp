@@ -29,6 +29,7 @@
 #include "ui.h"
 #include "settings.h"
 #include "error.h"
+#include "updatechecker.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -118,6 +119,8 @@ protected:
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
+
+    static const int MESSAGE_AREA_WIDTH = 300;
 };
 
 
@@ -168,7 +171,7 @@ wxFont WinSparkleDialog::MakeBigBoldFont()
 
 
 /*--------------------------------------------------------------------------*
-                       Window for communicating with the user
+                      Window for communicating with the user
  *--------------------------------------------------------------------------*/
 
 const int ID_SKIP_VERSION = wxNewId();
@@ -217,7 +220,6 @@ private:
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast       m_appcast;
 
-    static const int MESSAGE_AREA_WIDTH = 300;
     static const int RELNOTES_WIDTH = 400;
     static const int RELNOTES_HEIGHT = 200;
 };
@@ -501,6 +503,63 @@ void UpdateDialog::ShowReleaseNotes(const wxString& url)
 
 
 /*--------------------------------------------------------------------------*
+              Dialog that asks for permission to check for updates
+ *--------------------------------------------------------------------------*/
+
+class AskPermissionDialog : public WinSparkleDialog
+{
+public:
+    AskPermissionDialog();
+};
+
+
+AskPermissionDialog::AskPermissionDialog()
+{
+    wxStaticText *heading =
+            new wxStaticText(this, wxID_ANY,
+                             _("Check for updates automatically?"));
+    heading->SetFont(MakeBigBoldFont());
+    m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+
+    wxStaticText *message =
+            new wxStaticText
+                (
+                    this, wxID_ANY,
+                    wxString::Format
+                    (
+                        _("Should %s automatically check for updates? You can always check for updates manually from the menu."),
+                        Settings::GetAppName()
+                    ),
+                    wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1)
+                );
+    message->Wrap(MESSAGE_AREA_WIDTH);
+    m_mainAreaSizer->Add(message, wxSizerFlags(0).Expand());
+
+    m_mainAreaSizer->AddStretchSpacer(1);
+
+    wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    buttonSizer->Add
+                 (
+                     new wxButton(this, wxID_OK, _("Check automatically")),
+                     wxSizerFlags().Border(wxRIGHT)
+                 );
+    buttonSizer->Add
+                 (
+                     new wxButton(this, wxID_CANCEL, _("Don't check"))
+                 );
+
+    m_mainAreaSizer->Add
+                 (
+                     buttonSizer,
+                     wxSizerFlags(0).Right().Border(wxTOP, 10)
+                 );
+
+    UpdateLayout();
+}
+
+
+/*--------------------------------------------------------------------------*
                              Inter-thread messages
  *--------------------------------------------------------------------------*/
 
@@ -515,6 +574,9 @@ const int MSG_NO_UPDATE_FOUND = wxNewId();
 
 // Notify the UI that a new version is available
 const int MSG_UPDATE_AVAILABLE = wxNewId();
+
+// Tell the UI to ask for permission to check updates
+const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
 
 /*--------------------------------------------------------------------------*
@@ -538,6 +600,7 @@ private:
     void OnShowCheckingUpdates(wxThreadEvent& event);
     void OnNoUpdateFound(wxThreadEvent& event);
     void OnUpdateAvailable(wxThreadEvent& event);
+    void OnAskForPermission(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -569,6 +632,7 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnShowCheckingUpdates, this, MSG_SHOW_CHECKING_UPDATES);
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
 
 
@@ -642,6 +706,21 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
     delete appcast;
 
     ShowWindow();
+}
+
+
+void App::OnAskForPermission(wxThreadEvent& event)
+{
+    AskPermissionDialog dlg;
+    bool shouldCheck = (dlg.ShowModal() == wxID_OK);
+
+    Settings::WriteConfigValue("CheckForUpdates", shouldCheck);
+
+    if ( shouldCheck )
+    {
+        UpdateChecker *check = new UpdateChecker();
+        check->Start();
+    }
 }
 
 
@@ -771,6 +850,14 @@ void UI::ShowCheckingUpdates()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_SHOW_CHECKING_UPDATES);
+}
+
+
+/*static*/
+void UI::AskForPermission()
+{
+    UIThreadAccess uit;
+    uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
 }
 
 } // namespace winsparkle

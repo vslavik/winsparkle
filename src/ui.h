@@ -75,6 +75,11 @@ public:
     static void ShowCheckingUpdates();
 
     /**
+        Shows the dialog asking user for permission to check for updates.
+     */
+    static void AskForPermission();
+
+    /**
         Sets HINSTANCE of the DLL.
 
         Must be called on DLL initialization.
