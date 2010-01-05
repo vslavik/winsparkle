@@ -237,14 +237,24 @@ void UpdateChecker::Run()
         const std::string currentVersion =
                 WideToAnsi(Settings::GetAppVersion());
 
-        if ( CompareVersions(currentVersion, appcast.Version) < 0 )
+        // Check if our version is out of date.
+        if ( CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
-            UI::NotifyUpdateAvailable(appcast);
+            // The same or newer version is already installed.
+            UI::NotifyNoUpdates();
+            return;
         }
-        else
+
+        // Check if the user opted to ignore this particular version.
+        std::string toSkip;
+        if ( Settings::ReadConfigValue("SkipThisVersion", toSkip) &&
+             toSkip == appcast.Version )
         {
             UI::NotifyNoUpdates();
+            return;
         }
+
+        UI::NotifyUpdateAvailable(appcast);
     }
     catch ( ... )
     {

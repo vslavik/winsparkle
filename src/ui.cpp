@@ -266,14 +266,11 @@ UpdateDialog::UpdateDialog() : m_timer(this)
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-    // FIXME: enable this button once it is implemented
-#if 0
     m_updateButtonsSizer->Add
                           (
                             new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
                             wxSizerFlags().Border(wxRIGHT, 20)
                           );
-#endif
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
@@ -341,7 +338,8 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 
 void UpdateDialog::OnSkipVersion(wxCommandEvent&)
 {
-    // FIXME: record that this version should be skipped
+    Settings::WriteConfigValue("SkipThisVersion", m_appcast.Version);
+    Close();
 }
 
 
