@@ -234,12 +234,6 @@ void UpdateChecker::Run()
         Appcast appcast;
         appcast.Load(appcast_xml.data);
 
-        // FIXME: really check appcast data...
-        OutputDebugStringA("WinSparkle appcast data:\n");
-        OutputDebugStringA(("    Version:       " + appcast.Version + "\n").c_str());
-        OutputDebugStringA(("    Download:      " + appcast.DownloadURL + "\n").c_str());
-        OutputDebugStringA(("    Release notes: " + appcast.ReleaseNotesURL + "\n").c_str());
-
         const std::string currentVersion =
                 WideToAnsi(Settings::GetAppVersion());
 
