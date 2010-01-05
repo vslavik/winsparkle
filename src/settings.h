@@ -67,8 +67,15 @@ public:
 private:
     Settings() {}
 
-    // Get given field from the VERSIONINFO/StringFileInfo resource
-    static std::wstring GetVerInfoField(const wchar_t *field);
+    // Get given field from the VERSIONINFO/StringFileInfo resource,
+    // throw on failure
+    static std::wstring GetVerInfoField(const wchar_t *field)
+        { return DoGetVerInfoField(field, true); }
+    // Same, but don't throw if a field is not set
+    static std::wstring TryGetVerInfoField(const wchar_t *field)
+        { return DoGetVerInfoField(field, false); }
+
+    static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
 
 private:
     std::string m_appcastURL;

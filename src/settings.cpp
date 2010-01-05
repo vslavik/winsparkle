@@ -94,7 +94,7 @@ std::wstring GetVerInfoLang(void *fi)
 
 
 /* static */
-std::wstring Settings::GetVerInfoField(const wchar_t *field)
+std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
 {
     TCHAR exeFilename[MAX_PATH + 1];
 
@@ -118,7 +118,10 @@ std::wstring Settings::GetVerInfoField(const wchar_t *field)
     UINT len;
     if ( !VerQueryValue(fi.data, key.c_str(), (LPVOID*)&value, &len) )
     {
-        throw Win32Exception("Executable doesn't have required key in StringFileInfo");
+        if ( fatal )
+            throw Win32Exception("Executable doesn't have required key in StringFileInfo");
+        else
+            return std::wstring();
     }
 
     return value;
