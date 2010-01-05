@@ -69,9 +69,8 @@ struct InetHandle
 
 void DownloadFile(const std::string& url, IDownloadSink *sink)
 {
-    const Settings& settings = Settings::Get();
     std::wstring userAgent =
-        settings.GetAppName() + L"/" + settings.GetAppVersion() +
+        Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
         L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
 
     InetHandle inet = InternetOpen

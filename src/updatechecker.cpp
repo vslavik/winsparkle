@@ -224,7 +224,7 @@ void UpdateChecker::Run()
 
     try
     {
-        const std::string url = Settings::Get().GetAppcastURL();
+        const std::string url = Settings::GetAppcastURL();
         if ( url.empty() )
             throw std::runtime_error("Appcast URL not specified.");
 
@@ -241,7 +241,7 @@ void UpdateChecker::Run()
         OutputDebugStringA(("    Release notes: " + appcast.ReleaseNotesURL + "\n").c_str());
 
         const std::string currentVersion =
-                WideToAnsi(Settings::Get().GetAppVersion());
+                WideToAnsi(Settings::GetAppVersion());
 
         if ( CompareVersions(currentVersion, appcast.Version) < 0 )
         {

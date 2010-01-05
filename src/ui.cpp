@@ -29,6 +29,7 @@
 #include "ui.h"
 #include "settings.h"
 #include "error.h"
+#include "updatechecker.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -96,19 +97,88 @@ void DoShowElement(wxSizer *s, bool show)
     s->ShowItems(show);
 }
 
+#define SHOW(c)    DoShowElement(c, true)
+#define HIDE(c)    DoShowElement(c, false)
 
 } // anonymous namespace
 
 
 /*--------------------------------------------------------------------------*
-                       Window for communicating with the user
+                       Base class for WinSparkle dialogs
+ *--------------------------------------------------------------------------*/
+
+class WinSparkleDialog : public wxDialog
+{
+protected:
+    WinSparkleDialog();
+
+    void UpdateLayout();
+    static wxFont MakeBoldFont();
+    static wxFont MakeBigBoldFont();
+
+protected:
+    // sizer for the main area of the dialog (to the right of the icon)
+    wxSizer      *m_mainAreaSizer;
+
+    static const int MESSAGE_AREA_WIDTH = 300;
+};
+
+
+WinSparkleDialog::WinSparkleDialog()
+    : wxDialog(NULL, wxID_ANY, _("Software Update"),
+               wxDefaultPosition, wxDefaultSize,
+               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+    SetIcons(wxICON(UpdateAvailable));
+
+    wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+    topSizer->Add
+              (
+                  new wxStaticBitmap(this, wxID_ANY, bigIcon),
+                  wxSizerFlags(0).Border(wxALL, 10)
+              );
+
+    m_mainAreaSizer = new wxBoxSizer(wxVERTICAL);
+    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
+
+    SetSizer(topSizer);
+}
+
+
+void WinSparkleDialog::UpdateLayout()
+{
+    Layout();
+    GetSizer()->SetSizeHints(this);
+}
+
+
+wxFont WinSparkleDialog::MakeBoldFont()
+{
+    wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
+    return f;
+}
+
+
+wxFont WinSparkleDialog::MakeBigBoldFont()
+{
+    wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
+    f.SetPointSize(f.GetPointSize() + 1);
+    return f;
+}
+
+
+/*--------------------------------------------------------------------------*
+                      Window for communicating with the user
  *--------------------------------------------------------------------------*/
 
 const int ID_SKIP_VERSION = wxNewId();
 const int ID_REMIND_LATER = wxNewId();
 const int ID_INSTALL = wxNewId();
 
-class UpdateDialog : public wxDialog
+class UpdateDialog : public WinSparkleDialog
 {
 public:
     UpdateDialog();
@@ -135,7 +205,6 @@ private:
 
 private:
     wxTimer       m_timer;
-    wxSizer      *m_infoSizer;
     wxSizer      *m_buttonSizer;
     wxStaticText *m_heading;
     wxStaticText *m_message;
@@ -151,53 +220,30 @@ private:
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast       m_appcast;
 
-    static const int MESSAGE_AREA_WIDTH = 300;
     static const int RELNOTES_WIDTH = 400;
     static const int RELNOTES_HEIGHT = 200;
 };
 
 
-UpdateDialog::UpdateDialog()
-    : wxDialog(NULL, wxID_ANY, _("Software Update"),
-               wxDefaultPosition, wxDefaultSize,
-               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-      m_timer(this)
+UpdateDialog::UpdateDialog() : m_timer(this)
 {
-    SetIcons(wxICON(UpdateAvailable));
-
-    wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
-    topSizer->Add
-              (
-                  new wxStaticBitmap(this, wxID_ANY, bigIcon),
-                  wxSizerFlags(0).Border(wxALL, 10)
-              );
-
-    m_infoSizer = new wxBoxSizer(wxVERTICAL);
-    topSizer->Add(m_infoSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
-
     m_heading = new wxStaticText(this, wxID_ANY, "");
-    wxFont bigbold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    bigbold.SetPointSize(bigbold.GetPointSize() + 1);
-    bigbold.SetWeight(wxFONTWEIGHT_BOLD);
-    m_heading->SetFont(bigbold);
-    m_infoSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+    m_heading->SetFont(MakeBigBoldFont());
+    m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
 
     m_message = new wxStaticText(this, wxID_ANY, "",
                                  wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1));
-    m_infoSizer->Add(m_message, wxSizerFlags(0).Expand());
+    m_mainAreaSizer->Add(m_message, wxSizerFlags(0).Expand());
 
     m_progress = new wxGauge(this, wxID_ANY, 100,
                              wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
-    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
-    m_infoSizer->AddStretchSpacer(1);
+    m_mainAreaSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
+    m_mainAreaSizer->AddStretchSpacer(1);
 
     m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
-    wxFont bold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    bold.SetWeight(wxFONTWEIGHT_BOLD);
-    notesLabel->SetFont(bold);
+    notesLabel->SetFont(MakeBoldFont());
     m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, 10));
 
     m_browserParent = new wxPanel(this, wxID_ANY,
@@ -210,7 +256,7 @@ UpdateDialog::UpdateDialog()
                              wxSizerFlags(1).Expand().Border(wxTOP, 10)
                          );
 
-    m_infoSizer->Add
+    m_mainAreaSizer->Add
                  (
                      m_releaseNotesSizer,
                      // proportion=10000 to overcome stretch spacer above
@@ -247,13 +293,13 @@ UpdateDialog::UpdateDialog()
     m_closeButtonSizer->Add(m_closeButton, wxSizerFlags(0).Border(wxLEFT));
     m_buttonSizer->Add(m_closeButtonSizer, wxSizerFlags(1));
 
-    m_infoSizer->Add
+    m_mainAreaSizer->Add
                  (
                      m_buttonSizer,
                      wxSizerFlags(0).Expand().Border(wxTOP, 10)
                  );
 
-    SetSizerAndFit(topSizer);
+    UpdateLayout();
 
     Bind(wxEVT_CLOSE_WINDOW, &UpdateDialog::OnClose, this);
     Bind(wxEVT_TIMER, &UpdateDialog::OnTimer, this);
@@ -322,9 +368,6 @@ void UpdateDialog::SetMessage(const wxString& text)
 }
 
 
-#define SHOW(c)    DoShowElement(c, true)
-#define HIDE(c)    DoShowElement(c, false)
-
 void UpdateDialog::StateCheckingUpdates()
 {
     LayoutChangesGuard guard(this);
@@ -354,8 +397,8 @@ void UpdateDialog::StateNoUpdateFound()
         msg = wxString::Format
               (
                   _("%s %s is currently the newest version available."),
-                  Settings::Get().GetAppName(),
-                  Settings::Get().GetAppVersion()
+                  Settings::GetAppName(),
+                  Settings::GetAppVersion()
               );
     }
     catch ( std::exception& )
@@ -384,7 +427,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
     {
         LayoutChangesGuard guard(this);
 
-        const wxString appname = Settings::Get().GetAppName();
+        const wxString appname = Settings::GetAppName();
 
         m_heading->SetLabel(
             wxString::Format(_("A new version of %s is available!"), appname));
@@ -396,7 +439,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
                 _("%s %s is now available (you have %s). Would you like to download it now?"),
                 appname,
                 info.Version,
-                Settings::Get().GetAppVersion()
+                Settings::GetAppVersion()
             )
         );
 
@@ -460,6 +503,63 @@ void UpdateDialog::ShowReleaseNotes(const wxString& url)
 
 
 /*--------------------------------------------------------------------------*
+              Dialog that asks for permission to check for updates
+ *--------------------------------------------------------------------------*/
+
+class AskPermissionDialog : public WinSparkleDialog
+{
+public:
+    AskPermissionDialog();
+};
+
+
+AskPermissionDialog::AskPermissionDialog()
+{
+    wxStaticText *heading =
+            new wxStaticText(this, wxID_ANY,
+                             _("Check for updates automatically?"));
+    heading->SetFont(MakeBigBoldFont());
+    m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+
+    wxStaticText *message =
+            new wxStaticText
+                (
+                    this, wxID_ANY,
+                    wxString::Format
+                    (
+                        _("Should %s automatically check for updates? You can always check for updates manually from the menu."),
+                        Settings::GetAppName()
+                    ),
+                    wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1)
+                );
+    message->Wrap(MESSAGE_AREA_WIDTH);
+    m_mainAreaSizer->Add(message, wxSizerFlags(0).Expand());
+
+    m_mainAreaSizer->AddStretchSpacer(1);
+
+    wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    buttonSizer->Add
+                 (
+                     new wxButton(this, wxID_OK, _("Check automatically")),
+                     wxSizerFlags().Border(wxRIGHT)
+                 );
+    buttonSizer->Add
+                 (
+                     new wxButton(this, wxID_CANCEL, _("Don't check"))
+                 );
+
+    m_mainAreaSizer->Add
+                 (
+                     buttonSizer,
+                     wxSizerFlags(0).Right().Border(wxTOP, 10)
+                 );
+
+    UpdateLayout();
+}
+
+
+/*--------------------------------------------------------------------------*
                              Inter-thread messages
  *--------------------------------------------------------------------------*/
 
@@ -474,6 +574,9 @@ const int MSG_NO_UPDATE_FOUND = wxNewId();
 
 // Notify the UI that a new version is available
 const int MSG_UPDATE_AVAILABLE = wxNewId();
+
+// Tell the UI to ask for permission to check updates
+const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
 
 /*--------------------------------------------------------------------------*
@@ -497,6 +600,7 @@ private:
     void OnShowCheckingUpdates(wxThreadEvent& event);
     void OnNoUpdateFound(wxThreadEvent& event);
     void OnUpdateAvailable(wxThreadEvent& event);
+    void OnAskForPermission(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -528,6 +632,7 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnShowCheckingUpdates, this, MSG_SHOW_CHECKING_UPDATES);
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
 
 
@@ -601,6 +706,21 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
     delete appcast;
 
     ShowWindow();
+}
+
+
+void App::OnAskForPermission(wxThreadEvent& event)
+{
+    AskPermissionDialog dlg;
+    bool shouldCheck = (dlg.ShowModal() == wxID_OK);
+
+    Settings::WriteConfigValue("CheckForUpdates", shouldCheck);
+
+    if ( shouldCheck )
+    {
+        UpdateChecker *check = new UpdateChecker();
+        check->Start();
+    }
 }
 
 
@@ -730,6 +850,14 @@ void UI::ShowCheckingUpdates()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_SHOW_CHECKING_UPDATES);
+}
+
+
+/*static*/
+void UI::AskForPermission()
+{
+    UIThreadAccess uit;
+    uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
 }
 
 } // namespace winsparkle

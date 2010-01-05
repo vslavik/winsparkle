@@ -29,6 +29,7 @@
 #include "threads.h"
 
 #include <string>
+#include <sstream>
 
 
 namespace winsparkle
@@ -47,33 +48,83 @@ namespace winsparkle
 class Settings
 {
 public:
-    /// Returns the Settings singleton.
-    static Settings& Get();
-
     /// Get location of the appcast
-    std::string GetAppcastURL() const { return m_appcastURL; }
+    static std::string GetAppcastURL() { return ms_appcastURL; }
 
     /// Return application name
-    std::wstring GetAppName() const
+    static std::wstring GetAppName()
         { return GetVerInfoField(TEXT("ProductName")); }
 
     /// Return (human-readable) application version
-    std::wstring GetAppVersion() const
+    static std::wstring GetAppVersion()
         { return GetVerInfoField(TEXT("ProductVersion")); }
 
+    /// Return name of the vendor
+    static std::wstring GetCompanyName()
+        { return GetVerInfoField(TEXT("CompanyName")); }
+
     /// Set appcast location
-    void SetAppcastURL(const char *url) { m_appcastURL = url; }
+    static void SetAppcastURL(const char *url) { ms_appcastURL = url; }
+
+    /**
+        Access to runtime configuration.
+
+        This is stored in registry, under HKCU\Software\...\...\WinSparkle,
+        where the vendor and app names are determined from resources.
+     */
+    //@{
+
+    // Writes given value to registry under this name.
+    template<typename T>
+    static void WriteConfigValue(const char *name, const T& value)
+    {
+        std::ostringstream s;
+        s << value;
+        DoWriteConfigValue(name, s.str().c_str());
+    }
+
+    // Reads a value from registry. Returns true if it was present,
+    // false otherwise.
+    template<typename T>
+    static bool ReadConfigValue(const char *name, T& value)
+    {
+        const std::string v = DoReadConfigValue(name);
+        if ( v.empty() )
+            return false;
+        std::istringstream s(v);
+        s >> value;
+        return !s.fail();
+    }
+
+    // Reads a value from registry, substituting default value if not present.
+    template<typename T>
+    static bool ReadConfigValue(const char *name, T& value, const T& defval)
+    {
+        bool rv = ReadConfigValue(name, value);
+        if ( !rv )
+            value = defval;
+        return rv;
+    }
+
+    //@}
 
 private:
-    Settings() {}
+    Settings(); // cannot be instantiated
 
-    // Get given field from the VERSIONINFO/StringFileInfo resource
-    static std::wstring GetVerInfoField(const wchar_t *field);
+    // Get given field from the VERSIONINFO/StringFileInfo resource,
+    // throw on failure
+    static std::wstring GetVerInfoField(const wchar_t *field)
+        { return DoGetVerInfoField(field, true); }
+    // Same, but don't throw if a field is not set
+    static std::wstring TryGetVerInfoField(const wchar_t *field)
+        { return DoGetVerInfoField(field, false); }
+    static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
+
+    static void DoWriteConfigValue(const char *name, const char *value);
+    static std::string DoReadConfigValue(const char *name);
 
 private:
-    std::string m_appcastURL;
-
-    static Settings ms_instance;
+    static std::string ms_appcastURL;
 };
 
 } // namespace winsparkle
