@@ -6,7 +6,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     01/02/97
-// RCS-ID:      $Id: private.h 62190 2009-09-28 16:15:34Z JS $
+// RCS-ID:      $Id: private.h 63030 2009-12-31 13:32:13Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -876,9 +876,10 @@ inline wxString wxGetFullModuleName()
 //      0x0400      Windows 95, NT4
 //      0x0410      Windows 98
 //      0x0500      Windows ME, 2000
-//      0x0501      Windows XP
-//      0x0502      Windows 2003
-//      0x0600      Longhorn
+//      0x0501      Windows XP, 2003
+//      0x0502      Windows XP SP2, 2003 SP1
+//      0x0600      Windows Vista, 2008
+//      0x0601      Windows 7
 //
 // for the other Windows versions 0 is currently returned
 enum wxWinVersion
@@ -898,11 +899,15 @@ enum wxWinVersion
     wxWinVersion_NT5 = wxWinVersion_5,
     wxWinVersion_2000 = wxWinVersion_5,
     wxWinVersion_XP = 0x0501,
-    wxWinVersion_2003 = 0x0502,
+    wxWinVersion_2003 = 0x0501,
+    wxWinVersion_XP_SP2 = 0x0502,
+    wxWinVersion_2003_SP1 = 0x0502,
 
     wxWinVersion_6 = 0x0600,
     wxWinVersion_Vista = wxWinVersion_6,
-    wxWinVersion_NT6 = wxWinVersion_6
+    wxWinVersion_NT6 = wxWinVersion_6,
+
+    wxWinVersion_7 = 0x601
 };
 
 WXDLLIMPEXP_BASE wxWinVersion wxGetWinVersion();

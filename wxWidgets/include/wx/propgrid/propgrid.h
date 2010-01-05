@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2004-09-25
-// RCS-ID:      $Id: propgrid.h 62955 2009-12-20 12:48:41Z JMS $
+// RCS-ID:      $Id: propgrid.h 62990 2009-12-26 10:45:04Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,10 @@ public:
     wxPGCachedString    m_strMin;
     wxPGCachedString    m_strMax;
     wxPGCachedString    m_strUnits;
+    wxPGCachedString    m_strHint;
+#if wxPG_COMPATIBILITY_1_4
     wxPGCachedString    m_strInlineHelp;
+#endif
 
     // If true then some things are automatically translated
     bool                m_autoGetTranslation;
@@ -1240,6 +1243,33 @@ public:
     }
 
     /**
+        Sets appearance of value cells representing an unspecified property
+        value. Default appearance is blank.
+
+        @remarks If you set the unspecified value to have any
+                 textual representation, then that will override
+                 "InlineHelp" attribute.
+
+        @see wxPGProperty::SetValueToUnspecified(),
+             wxPGProperty::IsValueUnspecified()
+    */
+    void SetUnspecifiedValueAppearance( const wxPGCell& cell )
+    {
+        m_unspecifiedAppearance = m_propertyDefaultCell;
+        m_unspecifiedAppearance.MergeFrom(cell);
+    }
+
+    /**
+        Returns current appearance of unspecified value cells.
+
+        @see SetUnspecifiedValueAppearance()
+    */
+    const wxPGCell& GetUnspecifiedValueAppearance() const
+    {
+        return m_unspecifiedAppearance;
+    }
+
+    /**
         Returns (visual) text representation of the unspecified
         property value.
 
@@ -1764,6 +1794,12 @@ protected:
     /** Actions and keys that trigger them. */
     wxPGHashMapI2I      m_actionTriggers;
 
+    /** Appearance of currently active editor. */
+    wxPGCell            m_editorAppearance;
+
+    /** Appearance of a unspecified value cell. */
+    wxPGCell            m_unspecifiedAppearance;
+
     //
     // Temporary values
     //
@@ -2062,6 +2098,16 @@ protected:
     */
     void RecalculateVirtualSize( int forceXPos = -1 );
 
+    void SetEditorAppearance( const wxPGCell& cell,
+                              bool unspecified = false );
+
+    void ResetEditorAppearance()
+    {
+        wxPGCell cell;
+        cell.SetEmptyData();
+        SetEditorAppearance(cell, false);
+    }
+
     void PrepareAfterItemsAdded();
 
     /**
@@ -2102,6 +2148,22 @@ inline unsigned int wxPropertyGridPageState::GetActualVirtualHeight() const
     return DoGetRoot()->GetChildrenHeight(GetGrid()->GetRowHeight());
 }
 #endif
+
+wxString wxPGProperty::GetHintText() const
+{
+    wxVariant vHintText = GetAttribute(wxPGGlobalVars->m_strHint);
+
+#if wxPG_COMPATIBILITY_1_4
+    // Try the old, deprecated "InlineHelp"
+    if ( vHintText.IsNull() )
+        vHintText = GetAttribute(wxPGGlobalVars->m_strInlineHelp);
+#endif
+
+    if ( !vHintText.IsNull() )
+        return vHintText.GetString();
+
+    return wxEmptyString;
+}
 
 inline int wxPGProperty::GetDisplayedCommonValueCount() const
 {

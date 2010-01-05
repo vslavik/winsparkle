@@ -3,7 +3,7 @@
 // Purpose:     wxDateTime unit test
 // Author:      Vadim Zeitlin
 // Created:     2004-06-23 (extracted from samples/console/console.cpp)
-// RCS-ID:      $Id: datetimetest.cpp 62916 2009-12-17 17:51:12Z VZ $
+// RCS-ID:      $Id: datetimetest.cpp 63062 2010-01-04 12:22:34Z VZ $
 // Copyright:   (c) 2004 Vadim Zeitlin <vadim@wxwindows.org>
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1099,8 +1099,23 @@ void DateTimeTestCase::TestDateTimeParse()
         bool good;
     } parseTestDates[] =
     {
-        { "Thu 22 Nov 2007 07:40:00 PM",
-         { 22, wxDateTime::Nov, 2007, 19, 40, 0}, true },
+        {
+            "Thu 22 Nov 2007 07:40:00 PM",
+            { 22, wxDateTime::Nov, 2007, 19, 40,  0 },
+            true
+        },
+
+        {
+            "2010-01-04 14:30",
+            {  4, wxDateTime::Jan, 2010, 14, 30,  0 },
+            true
+        },
+
+        {
+            "bloordyblop",
+            {  1, wxDateTime::Jan, 9999,  0,  0,  0},
+            false
+        },
     };
 
     // the test strings here use "PM" which is not available in all locales so

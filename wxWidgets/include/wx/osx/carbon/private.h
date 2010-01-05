@@ -6,7 +6,7 @@
 // Author:      Stefan Csomor
 // Modified by:
 // Created:     1998-01-01
-// RCS-ID:      $Id: private.h 62771 2009-12-03 17:20:15Z PC $
+// RCS-ID:      $Id: private.h 62985 2009-12-25 09:47:30Z SC $
 // Copyright:   (c) Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1005,7 +1005,7 @@ public :
     wxNonOwnedWindowCarbonImpl();
     virtual ~wxNonOwnedWindowCarbonImpl();
 
-    virtual void Destroy() ;
+    virtual void WillBeDestroyed() ;
     void Create( wxWindow* parent, const wxPoint& pos, const wxSize& size,
     long style, long extraStyle, const wxString& name ) ;
 

@@ -2,7 +2,7 @@
 // Name:        wx/gtk/toolbar.h
 // Purpose:     GTK toolbar
 // Author:      Robert Roebling
-// RCS-ID:      $Id: toolbar.h 62849 2009-12-10 03:04:07Z VZ $
+// RCS-ID:      $Id: toolbar.h 62994 2009-12-26 16:36:39Z VZ $
 // Copyright:   (c) Robert Roebling
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,8 @@ public:
 
     virtual void SetToolNormalBitmap(int id, const wxBitmap& bitmap);
     virtual void SetToolDisabledBitmap(int id, const wxBitmap& bitmap);
+
+    virtual bool Realize();
 
     static wxVisualAttributes
     GetClassDefaultAttributes(wxWindowVariant variant = wxWINDOW_VARIANT_NORMAL);

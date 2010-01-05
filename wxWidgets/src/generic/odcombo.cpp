@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: odcombo.cpp 61877 2009-09-11 08:55:59Z JS $
+// RCS-ID:      $Id: odcombo.cpp 62989 2009-12-26 10:33:35Z JMS $
 // Copyright:   (c) 2005 Jaakko Salli
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1089,7 +1089,20 @@ void wxOwnerDrawnComboBox::OnDrawItem( wxDC& dc,
 {
     if ( flags & wxODCB_PAINTING_CONTROL )
     {
-        dc.DrawText( GetValue(),
+        wxString text;
+
+        if ( !ShouldUseHintText() )
+        {
+            text = GetValue();
+        }
+        else
+        {
+            text = GetHint();
+            wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
+            dc.SetTextForeground(col);
+        }
+
+        dc.DrawText( text,
                      rect.x + GetMargins().x,
                      (rect.height-dc.GetCharHeight())/2 + rect.y );
     }

@@ -4,7 +4,7 @@
 // Author:      Stefan Csomor
 // Modified by:
 // Created:     24.09.01
-// RCS-ID:      $Id: toplevel_osx.cpp 62828 2009-12-09 05:25:32Z KO $
+// RCS-ID:      $Id: toplevel_osx.cpp 63027 2009-12-30 23:40:01Z KO $
 // Copyright:   (c) 2001-2004 Stefan Csomor
 // License:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,7 +159,9 @@ wxString wxTopLevelWindowMac::GetTitle() const
 
 void wxTopLevelWindowMac::ShowWithoutActivating()
 {
-    if ( !wxTopLevelWindowBase::Show(true) )
+    // wxTopLevelWindowBase is derived from wxNonOwnedWindow, so don't
+    // call it here.
+    if ( !wxWindow::Show(true) )
         return;
 
     m_nowpeer->ShowWithoutActivating();

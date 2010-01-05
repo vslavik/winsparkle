@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     19.02.98
-// RCS-ID:      $Id: oleutils.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: oleutils.cpp 63045 2010-01-03 18:29:09Z VS $
 // Copyright:   (c) 1998 Vadim Zeitlin <zeitlin@dptmaths.ens-cachan.fr>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,11 +124,277 @@ wxBasicString::~wxBasicString()
     SysFreeString(m_bstrBuf);
 }
 
-#if wxUSE_DATAOBJ
+
+// ----------------------------------------------------------------------------
+// Convert variants
+// ----------------------------------------------------------------------------
+
+#if wxUSE_VARIANT
+
+WXDLLEXPORT bool wxConvertVariantToOle(const wxVariant& variant, VARIANTARG& oleVariant)
+{
+    VariantInit(&oleVariant);
+    if (variant.IsNull())
+    {
+        oleVariant.vt = VT_NULL;
+        return true;
+    }
+
+    wxString type(variant.GetType());
+
+
+    if (type == wxT("long"))
+    {
+        oleVariant.vt = VT_I4;
+        oleVariant.lVal = variant.GetLong() ;
+    }
+    else if (type == wxT("char"))
+    {
+        oleVariant.vt=VT_I1;            // Signed Char
+        oleVariant.cVal=variant.GetChar();
+    }
+    else if (type == wxT("double"))
+    {
+        oleVariant.vt = VT_R8;
+        oleVariant.dblVal = variant.GetDouble();
+    }
+    else if (type == wxT("bool"))
+    {
+        oleVariant.vt = VT_BOOL;
+        oleVariant.boolVal = variant.GetBool();
+    }
+    else if (type == wxT("string"))
+    {
+        wxString str( variant.GetString() );
+        oleVariant.vt = VT_BSTR;
+        oleVariant.bstrVal = wxConvertStringToOle(str);
+    }
+#if wxUSE_DATETIME
+    else if (type == wxT("datetime"))
+    {
+        wxDateTime date( variant.GetDateTime() );
+        oleVariant.vt = VT_DATE;
+
+        SYSTEMTIME st;
+        date.GetAsMSWSysTime(&st);
+
+        SystemTimeToVariantTime(&st, &oleVariant.date);
+    }
+#endif
+    else if (type == wxT("void*"))
+    {
+        oleVariant.vt = VT_DISPATCH;
+        oleVariant.pdispVal = (IDispatch*) variant.GetVoidPtr();
+    }
+    else if (type == wxT("list") || type == wxT("stringlist"))
+    {
+        oleVariant.vt = VT_VARIANT | VT_ARRAY;
+
+        SAFEARRAY *psa;
+        SAFEARRAYBOUND saBound;
+        VARIANTARG *pvargBase;
+        VARIANTARG *pvarg;
+        int i, j;
+
+        int iCount = variant.GetCount();
+
+        saBound.lLbound = 0;
+        saBound.cElements = iCount;
+
+        psa = SafeArrayCreate(VT_VARIANT, 1, &saBound);
+        if (psa == NULL)
+            return false;
+
+        SafeArrayAccessData(psa, (void**)&pvargBase);
+
+        pvarg = pvargBase;
+        for (i = 0; i < iCount; i++)
+        {
+            // copy each string in the list of strings
+            wxVariant eachVariant(variant[i]);
+            if (!wxConvertVariantToOle(eachVariant, * pvarg))
+            {
+                // memory failure:  back out and free strings alloc'ed up to
+                // now, and then the array itself.
+                pvarg = pvargBase;
+                for (j = 0; j < i; j++)
+                {
+                    SysFreeString(pvarg->bstrVal);
+                    pvarg++;
+                }
+                SafeArrayDestroy(psa);
+                return false;
+            }
+            pvarg++;
+        }
+
+        SafeArrayUnaccessData(psa);
+
+        oleVariant.parray = psa;
+    }
+    else
+    {
+        oleVariant.vt = VT_NULL;
+        return false;
+    }
+    return true;
+}
+
+#ifndef VT_TYPEMASK
+#define VT_TYPEMASK 0xfff
+#endif
+
+WXDLLEXPORT bool
+wxConvertOleToVariant(const VARIANTARG& oleVariant, wxVariant& variant)
+{
+    bool ok = true;
+    if ( oleVariant.vt & VT_ARRAY )
+    {
+
+        // Compute the total number of elements in all array dimensions
+        int cElements = 1;
+        for ( int cDims = 0; cDims < oleVariant.parray->cDims; cDims++ )
+            cElements *= oleVariant.parray->rgsabound[cDims].cElements;
+
+        // Get a pointer to the data
+        void* pvdata;
+        HRESULT hr = SafeArrayAccessData(oleVariant.parray, &pvdata);
+        if ( FAILED(hr) )
+            return false;
+
+        switch (oleVariant.vt & VT_TYPEMASK)
+        {
+            case VT_VARIANT:
+                {
+                    variant.ClearList();
+                    VARIANTARG *variant_data=(VARIANTARG*)pvdata;
+                    for ( int i = 0; i < cElements; i++ )
+                    {
+                        VARIANTARG& oleElement = variant_data[i];
+                        wxVariant vElement;
+                        if ( !wxConvertOleToVariant(oleElement, vElement) )
+                        {
+                            ok = false;
+                            variant.ClearList();
+                            break;
+                        }
+
+                        variant.Append(vElement);
+                    }
+                }
+                break;
+
+            case VT_BSTR:
+                {
+                    wxArrayString strings;
+                    BSTR *string_val=(BSTR*)pvdata;
+                    for ( int i = 0; i < cElements; ++i )
+                    {
+                        wxString str=wxConvertStringFromOle(*string_val);
+                        strings.Add(str);
+                        ++string_val;
+                    }
+                    variant=strings;
+                }
+                break;
+
+            default:
+                wxLogDebug(wxT("unhandled VT_ARRAY type %x in wxConvertOleToVariant"),
+                           oleVariant.vt & VT_TYPEMASK);
+                variant = wxVariant();
+                ok = false;
+                break;
+        }
+
+        SafeArrayUnaccessData(oleVariant.parray);
+    }
+    else if ( oleVariant.vt & VT_BYREF )
+    {
+        switch ( oleVariant.vt & VT_TYPEMASK )
+        {
+            case VT_VARIANT:
+                {
+                    VARIANTARG& oleReference = *((LPVARIANT)oleVariant.byref);
+                    if (!wxConvertOleToVariant(oleReference,variant))
+                        return false;
+                    break;
+                }
+
+            default:
+                wxLogError(wxT("wxAutomationObject::ConvertOleToVariant: [as yet] unhandled reference %X"),
+                            oleVariant.vt);
+                return false;
+        }
+    }
+    else // simply type (not array or reference)
+    {
+        switch ( oleVariant.vt & VT_TYPEMASK )
+        {
+            case VT_BSTR:
+                {
+                    wxString str(wxConvertStringFromOle(oleVariant.bstrVal));
+                    variant = str;
+                }
+                break;
+
+            case VT_DATE:
+#if wxUSE_DATETIME
+                {
+                    SYSTEMTIME st;
+                    VariantTimeToSystemTime(oleVariant.date, &st);
+
+                    wxDateTime date;
+                    date.SetFromMSWSysTime(st);
+                    variant = date;
+                }
+#endif // wxUSE_DATETIME
+                break;
+
+            case VT_I4:
+                variant = (long) oleVariant.lVal;
+                break;
+
+            case VT_I2:
+                variant = (long) oleVariant.iVal;
+                break;
+
+            case VT_BOOL:
+                variant = oleVariant.boolVal != 0;
+                break;
+
+            case VT_R8:
+                variant = oleVariant.dblVal;
+                break;
+
+            case VT_DISPATCH:
+                variant = (void*) oleVariant.pdispVal;
+                break;
+
+            case VT_NULL:
+                variant.MakeNull();
+                break;
+
+            case VT_EMPTY:
+                break;    // Ignore Empty Variant, used only during destruction of objects
+
+            default:
+                wxLogError(wxT("wxAutomationObject::ConvertOleToVariant: Unknown variant value type %X -> %X"),
+                           oleVariant.vt,oleVariant.vt&VT_TYPEMASK);
+                return false;
+        }
+    }
+
+    return ok;
+}
+
+#endif // wxUSE_VARIANT
+
 
 // ----------------------------------------------------------------------------
 // Debug support
 // ----------------------------------------------------------------------------
+
+#if wxUSE_DATAOBJ
 
 #if wxDEBUG_LEVEL && ( ( defined(__VISUALC__) && (__VISUALC__ > 1000) ) || defined(__MWERKS__) )
 static wxString GetIidName(REFIID riid)
@@ -260,7 +526,7 @@ void wxLogRelease(const wxChar *szInterface, ULONG cRef)
 
 #endif  // wxDEBUG_LEVEL
 
-#endif // wxUSE_DRAG_AND_DROP
+#endif // wxUSE_DATAOBJ
 
 #endif // __CYGWIN10__
 

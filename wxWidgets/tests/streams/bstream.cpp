@@ -2,7 +2,7 @@
 // Name:        tests/streams/bstream.cpp
 // Purpose:     House the base stream test suite.
 // Author:      Hans Van Leemputten
-// RCS-ID:      $Id: bstream.cpp 54542 2008-07-08 00:19:54Z VZ $
+// RCS-ID:      $Id: bstream.cpp 63022 2009-12-30 17:39:47Z MW $
 // Copyright:   (c) 2004 Hans Van Leemputten
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,6 @@ Test *StreamCase::suite()
      * Register all sub stream test suites.
      */
 
-#if 0
     STREAM_REGISTER_SUB_SUITE(memStream);
     STREAM_REGISTER_SUB_SUITE(strStream);
     STREAM_REGISTER_SUB_SUITE(fileStream);
@@ -54,14 +53,12 @@ Test *StreamCase::suite()
     STREAM_REGISTER_SUB_SUITE(tempStream);
     STREAM_REGISTER_SUB_SUITE(zlibStream);
     STREAM_REGISTER_SUB_SUITE(backStream);
+    STREAM_REGISTER_SUB_SUITE(socketStream);
 
     extern CppUnit::Test* GetlargeFileSuite();
     Test *lfs = GetlargeFileSuite();
     if (lfs)
         suite->addTest(lfs);
-#endif
-
-    STREAM_REGISTER_SUB_SUITE(socketStream);
 
     /*
     ** Add more stream subtests here

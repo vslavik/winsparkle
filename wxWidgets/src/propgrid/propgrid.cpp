@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2004-09-25
-// RCS-ID:      $Id: propgrid.cpp 62955 2009-12-20 12:48:41Z JMS $
+// RCS-ID:      $Id: propgrid.cpp 63040 2010-01-03 10:24:12Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -200,7 +200,10 @@ wxPGGlobalVarsClass::wxPGGlobalVarsClass()
     m_strMin = wxS("Min");
     m_strMax = wxS("Max");
     m_strUnits = wxS("Units");
+    m_strHint = wxS("Hint");
+#if wxPG_COMPATIBILITY_1_4
     m_strInlineHelp = wxS("InlineHelp");
+#endif
 
     m_warnings = 0;
 }
@@ -345,6 +348,9 @@ void wxPropertyGrid::Init1()
     m_mouseSide = 16;
     m_editorFocused = 0;
 
+    // Must set empty but valid data
+    m_unspecifiedAppearance.SetEmptyData();
+
     // Set default keys
     AddActionTrigger( wxPG_ACTION_NEXT_PROPERTY, WXK_RIGHT );
     AddActionTrigger( wxPG_ACTION_NEXT_PROPERTY, WXK_DOWN );
@@ -441,9 +447,9 @@ void wxPropertyGrid::Init2()
 
     CalculateFontAndBitmapStuff( wxPG_DEFAULT_VSPACING );
 
-    // Allocate cell datas indirectly by calling setter
-    m_propertyDefaultCell.SetBgCol(*wxBLACK);
-    m_categoryDefaultCell.SetBgCol(*wxBLACK);
+    // Allocate cell datas
+    m_propertyDefaultCell.SetEmptyData();
+    m_categoryDefaultCell.SetEmptyData();
 
     RegainColours();
 
@@ -1384,6 +1390,8 @@ void wxPropertyGrid::RegainColours()
         wxColour bgCol = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW );
         m_colPropBack = bgCol;
         m_propertyDefaultCell.GetData()->SetBgCol(bgCol);
+        if ( !m_unspecifiedAppearance.GetBgCol().IsOk() )
+            m_unspecifiedAppearance.SetBgCol(bgCol);
     }
 
     if ( !(m_coloursCustomized & 0x0010) )
@@ -1391,6 +1399,8 @@ void wxPropertyGrid::RegainColours()
         wxColour fgCol = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
         m_colPropFore = fgCol;
         m_propertyDefaultCell.GetData()->SetFgCol(fgCol);
+        if ( !m_unspecifiedAppearance.GetFgCol().IsOk() )
+            m_unspecifiedAppearance.SetFgCol(fgCol);
     }
 
     if ( !(m_coloursCustomized & 0x0020) )
@@ -1462,6 +1472,7 @@ void wxPropertyGrid::SetCellBackgroundColour( const wxColour& col )
     m_coloursCustomized |= 0x08;
 
     m_propertyDefaultCell.GetData()->SetBgCol(col);
+    m_unspecifiedAppearance.SetBgCol(col);
 
     Refresh();
 }
@@ -1474,6 +1485,7 @@ void wxPropertyGrid::SetCellTextColour( const wxColour& col )
     m_coloursCustomized |= 0x10;
 
     m_propertyDefaultCell.GetData()->SetFgCol(col);
+    m_unspecifiedAppearance.SetFgCol(col);
 
     Refresh();
 }
@@ -2111,6 +2123,7 @@ int wxPropertyGrid::DoDrawItems( wxDC& dc,
 
     const wxPGProperty* firstSelected = GetSelection();
     const wxPropertyGridPageState* state = m_pState;
+    const wxArrayInt& colWidths = state->m_colWidths;
 
 #if wxPG_REFRESH_CONTROLS_AFTER_REPAINT
     bool wasSelectedPainted = false;
@@ -2210,9 +2223,9 @@ int wxPropertyGrid::DoDrawItems( wxDC& dc,
         unsigned int si;
         int sx = x;
 
-        for ( si=0; si<state->m_colWidths.size(); si++ )
+        for ( si=0; si<colWidths.size(); si++ )
         {
-            sx += state->m_colWidths[si];
+            sx += colWidths[si];
             dc.DrawLine( sx, y, sx, y2 );
         }
 
@@ -2308,12 +2321,16 @@ int wxPropertyGrid::DoDrawItems( wxDC& dc,
                         m_marginWidth,
                         lh );
 
-        if ( p->IsCategory() )
+        // Default cell rect fill the entire row
+        wxRect cellRect(greyDepthX, y,
+                        gridWidth - greyDepth + 2, rowHeight-1 );
+
+        bool isCategory = p->IsCategory();
+
+        if ( isCategory )
         {
-            // Captions have their cell areas merged as one
             dc.SetFont(m_captionFont);
             fontChanged = true;
-            wxRect cellRect(greyDepthX, y, gridWidth - greyDepth + 2, rowHeight-1 );
 
             if ( renderFlags & wxPGCellRenderer::DontUseCellBgCol )
             {
@@ -2325,13 +2342,6 @@ int wxPropertyGrid::DoDrawItems( wxDC& dc,
             {
                 dc.SetTextForeground(rowFgCol);
             }
-
-            wxPGCellRenderer* renderer = p->GetCellRenderer(0);
-            renderer->Render( dc, cellRect, this, p, 0, -1, renderFlags );
-
-            // Tree Item Button
-            if ( !HasFlag(wxPG_HIDE_MARGIN) && p->HasVisibleChildren() )
-                DrawExpanderButton( dc, butRect, p );
         }
         else
         {
@@ -2339,111 +2349,148 @@ int wxPropertyGrid::DoDrawItems( wxDC& dc,
             if ( butRect.x > 0 )
                 butRect.x += IN_CELL_EXPANDER_BUTTON_X_ADJUST;
 
-            if ( p->m_flags & wxPG_PROP_MODIFIED && (windowStyle & wxPG_BOLD_MODIFIED) )
+            if ( p->m_flags & wxPG_PROP_MODIFIED &&
+                 (windowStyle & wxPG_BOLD_MODIFIED) )
             {
                 dc.SetFont(m_captionFont);
                 fontChanged = true;
             }
 
-            unsigned int ci;
-            int cellX = x + 1;
-            int nextCellWidth = state->m_colWidths[0] -
-                                (greyDepthX - m_marginWidth);
-            wxRect cellRect(greyDepthX+1, y, 0, rowHeight-1);
-            int textXAdd = textMarginHere - greyDepthX;
+            // Magic fine-tuning for non-category rows
+            cellRect.x += 1;
+        }
 
-            for ( ci=0; ci<state->m_colWidths.size(); ci++ )
+        int firstCellWidth = colWidths[0] - (greyDepthX - m_marginWidth);
+        int firstCellX = cellRect.x;
+
+        // Calculate cellRect.x for the last cell
+        unsigned int ci = 0;
+        int cellX = x + 1;
+        for ( ci=0; ci<colWidths.size(); ci++ )
+            cellX += colWidths[ci];
+        cellRect.x = cellX;
+
+        // Draw cells from back to front so that we can easily tell if the
+        // cell on the right was empty from text
+        bool prevFilled = true;
+        ci = colWidths.size();
+        do
+        {
+            ci--;
+
+            int textXAdd = 0;
+
+            if ( ci == 0 )
             {
-                cellRect.width = nextCellWidth - 1;
+                textXAdd = textMarginHere - greyDepthX;
+                cellRect.width = firstCellWidth;
+                cellRect.x = firstCellX;
+            }
+            else
+            {
+                int colWidth = colWidths[ci];
+                cellRect.width = colWidth;
+                cellRect.x -= colWidth;
+            }
 
-                wxWindow* cellEditor = NULL;
-                int cellRenderFlags = renderFlags;
+            // Merge with column to the right?
+            if ( !prevFilled && isCategory )
+            {
+                cellRect.width += colWidths[ci+1];
+            }
 
-                // Tree Item Button (must be drawn before clipping is set up)
-                if ( ci == 0 && !HasFlag(wxPG_HIDE_MARGIN) && p->HasVisibleChildren() )
-                    DrawExpanderButton( dc, butRect, p );
+            if ( !isCategory )
+                cellRect.width -= 1;
 
-                // Background
-                if ( isSelected && (ci == 1 || ci == m_selColumn) )
+            wxWindow* cellEditor = NULL;
+            int cellRenderFlags = renderFlags;
+
+            // Tree Item Button (must be drawn before clipping is set up)
+            if ( ci == 0 && !HasFlag(wxPG_HIDE_MARGIN) && p->HasVisibleChildren() )
+                DrawExpanderButton( dc, butRect, p );
+
+            // Background
+            if ( isSelected && (ci == 1 || ci == m_selColumn) )
+            {
+                if ( p == firstSelected )
                 {
-                    if ( p == firstSelected )
-                    {
-                        if ( ci == 1 && m_wndEditor )
-                            cellEditor = m_wndEditor;
-                        else if ( ci == m_selColumn && m_labelEditor )
-                            cellEditor = m_labelEditor;
-                    }
+                    if ( ci == 1 && m_wndEditor )
+                        cellEditor = m_wndEditor;
+                    else if ( ci == m_selColumn && m_labelEditor )
+                        cellEditor = m_labelEditor;
+                }
 
-                    if ( cellEditor )
-                    {
-                        wxColour editorBgCol =
-                            cellEditor->GetBackgroundColour();
-                        dc.SetBrush(editorBgCol);
-                        dc.SetPen(editorBgCol);
-                        dc.SetTextForeground(m_colPropFore);
-                        dc.DrawRectangle(cellRect);
+                if ( cellEditor )
+                {
+                    wxColour editorBgCol =
+                        cellEditor->GetBackgroundColour();
+                    dc.SetBrush(editorBgCol);
+                    dc.SetPen(editorBgCol);
+                    dc.SetTextForeground(m_colPropFore);
+                    dc.DrawRectangle(cellRect);
 
-                        if ( m_dragStatus != 0 ||
-                             (m_iFlags & wxPG_FL_CUR_USES_CUSTOM_IMAGE) )
-                            cellEditor = NULL;
-                    }
-                    else
-                    {
-                        dc.SetBrush(m_colPropBack);
-                        dc.SetPen(m_colPropBack);
-                        dc.SetTextForeground(m_colDisPropFore);
-                        if ( p->IsEnabled() )
-                            dc.SetTextForeground(rowFgCol);
-                        else
-                            dc.SetTextForeground(m_colDisPropFore);
-                    }
+                    if ( m_dragStatus != 0 ||
+                         (m_iFlags & wxPG_FL_CUR_USES_CUSTOM_IMAGE) )
+                        cellEditor = NULL;
                 }
                 else
                 {
-                    if ( renderFlags & wxPGCellRenderer::DontUseCellBgCol )
-                    {
-                        dc.SetBrush(rowBgBrush);
-                        dc.SetPen(rowBgCol);
-                    }
-
-                    if ( renderFlags & wxPGCellRenderer::DontUseCellFgCol )
-                    {
+                    dc.SetBrush(m_colPropBack);
+                    dc.SetPen(m_colPropBack);
+                    dc.SetTextForeground(m_colDisPropFore);
+                    if ( p->IsEnabled() )
                         dc.SetTextForeground(rowFgCol);
-                    }
-                }
-
-                dc.SetClippingRegion(cellRect);
-
-                cellRect.x += textXAdd;
-                cellRect.width -= textXAdd;
-
-                // Foreground
-                if ( !cellEditor )
-                {
-                    wxPGCellRenderer* renderer;
-                    int cmnVal = p->GetCommonValue();
-                    if ( cmnVal == -1 || ci != 1 )
-                    {
-                        renderer = p->GetCellRenderer(ci);
-                        renderer->Render( dc, cellRect, this, p, ci, -1,
-                                          cellRenderFlags );
-                    }
                     else
-                    {
-                        renderer = GetCommonValue(cmnVal)->GetRenderer();
-                        renderer->Render( dc, cellRect, this, p, ci, -1,
-                                          cellRenderFlags );
-                    }
+                        dc.SetTextForeground(m_colDisPropFore);
+                }
+            }
+            else
+            {
+                if ( renderFlags & wxPGCellRenderer::DontUseCellBgCol )
+                {
+                    dc.SetBrush(rowBgBrush);
+                    dc.SetPen(rowBgCol);
                 }
 
-                cellX += state->m_colWidths[ci];
-                if ( ci < (state->m_colWidths.size()-1) )
-                    nextCellWidth = state->m_colWidths[ci+1];
-                cellRect.x = cellX;
-                dc.DestroyClippingRegion(); // Is this really necessary?
-                textXAdd = 0;
+                if ( renderFlags & wxPGCellRenderer::DontUseCellFgCol )
+                {
+                    dc.SetTextForeground(rowFgCol);
+                }
             }
+
+            dc.SetClippingRegion(cellRect);
+
+            cellRect.x += textXAdd;
+            cellRect.width -= textXAdd;
+
+            // Foreground
+            if ( !cellEditor )
+            {
+                wxPGCellRenderer* renderer;
+                int cmnVal = p->GetCommonValue();
+                if ( cmnVal == -1 || ci != 1 )
+                {
+                    renderer = p->GetCellRenderer(ci);
+                    prevFilled = renderer->Render(dc, cellRect, this,
+                                                  p, ci, -1,
+                                                  cellRenderFlags );
+                }
+                else
+                {
+                    renderer = GetCommonValue(cmnVal)->GetRenderer();
+                    prevFilled = renderer->Render(dc, cellRect, this,
+                                                  p, ci, -1,
+                                                  cellRenderFlags );
+                }
+            }
+            else
+            {
+                prevFilled = true;
+            }
+
+            dc.DestroyClippingRegion(); // Is this really necessary?
         }
+        while ( ci > 0 );
 
         if ( fontChanged )
             dc.SetFont(normalFont);
@@ -3629,9 +3676,18 @@ void wxPropertyGrid::CustomSetCursor( int type, bool override )
     m_curcursor = type;
 }
 
+// -----------------------------------------------------------------------
+
 wxString
-wxPropertyGrid::GetUnspecifiedValueText( int WXUNUSED(argFlags) ) const
+wxPropertyGrid::GetUnspecifiedValueText( int argFlags ) const
 {
+    const wxPGCell& ua = GetUnspecifiedValueAppearance();
+
+    if ( ua.HasText() &&
+         !(argFlags & wxPG_FULL_VALUE) &&
+         !(argFlags & wxPG_EDITABLE_VALUE) )
+        return ua.GetText();
+
     return wxEmptyString;
 }
 
@@ -3916,6 +3972,9 @@ bool wxPropertyGrid::DoSelectProperty( wxPGProperty* p, unsigned int flags )
                 wxRect grect = GetEditorWidgetRect(p, m_selColumn);
                 wxPoint goodPos = grect.GetPosition();
 
+                // Editor appearance can now be considered clear
+                m_editorAppearance.SetEmptyData();
+
                 const wxPGEditor* editor = p->GetEditorClass();
                 wxCHECK_MSG(editor, false,
                     wxT("NULL editor class not allowed"));
@@ -3984,6 +4043,12 @@ bool wxPropertyGrid::DoSelectProperty( wxPGProperty* p, unsigned int flags )
                         primaryCtrl->SetFocus();
 
                         p->GetEditorClass()->OnFocus(p, primaryCtrl);
+                    }
+                    else
+                    {
+                        if ( p->IsValueUnspecified() )
+                            SetEditorAppearance(m_unspecifiedAppearance,
+                                                true);
                     }
                 }
 
@@ -4151,7 +4216,7 @@ void wxPropertyGrid::RefreshEditor()
     editorClass->UpdateControl(p, wnd);
 
     if ( p->IsValueUnspecified() )
-        editorClass ->SetValueToUnspecified(p, wnd);
+        SetEditorAppearance(m_unspecifiedAppearance, true);
 }
 
 // -----------------------------------------------------------------------
@@ -5602,6 +5667,7 @@ void wxPropertyGrid::HandleFocusChange( wxWindow* newFocused )
         if ( p )
         {
             const wxPGEditor* editor = p->GetEditorClass();
+            ResetEditorAppearance();
             editor->OnFocus(p, GetEditorControl());
         }
     }

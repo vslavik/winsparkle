@@ -2,7 +2,7 @@
 // Name:        tests/streams/largefile.cpp
 // Purpose:     Tests for large file support
 // Author:      Mike Wetherell
-// RCS-ID:      $Id: largefile.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: largefile.cpp 63024 2009-12-30 17:44:09Z MW $
 // Copyright:   (c) 2004 Mike Wetherell
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,8 +16,8 @@
 //
 //  test --verbose largeFile
 //
-// On systems supporting sparse files they may also be registered in the
-// Streams subsuite.
+// On systems supporting sparse files they will also be registered in the
+// Streams subsuite so that they run by default.
 //
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -268,8 +268,8 @@ wxOutputStream *LargeFileTest_wxFFile::MakeOutStream(const wxString& name) const
 
 bool LargeFileTest_wxFFile::HasLFS() const
 {
-#ifdef HAVE_FSEEKO
-    return (wxFileOffset)0xffffffff > 0;
+#ifdef wxHAS_LARGE_FFILES
+    return true;
 #else
     return false;
 #endif
@@ -304,10 +304,6 @@ CppUnit::Test *largeFile::suite()
 // Ideally these tests will be part of the default suite so that regressions
 // are picked up. However this is only possible when sparse files are
 // supported otherwise the tests require too much disk space.
-//
-// On unix, most filesystems support sparse files, though not all. So for now
-// I'm not assuming sparse file support on unix. On Windows it's possible to
-// test, and sparse files should be available on Win 5+ with NTFS.
 
 #ifdef __WXMSW__
 
@@ -384,12 +380,17 @@ void MakeSparse(const wxString& path, int fd)
             volumeFlags &= ~FILE_SUPPORTS_SPARSE_FILES;
 }
 
+// return the suite if sparse files are supported, otherwise return NULL
+//
 CppUnit::Test* GetlargeFileSuite()
 {
     if (!volumeInfoInit) {
-        wxFile file;
-        wxString path = wxFileName::CreateTempFileName(wxT("wxlfs-"), &file);
-        MakeSparse(path, file.fd());
+        wxString path;
+        {
+            wxFile file;
+            path = wxFileName::CreateTempFileName(wxT("wxlfs-"), &file);
+            MakeSparse(path, file.fd());
+        }
         wxRemoveFile(path);
     }
 
@@ -404,7 +405,36 @@ CppUnit::Test* GetlargeFileSuite()
 bool IsFAT(const wxString& WXUNUSED(path)) { return false; }
 void MakeSparse(const wxString& WXUNUSED(path), int WXUNUSED(fd)) { }
 
-CppUnit::Test* GetlargeFileSuite() { return NULL; }
+// return the suite if sparse files are supported, otherwise return NULL
+//
+CppUnit::Test* GetlargeFileSuite()
+{
+    wxString path;
+    struct stat st1, st2;
+    memset(&st1, 0, sizeof(st1));
+    memset(&st2, 0, sizeof(st2));
+
+    {
+        wxFile file;
+        path = wxFileName::CreateTempFileName(wxT("wxlfs-"), &file);
+
+        fstat(file.fd(), &st1);
+        file.Seek(st1.st_blksize);
+        file.Write("x", 1);
+        fstat(file.fd(), &st1);
+
+        file.Seek(0);
+        file.Write("x", 1);
+        fstat(file.fd(), &st2);
+    }
+
+    wxRemoveFile(path);
+
+    if (st1.st_blocks != st2.st_blocks)
+        return largeFile::suite();
+    else
+        return NULL;
+}
 
 #endif // __WXMSW__
 

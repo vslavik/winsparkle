@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:
-// RCS-ID:      $Id: msgdlg.h 61527 2009-07-25 16:41:16Z VZ $
+// RCS-ID:      $Id: msgdlg.h 63035 2010-01-02 11:22:59Z MBN $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -277,10 +277,10 @@ protected:
 private:
     // these functions may be overridden to provide different defaults for the
     // default button labels (this is used by wxGTK)
-    virtual wxString GetDefaultYesLabel() const { return _("Yes"); }
-    virtual wxString GetDefaultNoLabel() const { return _("No"); }
-    virtual wxString GetDefaultOKLabel() const { return _("OK"); }
-    virtual wxString GetDefaultCancelLabel() const { return _("Cancel"); }
+    virtual wxString GetDefaultYesLabel() const { return wxGetTranslation("Yes"); }
+    virtual wxString GetDefaultNoLabel() const { return wxGetTranslation("No"); }
+    virtual wxString GetDefaultOKLabel() const { return wxGetTranslation("OK"); }
+    virtual wxString GetDefaultCancelLabel() const { return wxGetTranslation("Cancel"); }
 
     // labels for the buttons, initially empty meaning that the defaults should
     // be used, use GetYes/No/OK/CancelLabel() to access them

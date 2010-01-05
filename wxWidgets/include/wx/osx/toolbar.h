@@ -4,7 +4,7 @@
 // Author:      Stefan Csomor
 // Modified by:
 // Created:     1998-01-01
-// RCS-ID:      $Id: toolbar.h 62633 2009-11-13 18:39:38Z SC $
+// RCS-ID:      $Id: toolbar.h 62988 2009-12-25 20:43:43Z KO $
 // Copyright:   (c) Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -44,6 +44,8 @@ class WXDLLIMPEXP_CORE wxToolBar: public wxToolBarBase
             const wxString& name = wxToolBarNameStr);
 
     virtual void SetWindowStyleFlag(long style);
+    
+    virtual bool Destroy();
 
     // override/implement base class virtuals
     virtual wxToolBarToolBase *FindToolForPosition(wxCoord x, wxCoord y) const;
@@ -73,6 +75,7 @@ class WXDLLIMPEXP_CORE wxToolBar: public wxToolBarBase
     
 #if wxOSX_USE_NATIVE_TOOLBAR
     bool MacInstallNativeToolbar(bool usesNative);
+    void MacUninstallNativeToolbar();
     bool MacWantsNativeToolbar();
     bool MacTopLevelHasNativeToolbar(bool *ownToolbarInstalled) const;
 #endif

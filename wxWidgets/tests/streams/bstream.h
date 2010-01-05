@@ -2,7 +2,7 @@
 // Name:        tests/streams/bstream.h
 // Purpose:     Template class for testing base stream functions.
 // Author:      Hans Van Leemputten
-// RCS-ID:      $Id: bstream.h 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: bstream.h 63022 2009-12-30 17:39:47Z MW $
 // Copyright:   (c) 2004 Hans Van Leemputten
 // Licence:     wxWidgets licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -217,9 +217,6 @@ protected:
         CleanupHelper cleanup(this);
         TStreamIn &stream_in = CreateInStream();
 
-        // this test shouldn't be used at all if the stream isn't seekable
-        CPPUNIT_ASSERT( stream_in.IsSeekable() );
-
         CPPUNIT_ASSERT(!stream_in.Eof());
 
         // Try to Get the location in the stream...
@@ -360,9 +357,6 @@ protected:
     {
         CleanupHelper cleanup(this);
         TStreamOut &stream_out = CreateOutStream();
-
-        // If this test is used, the stream must be seekable
-        CPPUNIT_ASSERT( stream_out.IsSeekable() );
 
         // Try to Get the location in the stream...
         CPPUNIT_ASSERT_EQUAL(0, stream_out.TellO());

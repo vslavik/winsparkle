@@ -4,7 +4,7 @@
 // Author:      Ryan Norton
 // Modified by: Stefan Csomor
 // Created:     1998-01-01
-// RCS-ID:      $Id: sound.cpp 61916 2009-09-13 18:28:45Z SC $
+// RCS-ID:      $Id: sound.cpp 63023 2009-12-30 17:41:29Z KO $
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -100,6 +100,9 @@ void wxOSXSoundManagerSoundData::DoStop()
         m_pSndChannel = NULL;
         wxSound::SoundStopped(this);
     }
+    
+    if (IsMarkedForDeletion())
+        delete this;
 }
 
 bool wxOSXSoundManagerSoundData::Play(unsigned flags)

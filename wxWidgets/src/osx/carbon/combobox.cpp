@@ -4,14 +4,14 @@
 // Author:      Stefan Csomor, Dan "Bud" Keith (composite combobox)
 // Modified by:
 // Created:     1998-01-01
-// RCS-ID:      $Id: combobox.cpp 61724 2009-08-21 10:41:26Z VZ $
+// RCS-ID:      $Id: combobox.cpp 63053 2010-01-04 01:57:42Z KO $
 // Copyright:   (c) Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
 #include "wx/wxprec.h"
 
-#if wxUSE_COMBOBOX
+#if wxUSE_COMBOBOX && !defined(wxOSX_USE_NATIVE_COMBOBOX)
 
 #include "wx/combobox.h"
 
@@ -686,4 +686,4 @@ bool wxComboBox::OSXHandleClicked( double WXUNUSED(timestampsec) )
     return true ;
 }
 
-#endif // wxUSE_COMBOBOX
+#endif // wxUSE_COMBOBOX && !defined(wxOSX_USE_NATIVE_COMBOBOX)

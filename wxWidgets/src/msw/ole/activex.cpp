@@ -4,7 +4,7 @@
 // Author:      Ryan Norton <wxprojects@comcast.net>, Lindsay Mathieson <???>
 // Modified by:
 // Created:     11/07/04
-// RCS-ID:      $Id: activex.cpp 62779 2009-12-05 14:25:53Z VZ $
+// RCS-ID:      $Id: activex.cpp 63038 2010-01-02 13:07:17Z VS $
 // Copyright:   (c) 2003 Lindsay Mathieson, (c) 2005 Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -36,14 +36,14 @@
 #include "wx/msw/private.h" // for wxCopyRectToRECT
 
 // autointerfaces that we only use here
-WX_DECLARE_AUTOOLE(wxAutoIOleInPlaceSite, IOleInPlaceSite)
-WX_DECLARE_AUTOOLE(wxAutoIOleDocument, IOleDocument)
-WX_DECLARE_AUTOOLE(wxAutoIPersistStreamInit, IPersistStreamInit)
-WX_DECLARE_AUTOOLE(wxAutoIAdviseSink, IAdviseSink)
-WX_DECLARE_AUTOOLE(wxAutoIProvideClassInfo, IProvideClassInfo)
-WX_DECLARE_AUTOOLE(wxAutoITypeInfo, ITypeInfo)
-WX_DECLARE_AUTOOLE(wxAutoIConnectionPoint, IConnectionPoint)
-WX_DECLARE_AUTOOLE(wxAutoIConnectionPointContainer, IConnectionPointContainer)
+typedef wxAutoOleInterface<IOleInPlaceSite> wxAutoIOleInPlaceSite;
+typedef wxAutoOleInterface<IOleDocument> wxAutoIOleDocument;
+typedef wxAutoOleInterface<IPersistStreamInit> wxAutoIPersistStreamInit;
+typedef wxAutoOleInterface<IAdviseSink> wxAutoIAdviseSink;
+typedef wxAutoOleInterface<IProvideClassInfo> wxAutoIProvideClassInfo;
+typedef wxAutoOleInterface<ITypeInfo> wxAutoITypeInfo;
+typedef wxAutoOleInterface<IConnectionPoint> wxAutoIConnectionPoint;
+typedef wxAutoOleInterface<IConnectionPointContainer> wxAutoIConnectionPointContainer;
 
 wxDEFINE_EVENT( wxEVT_ACTIVEX, wxActiveXEvent );
 

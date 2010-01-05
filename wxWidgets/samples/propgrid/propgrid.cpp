@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2004-09-25
-// RCS-ID:      $Id: propgrid.cpp 62882 2009-12-14 15:18:52Z JMS $
+// RCS-ID:      $Id: propgrid.cpp 63012 2009-12-29 16:04:40Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -1319,10 +1319,16 @@ void FormMain::PopulateWithStandardItems ()
     pg->SetPropertyAttribute(wxT("Height"), wxPG_ATTR_MAX, (long)2048 );
     pg->SetPropertyAttribute(wxT("Height"), wxPG_ATTR_UNITS, wxT("Pixels") );
 
-    // Set value to unspecified so that InlineHelp attribute will be demonstrated
-    pg->SetPropertyValueUnspecified(wxT("Height"));
-    pg->SetPropertyAttribute(wxT("Height"), wxPG_ATTR_INLINE_HELP, wxT("Enter new height for window") );
-    pg->SetPropertyHelpString(wxT("Height"), wxT("This property uses attributes \"Units\" and \"InlineHelp\".") );
+    // Set value to unspecified so that Hint attribute will be demonstrated
+    pg->SetPropertyValueUnspecified("Height");
+    pg->SetPropertyAttribute("Height", wxPG_ATTR_HINT,
+                             "Enter new height for window" );
+
+    // Difference between hint and help string is that the hint is shown in
+    // an empty value cell, while help string is shown either in the
+    // description text box, as a tool tip, or on the status bar.
+    pg->SetPropertyHelpString("Height",
+        "This property uses attributes \"Units\" and \"InlineHelp\"." );
 
     pg->Append( new wxIntProperty(wxT("Width"),wxPG_LABEL,640) );
     pg->SetPropertyAttribute(wxT("Width"), wxPG_ATTR_MIN, (long)10 );
@@ -1547,6 +1553,7 @@ void FormMain::PopulateWithExamples ()
     soc.Add( wxT("Look, it continues"), 200 );
     soc.Add( wxT("Even More"), 240 );
     soc.Add( wxT("And More"), 280 );
+    soc.Add( "", 300 );
     soc.Add( wxT("True End of the List"), 320 );
 
     // Test custom colours ([] operator of wxPGChoices returns
@@ -1568,6 +1575,12 @@ void FormMain::PopulateWithExamples ()
     // Here we only display the original 'soc' choices
     pg->Append( new wxEnumProperty(wxT("EnumProperty 3"),wxPG_LABEL,
         soc, 240 ) );
+
+    // Test Hint attribute in EnumProperty
+    pg->GetProperty("EnumProperty 3")->SetAttribute("Hint", "Dummy Hint");
+
+    pg->SetPropertyHelpString("EnumProperty 3",
+        "This property uses \"Hint\" attribute.");
 
     // 'soc' plus one exclusive extra choice "4th only"
     pg->Append( new wxEnumProperty(wxT("EnumProperty 4"),wxPG_LABEL,
@@ -1679,6 +1692,9 @@ void FormMain::PopulateWithExamples ()
                                        wxPG_LABEL,
                                        eech,
                                        "Choice not in the list") );
+
+    // Test Hint attribute in EditEnumProperty
+    pg->GetProperty("EditEnumProperty")->SetAttribute("Hint", "Dummy Hint");
 
     //wxString v_;
     //wxTextValidator validator1(wxFILTER_NUMERIC,&v_);
@@ -1851,6 +1867,10 @@ void FormMain::PopulateWithLibraryConfig ()
 
     pid = pg->Append( new wxPropertyCategory( wxT("wxWidgets Library Configuration") ) );
     pg->SetPropertyCell( pid, 0, wxPG_LABEL, bmp );
+
+    // Both of following lines would set a label for the second column
+    pg->SetPropertyCell( pid, 1, "Is Enabled" );
+    pid->SetValue("Is Enabled");
 
     ADD_WX_LIB_CONF_GROUP(wxT("Global Settings"))
     ADD_WX_LIB_CONF( wxUSE_GUI )
@@ -2155,6 +2175,13 @@ void FormMain::CreateGrid( int style, int extraStyle )
     m_pPropGridManager->SetValidationFailureBehavior( wxPG_VFB_BEEP | wxPG_VFB_MARK_CELL | wxPG_VFB_SHOW_MESSAGE );
 
     m_pPropGridManager->GetGrid()->SetVerticalSpacing( 2 );
+
+    //
+    // Set somewhat different unspecified value appearance
+    wxPGCell cell;
+    cell.SetText("Unspecified");
+    cell.SetFgCol(*wxLIGHT_GREY);
+    m_propGrid->SetUnspecifiedValueAppearance(cell);
 
     PopulateGrid();
 

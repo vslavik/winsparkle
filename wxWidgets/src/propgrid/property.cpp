@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-23
-// RCS-ID:      $Id: property.cpp 62955 2009-12-20 12:48:41Z JMS $
+// RCS-ID:      $Id: property.cpp 63012 2009-12-29 16:04:40Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -135,8 +135,9 @@ int wxPGCellRenderer::PreDrawCell( wxDC& dc, const wxRect& rect, const wxPGCell&
     // If possible, use cell colours
     if ( !(flags & DontUseCellBgCol) )
     {
-        dc.SetPen(cell.GetBgCol());
-        dc.SetBrush(cell.GetBgCol());
+        const wxColour& bgCol = cell.GetBgCol();
+        dc.SetPen(bgCol);
+        dc.SetBrush(bgCol);
     }
 
     if ( !(flags & DontUseCellFgCol) )
@@ -185,10 +186,14 @@ void wxPGCellRenderer::PostDrawCell( wxDC& dc,
 // wxPGDefaultRenderer
 // -----------------------------------------------------------------------
 
-void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
+bool wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
                                   const wxPropertyGrid* propertyGrid, wxPGProperty* property,
                                   int column, int item, int flags ) const
 {
+    const wxPGEditor* editor = NULL;
+    const wxPGCell* cell = NULL;
+
+    wxString text;
     bool isUnspecified = property->IsValueUnspecified();
 
     if ( column == 1 && item == -1 )
@@ -198,17 +203,19 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
         {
             // Common Value
             if ( !isUnspecified )
-                DrawText( dc, rect, 0, propertyGrid->GetCommonValueLabel(cmnVal) );
-            return;
+            {
+                text = propertyGrid->GetCommonValueLabel(cmnVal);
+                DrawText( dc, rect, 0, text );
+                if ( text.length() )
+                    return true;
+            }
+            return false;
         }
     }
 
-    const wxPGEditor* editor = NULL;
-    const wxPGCell* cell = NULL;
-
-    wxString text;
     int imageWidth = 0;
     int preDrawFlags = flags;
+    bool res = false;
 
     property->GetDisplayInfo(column, item, flags, &text, &cell);
 
@@ -258,17 +265,23 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
 
         if ( text.length() == 0 )
         {
-            // Try to show inline help if no text
-            wxVariant vInlineHelp = property->GetAttribute(wxPGGlobalVars->m_strInlineHelp);
-            if ( !vInlineHelp.IsNull() )
+            text = property->GetHintText();
+            if ( text.length() > 0 )
             {
-                text = vInlineHelp.GetString();
-                dc.SetTextForeground(propertyGrid->GetCellDisabledTextColour());
+                res = true;
+
+                const wxColour& hCol =
+                    propertyGrid->GetCellDisabledTextColour();
+                dc.SetTextForeground(hCol);
 
                 // Must make the editor NULL to override it's own rendering
                 // code.
                 editor = NULL;
             }
+        }
+        else
+        {
+            res = true;
         }
     }
 
@@ -277,7 +290,7 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
     DrawEditorValue( dc, rect, imageOffset, text, property, editor );
 
     // active caption gets nice dotted rectangle
-    if ( property->IsCategory() /*&& column == 0*/ )
+    if ( property->IsCategory() && column == 0 )
     {
         if ( flags & Selected )
         {
@@ -298,6 +311,8 @@ void wxPGDefaultRenderer::Render( wxDC& dc, const wxRect& rect,
     }
 
     PostDrawCell(dc, propertyGrid, *cell, preDrawFlags);
+
+    return res;
 }
 
 wxSize wxPGDefaultRenderer::GetImageSize( const wxPGProperty* property,
@@ -416,6 +431,12 @@ void wxPGCell::MergeFrom( const wxPGCell& srcCell )
     if ( srcCell.GetBitmap().IsOk() )
         data->SetBitmap(srcCell.GetBitmap());
 }
+
+void wxPGCell::SetEmptyData()
+{
+    AllocExclusive();
+}
+
 
 // -----------------------------------------------------------------------
 // wxPGProperty
@@ -706,8 +727,17 @@ void wxPGProperty::GetDisplayInfo( unsigned int column,
 
     if ( !(flags & wxPGCellRenderer::ChoicePopup) )
     {
-        // Not painting listi of choice popups, so get text from property
-        cell = &GetCell(column);
+        // Not painting list of choice popups, so get text from property
+        if ( column != 1 || !IsValueUnspecified() || IsCategory() )
+        {
+            cell = &GetCell(column);
+        }
+        else
+        {
+            // Use special unspecified value cell
+            cell = &GetGrid()->GetUnspecifiedValueAppearance();
+        }
+
         if ( cell->HasText() )
         {
             *pString = cell->GetText();
@@ -2613,7 +2643,29 @@ wxPropertyCategory::~wxPropertyCategory()
 wxString wxPropertyCategory::ValueToString( wxVariant& WXUNUSED(value),
                                             int WXUNUSED(argFlags) ) const
 {
+    if ( m_value.GetType() == wxPG_VARIANT_TYPE_STRING )
+        return m_value.GetString();
     return wxEmptyString;
+}
+
+wxString wxPropertyCategory::GetValueAsString( int argFlags ) const
+{
+#if wxPG_COMPATIBILITY_1_4
+    // This is backwards compatibility test
+    // That is, to make sure this function is not overridden
+    // (instead, ValueToString() should be).
+    if ( argFlags == 0xFFFF )
+    {
+        // Do not override! (for backwards compliancy)
+        return g_invalidStringContent;
+    }
+#endif
+
+    // Unspecified value is always empty string
+    if ( IsValueUnspecified() )
+        return wxEmptyString;
+
+    return wxPGProperty::GetValueAsString(argFlags);
 }
 
 int wxPropertyCategory::GetTextExtent( const wxWindow* wnd, const wxFont& font ) const

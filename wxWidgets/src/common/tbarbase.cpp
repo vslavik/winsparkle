@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: VZ at 11.12.99 (wxScrollableToolBar split off)
 // Created:     04/01/98
-// RCS-ID:      $Id: tbarbase.cpp 62850 2009-12-10 03:04:19Z VZ $
+// RCS-ID:      $Id: tbarbase.cpp 62992 2009-12-26 16:36:26Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -454,8 +454,7 @@ bool wxToolBarBase::Realize()
     if ( m_tools.empty() )
         return false;
 
-    // make sure tool size is larger enough for all all bitmaps to fit in
-    // (this is consistent with what other ports do):
+    // make sure tool size is large enough for all bitmaps to fit in
     AdjustToolBitmapSize();
 
     return true;

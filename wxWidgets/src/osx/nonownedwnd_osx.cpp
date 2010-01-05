@@ -159,10 +159,24 @@ wxNonOwnedWindow::~wxNonOwnedWindow()
     DestroyChildren();
 
     delete m_nowpeer;
+    m_nowpeer = NULL;
 
     // avoid dangling refs
     if ( s_macDeactivateWindow == this )
         s_macDeactivateWindow = NULL;
+}
+
+bool wxNonOwnedWindow::Destroy()
+{
+    WillBeDestroyed();
+    
+    return wxWindow::Destroy();
+}
+
+void wxNonOwnedWindow::WillBeDestroyed()
+{
+    if ( m_nowpeer )
+        m_nowpeer->WillBeDestroyed();
 }
 
 // ----------------------------------------------------------------------------

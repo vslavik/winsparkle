@@ -103,6 +103,8 @@ public:
     virtual void HandleResized( double timestampsec );
     virtual void HandleMoved( double timestampsec );
     virtual void HandleResizing( double timestampsec, wxRect* rect );
+    
+    virtual bool Destroy();
 
 protected:
     // common part of all ctors
@@ -116,6 +118,8 @@ protected:
     virtual bool OSXShowWithEffect(bool show,
                                    wxShowEffect effect,
                                    unsigned timeout);
+    
+    virtual void WillBeDestroyed();
 
     wxNonOwnedWindowImpl* m_nowpeer ;
 

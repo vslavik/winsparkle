@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     04/01/98
-// RCS-ID:      $Id: button.cpp 62889 2009-12-15 11:24:17Z VS $
+// RCS-ID:      $Id: button.cpp 62970 2009-12-22 15:37:37Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -574,8 +574,10 @@ wxSize wxButton::DoGetBestSize() const
 {
     wxSize size;
 
-    // account for the text part
-    if ( ShowsLabel() )
+    // account for the text part if we have it or if we don't have any image at
+    // all (buttons initially created with empty label should still have a non
+    // zero size)
+    if ( ShowsLabel() || !m_imageData )
     {
         size = wxMSWButton::ComputeBestSize(const_cast<wxButton *>(this));
     }

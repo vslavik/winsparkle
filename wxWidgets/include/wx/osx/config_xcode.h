@@ -4,7 +4,7 @@
 // Author:      Stefan Csomor
 // Modified by:
 // Created:     29.04.04
-// RCS-ID:      $Id: config_xcode.h 61724 2009-08-21 10:41:26Z VZ $
+// RCS-ID:      $Id: config_xcode.h 63056 2010-01-04 07:52:45Z SC $
 // Copyright:   (c) wxWidgets team
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,6 +119,7 @@
 #define HAVE_GETPWUID_R 1
 #define HAVE_GETGRGID_R 1
 #define HAVE_LOCALE_T 1
+#define wxHAS_KQUEUE 1
 
 #define WXWIN_OS_DESCRIPTION "Darwin 7.9.0 Power Macintosh"
 #define PACKAGE_BUGREPORT "wx-dev@lists.wxwidgets.org"

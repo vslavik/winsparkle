@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-23
-// RCS-ID:      $Id: property.h 62880 2009-12-14 15:15:35Z JMS $
+// RCS-ID:      $Id: property.h 63012 2009-12-29 16:04:40Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,11 @@ public:
                               DontUseCellBgCol
     };
 
-    virtual void Render( wxDC& dc,
+    /**
+        Returns @true if rendered something in the foreground (text or
+        bitmap.
+    */
+    virtual bool Render( wxDC& dc,
                          const wxRect& rect,
                          const wxPropertyGrid* propertyGrid,
                          wxPGProperty* property,
@@ -171,7 +175,7 @@ public:
 class WXDLLIMPEXP_PROPGRID wxPGDefaultRenderer : public wxPGCellRenderer
 {
 public:
-    virtual void Render( wxDC& dc,
+    virtual bool Render( wxDC& dc,
                          const wxRect& rect,
                          const wxPropertyGrid* propertyGrid,
                          wxPGProperty* property,
@@ -253,6 +257,11 @@ public:
     {
         return (m_refData && GetData()->m_hasValidText);
     }
+
+    /**
+        Sets empty but valid data to this cell object.
+    */
+    void SetEmptyData();
 
     /**
         Merges valid data from srcCell into this.
@@ -541,10 +550,17 @@ wxPG_PROP_BEING_DELETED             = 0x00200000
 */
 #define wxPG_ATTR_UNITS                     wxS("Units")
 
-/** Universal, string. When set, will be shown in property's value cell
-    when displayed value string is empty, or value is unspecified.
+/** When set, will be shown as 'greyed' text in property's value cell when
+    the actual displayed value is blank.
+*/
+#define wxPG_ATTR_HINT                      wxS("Hint")
+
+#if wxPG_COMPATIBILITY_1_4
+/**
+    @deprecated Use "Hint" (wxPG_ATTR_INLINE_HELP) instead.
 */
 #define wxPG_ATTR_INLINE_HELP               wxS("InlineHelp")
+#endif
 
 /** Universal, wxArrayString. Set to enable auto-completion in any
     wxTextCtrl-based property editor.
@@ -678,8 +694,12 @@ wxPG_PROP_BEING_DELETED             = 0x00200000
 #define wxPG_ATTR_MAX                     wxPGGlobalVars->m_strMax
 #undef wxPG_ATTR_UNITS
 #define wxPG_ATTR_UNITS                   wxPGGlobalVars->m_strUnits
+#undef wxPG_ATTR_HINT
+#define wxPG_ATTR_HINT                    wxPGGlobalVars->m_strHint
+#if wxPG_COMPATIBILITY_1_4
 #undef wxPG_ATTR_INLINE_HELP
 #define wxPG_ATTR_INLINE_HELP             wxPGGlobalVars->m_strInlineHelp
+#endif
 
 #endif  // !SWIG
 
@@ -1633,6 +1653,11 @@ public:
         return GetValueAsString(0);
     }
 
+    /**
+        Returns property's hint text (shown in empty value cell).
+    */
+    inline wxString GetHintText() const;
+
     /** Returns property grid where property lies. */
     wxPropertyGrid* GetGrid() const;
 
@@ -2463,6 +2488,7 @@ public:
     int GetTextExtent( const wxWindow* wnd, const wxFont& font ) const;
 
     virtual wxString ValueToString( wxVariant& value, int argFlags ) const;
+    virtual wxString GetValueAsString( int argFlags = 0 ) const;
 
 protected:
     void SetTextColIndex( unsigned int colInd )

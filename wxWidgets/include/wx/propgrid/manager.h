@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2005-01-14
-// RCS-ID:      $Id: manager.h 62867 2009-12-13 12:00:04Z JMS $
+// RCS-ID:      $Id: manager.h 63059 2010-01-04 10:08:01Z SC $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@
 #include "wx/button.h"
 #include "wx/textctrl.h"
 #include "wx/dialog.h"
-#include <wx/headerctrl.h>
+#include "wx/headerctrl.h"
 
 // -----------------------------------------------------------------------
 

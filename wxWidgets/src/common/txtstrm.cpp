@@ -4,7 +4,7 @@
 // Author:      Guilhem Lavaux
 // Modified by:
 // Created:     28/06/98
-// RCS-ID:      $Id: txtstrm.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: txtstrm.cpp 63064 2010-01-04 12:22:49Z VZ $
 // Copyright:   (c) Guilhem Lavaux
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ wxChar wxTextInputStream::NextChar()
             return wxEOT;
 
         if ( m_conv->ToWChar(wbuf, WXSIZEOF(wbuf), m_lastBytes, inlen + 1)
-                != wxCONV_FAILED )
+                == 1 )
             return wbuf[0];
     }
     // there should be no encoding which requires more than nine bytes for one character...

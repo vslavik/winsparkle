@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2008-08-24
-// RCS-ID:      $Id: propgridiface.cpp 62743 2009-11-29 09:42:45Z JMS $
+// RCS-ID:      $Id: propgridiface.cpp 63066 2010-01-04 16:07:47Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ bool wxPropertyGridInterface::EnableProperty( wxPGPropArg id, bool enable )
             return false;
 
         // If active, Set active Editor.
-        if ( grid->GetState() == state && p == grid->GetSelection() )
+        if ( grid && grid->GetState() == state && p == grid->GetSelection() )
             grid->DoSelectProperty( p, wxPG_SEL_FORCE );
     }
     else
@@ -279,7 +279,7 @@ bool wxPropertyGridInterface::EnableProperty( wxPGPropArg id, bool enable )
             return false;
 
         // If active, Disable as active Editor.
-        if ( grid->GetState() == state && p == grid->GetSelection() )
+        if ( grid && grid->GetState() == state && p == grid->GetSelection() )
             grid->DoSelectProperty( p, wxPG_SEL_FORCE );
     }
 

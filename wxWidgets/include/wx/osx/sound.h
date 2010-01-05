@@ -5,7 +5,7 @@
 // Author:      Ryan Norton, Stefan Csomor
 // Modified by:
 // Created:     1998-01-01
-// RCS-ID:      $Id: sound.h 62356 2009-10-09 17:39:19Z PC $
+// RCS-ID:      $Id: sound.h 63023 2009-12-30 17:41:29Z KO $
 // Copyright:   (c) Ryan Norton, Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -30,6 +30,9 @@ public :
     virtual void Stop();
     // can be called by a timer for repeated tasks during playback
     virtual void SoundTask();
+    // mark this to be deleted
+    virtual void MarkForDeletion();
+    virtual bool IsMarkedForDeletion() const { return m_markedForDeletion; }
     
     // does the true work of stopping and cleaning up
     virtual void DoStop() = 0;
@@ -38,6 +41,7 @@ protected :
     
     unsigned int m_flags;
     wxSoundTimer* m_pTimer;
+    bool m_markedForDeletion;
 } ;
 
 class WXDLLIMPEXP_ADV wxSound : public wxSoundBase

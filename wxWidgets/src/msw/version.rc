@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     09.07.00
-// RCS-ID:      $Id: version.rc 62054 2009-09-24 07:42:31Z JS $
+// RCS-ID:      $Id: version.rc 63031 2009-12-31 13:36:23Z VZ $
 // Copyright:   (c) 2000 Vadim Zeitlin
 // Licence:     wxWidgets license
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ BEGIN
             VALUE "FileDescription", "wxWidgets for MSW\0"
             VALUE "FileVersion", "wxWidgets Library " wxVERSION_NUM_DOT_STRING "\0"
             VALUE "InternalName", "wxMSW\0"
-            VALUE "LegalCopyright", "Copyright 1993-2009 wxWidgets development team\0"
+            VALUE "LegalCopyright", "Copyright 1993-2010 wxWidgets development team\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", wxSTRINGIZE(WXDLLNAME) ".dll\0"
             VALUE "PrivateBuild", "\0"

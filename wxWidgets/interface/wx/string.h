@@ -2,7 +2,7 @@
 // Name:        string.h
 // Purpose:     interface of wxStringBuffer, wxString
 // Author:      wxWidgets team
-// RCS-ID:      $Id: string.h 61884 2009-09-12 10:42:04Z VZ $
+// RCS-ID:      $Id: string.h 62996 2009-12-27 19:40:08Z VZ $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -584,6 +584,7 @@ public:
     wxString& operator<<(wchar_t ch);
     wxString& operator<<(const wxCharBuffer& s);
     wxString& operator<<(const wxWCharBuffer& s);
+    wxString& operator<<(wxUniChar ch);
     wxString& operator<<(wxUniCharRef ch);
     wxString& operator<<(unsigned int ui);
     wxString& operator<<(long l);
