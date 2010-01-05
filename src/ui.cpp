@@ -395,8 +395,8 @@ void UpdateDialog::StateNoUpdateFound()
         msg = wxString::Format
               (
                   _("%s %s is currently the newest version available."),
-                  Settings::Get().GetAppName(),
-                  Settings::Get().GetAppVersion()
+                  Settings::GetAppName(),
+                  Settings::GetAppVersion()
               );
     }
     catch ( std::exception& )
@@ -425,7 +425,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
     {
         LayoutChangesGuard guard(this);
 
-        const wxString appname = Settings::Get().GetAppName();
+        const wxString appname = Settings::GetAppName();
 
         m_heading->SetLabel(
             wxString::Format(_("A new version of %s is available!"), appname));
@@ -437,7 +437,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
                 _("%s %s is now available (you have %s). Would you like to download it now?"),
                 appname,
                 info.Version,
-                Settings::Get().GetAppVersion()
+                Settings::GetAppVersion()
             )
         );
 

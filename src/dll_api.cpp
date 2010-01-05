@@ -68,7 +68,7 @@ WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
 {
     try
     {
-        Settings::Get().SetAppcastURL(url);
+        Settings::SetAppcastURL(url);
     }
     CATCH_ALL_EXCEPTIONS
 }

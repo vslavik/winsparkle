@@ -32,14 +32,7 @@
 namespace winsparkle
 {
 
-
-Settings Settings::ms_instance;
-
-
-Settings& Settings::Get()
-{
-    return ms_instance;
-}
+std::string Settings::ms_appcastURL;
 
 
 /*--------------------------------------------------------------------------*
@@ -93,7 +86,6 @@ std::wstring GetVerInfoLang(void *fi)
 } // anonymous namespace
 
 
-/* static */
 std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
 {
     TCHAR exeFilename[MAX_PATH + 1];
@@ -139,10 +131,10 @@ std::string MakeSubKey(const char *name)
 {
     std::string s("Software\\");
 
-    std::wstring vendor = Settings::Get().GetCompanyName();
+    std::wstring vendor = Settings::GetCompanyName();
     if ( !vendor.empty() )
         s += WideToAnsi(vendor) + "\\";
-    s += WideToAnsi(Settings::Get().GetAppName());
+    s += WideToAnsi(Settings::GetAppName());
     s += "\\WinSparkle";
 
     return s;
@@ -245,7 +237,7 @@ void Settings::DoWriteConfigValue(const char *name, const char *value)
 }
 
 
-std::string Settings::DoReadConfigValue(const char *name) const
+std::string Settings::DoReadConfigValue(const char *name)
 {
     char buf[512];
     if ( RegistryRead(name, buf, sizeof(buf)) )

@@ -48,26 +48,23 @@ namespace winsparkle
 class Settings
 {
 public:
-    /// Returns the Settings singleton.
-    static Settings& Get();
-
     /// Get location of the appcast
-    std::string GetAppcastURL() const { return m_appcastURL; }
+    static std::string GetAppcastURL() { return ms_appcastURL; }
 
     /// Return application name
-    std::wstring GetAppName() const
+    static std::wstring GetAppName()
         { return GetVerInfoField(TEXT("ProductName")); }
 
     /// Return (human-readable) application version
-    std::wstring GetAppVersion() const
+    static std::wstring GetAppVersion()
         { return GetVerInfoField(TEXT("ProductVersion")); }
 
     /// Return name of the vendor
-    std::wstring GetCompanyName() const
+    static std::wstring GetCompanyName()
         { return GetVerInfoField(TEXT("CompanyName")); }
 
     /// Set appcast location
-    void SetAppcastURL(const char *url) { m_appcastURL = url; }
+    static void SetAppcastURL(const char *url) { ms_appcastURL = url; }
 
     /**
         Access to runtime configuration.
@@ -79,7 +76,7 @@ public:
 
     // Writes given value to registry under this name.
     template<typename T>
-    void WriteConfigValue(const char *name, const T& value)
+    static void WriteConfigValue(const char *name, const T& value)
     {
         std::ostringstream s;
         s << value;
@@ -89,7 +86,7 @@ public:
     // Reads a value from registry. Returns true if it was present,
     // false otherwise.
     template<typename T>
-    bool ReadConfigValue(const char *name, T& value) const
+    static bool ReadConfigValue(const char *name, T& value)
     {
         const std::string v = DoReadConfigValue(name);
         if ( v.empty() )
@@ -101,7 +98,7 @@ public:
 
     // Reads a value from registry, substituting default value if not present.
     template<typename T>
-    bool ReadConfigValue(const char *name, T& value, const T& defval) const
+    static bool ReadConfigValue(const char *name, T& value, const T& defval)
     {
         bool rv = ReadConfigValue(name, value);
         if ( !rv )
@@ -112,7 +109,7 @@ public:
     //@}
 
 private:
-    Settings() {}
+    Settings(); // cannot be instantiated
 
     // Get given field from the VERSIONINFO/StringFileInfo resource,
     // throw on failure
@@ -123,13 +120,11 @@ private:
         { return DoGetVerInfoField(field, false); }
     static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
 
-    void DoWriteConfigValue(const char *name, const char *value);
-    std::string DoReadConfigValue(const char *name) const;
+    static void DoWriteConfigValue(const char *name, const char *value);
+    static std::string DoReadConfigValue(const char *name);
 
 private:
-    std::string m_appcastURL;
-
-    static Settings ms_instance;
+    static std::string ms_appcastURL;
 };
 
 } // namespace winsparkle
