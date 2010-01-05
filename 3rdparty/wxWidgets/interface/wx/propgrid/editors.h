@@ -2,7 +2,7 @@
 // Name:        editors.h
 // Purpose:     interface of wxPropertyGrid editors
 // Author:      wxWidgets team
-// RCS-ID:      $Id: editors.h 59450 2009-03-09 18:32:43Z JMS $
+// RCS-ID:      $Id: editors.h 62981 2009-12-25 08:33:56Z JMS $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -113,6 +113,30 @@ public:
     /** Sets value in control to unspecified. */
     virtual void SetValueToUnspecified( wxPGProperty* property,
                                         wxWindow* ctrl ) const = 0;
+
+    /**
+        Called by property grid to set new appearance for the control.
+        Default implementation  sets foreground colour, background colour,
+        font, plus text for wxTextCtrl and wxComboCtrl.
+
+        @param appearance
+            New appearance to be applied.
+
+        @param oldAppearance
+            Previously applied appearance. Used to detect which
+            control attributes need to be changed (e.g. so we only
+            change background colour if really needed).
+
+        @param unspecified
+            @true if the new appearance represents an unspecified
+            property value.
+    */
+    virtual void SetControlAppearance( wxPropertyGrid* pg,
+                                       wxPGProperty* property,
+                                       wxWindow* ctrl,
+                                       const wxPGCell& appearance,
+                                       const wxPGCell& oldAppearance,
+                                       bool unspecified ) const;
 
     /** Sets control's value specifically from string. */
     virtual void SetControlStringValue( wxPGProperty* property,

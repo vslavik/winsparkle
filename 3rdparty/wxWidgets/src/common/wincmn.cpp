@@ -4,7 +4,7 @@
 // Author:      Julian Smart, Vadim Zeitlin
 // Modified by:
 // Created:     13/07/98
-// RCS-ID:      $Id: wincmn.cpp 62836 2009-12-09 13:27:53Z VZ $
+// RCS-ID:      $Id: wincmn.cpp 63065 2010-01-04 12:51:48Z VZ $
 // Copyright:   (c) wxWidgets team
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -245,7 +245,7 @@ bool wxWindowBase::CreateBase(wxWindowBase *parent,
     // does not as the user should be able to resize the window)
     //
     // note that we can't use IsTopLevel() from ctor
-    if ( !wxTopLevelWindows.Find((wxWindow *)this) )
+    if ( size != wxDefaultSize && !wxTopLevelWindows.Find((wxWindow *)this) )
         SetMinSize(size);
 
     SetName(name);
@@ -321,6 +321,12 @@ wxWindowBase::~wxWindowBase()
     // Just in case we've loaded a top-level window via LoadNativeDialog but
     // we weren't a dialog class
     wxTopLevelWindows.DeleteObject((wxWindow*)this);
+
+    // Any additional event handlers should be popped before the window is
+    // deleted as otherwise the last handler will be left with a dangling
+    // pointer to this window result in a difficult to diagnose crash later on.
+    wxASSERT_MSG( GetEventHandler() == this,
+                    wxT("any pushed event handlers must have been removed") );
 
 #if wxUSE_MENUS
     // The associated popup menu can still be alive, disassociate from it in

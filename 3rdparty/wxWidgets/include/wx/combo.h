@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: combo.h 62537 2009-11-02 14:57:35Z JMS $
+// RCS-ID:      $Id: combo.h 62989 2009-12-26 10:33:35Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -385,6 +385,10 @@ public:
     const wxBitmap& GetBitmapHover() const { return m_bmpHover; }
     const wxBitmap& GetBitmapDisabled() const { return m_bmpDisabled; }
 
+    // Hint functions mirrored from TextEntryBase
+    virtual bool SetHint(const wxString& hint);
+    virtual wxString GetHint() const;
+
     // Margins functions mirrored from TextEntryBase
     // (wxComboCtrl does not inherit from wxTextEntry, but may embed a
     // wxTextCtrl, so we need these). Also note that these functions
@@ -426,6 +430,16 @@ public:
         { return m_mainCtrlWnd; }
 
 protected:
+
+    // Returns true if hint text should be drawn in the control
+    bool ShouldUseHintText(int flags = 0) const
+    {
+        return ( !m_text &&
+                 !(flags & wxCONTROL_ISSUBMENU) &&
+                 !m_valueString.length() &&
+                 m_hintText.length() &&
+                 !ShouldDrawFocus() );
+    }
 
     //
     // Override these for customization purposes
@@ -483,6 +497,10 @@ protected:
     // override the base class virtuals involved in geometry calculations
     virtual wxSize DoGetBestSize() const;
 
+    // also set the embedded wxTextCtrl colours
+    virtual bool SetForegroundColour(const wxColour& colour);
+    virtual bool SetBackgroundColour(const wxColour& colour);
+
     // NULL popup can be used to indicate default in a derived class
     virtual void DoSetPopupControl(wxComboPopup* popup);
 
@@ -539,6 +557,9 @@ protected:
 
     // This is used when m_text is hidden (readonly).
     wxString                m_valueString;
+
+    // This is used when control is unfocused and m_valueString is empty
+    wxString                m_hintText;
 
     // the text control and button we show all the time
     wxTextCtrl*             m_text;

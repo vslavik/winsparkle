@@ -2,7 +2,7 @@
 // Name:        property.h
 // Purpose:     interface of wxPGProperty
 // Author:      wxWidgets team
-// RCS-ID:      $Id: property.h 62416 2009-10-15 16:39:19Z JMS $
+// RCS-ID:      $Id: property.h 63012 2009-12-29 16:04:40Z JMS $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -41,8 +41,13 @@
 */
 #define wxPG_ATTR_UNITS                     wxS("Units")
 
-/** Universal, string. When set, will be shown in property's value cell
-    when displayed value string is empty, or value is unspecified.
+/** When set, will be shown as 'greyed' text in property's value cell when
+    the actual displayed value is blank.
+*/
+#define wxPG_ATTR_HINT                      wxS("Hint")
+
+/**
+    @deprecated Use "Hint" (wxPG_ATTR_INLINE_HELP) instead.
 */
 #define wxPG_ATTR_INLINE_HELP               wxS("InlineHelp")
 
@@ -202,7 +207,10 @@
     @subsection wxPropertyCategory
 
     Not an actual property per se, but a header for a group of properties.
-    Regardless inherits from wxPGProperty.
+    Regardless inherits from wxPGProperty, and supports displaying 'labels'
+    for columns other than the first one. Easiest way to set category's
+    label for second column is to call wxPGProperty::SetValue() with string
+    argument.
 
     @subsection wxStringProperty
 

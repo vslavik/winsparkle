@@ -28,6 +28,7 @@
 
 #include "ui.h"
 #include "settings.h"
+#include "error.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -45,6 +46,9 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include <wx/settings.h>
+#include <wx/msw/ole/activex.h>
+
+#include <exdisp.h>
 
 #if !wxCHECK_VERSION(2,9,0)
 #error "wxWidgets >= 2.9 is required to compile this code"
@@ -74,6 +78,7 @@ struct LayoutChangesGuard
         m_win->GetSizer()->SetSizeHints(m_win);
         m_win->Refresh();
         m_win->Thaw();
+        m_win->Update();
     }
 
     wxWindow *m_win;
@@ -126,6 +131,7 @@ private:
     void OnInstall(wxCommandEvent&);
 
     void SetMessage(const wxString& text);
+    void ShowReleaseNotes(const wxString& url);
 
 private:
     wxTimer       m_timer;
@@ -137,12 +143,19 @@ private:
     wxButton     *m_closeButton;
     wxSizer      *m_closeButtonSizer;
     wxSizer      *m_updateButtonsSizer;
+    wxSizer      *m_releaseNotesSizer;
+    wxPanel      *m_browserParent;
+
+    wxAutoOleInterface<IWebBrowser2> m_webBrowser;
 
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast       m_appcast;
 
     static const int MESSAGE_AREA_WIDTH = 300;
+    static const int RELNOTES_WIDTH = 400;
+    static const int RELNOTES_HEIGHT = 200;
 };
+
 
 UpdateDialog::UpdateDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
@@ -164,10 +177,10 @@ UpdateDialog::UpdateDialog()
     topSizer->Add(m_infoSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
 
     m_heading = new wxStaticText(this, wxID_ANY, "");
-    wxFont bold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    bold.SetPointSize(bold.GetPointSize() + 1);
-    bold.SetWeight(wxFONTWEIGHT_BOLD);
-    m_heading->SetFont(bold);
+    wxFont bigbold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    bigbold.SetPointSize(bigbold.GetPointSize() + 1);
+    bigbold.SetWeight(wxFONTWEIGHT_BOLD);
+    m_heading->SetFont(bigbold);
     m_infoSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
 
     m_message = new wxStaticText(this, wxID_ANY, "",
@@ -176,8 +189,33 @@ UpdateDialog::UpdateDialog()
 
     m_progress = new wxGauge(this, wxID_ANY, 100,
                              wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
-    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP, 10));
+    m_infoSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
     m_infoSizer->AddStretchSpacer(1);
+
+    m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
+    wxFont bold = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    bold.SetWeight(wxFONTWEIGHT_BOLD);
+    notesLabel->SetFont(bold);
+    m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, 10));
+
+    m_browserParent = new wxPanel(this, wxID_ANY,
+                                  wxDefaultPosition,
+                                  wxSize(RELNOTES_WIDTH, RELNOTES_HEIGHT));
+    m_browserParent->SetBackgroundColour(*wxWHITE);
+    m_releaseNotesSizer->Add
+                         (
+                             m_browserParent,
+                             wxSizerFlags(1).Expand().Border(wxTOP, 10)
+                         );
+
+    m_infoSizer->Add
+                 (
+                     m_releaseNotesSizer,
+                     // proportion=10000 to overcome stretch spacer above
+                     wxSizerFlags(10000).Expand()
+                 );
 
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -212,7 +250,7 @@ UpdateDialog::UpdateDialog()
     m_infoSizer->Add
                  (
                      m_buttonSizer,
-                     wxSizerFlags(0).Expand().Border(wxTOP, 20)
+                     wxSizerFlags(0).Expand().Border(wxTOP, 10)
                  );
 
     SetSizerAndFit(topSizer);
@@ -299,6 +337,7 @@ void UpdateDialog::StateCheckingUpdates()
     HIDE(m_heading);
     SHOW(m_progress);
     SHOW(m_closeButtonSizer);
+    HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
 }
 
@@ -333,6 +372,7 @@ void UpdateDialog::StateNoUpdateFound()
     SHOW(m_heading);
     HIDE(m_progress);
     SHOW(m_closeButtonSizer);
+    HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
 }
 
@@ -341,30 +381,81 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
     m_appcast = info;
 
-    LayoutChangesGuard guard(this);
+    {
+        LayoutChangesGuard guard(this);
 
-    const wxString appname = Settings::Get().GetAppName();
+        const wxString appname = Settings::Get().GetAppName();
 
-    m_heading->SetLabel(
-        wxString::Format(_("A new version of %s is available!"), appname));
+        m_heading->SetLabel(
+            wxString::Format(_("A new version of %s is available!"), appname));
 
-    SetMessage
-    (
-        wxString::Format
+        SetMessage
         (
-            _("%s %s is now available (you have %s). Would you like to download it now?"),
-            appname,
-            info.Version,
-            Settings::Get().GetAppVersion()
-        )
-    );
+            wxString::Format
+            (
+                _("%s %s is now available (you have %s). Would you like to download it now?"),
+                appname,
+                info.Version,
+                Settings::Get().GetAppVersion()
+            )
+        );
 
-    EnablePulsing(false);
+        EnablePulsing(false);
 
-    SHOW(m_heading);
-    HIDE(m_progress);
-    HIDE(m_closeButtonSizer);
-    SHOW(m_updateButtonsSizer);
+        SHOW(m_heading);
+        HIDE(m_progress);
+        HIDE(m_closeButtonSizer);
+        SHOW(m_updateButtonsSizer);
+        DoShowElement(m_releaseNotesSizer, !info.ReleaseNotesURL.empty());
+    }
+
+    // Only show the release notes now that the layout was updated, as it may
+    // take some time to load the MSIE control:
+    if ( !info.ReleaseNotesURL.empty() )
+        ShowReleaseNotes(info.ReleaseNotesURL);
+}
+
+
+void UpdateDialog::ShowReleaseNotes(const wxString& url)
+{
+    if ( !m_webBrowser.IsOk() )
+    {
+        // Load MSIE control
+
+        wxBusyCursor busy;
+
+        IWebBrowser2 *browser;
+        HRESULT hr = CoCreateInstance
+                     (
+                         CLSID_WebBrowser,
+                         NULL,
+                         CLSCTX_INPROC_SERVER,
+                         IID_IWebBrowser2,
+                         (void**)&browser
+                     );
+
+        if ( FAILED(hr) )
+        {
+            // hide the notes again, we cannot show them
+            LayoutChangesGuard guard(this);
+            HIDE(m_releaseNotesSizer);
+            LogError("Failed to create WebBrowser ActiveX control.");
+            return;
+        }
+
+        m_webBrowser = browser;
+
+        new wxActiveXContainer(m_browserParent, IID_IWebBrowser2, browser);
+    }
+
+    m_webBrowser->Navigate
+                  (
+                      wxBasicString(url),
+                      NULL,  // Flags
+                      NULL,  // TargetFrameName
+                      NULL,  // PostData
+                      NULL   // Headers
+                  );
 }
 
 

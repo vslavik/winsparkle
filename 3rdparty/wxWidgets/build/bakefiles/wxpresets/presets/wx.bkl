@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: wx.bkl 62458 2009-10-19 13:57:25Z VS $ -->
+<!-- $Id: wx.bkl 62998 2009-12-27 19:40:22Z VZ $ -->
 
 <!--
     Presets for building wxWidgets applications.
@@ -273,7 +273,9 @@
         <if cond="WX_DEBUG=='0' and WX_UNICODE=='1'">u</if>
     </set>
 
-    <set var="COMPILER_PREFIX" make_var="1">$(COMPILER)</set>
+    <if cond="FORMAT!='autoconf'">
+        <set var="COMPILER_PREFIX" make_var="1">$(COMPILER)</set>
+    </if>
 
 
 

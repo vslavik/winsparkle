@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     11.05.99
-// RCS-ID:      $Id: datetimefmt.cpp 62764 2009-12-02 17:28:45Z PC $
+// RCS-ID:      $Id: datetimefmt.cpp 63061 2010-01-04 11:05:47Z VZ $
 // Copyright:   (c) 1999 Vadim Zeitlin <zeitlin@dptmaths.ens-cachan.fr>
 //              parts of code taken from sndcal library by Scott E. Lee:
 //
@@ -1559,7 +1559,7 @@ wxDateTime::ParseDate(const wxString& date, wxString::const_iterator *end)
     const wxString::const_iterator pEnd = date.end();
 
     wxString::const_iterator p = pBegin;
-    while ( wxIsspace(*p) )
+    while ( p != pEnd && wxIsspace(*p) )
         p++;
 
     // some special cases
@@ -1922,14 +1922,13 @@ wxDateTime::ParseTime(const wxString& time, wxString::const_iterator *end)
     for ( size_t n = 0; n < WXSIZEOF(stdTimes); n++ )
     {
         const wxString timeString = wxGetTranslation(stdTimes[n].name);
-        const wxString::const_iterator p = time.begin() + timeString.length();
-        if ( timeString.CmpNoCase(wxString(time.begin(), p)) == 0 )
+        if ( timeString.CmpNoCase(wxString(time, timeString.length())) == 0 )
         {
             // casts required by DigitalMars
             Set(stdTimes[n].hour, wxDateTime_t(0), wxDateTime_t(0));
 
             if ( end )
-                *end = p;
+                *end = time.begin() + timeString.length();
 
             return true;
         }
@@ -1942,7 +1941,7 @@ wxDateTime::ParseTime(const wxString& time, wxString::const_iterator *end)
         "%I:%M:%S %p",  // 12hour with AM/PM
         "%H:%M:%S",     // could be the same or 24 hour one so try it too
         "%I:%M %p",     // 12hour with AM/PM but without seconds
-        "%H:%M:%S",     // and a possibly 24 hour version without seconds
+        "%H:%M",        // and a possibly 24 hour version without seconds
         "%X",           // possibly something from above or maybe something
                         // completely different -- try it last
 

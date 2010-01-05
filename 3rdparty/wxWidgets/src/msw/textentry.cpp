@@ -3,7 +3,7 @@
 // Purpose:     wxTextEntry implementation for wxMSW
 // Author:      Vadim Zeitlin
 // Created:     2007-09-26
-// RCS-ID:      $Id: textentry.cpp 61834 2009-09-05 12:39:12Z JMS $
+// RCS-ID:      $Id: textentry.cpp 62986 2009-12-25 11:36:54Z VZ $
 // Copyright:   (c) 2007 Vadim Zeitlin <vadim@wxwindows.org>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -450,8 +450,12 @@ bool wxTextEntry::SetHint(const wxString& hint)
     if ( wxUxThemeEngine::GetIfActive() )
     {
         // notice that this message always works with Unicode strings
+        //
+        // we always use TRUE for wParam to show the hint even when the window
+        // has focus, otherwise there would be no way to show the hint for the
+        // initially focused window
         if ( ::SendMessage(GetEditHwnd(), EM_SETCUEBANNER,
-                             0, (LPARAM)(const wchar_t *)hint.wc_str()) )
+                             TRUE, (LPARAM)(const wchar_t *)hint.wc_str()) )
             return true;
     }
 

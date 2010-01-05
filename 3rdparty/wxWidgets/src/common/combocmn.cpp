@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     Apr-30-2006
-// RCS-ID:      $Id: combocmn.cpp 62960 2009-12-21 15:20:37Z JMS $
+// RCS-ID:      $Id: combocmn.cpp 62989 2009-12-26 10:33:35Z JMS $
 // Copyright:   (c) 2005 Jaakko Salli
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -904,6 +904,7 @@ wxComboCtrlBase::CreateTextCtrl(int style, const wxValidator& validator)
         m_text->Create(this, wxID_ANY, m_valueString,
                        wxDefaultPosition, wxSize(10,-1),
                        style, validator);
+        m_text->SetHint(m_hintText);
     }
 }
 
@@ -1322,6 +1323,27 @@ wxValidator* wxComboCtrlBase::GetValidator()
 }
 #endif // wxUSE_VALIDATORS
 
+bool wxComboCtrlBase::SetForegroundColour(const wxColour& colour)
+{
+    if ( wxControl::SetForegroundColour(colour) )
+    {
+        if ( m_text )
+            m_text->SetForegroundColour(colour);
+        return true;
+    }
+    return false;
+}
+
+bool wxComboCtrlBase::SetBackgroundColour(const wxColour& colour)
+{
+    if ( wxControl::SetBackgroundColour(colour) )
+    {
+        if ( m_text )
+            m_text->SetBackgroundColour(colour);
+        return true;
+    }
+    return false;
+}
 // ----------------------------------------------------------------------------
 // painting
 // ----------------------------------------------------------------------------
@@ -2516,6 +2538,21 @@ void wxComboCtrlBase::Undo()
 {
     if ( m_text )
         m_text->Undo();
+}
+
+bool wxComboCtrlBase::SetHint(const wxString& hint)
+{
+    m_hintText = hint;
+    bool res = true;
+    if ( m_text )
+        res = m_text->SetHint(hint);
+    Refresh();
+    return res;
+}
+
+wxString wxComboCtrlBase::GetHint() const
+{
+    return m_hintText;
 }
 
 #endif // wxUSE_COMBOCTRL

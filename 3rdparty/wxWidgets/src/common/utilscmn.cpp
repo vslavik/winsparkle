@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     29/01/98
-// RCS-ID:      $Id: utilscmn.cpp 62834 2009-12-09 07:38:22Z SC $
+// RCS-ID:      $Id: utilscmn.cpp 63031 2009-12-31 13:36:23Z VZ $
 // Copyright:   (c) 1998 Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1343,7 +1343,7 @@ void wxInfoMessageBox(wxWindow* parent)
                             GTK_MICRO_VERSION);
 #endif // __WXGTK__
 
-    msg += wxS("\nCopyright (c) 1995-2009 wxWidgets team");
+    msg += wxS("\nCopyright (c) 1995-2010 wxWidgets team");
 
     wxMessageBox(msg, wxT("wxWidgets information"),
                  wxICON_INFORMATION | wxOK,
