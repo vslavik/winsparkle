@@ -128,4 +128,130 @@ std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
 }
 
 
+/*--------------------------------------------------------------------------*
+                             runtime config access
+ *--------------------------------------------------------------------------*/
+
+namespace
+{
+
+std::string MakeSubKey(const char *name)
+{
+    std::string s("Software\\");
+
+    std::wstring vendor = Settings::Get().GetCompanyName();
+    if ( !vendor.empty() )
+        s += WideToAnsi(vendor) + "\\";
+    s += WideToAnsi(Settings::Get().GetAppName());
+    s += "\\WinSparkle";
+
+    return s;
+}
+
+
+void RegistryWrite(const char *name, const char *value)
+{
+    const std::string subkey = MakeSubKey(name);
+
+    HKEY key;
+    LONG result = RegCreateKeyExA
+                  (
+                      HKEY_CURRENT_USER,
+                      subkey.c_str(),
+                      0,
+                      NULL,
+                      REG_OPTION_NON_VOLATILE,
+                      KEY_SET_VALUE,
+                      NULL,
+                      &key,
+                      NULL
+                  );
+    if ( result != ERROR_SUCCESS )
+        throw Win32Exception("Cannot write settings to registry");
+
+    result = RegSetValueExA
+             (
+                 key,
+                 name,
+                 0,
+                 REG_SZ,
+                 (const BYTE*)value,
+                 strlen(value) + 1
+             );
+    if ( result != ERROR_SUCCESS )
+        throw Win32Exception("Cannot write settings to registry");
+
+    RegCloseKey(key);
+}
+
+
+int RegistryRead(const char *name, char *buf, size_t len)
+{
+    const std::string subkey = MakeSubKey(name);
+
+    HKEY key;
+    LONG result = RegOpenKeyExA
+                  (
+                      HKEY_CURRENT_USER,
+                      subkey.c_str(),
+                      0,
+                      KEY_QUERY_VALUE,
+                      &key
+                  );
+    if ( result != ERROR_SUCCESS )
+    {
+        if ( result == ERROR_FILE_NOT_FOUND )
+            return 0;
+        throw Win32Exception("Cannot write settings to registry");
+    }
+
+    DWORD buflen = len;
+    DWORD type;
+    result = RegQueryValueExA
+             (
+                 key,
+                 name,
+                 0,
+                 &type,
+                 (BYTE*)buf,
+                 &buflen
+             );
+
+    RegCloseKey(key);
+
+    if ( result != ERROR_SUCCESS )
+    {
+        if ( result == ERROR_FILE_NOT_FOUND )
+            return 0;
+        throw Win32Exception("Cannot write settings to registry");
+    }
+
+    if ( type != REG_SZ )
+    {
+        // incorrect type -- pretend that the setting doesn't exist, it will
+        // be newly written by WinSparkle anyway
+        return 0;
+    }
+
+    return 1;
+}
+
+} // anonymous namespace
+
+
+void Settings::DoWriteConfigValue(const char *name, const char *value)
+{
+    RegistryWrite(name, value);
+}
+
+
+std::string Settings::DoReadConfigValue(const char *name) const
+{
+    char buf[512];
+    if ( RegistryRead(name, buf, sizeof(buf)) )
+        return buf;
+    else
+        return std::string();
+}
+
 } // namespace winsparkle

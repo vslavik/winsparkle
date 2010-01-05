@@ -29,6 +29,7 @@
 #include "threads.h"
 
 #include <string>
+#include <sstream>
 
 
 namespace winsparkle
@@ -61,8 +62,54 @@ public:
     std::wstring GetAppVersion() const
         { return GetVerInfoField(TEXT("ProductVersion")); }
 
+    /// Return name of the vendor
+    std::wstring GetCompanyName() const
+        { return GetVerInfoField(TEXT("CompanyName")); }
+
     /// Set appcast location
     void SetAppcastURL(const char *url) { m_appcastURL = url; }
+
+    /**
+        Access to runtime configuration.
+
+        This is stored in registry, under HKCU\Software\...\...\WinSparkle,
+        where the vendor and app names are determined from resources.
+     */
+    //@{
+
+    // Writes given value to registry under this name.
+    template<typename T>
+    void WriteConfigValue(const char *name, const T& value)
+    {
+        std::ostringstream s;
+        s << value;
+        DoWriteConfigValue(name, s.str().c_str());
+    }
+
+    // Reads a value from registry. Returns true if it was present,
+    // false otherwise.
+    template<typename T>
+    bool ReadConfigValue(const char *name, T& value) const
+    {
+        const std::string v = DoReadConfigValue(name);
+        if ( v.empty() )
+            return false;
+        std::istringstream s(v);
+        s >> value;
+        return !s.fail();
+    }
+
+    // Reads a value from registry, substituting default value if not present.
+    template<typename T>
+    bool ReadConfigValue(const char *name, T& value, const T& defval) const
+    {
+        bool rv = ReadConfigValue(name, value);
+        if ( !rv )
+            value = defval;
+        return rv;
+    }
+
+    //@}
 
 private:
     Settings() {}
@@ -74,8 +121,10 @@ private:
     // Same, but don't throw if a field is not set
     static std::wstring TryGetVerInfoField(const wchar_t *field)
         { return DoGetVerInfoField(field, false); }
-
     static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
+
+    void DoWriteConfigValue(const char *name, const char *value);
+    std::string DoReadConfigValue(const char *name) const;
 
 private:
     std::string m_appcastURL;
