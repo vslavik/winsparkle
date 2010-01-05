@@ -4,7 +4,7 @@
 //              wxInputStream and wxOutputStream
 // Author:      Jonathan Liu <net147@gmail.com>
 // Created:     2009-05-02
-// RCS-ID:      $Id: stdstream.h 60483 2009-05-02 18:29:33Z VZ $
+// RCS-ID:      $Id: stdstream.h 63055 2010-01-04 07:50:31Z SC $
 // Copyright:   (c) 2009 Jonathan Liu
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -17,8 +17,8 @@
 #if wxUSE_STD_IOSTREAM
 
 #include <iosfwd>
-#include <wx/defs.h>
-#include <wx/stream.h>
+#include "wx/defs.h"
+#include "wx/stream.h"
 
 // ==========================================================================
 // wxStdInputStreamBuffer

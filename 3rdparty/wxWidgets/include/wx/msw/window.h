@@ -5,7 +5,7 @@
 // Modified by: Vadim Zeitlin on 13.05.99: complete refont of message handling,
 //              elimination of Default(), ...
 // Created:     01/02/97
-// RCS-ID:      $Id: window.h 62947 2009-12-19 14:47:37Z JMS $
+// RCS-ID:      $Id: window.h 62993 2009-12-26 16:36:32Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
 #ifndef _WX_WINDOW_H_
 #define _WX_WINDOW_H_
 
-enum wxSystemColour;
+#include "wx/settings.h"        // solely for wxSystemColour
 
 // if this is set to 1, we use deferred window sizing to reduce flicker when
 // resizing complicated window hierarchies, but this can in theory result in
@@ -446,6 +446,27 @@ public:
     {
         return true;
     }
+
+#if !defined(__WXWINCE__) && !defined(__WXUNIVERSAL__)
+    #define wxHAS_MSW_BACKGROUND_ERASE_HOOK
+#endif
+
+#ifdef wxHAS_MSW_BACKGROUND_ERASE_HOOK
+    // allows the child to hook into its parent WM_ERASEBKGND processing: call
+    // MSWSetEraseBgHook() with a non-NULL window to make parent call
+    // MSWEraseBgHook() on this window (don't forget to reset it to NULL
+    // afterwards)
+    //
+    // this hack is used by wxToolBar, see comments there
+    void MSWSetEraseBgHook(wxWindow *child);
+
+    // return true if WM_ERASEBKGND is currently hooked
+    bool MSWHasEraseBgHook() const;
+
+    // called when the window on which MSWSetEraseBgHook() had been called
+    // receives WM_ERASEBKGND
+    virtual bool MSWEraseBgHook(WXHDC WXUNUSED(hDC)) { return false; }
+#endif // wxHAS_MSW_BACKGROUND_ERASE_HOOK
 
     // common part of Show/HideWithEffect()
     bool MSWShowWithEffect(bool show,

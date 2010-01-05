@@ -4,7 +4,7 @@
 // Author:      Ryan Norton <wxprojects@comcast.net>
 // Modified by:
 // Created:     8/18/05
-// RCS-ID:      $Id: activex.h 58718 2009-02-07 18:59:25Z VZ $
+// RCS-ID:      $Id: activex.h 63038 2010-01-02 13:07:17Z VS $
 // Copyright:   (c) Ryan Norton
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,41 +74,41 @@ class FrameSite;
 template<typename I>
 class wxAutoOleInterface
 {
-    protected:
-    I *m_interface;
+public:
+    typedef I Interface;
 
-    public:
-    explicit wxAutoOleInterface(I *pInterface = NULL) : m_interface(pInterface) {}
+    explicit wxAutoOleInterface(I *pInterface = NULL) : m_interface(pInterface)
+        {}
     wxAutoOleInterface(REFIID riid, IUnknown *pUnk) : m_interface(NULL)
-    {   QueryInterface(riid, pUnk); }
+        { QueryInterface(riid, pUnk); }
     wxAutoOleInterface(REFIID riid, IDispatch *pDispatch) : m_interface(NULL)
-    {   QueryInterface(riid, pDispatch); }
+        { QueryInterface(riid, pDispatch); }
     wxAutoOleInterface(REFCLSID clsid, REFIID riid) : m_interface(NULL)
-    {   CreateInstance(clsid, riid); }
+        { CreateInstance(clsid, riid); }
     wxAutoOleInterface(const wxAutoOleInterface& ti) : m_interface(NULL)
-    {   operator = (ti); }
+        { operator=(ti); }
 
-    wxAutoOleInterface& operator = (const wxAutoOleInterface& ti)
+    wxAutoOleInterface& operator=(const wxAutoOleInterface& ti)
     {
-        if (ti.m_interface)
+        if ( ti.m_interface )
             ti.m_interface->AddRef();
         Free();
         m_interface = ti.m_interface;
         return *this;
     }
 
-    wxAutoOleInterface& operator = (I *&ti)
+    wxAutoOleInterface& operator=(I*& ti)
     {
         Free();
         m_interface = ti;
         return *this;
     }
 
-    ~wxAutoOleInterface() {   Free();   }
+    ~wxAutoOleInterface() { Free(); }
 
-    inline void Free()
+    void Free()
     {
-        if (m_interface)
+        if ( m_interface )
             m_interface->Release();
         m_interface = NULL;
     }
@@ -117,25 +117,37 @@ class wxAutoOleInterface
     {
         Free();
         wxASSERT(pUnk != NULL);
-        return pUnk->QueryInterface(riid, (void **) &m_interface);
+        return pUnk->QueryInterface(riid, (void **)&m_interface);
     }
 
     HRESULT CreateInstance(REFCLSID clsid, REFIID riid)
     {
         Free();
-        return CoCreateInstance(clsid, NULL, CLSCTX_ALL, riid, (void **) &m_interface);
+        return CoCreateInstance
+               (
+                   clsid,
+                   NULL,
+                   CLSCTX_ALL,
+                   riid,
+                   (void **)&m_interface
+               );
     }
 
-    inline operator I *() const {return m_interface;}
-    inline I* operator ->() {return m_interface;}
-    inline I** GetRef()    {return &m_interface;}
-    inline bool Ok() const { return IsOk(); }
-    inline bool IsOk() const    {return m_interface != NULL;}
+    operator I*() const {return m_interface; }
+    I* operator->() {return m_interface; }
+    I** GetRef() {return &m_interface; }
+    bool Ok() const { return IsOk(); }
+    bool IsOk() const { return m_interface != NULL; }
+
+protected:
+    I *m_interface;
 };
 
+#if WXWIN_COMPATIBILITY_2_8
 // this macro is kept for compatibility with older wx versions
 #define WX_DECLARE_AUTOOLE(wxAutoOleInterfaceType, I) \
     typedef wxAutoOleInterface<I> wxAutoOleInterfaceType;
+#endif // WXWIN_COMPATIBILITY_2_8
 
 typedef wxAutoOleInterface<IDispatch> wxAutoIDispatch;
 typedef wxAutoOleInterface<IOleClientSite> wxAutoIOleClientSite;

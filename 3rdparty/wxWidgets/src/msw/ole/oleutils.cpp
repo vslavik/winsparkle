@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     19.02.98
-// RCS-ID:      $Id: oleutils.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: oleutils.cpp 63045 2010-01-03 18:29:09Z VS $
 // Copyright:   (c) 1998 Vadim Zeitlin <zeitlin@dptmaths.ens-cachan.fr>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,103 +131,9 @@ wxBasicString::~wxBasicString()
 
 #if wxUSE_VARIANT
 
-/*
- *  wxClearVariant
- *
- *  Zeros a variant structure without regard to current contents
- */
-void wxClearVariant(VARIANTARG *pvarg)
-{
-    pvarg->vt = VT_EMPTY;
-    pvarg->wReserved1 = 0;
-    pvarg->wReserved2 = 0;
-    pvarg->wReserved3 = 0;
-    pvarg->lVal = 0;
-}
-
-/*
- *  wxReleaseVariant
- *
- *  Clears a particular variant structure and releases any external objects
- *  or memory contained in the variant.  Supports the data types listed above.
- */
-void wxReleaseVariant(VARIANTARG *pvarg)
-{
-    VARTYPE vt;
-    VARIANTARG _huge *pvargArray;
-    LONG lLBound, lUBound, l;
-
-    vt = (VARTYPE)(pvarg->vt & 0xfff);        // mask off flags
-
-    // check if an array.  If so, free its contents, then the array itself.
-    if (V_ISARRAY(pvarg))
-    {
-        // variant arrays are all this routine currently knows about.  Since a
-        // variant can contain anything (even other arrays), call ourselves
-        // recursively.
-        if (vt == VT_VARIANT)
-        {
-            SafeArrayGetLBound(pvarg->parray, 1, &lLBound);
-            SafeArrayGetUBound(pvarg->parray, 1, &lUBound);
-
-            if (lUBound > lLBound)
-            {
-                lUBound -= lLBound;
-
-                SafeArrayAccessData(pvarg->parray, (void**)&pvargArray);
-
-                for (l = 0; l < lUBound; l++)
-                {
-                    wxReleaseVariant(pvargArray);
-                    pvargArray++;
-                }
-
-                SafeArrayUnaccessData(pvarg->parray);
-            }
-        }
-        else
-        {
-            wxLogWarning(wxT("wxReleaseVariant: Array contains non-variant type"));
-        }
-
-        // Free the array itself.
-        SafeArrayDestroy(pvarg->parray);
-    }
-    else
-    {
-        switch (vt)
-        {
-            case VT_DISPATCH:
-                if (pvarg->pdispVal)
-                    pvarg->pdispVal->Release();
-                break;
-
-            case VT_BSTR:
-                SysFreeString(pvarg->bstrVal);
-                break;
-
-            case VT_I2:
-            case VT_I4:
-            case VT_BOOL:
-            case VT_R8:
-            case VT_ERROR:        // to avoid erroring on an error return from Excel
-            case VT_EMPTY:
-            case VT_DATE:
-                // no work for these types
-                break;
-
-            default:
-                wxLogWarning(wxT("wxReleaseVariant: Unknown type"));
-                break;
-        }
-    }
-
-    wxClearVariant(pvarg);
-}
-
 WXDLLEXPORT bool wxConvertVariantToOle(const wxVariant& variant, VARIANTARG& oleVariant)
 {
-    wxClearVariant(&oleVariant);
+    VariantInit(&oleVariant);
     if (variant.IsNull())
     {
         oleVariant.vt = VT_NULL;
@@ -242,14 +148,11 @@ WXDLLEXPORT bool wxConvertVariantToOle(const wxVariant& variant, VARIANTARG& ole
         oleVariant.vt = VT_I4;
         oleVariant.lVal = variant.GetLong() ;
     }
-    // cVal not always present
-#ifndef __GNUWIN32__
     else if (type == wxT("char"))
     {
         oleVariant.vt=VT_I1;            // Signed Char
         oleVariant.cVal=variant.GetChar();
     }
-#endif
     else if (type == wxT("double"))
     {
         oleVariant.vt = VT_R8;
@@ -258,12 +161,7 @@ WXDLLEXPORT bool wxConvertVariantToOle(const wxVariant& variant, VARIANTARG& ole
     else if (type == wxT("bool"))
     {
         oleVariant.vt = VT_BOOL;
-        // 'bool' required for VC++ 4 apparently
-#if (defined(__VISUALC__) && (__VISUALC__ <= 1000))
-        oleVariant.bool = variant.GetBool();
-#else
         oleVariant.boolVal = variant.GetBool();
-#endif
     }
     else if (type == wxT("string"))
     {

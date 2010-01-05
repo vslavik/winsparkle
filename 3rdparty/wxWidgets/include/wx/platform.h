@@ -4,7 +4,7 @@
 * Author:      Vadim Zeitlin
 * Modified by:
 * Created:     29.10.01 (extracted from wx/defs.h)
-* RCS-ID:      $Id: platform.h 62698 2009-11-22 11:24:09Z VZ $
+* RCS-ID:      $Id: platform.h 63021 2009-12-30 17:38:22Z MW $
 * Copyright:   (c) 1997-2001 Vadim Zeitlin
 * Licence:     wxWindows licence
 */
@@ -652,6 +652,8 @@
 #else
 #    undef wxCHECK_W32API_VERSION
 #    define wxCHECK_W32API_VERSION(maj, min) (0)
+#    undef wxCHECK_MINGW32_VERSION
+#    define wxCHECK_MINGW32_VERSION(maj, min) (0)
 #endif
 
 /**

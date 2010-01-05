@@ -4,7 +4,7 @@
 // Author:      Michael Bedward (based on code by Julian Smart, Robin Dunn)
 // Modified by: Robin Dunn, Vadim Zeitlin, Santiago Palacios
 // Created:     1/08/1999
-// RCS-ID:      $Id: grid.cpp 62764 2009-12-02 17:28:45Z PC $
+// RCS-ID:      $Id: grid.cpp 63001 2009-12-27 19:40:46Z VZ $
 // Copyright:   (c) Michael Bedward (mbedward@ozemail.com.au)
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -7139,11 +7139,21 @@ bool wxGrid::GetCellOverflow( int row, int col ) const
     return allow;
 }
 
-void wxGrid::GetCellSize( int row, int col, int *num_rows, int *num_cols ) const
+wxGrid::CellSpan
+wxGrid::GetCellSize( int row, int col, int *num_rows, int *num_cols ) const
 {
     wxGridCellAttr *attr = GetCellAttr(row, col);
     attr->GetSize( num_rows, num_cols );
     attr->DecRef();
+
+    if ( *num_rows == 1 && *num_cols == 1 )
+        return CellSpan_None; // just a normal cell
+
+    if ( *num_rows < 0 || *num_cols < 0 )
+        return CellSpan_Inside; // covered by a multi-span cell
+
+    // this cell spans multiple cells to its right/bottom
+    return CellSpan_Main;
 }
 
 wxGridCellRenderer* wxGrid::GetCellRenderer(int row, int col) const
@@ -7802,22 +7812,40 @@ wxGrid::AutoSizeColOrRow(int colOrRow, bool setAsMin, wxGridDirection direction)
     HideCellEditControl();
     SaveEditControlValue();
 
-    // init both of them to avoid compiler warnings, even if we only need one
+    // initialize both of them just to avoid compiler warnings
     int row = -1,
         col = -1;
-    if ( column )
-        col = colOrRow;
-    else
-        row = colOrRow;
 
     wxCoord extent, extentMax = 0;
     int max = column ? m_numRows : m_numCols;
     for ( int rowOrCol = 0; rowOrCol < max; rowOrCol++ )
     {
         if ( column )
+        {
             row = rowOrCol;
+            col = colOrRow;
+        }
         else
+        {
+            row = colOrRow;
             col = rowOrCol;
+        }
+
+        // we need to account for the cells spanning multiple columns/rows:
+        // while they may need a lot of space, they don't need all of it in
+        // this column/row
+        int numRows, numCols;
+        const CellSpan span = GetCellSize(row, col, &numRows, &numCols);
+        if ( span == CellSpan_Inside )
+        {
+            // we need to get the size of the main cell, not of a cell hidden
+            // by it
+            row += numRows;
+            col += numCols;
+
+            // get the size of the main cell too
+            GetCellSize(row, col, &numRows, &numCols);
+        }
 
         wxGridCellAttr *attr = GetCellAttr(row, col);
         wxGridCellRenderer *renderer = attr->GetRenderer(this, row, col);
@@ -7825,6 +7853,19 @@ wxGrid::AutoSizeColOrRow(int colOrRow, bool setAsMin, wxGridDirection direction)
         {
             wxSize size = renderer->GetBestSize(*this, *attr, dc, row, col);
             extent = column ? size.x : size.y;
+
+            if ( span != CellSpan_None )
+            {
+                // we spread the size of a spanning cell over all the cells it
+                // covers evenly -- this is probably not ideal but we can't
+                // really do much better here
+                //
+                // notice that numCols and numRows are never 0 as they
+                // correspond to the size of the main cell of the span and not
+                // of the cell inside it
+                extent /= column ? numCols : numRows;
+            }
+
             if ( extent > extentMax )
                 extentMax = extent;
 

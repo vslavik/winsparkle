@@ -435,6 +435,7 @@ All:
 - wxDateTime timezone functions now dynamic (no caching).
 - Added wxHttp::GetCookie and wxHttp::HasCookies (dodge).
 - Added support for unique volume names to wxFileName (Neno Ganchev).
+- Correct bugs when using wxTextInputStream with wxConvAuto (Leon Buikstra).
 
 Unix:
 
@@ -471,14 +472,16 @@ All (GUI):
   HasScrollbar() really check for the scrollbar existence.
 - Added wxKeyEvent::IsKeyInCategory() (Jeff Tupper).
 - Add A0 and A1 paper formats support (Martin Perktold).
-- Fixed wxOwnerDrawComboCtrl popup size on Mac (scrollbars were always shown).
-- Fixed wxOwnerDrawComboCtrl focus problem on Mac (first-time popup
+- Fixed wxComboCtrl popup size on Mac (scrollbars were always shown).
+- Fixed wxComboCtrl focus problem on Mac (first-time popup
   dismissed immediately as text control grabbed the focus).
 - wxPropertyGrid: added wxPG_EX_MULTIPLE_SELECTION.
 - wxPropertyGrid: added functions for editing property labels.
-- wxPropertyGrid: added wxPG_NO_INTERNAL_BORDER, wxPG_EX_NO_TOOLBAR_DIVIDER
-  and wxPG_EX_TOOLBAR_SEPARATOR styles for finer control over borders.
-  Borders around property grid are now native for consistency.
+- wxPropertyGridManager: added wxPG_NO_INTERNAL_BORDER,
+  wxPG_EX_NO_TOOLBAR_DIVIDER and wxPG_EX_TOOLBAR_SEPARATOR styles for finer
+  control over borders. Borders around property grid are now native for
+  consistency.
+- Added wxPropertyGridManager::ShowHeader().
 - Added wxXmlResource::LoadObjectRecursively().
 - Added wxColour::Set/GetRGB() and Set/GetRGBA() methods (Marcel Haß).
 - wxRTC: added wxRICHTEXT_HANDLER_USE_CSS flag for HTML handler to use CSS

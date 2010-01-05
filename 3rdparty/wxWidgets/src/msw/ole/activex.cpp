@@ -4,7 +4,7 @@
 // Author:      Ryan Norton <wxprojects@comcast.net>, Lindsay Mathieson <???>
 // Modified by:
 // Created:     11/07/04
-// RCS-ID:      $Id: activex.cpp 62779 2009-12-05 14:25:53Z VZ $
+// RCS-ID:      $Id: activex.cpp 63038 2010-01-02 13:07:17Z VS $
 // Copyright:   (c) 2003 Lindsay Mathieson, (c) 2005 Ryan Norton
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////

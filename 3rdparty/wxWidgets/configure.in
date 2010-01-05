@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_REVISION($Id: configure.in 62871 2009-12-13 12:52:59Z VZ $)dnl
+AC_REVISION($Id: configure.in 62997 2009-12-27 19:40:15Z VZ $)dnl
 
 AC_PREREQ(2.58)
 
@@ -10,7 +10,7 @@ dnl Vadim Zeitlin and Ron Lee
 dnl
 dnl This script is under the wxWidgets licence.
 dnl
-dnl Version: $Id: configure.in 62871 2009-12-13 12:52:59Z VZ $
+dnl Version: $Id: configure.in 62997 2009-12-27 19:40:15Z VZ $
 dnl ---------------------------------------------------------------------------
 
 dnl ---------------------------------------------------------------------------
@@ -1229,13 +1229,22 @@ elif test "x$wxUSE_MACOSX_VERSION_MIN" = "x"; then
         AC_MSG_WARN([Assuming OS X 10.4, use --with-macosx-version-min to override.])
         OSX_VERSION="10.4"
     fi
-    if test "$wxUSE_OSX_CARBON" = 1 -o "x$OSX_VERSION" = "x10.4"; then
-        # otherwise configure stops on leopard for universal_binary
-        wxUSE_MACOSX_VERSION_MIN=10.4
-    else
-        # for OS X Cocoa, use 10.5 so we can get 64-bit compile on Snow Leopard
-        wxUSE_MACOSX_VERSION_MIN=10.5
-    fi
+
+    case "$OSX_VERSION" in
+        10.4* )
+            wxUSE_MACOSX_VERSION_MIN=10.4
+            ;;
+
+        * )
+            if test "$wxUSE_OSX_CARBON" = 1; then
+                # otherwise configure stops on leopard for universal_binary
+                wxUSE_MACOSX_VERSION_MIN=10.4
+            else
+                # for Cocoa, use 10.5 to be able to compile it in 64 bits too
+                wxUSE_MACOSX_VERSION_MIN=10.5
+            fi
+            ;;
+    esac
 fi
 
 NEEDS_GCC40="no"

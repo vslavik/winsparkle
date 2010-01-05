@@ -4,7 +4,7 @@
 // Author:      Vadim Zeitlin
 // Modified by:
 // Created:     14.07.99
-// RCS-ID:      $Id: ffile.cpp 61724 2009-08-21 10:41:26Z VZ $
+// RCS-ID:      $Id: ffile.cpp 62974 2009-12-22 21:22:59Z MW $
 // Copyright:   (c) 1998 Vadim Zeitlin <zeitlin@dptmaths.ens-cachan.fr>
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -41,18 +41,6 @@
 // ============================================================================
 // implementation
 // ============================================================================
-
-// ----------------------------------------------------------------------------
-// seek and tell with large file support if available
-// ----------------------------------------------------------------------------
-
-#ifdef HAVE_FSEEKO
-#   define wxFseek fseeko
-#   define wxFtell ftello
-#else
-#   define wxFseek fseek
-#   define wxFtell ftell
-#endif
 
 // ----------------------------------------------------------------------------
 // opening the file
@@ -215,7 +203,7 @@ bool wxFFile::Seek(wxFileOffset ofs, wxSeekMode mode)
             break;
     }
 
-#ifndef HAVE_FSEEKO
+#ifndef wxHAS_LARGE_FFILES
     if ((long)ofs != ofs)
     {
         wxLogError(_("Seek error on file '%s' (large files not supported by stdio)"), m_name.c_str());
