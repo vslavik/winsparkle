@@ -26,8 +26,6 @@
 #ifndef _settings_h_
 #define _settings_h_
 
-#include "threads.h"
-
 #include <string>
 #include <sstream>
 
@@ -53,15 +51,15 @@ public:
 
     /// Return application name
     static std::wstring GetAppName()
-        { return GetVerInfoField(TEXT("ProductName")); }
+        { return GetVerInfoField(L"ProductName"); }
 
     /// Return (human-readable) application version
     static std::wstring GetAppVersion()
-        { return GetVerInfoField(TEXT("ProductVersion")); }
+        { return GetVerInfoField(L"ProductVersion"); }
 
     /// Return name of the vendor
     static std::wstring GetCompanyName()
-        { return GetVerInfoField(TEXT("CompanyName")); }
+        { return GetVerInfoField(L"CompanyName"); }
 
     /// Set appcast location
     static void SetAppcastURL(const char *url) { ms_appcastURL = url; }

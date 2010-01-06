@@ -27,6 +27,7 @@
 #define _utils_h_
 
 #include <string>
+#include <string.h>
 
 namespace winsparkle
 {
@@ -37,7 +38,7 @@ struct DataBuffer
     DataBuffer(size_t size)
     {
         data = new unsigned char[size];
-        ZeroMemory(data, size);
+        memset(data, 0, size);
     }
 
     ~DataBuffer() { delete[] data; }
