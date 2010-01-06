@@ -27,6 +27,7 @@
 
 #include "error.h"
 #include "utils.h"
+#include "threads.h"
 
 
 namespace winsparkle
@@ -228,17 +229,24 @@ int RegistryRead(const char *name, char *buf, size_t len)
     return 1;
 }
 
+// Critical section to guard DoWriteConfigValue/DoReadConfigValue.
+CriticalSection g_csConfigValues;
+
 } // anonymous namespace
 
 
 void Settings::DoWriteConfigValue(const char *name, const char *value)
 {
+    CriticalSectionLocker lock(g_csConfigValues);
+
     RegistryWrite(name, value);
 }
 
 
 std::string Settings::DoReadConfigValue(const char *name)
 {
+    CriticalSectionLocker lock(g_csConfigValues);
+
     char buf[512];
     if ( RegistryRead(name, buf, sizeof(buf)) )
         return buf;
