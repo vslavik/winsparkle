@@ -200,7 +200,7 @@ private:
     void OnRemindLater(wxCommandEvent&);
     void OnInstall(wxCommandEvent&);
 
-    void SetMessage(const wxString& text);
+    void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const wxString& url);
 
 private:
@@ -360,10 +360,10 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
 }
 
 
-void UpdateDialog::SetMessage(const wxString& text)
+void UpdateDialog::SetMessage(const wxString& text, int width)
 {
     m_message->SetLabel(text);
-    m_message->Wrap(MESSAGE_AREA_WIDTH);
+    m_message->Wrap(width);
 }
 
 
@@ -423,6 +423,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
     m_appcast = info;
 
+    const bool showRelnotes = !info.ReleaseNotesURL.empty();
+
     {
         LayoutChangesGuard guard(this);
 
@@ -439,7 +441,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
                 appname,
                 info.Version,
                 Settings::GetAppVersion()
-            )
+            ),
+            showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
         );
 
         EnablePulsing(false);
@@ -448,12 +451,12 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         HIDE(m_progress);
         HIDE(m_closeButtonSizer);
         SHOW(m_updateButtonsSizer);
-        DoShowElement(m_releaseNotesSizer, !info.ReleaseNotesURL.empty());
+        DoShowElement(m_releaseNotesSizer, showRelnotes);
     }
 
     // Only show the release notes now that the layout was updated, as it may
     // take some time to load the MSIE control:
-    if ( !info.ReleaseNotesURL.empty() )
+    if ( showRelnotes )
         ShowReleaseNotes(info.ReleaseNotesURL);
 }
 
