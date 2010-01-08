@@ -30,6 +30,8 @@
 #include "ui.h"
 #include "updatechecker.h"
 
+#include <ctime>
+
 using namespace winsparkle;
 
 extern "C"
@@ -48,10 +50,20 @@ WIN_SPARKLE_API void win_sparkle_init()
         {
             if ( checkUpdates )
             {
-                // Run the check in background. Only show UI if updates are
-                // available.
-                UpdateChecker *check = new UpdateChecker();
-                check->Start();
+                static const time_t ONE_DAY = 60*60*24;
+
+                time_t lastCheck = 0;
+                Settings::ReadConfigValue("LastCheckTime", lastCheck);
+                const time_t currentTime = time(NULL);
+
+                // Only check for updates once a day automatically.
+                if ( currentTime - lastCheck >= ONE_DAY )
+                {
+                    // Run the check in background. Only show UI if updates
+                    // are available.
+                    UpdateChecker *check = new UpdateChecker();
+                    check->Start();
+                }
             }
         }
         else // not yet configured

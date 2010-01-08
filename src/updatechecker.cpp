@@ -32,6 +32,7 @@
 #include "download.h"
 #include "utils.h"
 
+#include <ctime>
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
@@ -233,6 +234,8 @@ void UpdateChecker::Run()
 
         Appcast appcast;
         appcast.Load(appcast_xml.data);
+
+        Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
         const std::string currentVersion =
                 WideToAnsi(Settings::GetAppVersion());
