@@ -6,11 +6,13 @@
 
 # The version to package. It is assumed that binaries in the tree are
 # for this version.
-VERSION := $(shell bzr tags | head -n 1 | sed -e 's/release-\([0-9.a-zA-Z_-]*\).*/\1/g')
+VERSION := $(shell git describe | sed -e 's/^v//g')
 
 
-sources_arch := WinSparkle-$(VERSION)-src.7z
-binary_arch := WinSparkle-$(VERSION).zip
+sources_base := WinSparkle-$(VERSION)-src
+binary_base  := WinSparkle-$(VERSION)
+sources_arch := $(sources_base).7z
+binary_arch  := $(binary_base).zip
 binary_files := \
 	AUTHORS COPYING NEWS README \
 	Release/WinSparkle.dll \
@@ -23,16 +25,19 @@ binary_files := \
 
 all: $(binary_arch) $(sources_arch)
 
-
 $(binary_arch): $(binary_files)
-	rm -f $@
-	zip -9 --junk-paths $@ $(binary_files)
+	@rm -f $(binary_base) $@
+	@mkdir $(binary_base)
+	cp -ra $(binary_files) $(binary_base)
+	zip -9 -r  $@ $(binary_base)
+	@rm -rf $(binary_base) $(binary_base).tar
 
 $(sources_arch):
-	rm -rf WinSparkle-$(VERSION) $@
-	bzr export --format=dir WinSparkle-$(VERSION)
-	7z a -m0=lzma -mx=9 $@ WinSparkle-$(VERSION)
-	rm -rf WinSparkle-$(VERSION)
+	@rm -rf $(sources_base) $@
+	git archive --prefix=$(sources_base)/ -o $(sources_base).tar HEAD
+	tar xf $(sources_base).tar
+	7z a -m0=lzma -mx=9 $@  $(sources_base)
+	@rm -rf $(sources_base) $(sources_base).tar
 
 
 clean:
