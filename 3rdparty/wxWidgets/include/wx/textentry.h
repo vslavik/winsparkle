@@ -3,7 +3,7 @@
 // Purpose:     declares wxTextEntry interface defining a simple text entry
 // Author:      Vadim Zeitlin
 // Created:     2007-09-24
-// RCS-ID:      $Id: textentry.h 61844 2009-09-06 14:31:17Z VZ $
+// RCS-ID:      $Id: textentry.h 63105 2010-01-09 19:50:55Z KO $
 // Copyright:   (c) 2007 Vadim Zeitlin <vadim@wxwindows.org>
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -248,6 +248,8 @@ private:
     };
 #elif defined(__WXGTK20__)
     #include "wx/gtk/textentry.h"
+#elif defined(__WXMAC__)
+    #include "wx/osx/textentry.h"
 #elif defined(__WXMSW__)
     #include "wx/msw/textentry.h"
 #elif defined(__WXMOTIF__)

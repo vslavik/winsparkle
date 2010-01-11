@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Vadim Zeitlin to be less MSW-specific on 10.10.98
 // Created:     1997
-// RCS-ID:      $Id: treectrl.cpp 61784 2009-08-30 17:24:53Z VZ $
+// RCS-ID:      $Id: treectrl.cpp 63089 2010-01-07 13:16:01Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -2215,6 +2215,15 @@ bool wxTreeCtrl::MSWCommand(WXUINT cmd, WXWORD id_)
     return true;
 }
 
+bool wxTreeCtrl::MSWIsOnItem(unsigned flags) const
+{
+    unsigned mask = TVHT_ONITEM;
+    if ( HasFlag(wxTR_FULL_ROW_HIGHLIGHT) )
+        mask |= TVHT_ONITEMINDENT | TVHT_ONITEMRIGHT;
+
+    return (flags & mask) != 0;
+}
+
 bool wxTreeCtrl::MSWHandleSelectionKey(unsigned vkey)
 {
     const bool bCtrl = wxIsCtrlDown();
@@ -2716,7 +2725,7 @@ wxTreeCtrl::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 
                 m_htClickedItem.Unset();
 
-                if ( !(tvht.flags & TVHT_ONITEM) )
+                if ( !MSWIsOnItem(tvht.flags) )
                 {
                     if ( tvht.flags & TVHT_ONITEMBUTTON )
                     {
@@ -3067,10 +3076,7 @@ wxTreeCtrl::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
                         }
                     }
 
-                    if ( !m_dragStarted &&
-                         (tvht.flags & TVHT_ONITEMSTATEICON ||
-                          tvht.flags & TVHT_ONITEMICON ||
-                          tvht.flags & TVHT_ONITEM) )
+                    if ( !m_dragStarted && MSWIsOnItem(tvht.flags) )
                     {
                         processed = true;
                     }
@@ -3652,7 +3658,7 @@ bool wxTreeCtrl::MSWOnNotify(int idCtrl, WXLPARAM lParam, WXLPARAM *result)
                 ::ScreenToClient(GetHwnd(), &tvhti.pt);
                 if ( TreeView_HitTest(GetHwnd(), &tvhti) )
                 {
-                    if ( tvhti.flags & TVHT_ONITEM )
+                    if ( MSWIsOnItem(tvhti.flags) )
                     {
                         event.m_item = tvhti.hItem;
                         eventType = (int)hdr->code == NM_DBLCLK

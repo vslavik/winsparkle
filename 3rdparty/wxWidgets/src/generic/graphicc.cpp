@@ -4,7 +4,7 @@
 // Author:      Stefan Csomor
 // Modified by:
 // Created:     2006-10-03
-// RCS-ID:      $Id: graphicc.cpp 62731 2009-11-27 21:36:03Z VZ $
+// RCS-ID:      $Id: graphicc.cpp 63083 2010-01-06 02:22:38Z KO $
 // Copyright:   (c) 2006 Stefan Csomor
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -1040,8 +1040,8 @@ wxCairoBitmapData::wxCairoBitmapData( wxGraphicsRenderer* renderer, const wxBitm
 {
     wxCHECK_RET( bmp.IsOk(), wxT("Invalid bitmap in wxCairoContext::DrawBitmap"));
 
-    int bw = bmp.GetWidth();
-    int bh = bmp.GetHeight();
+    int bw = m_width = bmp.GetWidth();
+    int bh = m_height = bmp.GetHeight();
     wxBitmap bmpSource = bmp;  // we need a non-const instance
     m_buffer = new unsigned char[bw*bh*4];
     wxUint32* data = (wxUint32*)m_buffer;

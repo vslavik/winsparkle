@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- $Id: files.bkl 63053 2010-01-04 01:57:42Z KO $ -->
+<!-- $Id: files.bkl 63105 2010-01-09 19:50:55Z KO $ -->
 <makefile>
 
 <!--
@@ -2249,6 +2249,7 @@ IMPORTANT: please read docs/tech/tn0016.txt before modifying this file!
     src/osx/statbox_osx.cpp
     src/osx/statline_osx.cpp
     src/osx/stattext_osx.cpp
+    src/osx/textentry_osx.cpp
     src/osx/textctrl_osx.cpp
     src/osx/tglbtn_osx.cpp
     src/osx/toolbar_osx.cpp
