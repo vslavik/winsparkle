@@ -47,10 +47,9 @@ Download the sources archive and have a look at the examples/ folder.
 
 If you want to stay at the bleeding edge and use the latest, not yet released,
 version of WinSparkle, you can get its sources from public repository.
-WinSparkle uses the Bazaar DVCS and the sources can be obtained using this
-command:
-
-   bzr branch lp:winsparkle
+WinSparkle uses git and and the sources are hosted on GitHub. See
+http://github.com/vslavik/winsparkle for information on how to check the
+sources out.
 
 Then compile WinSparkle as described above; no extra steps are required.
 
