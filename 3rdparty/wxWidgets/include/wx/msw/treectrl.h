@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Vadim Zeitlin to be less MSW-specific on 10/10/98
 // Created:     01/02/97
-// RCS-ID:      $Id: treectrl.h 61784 2009-08-30 17:24:53Z VZ $
+// RCS-ID:      $Id: treectrl.h 63089 2010-01-07 13:16:01Z VZ $
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -286,6 +286,14 @@ private:
     // clears/sets the currently focused item
     void ClearFocusedItem();
     void SetFocusedItem(const wxTreeItemId& item);
+
+    // check if the given flags (taken from TV_HITTESTINFO structure)
+    // indicate a position "on item": this is less trivial than just checking
+    // for TVHT_ONITEM because we consider that points to the left and right of
+    // item text are also "on item" when wxTR_FULL_ROW_HIGHLIGHT is used as the
+    // item visually spans the entire breadth of the window then
+    bool MSWIsOnItem(unsigned flags) const;
+
 
     // the hash storing the items attributes (indexed by item ids)
     wxMapTreeAttr m_attrs;

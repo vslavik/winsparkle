@@ -2,7 +2,7 @@
 // Name:        property.h
 // Purpose:     interface of wxPGProperty
 // Author:      wxWidgets team
-// RCS-ID:      $Id: property.h 63012 2009-12-29 16:04:40Z JMS $
+// RCS-ID:      $Id: property.h 63095 2010-01-07 19:43:12Z JMS $
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
 
@@ -47,7 +47,7 @@
 #define wxPG_ATTR_HINT                      wxS("Hint")
 
 /**
-    @deprecated Use "Hint" (wxPG_ATTR_INLINE_HELP) instead.
+    @deprecated Use "Hint" (wxPG_ATTR_HINT) instead.
 */
 #define wxPG_ATTR_INLINE_HELP               wxS("InlineHelp")
 
@@ -881,12 +881,15 @@ public:
     virtual void RefreshChildren();
 
     /**
-        Special handling for attributes of this property.
+        Reimplement this member function to add special handling for
+        attributes of this property.
 
-        If returns @false, then the attribute will be automatically stored in
-        m_attributes.
+        @return Return @false to have the attribute automatically stored in
+                m_attributes. Default implementation simply does that and
+                nothing else.
 
-        Default implementation simply returns @false.
+        @remarks To actually set property attribute values from the
+                 application, use wxPGProperty::SetAttribute() instead.
     */
     virtual bool DoSetAttribute( const wxString& name, wxVariant& value );
 

@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Vadim Zeitlin on 2008-11-04 to use the base classes
 // Created:     04/01/98
-// RCS-ID:      $Id: mdi.cpp 61986 2009-09-21 08:44:42Z VZ $
+// RCS-ID:      $Id: mdi.cpp 63104 2010-01-09 17:57:52Z VZ $
 // Copyright:   (c) 1998 Julian Smart
 //              (c) 2008-2009 Vadim Zeitlin
 // Licence:     wxWindows licence
@@ -573,19 +573,6 @@ WXLRESULT wxMDIParentFrame::MSWWindowProc(WXUINT message,
             }
 
             processed = true;
-            break;
-
-        case WM_ERASEBKGND:
-            processed = true;
-
-            // we erase background ourselves
-            rc = true;
-            break;
-
-        case WM_SIZE:
-            // though we don't (usually) resize the MDI client to exactly fit
-            // the client area we need to pass this one to DefFrameProc to
-            // allow the children to show
             break;
     }
 

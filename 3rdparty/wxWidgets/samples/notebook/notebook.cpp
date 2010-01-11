@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by: Dimitri Schoolwerth
 // Created:     26/10/98
-// RCS-ID:      $Id: notebook.cpp 61508 2009-07-23 20:30:22Z VZ $
+// RCS-ID:      $Id: notebook.cpp 63097 2010-01-08 04:05:31Z PC $
 // Copyright:   (c) 1998-2002 wxWidgets team
 // License:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ MyFrame::MyFrame()
     m_type = Type_Listbook;
 #elif wxUSE_TREEBOOK
     m_type = Type_Treebook;
-#elif
+#else
     #error "Don't use Notebook sample without any book enabled in wxWidgets build!"
 #endif
 

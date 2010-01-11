@@ -2,7 +2,7 @@
 // Name:        wx/gtk/bitmap.h
 // Purpose:
 // Author:      Robert Roebling
-// RCS-ID:      $Id: bitmap.h 62444 2009-10-17 20:06:34Z PC $
+// RCS-ID:      $Id: bitmap.h 63090 2010-01-07 18:16:45Z PC $
 // Copyright:   (c) 1998 Robert Roebling
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -104,8 +104,7 @@ public:
     void SetHeight( int height );
     void SetWidth( int width );
     void SetDepth( int depth );
-    void SetPixmap( GdkPixmap *pixmap );
-    void SetPixbuf(GdkPixbuf* pixbuf, int depth = 0);
+    void SetPixbuf(GdkPixbuf* pixbuf);
 
     GdkPixmap *GetPixmap() const;
     bool HasPixmap() const;
@@ -127,6 +126,7 @@ protected:
     virtual wxGDIRefData* CloneGDIRefData(const wxGDIRefData* data) const;
 
 private:
+    void SetPixmap(GdkPixmap* pixmap);
 #if wxUSE_IMAGE
     // to be called from CreateFromImage only!
     bool CreateFromImageAsPixmap(const wxImage& image, int depth);
@@ -144,7 +144,6 @@ public:
     // (wxBitmap may keep same bitmap e.g. as both pixmap and pixbuf):
     void PurgeOtherRepresentations(Representation keep);
 
-private:
     DECLARE_DYNAMIC_CLASS(wxBitmap)
 };
 

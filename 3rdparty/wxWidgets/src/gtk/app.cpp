@@ -2,7 +2,7 @@
 // Name:        src/gtk/app.cpp
 // Purpose:
 // Author:      Robert Roebling
-// Id:          $Id: app.cpp 62399 2009-10-13 15:40:35Z PC $
+// Id:          $Id: app.cpp 63091 2010-01-07 18:30:18Z PC $
 // Copyright:   (c) 1998 Robert Roebling, Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -275,21 +275,6 @@ bool wxApp::OnInitGui()
 #endif // wxUSE_LIBHILDON || wxUSE_LIBHILDON2
 
     return true;
-}
-
-GdkVisual *wxApp::GetGdkVisual()
-{
-    GdkVisual *visual = NULL;
-
-    XVisualInfo *xvi = (XVisualInfo *)GetXVisualInfo();
-    if ( xvi )
-        visual = gdkx_visual_get( xvi->visualid );
-    else
-        visual = gdk_drawable_get_visual( wxGetRootWindow()->window );
-
-    wxASSERT( visual );
-
-    return visual;
 }
 
 // use unusual names for the parameters to avoid conflict with wxApp::arg[cv]

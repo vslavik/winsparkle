@@ -2,7 +2,7 @@
 // Name:        wx/gtk/app.h
 // Purpose:     wxApp definition for wxGTK
 // Author:      Robert Roebling
-// Id:          $Id: app.h 62399 2009-10-13 15:40:35Z PC $
+// Id:          $Id: app.h 63091 2010-01-07 18:30:18Z PC $
 // Copyright:   (c) 1998 Robert Roebling, Julian Smart
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -63,10 +63,6 @@ public:
 
     // implementation only from now on
     // -------------------------------
-
-    // This returns the current visual: either that used by wxRootWindow
-    // or the XVisualInfo* for SGI.
-    GdkVisual      *GetGdkVisual();
 
     // check for pending events, without interference from our idle source
     bool EventsPending();

@@ -4,7 +4,7 @@
 // Author:      Jaakko Salli
 // Modified by:
 // Created:     2007-04-14
-// RCS-ID:      $Id: editors.cpp 63039 2010-01-03 10:23:40Z JMS $
+// RCS-ID:      $Id: editors.cpp 63077 2010-01-05 16:42:35Z JMS $
 // Copyright:   (c) Jaakko Salli
 // Licence:     wxWindows license
 /////////////////////////////////////////////////////////////////////////////
@@ -262,7 +262,10 @@ void wxPGEditor::SetControlAppearance( wxPropertyGrid* pg,
         }
     }
 
-    wxVisualAttributes vattrs = ctrl->GetClassDefaultAttributes();
+    // Do not make the mistake of calling GetClassDefaultAttributes()
+    // here. It is static, while GetDefaultAttributes() is virtual
+    // and the correct one to use.
+    wxVisualAttributes vattrs = ctrl->GetDefaultAttributes();
 
     // Foreground colour
     const wxColour& fgCol = cell.GetFgCol();

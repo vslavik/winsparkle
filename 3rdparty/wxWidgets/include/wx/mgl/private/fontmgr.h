@@ -3,7 +3,7 @@
 // Purpose:     font management for MGL
 // Author:      Vaclav Slavik
 // Created:     2006-11-18
-// RCS-ID:      $Id: fontmgr.h 43569 2006-11-21 10:12:00Z VS $
+// RCS-ID:      $Id: fontmgr.h 43569 2006-10-11 04:09:58Z RD $
 // Copyright:   (c) 2001-2002 SciTech Software, Inc. (www.scitechsoft.com)
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
