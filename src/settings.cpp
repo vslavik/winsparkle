@@ -178,14 +178,14 @@ void RegistryWrite(const char *name, const char *value)
 }
 
 
-int RegistryRead(const char *name, char *buf, size_t len)
+int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
 {
     const std::string subkey = MakeSubKey(name);
 
     HKEY key;
     LONG result = RegOpenKeyExA
                   (
-                      HKEY_CURRENT_USER,
+                      root,
                       subkey.c_str(),
                       0,
                       KEY_QUERY_VALUE,
@@ -227,6 +227,22 @@ int RegistryRead(const char *name, char *buf, size_t len)
     }
 
     return 1;
+}
+
+
+int RegistryRead(const char *name, char *buf, size_t len)
+{
+    // Try reading from HKCU first. If that fails, look at HKLM too, in case
+    // some settings have globally set values (either by the installer or the
+    // administrator).
+    if ( DoRegistryRead(HKEY_CURRENT_USER, name, buf, len) )
+    {
+        return 1;
+    }
+    else
+    {
+        return DoRegistryRead(HKEY_LOCAL_MACHINE, name, buf, len);
+    }
 }
 
 // Critical section to guard DoWriteConfigValue/DoReadConfigValue.
