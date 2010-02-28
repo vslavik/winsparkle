@@ -195,7 +195,7 @@ int RegistryRead(const char *name, char *buf, size_t len)
     {
         if ( result == ERROR_FILE_NOT_FOUND )
             return 0;
-        throw Win32Exception("Cannot write settings to registry");
+        throw Win32Exception("Cannot read settings from registry");
     }
 
     DWORD buflen = len;
@@ -216,7 +216,7 @@ int RegistryRead(const char *name, char *buf, size_t len)
     {
         if ( result == ERROR_FILE_NOT_FOUND )
             return 0;
-        throw Win32Exception("Cannot write settings to registry");
+        throw Win32Exception("Cannot read settings from registry");
     }
 
     if ( type != REG_SZ )
