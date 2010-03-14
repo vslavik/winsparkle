@@ -47,6 +47,7 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include <wx/settings.h>
+#include <wx/utils.h>
 #include <wx/msw/ole/activex.h>
 
 #include <exdisp.h>
@@ -113,8 +114,8 @@ protected:
     WinSparkleDialog();
 
     void UpdateLayout();
-    static wxFont MakeBoldFont();
-    static wxFont MakeBigBoldFont();
+    static void SetBoldFont(wxWindow *win);
+    static void SetHeadingFont(wxWindow *win);
 
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
@@ -153,20 +154,35 @@ void WinSparkleDialog::UpdateLayout()
 }
 
 
-wxFont WinSparkleDialog::MakeBoldFont()
+void WinSparkleDialog::SetBoldFont(wxWindow *win)
 {
     wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     f.SetWeight(wxFONTWEIGHT_BOLD);
-    return f;
+
+    win->SetFont(f);
 }
 
 
-wxFont WinSparkleDialog::MakeBigBoldFont()
+void WinSparkleDialog::SetHeadingFont(wxWindow *win)
 {
     wxFont f = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    f.SetWeight(wxFONTWEIGHT_BOLD);
-    f.SetPointSize(f.GetPointSize() + 1);
-    return f;
+
+    int winver;
+    wxGetOsVersion(&winver);
+    if ( winver >= 6 ) // Windows Vista, 7 or newer
+    {
+        // 9pt is base font, 12pt is for "Main instructions". See
+        // http://msdn.microsoft.com/en-us/library/aa511282%28v=MSDN.10%29.aspx
+        f.SetPointSize(f.GetPointSize() + 3);
+        win->SetForegroundColour(wxColour(0x00, 0x33, 0x99));
+    }
+    else // Windows XP/2000
+    {
+        f.SetWeight(wxFONTWEIGHT_BOLD);
+        f.SetPointSize(f.GetPointSize() + 1);
+    }
+
+    win->SetFont(f);
 }
 
 
@@ -228,7 +244,7 @@ private:
 UpdateDialog::UpdateDialog() : m_timer(this)
 {
     m_heading = new wxStaticText(this, wxID_ANY, "");
-    m_heading->SetFont(MakeBigBoldFont());
+    SetHeadingFont(m_heading);
     m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
 
     m_message = new wxStaticText(this, wxID_ANY, "",
@@ -243,7 +259,7 @@ UpdateDialog::UpdateDialog() : m_timer(this)
     m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
-    notesLabel->SetFont(MakeBoldFont());
+    SetBoldFont(notesLabel);
     m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, 10));
 
     m_browserParent = new wxPanel(this, wxID_ANY,
@@ -520,7 +536,7 @@ AskPermissionDialog::AskPermissionDialog()
     wxStaticText *heading =
             new wxStaticText(this, wxID_ANY,
                              _("Check for updates automatically?"));
-    heading->SetFont(MakeBigBoldFont());
+    SetHeadingFont(heading);
     m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
 
     wxStaticText *message =
