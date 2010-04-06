@@ -261,7 +261,7 @@ void UpdateChecker::Run()
     }
     catch ( ... )
     {
-        UI::NotifyNoUpdates();
+        UI::NotifyUpdateError();
         throw;
     }
 }

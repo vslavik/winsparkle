@@ -203,6 +203,8 @@ public:
     void StateCheckingUpdates();
     // change state into "no updates found"
     void StateNoUpdateFound();
+    // change state into "update error"
+    void StateUpdateError();
     // change state into "a new version is available"
     void StateUpdateAvailable(const Appcast& info);
 
@@ -435,6 +437,27 @@ void UpdateDialog::StateNoUpdateFound()
 }
 
 
+void UpdateDialog::StateUpdateError()
+{
+    LayoutChangesGuard guard(this);
+
+    m_heading->SetLabel(_("Update Error!"));
+
+    wxString msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+    SetMessage(msg);
+
+    m_closeButton->SetLabel(_("Cancel"));
+    EnablePulsing(false);
+
+    SHOW(m_heading);
+    HIDE(m_progress);
+    SHOW(m_closeButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+}
+
+
+
 void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
     m_appcast = info;
@@ -593,6 +616,9 @@ const int MSG_NO_UPDATE_FOUND = wxNewId();
 // Notify the UI that a new version is available
 const int MSG_UPDATE_AVAILABLE = wxNewId();
 
+// Notify the UI that a new version is available
+const int MSG_UPDATE_ERROR = wxNewId();
+
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
@@ -618,6 +644,7 @@ private:
     void OnShowCheckingUpdates(wxThreadEvent& event);
     void OnNoUpdateFound(wxThreadEvent& event);
     void OnUpdateAvailable(wxThreadEvent& event);
+    void OnUpdateError(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
 
 private:
@@ -650,6 +677,7 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnShowCheckingUpdates, this, MSG_SHOW_CHECKING_UPDATES);
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateError, this, MSG_UPDATE_ERROR);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
 
@@ -710,6 +738,13 @@ void App::OnNoUpdateFound(wxThreadEvent&)
 {
     if ( m_win )
         m_win->StateNoUpdateFound();
+}
+
+
+void App::OnUpdateError(wxThreadEvent&)
+{
+    if ( m_win )
+        m_win->StateUpdateError();
 }
 
 
@@ -860,6 +895,18 @@ void UI::NotifyUpdateAvailable(const Appcast& info)
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_UPDATE_AVAILABLE, new Appcast(info));
+}
+
+
+/*static*/
+void UI::NotifyUpdateError()
+{
+    UIThreadAccess uit;
+
+    if ( !uit.IsRunning() )
+        return;
+
+    uit.App().SendMsg(MSG_UPDATE_ERROR);
 }
 
 

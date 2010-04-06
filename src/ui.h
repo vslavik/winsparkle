@@ -63,6 +63,15 @@ public:
     static void NotifyNoUpdates();
 
     /**
+        Notifies the UI that there was an error retrieving updates.
+
+        If the UI thread is running and WinSparkle window is currently open
+        (i.e. the user is manually checking for updates), "update error"
+        message is shown. Otherwise, does nothing.
+     */
+    static void NotifyUpdateError();
+
+    /**
         Notifies the UI that a new version is available.
 
         If the UI thread isn't running yet, it will be launched.
