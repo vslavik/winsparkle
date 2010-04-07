@@ -41,7 +41,7 @@ namespace
 #define MVAL(x) x
 #define CONCAT3(a,b,c) MVAL(a)##MVAL(b)##MVAL(c)
 
-#define NS_SPARKLE      "http://www.andymatuschak.org/xml-namespaces"
+#define NS_SPARKLE      "http://www.andymatuschak.org/xml-namespaces/sparkle"
 #define NS_SEP          '#'
 #define NS_SPARKLE_NAME(name) NS_SPARKLE "#" name
 

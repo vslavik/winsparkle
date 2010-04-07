@@ -1,5 +1,14 @@
 
+Version 0.1.1
+-------------
+
+- Fixed Sparkle namespace in appcast parser; it now looks for the correct
+  `http://www.andymatuschak.org/xml-namespaces/sparkle` value. Appcasts
+  using the incorrect `http://www.andymatuschak.org/xml-namespaces`
+  URI must be updated.
+
+
 Version 0.1
 -----------
 
-- initial release
+- Initial release.
