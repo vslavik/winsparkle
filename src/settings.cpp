@@ -106,10 +106,11 @@ std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
 
     const std::wstring key =
         TEXT("\\StringFileInfo\\") + GetVerInfoLang(fi.data) + TEXT("\\") + field;
+    LPTSTR key_str = (LPTSTR)key.c_str(); // explicit cast to work around VC2005 bug
 
     TCHAR *value;
     UINT len;
-    if ( !VerQueryValue(fi.data, key.c_str(), (LPVOID*)&value, &len) )
+    if ( !VerQueryValue(fi.data, key_str, (LPVOID*)&value, &len) )
     {
         if ( fatal )
             throw Win32Exception("Executable doesn't have required key in StringFileInfo");
