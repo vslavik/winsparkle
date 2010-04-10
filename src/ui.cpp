@@ -117,6 +117,9 @@ protected:
     static void SetBoldFont(wxWindow *win);
     static void SetHeadingFont(wxWindow *win);
 
+    // enable/disable resizing of the dialog
+    void MakeResizable(bool resizable = true);
+
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
@@ -144,6 +147,19 @@ WinSparkleDialog::WinSparkleDialog()
     topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
 
     SetSizer(topSizer);
+
+    MakeResizable(false);
+}
+
+
+void WinSparkleDialog::MakeResizable(bool resizable)
+{
+    bool is_resizable = (GetWindowStyleFlag() & wxRESIZE_BORDER) != 0;
+    if ( is_resizable == resizable )
+        return;
+
+    ToggleWindowStyle(wxRESIZE_BORDER);
+    Refresh(); // to paint the gripper
 }
 
 
@@ -399,6 +415,7 @@ void UpdateDialog::StateCheckingUpdates()
     SHOW(m_closeButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
 }
 
 
@@ -434,6 +451,7 @@ void UpdateDialog::StateNoUpdateFound()
     SHOW(m_closeButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
 }
 
 
@@ -454,6 +472,7 @@ void UpdateDialog::StateUpdateError()
     SHOW(m_closeButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
 }
 
 
@@ -491,6 +510,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         HIDE(m_closeButtonSizer);
         SHOW(m_updateButtonsSizer);
         DoShowElement(m_releaseNotesSizer, showRelnotes);
+        MakeResizable(showRelnotes);
     }
 
     // Only show the release notes now that the layout was updated, as it may
@@ -523,6 +543,7 @@ void UpdateDialog::ShowReleaseNotes(const wxString& url)
             // hide the notes again, we cannot show them
             LayoutChangesGuard guard(this);
             HIDE(m_releaseNotesSizer);
+            MakeResizable(false);
             LogError("Failed to create WebBrowser ActiveX control.");
             return;
         }
@@ -540,6 +561,8 @@ void UpdateDialog::ShowReleaseNotes(const wxString& url)
                       NULL,  // PostData
                       NULL   // Headers
                   );
+
+    SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 }
 
 
