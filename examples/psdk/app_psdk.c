@@ -18,13 +18,13 @@
    headers
  *-------------------------------------------------------------------------*/
 
+#include "winsparkle.h"
+
 #include <windows.h>
 #include <windowsx.h>
 
 #include <stdio.h>
 #include <tchar.h>
-
-#include "winsparkle.h"
 
 /*-------------------------------------------------------------------------*
    constants
