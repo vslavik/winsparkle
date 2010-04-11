@@ -5,6 +5,7 @@ Version 0.2
 - Display error if update info couldn't be retrieved while manually checking
   for updates.
 - WinSparkle window is now resizable only when showing release notes.
+- Bypass cache and proxies in manual checks.
 
 
 Version 0.1.1

@@ -230,7 +230,7 @@ void UpdateChecker::Run()
             throw std::runtime_error("Appcast URL not specified.");
 
         StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml);
+        DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
 
         Appcast appcast;
         appcast.Load(appcast_xml.data);
@@ -264,6 +264,19 @@ void UpdateChecker::Run()
         UI::NotifyUpdateError();
         throw;
     }
+}
+
+
+/*--------------------------------------------------------------------------*
+                            ManualUpdateChecker
+ *--------------------------------------------------------------------------*/
+
+int ManualUpdateChecker::GetAppcastDownloadFlags() const
+{
+    // Manual check should always connect to the server and bypass any caching.
+    // This is good for finding updates that are too new to propagate through
+    // caches yet.
+    return Download_NoCached;
 }
 
 } // namespace winsparkle

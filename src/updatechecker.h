@@ -51,16 +51,33 @@ public:
         The comparison is somewhat intelligent, it handles beta and RC
         components correctly.
 
-        @return 0 if the versions are identical, negative value if 
+        @return 0 if the versions are identical, negative value if
                 @a a is smaller than @a b, positive value if @a a
                 is larger than @a b.
      */
     static int CompareVersions(const std::string& a, const std::string& b);
 
 protected:
-    virtual void Run();
+    /// Returns flags to be used when checking the appcast
+    virtual int GetAppcastDownloadFlags() const { return 0; }
 
+protected:
+    virtual void Run();
     virtual bool IsJoinable() const { return false; }
+};
+
+
+/**
+    Update checker used for manual checking.
+ */
+class ManualUpdateChecker : public UpdateChecker
+{
+public:
+    /// Creates checker thread.
+    ManualUpdateChecker() : UpdateChecker() {}
+
+protected:
+    virtual int GetAppcastDownloadFlags() const;
 };
 
 } // namespace winsparkle

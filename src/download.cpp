@@ -67,7 +67,7 @@ struct InetHandle
                                 DownloadFile()
  *--------------------------------------------------------------------------*/
 
-void DownloadFile(const std::string& url, IDownloadSink *sink)
+void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 {
     std::wstring userAgent =
         Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
@@ -84,13 +84,17 @@ void DownloadFile(const std::string& url, IDownloadSink *sink)
     if ( !inet )
         throw Win32Exception();
 
+    DWORD dwFlags = 0;
+    if ( flags & Download_NoCached )
+        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+
     InetHandle conn = InternetOpenUrlA
                       (
                           inet,
                           url.c_str(),
                           NULL, // lpszHeaders
                           -1,   // dwHeadersLength
-                          0,    // dwFlags
+                          dwFlags,
                           NULL  // dwContext
                       );
     if ( !conn )

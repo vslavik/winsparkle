@@ -126,7 +126,7 @@ WIN_SPARKLE_API void win_sparkle_check_update_with_ui()
         UI::ShowCheckingUpdates();
 
         // Then run the actual check in the background.
-        UpdateChecker *check = new UpdateChecker();
+        UpdateChecker *check = new ManualUpdateChecker();
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS

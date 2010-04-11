@@ -55,6 +55,13 @@ struct StringDownloadSink : public IDownloadSink
 };
 
 
+/// Flags for DownloadFile().
+enum DownloadFlag
+{
+    /// Don't get resources from cache, always contact the origin server
+    Download_NoCached = 1
+};
+
 /**
     Downloads a HTTP resource.
 
@@ -62,10 +69,11 @@ struct StringDownloadSink : public IDownloadSink
 
     @param url   URL of the resource to download.
     @param sink  Where to put downloaded data.
+    @param flags Or-combination of DownloadFlag values.
 
     @see CheckConnection()
  */
-void DownloadFile(const std::string& url, IDownloadSink *sink);
+void DownloadFile(const std::string& url, IDownloadSink *sink, int flags = 0);
 
 } // namespace winsparkle
 
