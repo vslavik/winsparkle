@@ -26,6 +26,8 @@
 #ifndef _settings_h_
 #define _settings_h_
 
+#include "threads.h"
+
 #include <string>
 #include <sstream>
 
@@ -47,7 +49,11 @@ class Settings
 {
 public:
     /// Get location of the appcast
-    static std::string GetAppcastURL() { return ms_appcastURL; }
+    static std::string GetAppcastURL()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        return ms_appcastURL;
+    }
 
     /// Return application name
     static std::wstring GetAppName()
@@ -62,7 +68,11 @@ public:
         { return GetVerInfoField(L"CompanyName"); }
 
     /// Set appcast location
-    static void SetAppcastURL(const char *url) { ms_appcastURL = url; }
+    static void SetAppcastURL(const char *url)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_appcastURL = url;
+    }
 
     /**
         Access to runtime configuration.
@@ -122,6 +132,9 @@ private:
     static std::string DoReadConfigValue(const char *name);
 
 private:
+    // guards the variables below:
+    static CriticalSection ms_csVars;
+
     static std::string ms_appcastURL;
 };
 

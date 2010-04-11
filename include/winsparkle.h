@@ -83,8 +83,7 @@ WIN_SPARKLE_API void win_sparkle_cleanup();
     Functions for setting up WinSparkle.
 
     All functions in this category can only be called @em before the first
-    call to win_sparkle_init()! Additionally, they aren't MT-safe and cannot
-    be called in parallel.
+    call to win_sparkle_init()!
 
     Typically, the application would configure WinSparkle on startup and then
     call win_sparkle_init(), all from its main thread.

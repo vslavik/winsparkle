@@ -33,6 +33,7 @@
 namespace winsparkle
 {
 
+CriticalSection Settings::ms_csVars;
 std::string Settings::ms_appcastURL;
 
 
