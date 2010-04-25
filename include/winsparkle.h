@@ -97,7 +97,8 @@ WIN_SPARKLE_API void win_sparkle_cleanup();
 
     Only http and https schemes are supported.
 
-    Currently, this function must be called (@todo - get it from resources).
+    If this function isn't called by the app, the URL is obtained from
+    Windows resource named "FeedURL" of type "APPCAST".
 
     @param url  URL of the appcast.
  */

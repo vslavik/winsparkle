@@ -126,6 +126,37 @@ std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
 }
 
 
+std::string Settings::GetCustomResource(const char *name, const char *type)
+{
+    const HINSTANCE module = 0; // main executable
+    HRSRC hRes = FindResourceA(module, name, type);
+    if ( hRes )
+    {
+        HGLOBAL hData = LoadResource(module, hRes);
+        if ( hData )
+        {
+            const char *data = (const char*)::LockResource(hData);
+            size_t size = ::SizeofResource(module, hRes);
+
+            if ( data && size )
+            {
+                if ( data[size-1] == '\0' ) // null-terminated string
+                    size--;
+                return std::string(data, size);
+            }
+        }
+    }
+
+    std::string err;
+    err += "Failed to get resource \"";
+    err += name;
+    err += "\" (type \"";
+    err += type;
+    err += "\")";
+    throw Win32Exception(err.c_str());
+}
+
+
 /*--------------------------------------------------------------------------*
                              runtime config access
  *--------------------------------------------------------------------------*/

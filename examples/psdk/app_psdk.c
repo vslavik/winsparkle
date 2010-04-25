@@ -158,7 +158,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     /* initialize WinSparkle as soon as the app itself is initialized, right
        before entering the event loop: */
-    win_sparkle_set_appcast_url("http://winsparkle.org/example/appcast.xml");
     win_sparkle_init();
 
     {

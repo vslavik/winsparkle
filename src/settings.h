@@ -57,6 +57,8 @@ public:
     static std::string GetAppcastURL()
     {
         CriticalSectionLocker lock(ms_csVars);
+        if ( ms_appcastURL.empty() )
+            ms_appcastURL = GetCustomResource("FeedURL", "APPCAST");
         return ms_appcastURL;
     }
 
@@ -179,6 +181,8 @@ private:
     static std::wstring TryGetVerInfoField(const wchar_t *field)
         { return DoGetVerInfoField(field, false); }
     static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
+    // Gets custom win32 resource data
+    static std::string GetCustomResource(const char *name, const char *type);
 
     static void DoWriteConfigValue(const char *name, const char *value);
     static std::string DoReadConfigValue(const char *name);

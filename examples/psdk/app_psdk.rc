@@ -7,6 +7,10 @@
 
 #include <winver.h>
 
+// Get updates from this appcast feed:
+FeedURL     APPCAST     {"http://winsparkle.org/example/appcast.xml"}
+
+// Version information; this, too, is used by WinSparkle
 1 VERSIONINFO
  FILEVERSION     1,0,0,0
  PRODUCTVERSION  1,0,0,0
@@ -22,7 +26,7 @@ BEGIN
         BEGIN
             VALUE "Comments", "Example app."
             VALUE "CompanyName", "winsparkle.org\0"
-            VALUE "FileDescription", "WinSparkle exmaple\0"
+            VALUE "FileDescription", "WinSparkle example\0"
             VALUE "FileVersion", "1.0\0"
             VALUE "InternalName", "example_psdk\0"
             VALUE "OriginalFilename", "example_psdk.exe\0"
