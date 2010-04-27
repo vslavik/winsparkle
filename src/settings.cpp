@@ -34,7 +34,8 @@ namespace winsparkle
 {
 
 CriticalSection Settings::ms_csVars;
-std::string Settings::ms_appcastURL;
+std::string  Settings::ms_appcastURL;
+std::string  Settings::ms_registryPath;
 std::wstring Settings::ms_companyName;
 std::wstring Settings::ms_appName;
 std::wstring Settings::ms_appVersion;
@@ -166,8 +167,11 @@ namespace
 
 std::string MakeSubKey(const char *name)
 {
-    std::string s("Software\\");
 
+	if (!Settings::GetRegistryPath().empty())
+		return Settings::GetRegistryPath();
+	
+    std::string s("Software\\");
     std::wstring vendor = Settings::GetCompanyName();
     if ( !vendor.empty() )
         s += WideToAnsi(vendor) + "\\";

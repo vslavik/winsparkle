@@ -88,6 +88,13 @@ public:
             ms_companyName = GetVerInfoField(L"CompanyName");
         return ms_companyName;
     }
+	
+	/// Return the registry path to store settings in
+	static std::string GetRegistryPath()
+	{
+		CriticalSectionLocker lock(ms_csVars);
+		return ms_registryPath;
+	}
     //@}
 
     /**
@@ -125,6 +132,13 @@ public:
         CriticalSectionLocker lock(ms_csVars);
         ms_companyName = name;
     }
+	
+	/// Set Windows registry path to store settings.
+	/// HKCU\ is automatically prepended to this.
+	static void SetRegistryPath(const char *path) {
+		CriticalSectionLocker lock(ms_csVars);
+		ms_registryPath = path;
+	}
     //@}
 
 
@@ -192,6 +206,7 @@ private:
     static CriticalSection ms_csVars;
 
     static std::string  ms_appcastURL;
+	static std::string  ms_registryPath;
     static std::wstring ms_companyName;
     static std::wstring ms_appName;
     static std::wstring ms_appVersion;

@@ -126,6 +126,21 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
                                                  const wchar_t *app_name,
                                                  const wchar_t *app_version);
 
+/**
+	 Set the registry path where settings will be stored.
+	 
+	 Normally, these are stored in:
+
+         HKCU\Software\<company_name>\<app_name>\WinSparkle
+
+     but if your application needs to store the data elsewhere for
+     some reason, using this function is an alternative.  HKCU\ will
+     automatically be prepended, so you should only include the path
+     that comes after. (eg "Software\My Company\My App\WinSparkle")
+	 
+	 @param path  Registry path where settings will be stored.
+ */
+WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
 //@}
 
 
