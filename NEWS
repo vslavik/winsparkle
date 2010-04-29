@@ -3,6 +3,7 @@
   as an alternative to their extraction from resources.
 - It is no longer necessary to call win_sparkle_set_appcast_url(), the
   feed can be specified in FeedURL resource with type set to APPCAST.
+- Added win_sparkle_set_registry_path().
 
 Version 0.2
 -----------

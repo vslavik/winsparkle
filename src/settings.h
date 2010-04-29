@@ -134,8 +134,7 @@ public:
         ms_companyName = name;
     }
 
-    /// Set Windows registry path to store settings.
-    /// HKCU\ is automatically prepended to this.
+    /// Set Windows registry path to store settings in (relative to HKCU/KHLM).
     static void SetRegistryPath(const char *path)
     {
         CriticalSectionLocker lock(ms_csVars);

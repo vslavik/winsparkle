@@ -120,7 +120,7 @@ WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
           of WinSparkle settings in registry.
           (HKCU\Software\<company_name>\<app_name>\WinSparkle is used.)
 
-    @since 0.3.
+    @since 0.3
  */
 WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
                                                  const wchar_t *app_name,
@@ -132,11 +132,17 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
     Normally, these are stored in
     "HKCU\Software\<company_name>\<app_name>\WinSparkle"
     but if your application needs to store the data elsewhere for
-    some reason, using this function is an alternative.  HKCU\ will
-    automatically be prepended, so you should only include the path
-    that comes after. (eg "Software\My Company\My App\WinSparkle")
+    some reason, using this function is an alternative.
+
+    Note that @a path is relative to HKCU/HKLM root and the root is not part
+    of it. For example:
+    @code
+    win_sparkle_set_registry_path("Software\\My App\\Updates");
+    @endcode
 
     @param path  Registry path where settings will be stored.
+
+    @since 0.3
  */
 WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
 
