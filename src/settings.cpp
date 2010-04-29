@@ -162,14 +162,8 @@ std::string Settings::GetCustomResource(const char *name, const char *type)
                              runtime config access
  *--------------------------------------------------------------------------*/
 
-namespace
+std::string Settings::GetDefaultRegistryPath()
 {
-
-std::string MakeSubKey(const char *name)
-{
-    if ( !Settings::GetRegistryPath().empty() )
-        return Settings::GetRegistryPath();
-
     std::string s("Software\\");
     std::wstring vendor = Settings::GetCompanyName();
     if ( !vendor.empty() )
@@ -180,10 +174,12 @@ std::string MakeSubKey(const char *name)
     return s;
 }
 
+namespace
+{
 
 void RegistryWrite(const char *name, const char *value)
 {
-    const std::string subkey = MakeSubKey(name);
+    const std::string subkey = Settings::GetRegistryPath();
 
     HKEY key;
     LONG result = RegCreateKeyExA
@@ -219,7 +215,7 @@ void RegistryWrite(const char *name, const char *value)
 
 int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
 {
-    const std::string subkey = MakeSubKey(name);
+    const std::string subkey = Settings::GetRegistryPath();
 
     HKEY key;
     LONG result = RegOpenKeyExA

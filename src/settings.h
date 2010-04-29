@@ -93,6 +93,8 @@ public:
     static std::string GetRegistryPath()
     {
         CriticalSectionLocker lock(ms_csVars);
+        if ( ms_registryPath.empty() )
+            ms_registryPath = GetDefaultRegistryPath();
         return ms_registryPath;
     }
 
@@ -198,6 +200,8 @@ private:
     static std::wstring DoGetVerInfoField(const wchar_t *field, bool fatal);
     // Gets custom win32 resource data
     static std::string GetCustomResource(const char *name, const char *type);
+
+    static std::string GetDefaultRegistryPath();
 
     static void DoWriteConfigValue(const char *name, const char *value);
     static std::string DoReadConfigValue(const char *name);
