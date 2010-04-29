@@ -128,10 +128,11 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
 
 WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path)
 {
-	try {
-		Settings::SetRegistryPath(path);
-	}
-	CATCH_ALL_EXCEPTIONS
+    try
+    {
+        Settings::SetRegistryPath(path);
+    }
+    CATCH_ALL_EXCEPTIONS
 }
 
 

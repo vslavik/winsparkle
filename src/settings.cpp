@@ -167,10 +167,9 @@ namespace
 
 std::string MakeSubKey(const char *name)
 {
+    if ( !Settings::GetRegistryPath().empty() )
+        return Settings::GetRegistryPath();
 
-	if (!Settings::GetRegistryPath().empty())
-		return Settings::GetRegistryPath();
-	
     std::string s("Software\\");
     std::wstring vendor = Settings::GetCompanyName();
     if ( !vendor.empty() )
