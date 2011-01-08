@@ -1,4 +1,7 @@
 
+Version 0.3
+-----------
+
 - Added win_sparkle_set_app_details() for setting app metadata from code,
   as an alternative to their extraction from resources.
 - It is no longer necessary to call win_sparkle_set_appcast_url(), the
