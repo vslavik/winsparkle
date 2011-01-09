@@ -26,7 +26,7 @@ binary_files := \
 all: $(binary_arch) $(sources_arch)
 
 $(binary_arch): $(binary_files)
-	@rm -f $(binary_base) $@
+	@rm -rf $(binary_base) $@
 	@mkdir $(binary_base)
 	cp -Ra $(binary_files) $(binary_base)
 	zip -9 -r  $@ $(binary_base)
