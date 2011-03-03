@@ -60,6 +60,10 @@ extern "C" {
     to perform the check. You should only call this function when your app
     is initialized and shows its main window.
 
+    @note This call doesn't block and returns almost immediately. If an
+          update is available, the respective UI is shown later from a separate
+          thread.
+
     @see win_sparkle_cleanup()
  */
 WIN_SPARKLE_API void win_sparkle_init();
