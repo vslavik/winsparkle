@@ -150,6 +150,28 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
  */
 WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
 
+/**
+    Sets whether updates are checked automatically or only through a manual call.
+
+    If disabled, win_sparkle_check_update_with_ui() must be used explicitly.
+
+    @param  state  1 to have updates checked automatically, 0 otherwise
+
+    @since 0.4
+ */
+WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state);
+
+/**
+    Gets the automatic update checking state
+
+    @return  1 if updates are set to be checked automatically, 0 otherwise
+
+    @note Defaults to 0 when not yet configured (as happens on first start).
+
+    @since 0.4
+ */
+WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates();
+
 //@}
 
 

@@ -135,6 +135,28 @@ WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state)
+{
+    try
+    {
+        Settings::WriteConfigValue("CheckForUpdates", state != 0);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates()
+{
+    try
+    {
+        bool checkUpdates;
+        if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false) )
+        return checkUpdates ? 1 : 0;
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return 0;
+}
+
 
 /*--------------------------------------------------------------------------*
                               Manual usage
