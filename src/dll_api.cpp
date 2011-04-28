@@ -154,4 +154,35 @@ WIN_SPARKLE_API void win_sparkle_check_update_with_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state) {
+    try
+    {
+        // Validate input
+        if (state != 0 || state != 1)
+            throw std::runtime_error("Invalid automatic update state (can only be 0 or 1).");
+
+        Settings::WriteConfigValue("CheckForUpdates", state);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates() {
+    try
+    {
+        bool checkUpdates;
+        if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
+        {
+            return checkUpdates ? TRUE : FALSE;
+        }
+        else
+        {
+            // Not yet configured, we return the default value
+            return FALSE;
+        }
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return FALSE;
+}
+
 } // extern "C"
