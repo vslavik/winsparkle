@@ -56,8 +56,9 @@ WIN_SPARKLE_API void win_sparkle_init()
                 Settings::ReadConfigValue("LastCheckTime", lastCheck);
                 const time_t currentTime = time(NULL);
 
-                // Only check for updates once a day automatically.
-                if ( currentTime - lastCheck >= ONE_DAY )
+                // Only check for updates in reasonable intervals:
+                const int interval = win_sparkle_get_update_check_interval();
+                if ( currentTime - lastCheck >= interval )
                 {
                     // Run the check in background. Only show UI if updates
                     // are available.
@@ -155,6 +156,34 @@ WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates()
     CATCH_ALL_EXCEPTIONS
 
     return 0;
+}
+
+WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval)
+{
+    try
+    {
+        // Validate input
+        if (interval < 3600)
+            throw std::runtime_error("Invalid update interval (min: 3600 seconds)");
+
+        Settings::WriteConfigValue("UpdateInterval", interval);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int win_sparkle_get_update_check_interval()
+{
+    static const int ONE_DAY = 60*60*24;
+
+    try
+    {
+        int interval;
+        Settings::ReadConfigValue("UpdateInterval", interval, ONE_DAY);
+        return interval;
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return ONE_DAY;
 }
 
 
