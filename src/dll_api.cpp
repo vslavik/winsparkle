@@ -56,8 +56,11 @@ WIN_SPARKLE_API void win_sparkle_init()
                 Settings::ReadConfigValue("LastCheckTime", lastCheck);
                 const time_t currentTime = time(NULL);
 
-                // Only check for updates once a day automatically.
-                if ( currentTime - lastCheck >= ONE_DAY )
+                // Only check for updates after the update interval has passed
+                int interval = ONE_DAY;
+                Settings::ReadConfigValue("UpdateInterval", interval);
+
+                if ( currentTime - lastCheck >= interval )
                 {
                     // Run the check in background. Only show UI if updates
                     // are available.
@@ -152,6 +155,70 @@ WIN_SPARKLE_API void win_sparkle_check_update_with_ui()
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state) {
+    try
+    {
+        // Validate input
+        if (state != 0 || state != 1)
+            throw std::runtime_error("Invalid automatic update state (can only be 0 or 1).");
+
+        Settings::WriteConfigValue("CheckForUpdates", state);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates() {
+    try
+    {
+        bool checkUpdates;
+        if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
+        {
+            return checkUpdates ? TRUE : FALSE;
+        }
+        else
+        {
+            // Not yet configured, we return the default value
+            return FALSE;
+        }
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return FALSE;
+}
+
+WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval) {
+    try
+    {
+        // Validate input
+        if (interval < 3600)
+            throw std::runtime_error("Invalid update interval (min: 3600 seconds)");
+
+        Settings::WriteConfigValue("UpdateInterval", interval);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int win_sparkle_get_update_check_interval() {
+    static const time_t ONE_DAY = 60*60*24;
+
+    try
+    {
+        int interval;
+        if ( Settings::ReadConfigValue("UpdateInterval", interval) )
+        {
+            return interval;
+        }
+        else
+        {
+            // Not yet configured, we return the default value
+            return ONE_DAY;
+        }
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return ONE_DAY;
 }
 
 } // extern "C"

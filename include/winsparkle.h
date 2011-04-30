@@ -178,6 +178,40 @@ WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
  */
 WIN_SPARKLE_API void win_sparkle_check_update_with_ui();
 
+/**
+    Sets whether updates are checked automatically or only through a manual call.
+
+   @param  state  1 to have updates checked automatically, 0 otherwise
+ */
+WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state);
+
+/**
+    Gets the automatic update checking state
+
+    @return  1 if updates are set to be checked automatically, 0 otherwise
+
+    @note defaults to 0 when not yet configured (as happens on first start)
+ */
+WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates();
+
+/**
+    Sets the automatic update interval
+
+    @param  interval    the interval in seconds between checks for updates
+
+    @note the minimum update interval is 3600 seconds (1 hour)
+ */
+WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval);
+
+/**
+    Gets the automatic update interval
+
+    @return  the interval in seconds between checks for updates
+
+    @note defaults to one day when not yet configured (as happens on first start)
+ */
+WIN_SPARKLE_API int win_sparkle_get_update_check_interval();
+
 //@}
 
 #ifdef __cplusplus
