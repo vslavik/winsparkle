@@ -103,6 +103,43 @@ void DoShowElement(wxSizer *s, bool show)
 #define SHOW(c)    DoShowElement(c, true)
 #define HIDE(c)    DoShowElement(c, false)
 
+BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszName, LONG_PTR lParam)
+{
+    if (IS_INTRESOURCE(lpszName))
+        *((LPTSTR*)lParam) = lpszName;
+    else
+        *((LPTSTR*)lParam) = _tcsdup(lpszName);
+    return FALSE; // stop on the first icon found
+}
+
+wxIcon GetApplicationIcon()
+{
+    HMODULE hParentExe = GetModuleHandle(NULL);
+    if ( !hParentExe )
+        return wxNullIcon;
+
+    LPTSTR iconName = 0;
+    EnumResourceNames(hParentExe, RT_GROUP_ICON, GetFirstIconProc, (LONG_PTR)&iconName);
+
+    if ( GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_RESOURCE_ENUM_USER_STOP )
+        return wxNullIcon;
+
+    HANDLE hIcon = LoadImage(hParentExe, iconName, IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR);
+
+    if ( !IS_INTRESOURCE(iconName) )
+        free(iconName);
+
+    if ( !hIcon )
+        return wxNullIcon;
+
+    wxIcon icon;
+    icon.SetHICON(hIcon);
+    icon.SetWidth(48);
+    icon.SetHeight(48);
+
+    return icon;
+}
+
 } // anonymous namespace
 
 
@@ -138,7 +175,13 @@ WinSparkleDialog::WinSparkleDialog()
     SetIcons(wxICON(UpdateAvailable));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+
+    // Load the dialog box icon: the first 48x48 application icon will be loaded, if available,
+    // otherwise, the standard WinSparkle icon will be used.
+    wxIcon bigIcon = GetApplicationIcon();
+    if ( !bigIcon.IsOk() )
+        bigIcon.LoadFile("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+
     topSizer->Add
               (
                   new wxStaticBitmap(this, wxID_ANY, bigIcon),
