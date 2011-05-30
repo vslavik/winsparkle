@@ -84,34 +84,87 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     if ( !inet )
         throw Win32Exception();
 
-    DWORD dwFlags = 0;
-    if ( flags & Download_NoCached )
-        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+	const int MAX_COMP_LENGTH = 512; 
+	char host[MAX_COMP_LENGTH];
+	char user[MAX_COMP_LENGTH];
+	char password[MAX_COMP_LENGTH];
+	char path[MAX_COMP_LENGTH];
+	char extra[MAX_COMP_LENGTH];
+	URL_COMPONENTSA urlc;
 
-    InetHandle conn = InternetOpenUrlA
-                      (
-                          inet,
-                          url.c_str(),
-                          NULL, // lpszHeaders
-                          -1,   // dwHeadersLength
-                          dwFlags,
-                          NULL  // dwContext
-                      );
-    if ( !conn )
-        throw Win32Exception();
+	memset(&urlc, 0, sizeof(urlc));
+	urlc.dwStructSize = sizeof(urlc);
+	urlc.lpszHostName = host;
+	urlc.dwHostNameLength = MAX_COMP_LENGTH;
+	urlc.lpszUserName = user;
+	urlc.dwUserNameLength = MAX_COMP_LENGTH;
+	urlc.lpszPassword = password;
+	urlc.dwPasswordLength = MAX_COMP_LENGTH;
+	urlc.lpszUrlPath = path;
+	urlc.dwUrlPathLength = MAX_COMP_LENGTH;
+	urlc.lpszExtraInfo = extra;
+	urlc.dwExtraInfoLength = MAX_COMP_LENGTH;
 
-    char buffer[1024];
-    for ( ;; )
-    {
-        DWORD read;
-        if ( !InternetReadFile(conn, buffer, 1024, &read) )
-            throw Win32Exception();
+	if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
+		throw Win32Exception();
 
-        if ( read == 0 )
-            break; // all of the file was downloaded
+	InetHandle conn = InternetConnectA(inet, host, urlc.nPort, user, password, 
+									   INTERNET_SERVICE_HTTP, 0, (DWORD_PTR)sink);
+	if ( !conn )
+		throw Win32Exception();
 
-        sink->Add(buffer, read);
-    }
+	DWORD dwFlags = 0;
+	if ( flags & Download_NoCached )
+		dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+
+	std::string fullUrl(path);
+	fullUrl += extra;
+	const char *mimeTypes[] = { "text/*", "application/*", NULL };
+	InetHandle http = HttpOpenRequestA(conn, "GET", fullUrl.c_str(), NULL, NULL, mimeTypes, dwFlags, (DWORD_PTR)sink);
+
+	if ( !http )
+		throw Win32Exception();
+
+	if ( HttpSendRequestA(http, NULL, -1, NULL, 0) )
+	{
+		char buffer[1024];
+		DWORD bufLength = sizeof(buffer), hdrIndex = 0;
+		buffer[0] = 0;
+		if (HttpQueryInfoA(http, HTTP_QUERY_CONTENT_LENGTH, buffer, &bufLength, &hdrIndex))
+		{
+			sink->SetTotalLength(atol(buffer));
+			for ( ;; )
+			{
+				DWORD read;
+				if ( !InternetReadFile(http, buffer, 1024, &read) )
+					throw Win32Exception();
+
+				if ( read == 0 )
+					break; // all of the file was downloaded
+
+				if ( !sink->Add(buffer, read) )
+					break; // the consumer could not handle the data: stop
+			}
+		}
+	}
+}
+
+std::string GetURLFileName(const std::string& url)
+{
+	const int MAX_COMP_LENGTH = 512; 
+	char path[MAX_COMP_LENGTH];
+	URL_COMPONENTSA urlc;
+
+	memset(&urlc, 0, sizeof(urlc));
+	urlc.dwStructSize = sizeof(urlc);
+	urlc.lpszUrlPath = path;
+	urlc.dwUrlPathLength = MAX_COMP_LENGTH;
+
+	if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
+		throw Win32Exception();
+
+	char *lastSlash = strrchr(path, '/');
+	return (lastSlash ? lastSlash + 1 : path);
 }
 
 } // namespace winsparkle

@@ -88,6 +88,11 @@ public:
      */
     static void AskForPermission();
 
+	/**
+		Shows the dialog for reporting progress while the update is downloaded.
+	 */
+	static void RunUpdate(const Appcast& info);
+
     /**
         Sets HINSTANCE of the DLL.
 

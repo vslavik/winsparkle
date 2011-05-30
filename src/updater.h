@@ -2,6 +2,7 @@
  *  This file is part of WinSparkle (http://winsparkle.org)
  *
  *  Copyright (C) 2009-2010 Vaclav Slavik
+ *  Copyright (C) 2011 Vasco Veloso
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,67 +24,58 @@
  *
  */
 
-#ifndef _download_h_
-#define _download_h_
+#ifndef _updater_h_
+#define _updater_h_
 
-#include <string>
+#include "ui.h"
+#include "download.h"
+
+#define wxNO_NET_LIB
+#define wxNO_XML_LIB
+#define wxNO_XRC_LIB
+#define wxNO_ADV_LIB
+#define wxNO_HTML_LIB
+#include <wx/setup.h>
+
+#include <wx/file.h>
+#include <wx/thread.h>
+#include <wx/dialog.h>
 
 namespace winsparkle
 {
-
 /**
-    Abstraction for storing downloaded data.
+    This class downloads an update file.
  */
-struct IDownloadSink
+class Updater : public wxThread, public IDownloadSink
 {
-    /// Add chunk of downloaded data
-    virtual bool Add(const void *data, size_t len) = 0;
-	virtual void SetTotalLength(size_t length) = 0;
+public:
+    Updater(const Appcast &appcast, wxDialog *notificationDlg);
+
+	void RequestStop();
+
+	// IDownloadSink methods
+	bool Add(const void *data, size_t len);
+	void SetTotalLength(size_t length);
+
+	static void RunUpdate(const wxString updateFilePath);
+
+	static int PROGRESS_PERCENT_UPDATE;
+	static int UPDATE_COMPLETE;
+	static int UPDATE_CANCELLED;
+
+private:
+	bool m_stop;
+	wxString m_updateFileUrl;
+	wxString m_updateFileName;
+	wxFile m_file;
+	wxDialog *m_notify;
+	size_t m_totalLength;
+	size_t m_lengthReceived;
+
+public:
+    virtual ExitCode Entry();
 };
-
-/**
-    IDownloadSink implementation for storing data in a string.
- */
-struct StringDownloadSink : public IDownloadSink
-{
-    virtual bool Add(const void *data, size_t len)
-    {
-        this->data.append(reinterpret_cast<const char*>(data), len);
-		return true;
-    }
-
-	virtual void SetTotalLength(size_t /* length */)
-	{
-
-	}
-
-    /// Downloaded data, as a string.
-    std::string data;
-};
-
-
-/// Flags for DownloadFile().
-enum DownloadFlag
-{
-    /// Don't get resources from cache, always contact the origin server
-    Download_NoCached = 1
-};
-
-/**
-    Downloads a HTTP resource.
-
-    Throws on error.
-
-    @param url   URL of the resource to download.
-    @param sink  Where to put downloaded data.
-    @param flags Or-combination of DownloadFlag values.
-
-    @see CheckConnection()
- */
-void DownloadFile(const std::string& url, IDownloadSink *sink, int flags = 0);
-
-std::string GetURLFileName(const std::string& url);
 
 } // namespace winsparkle
 
-#endif // _download_h_
+#endif // _updatechecker_h_

@@ -50,11 +50,15 @@
 #include <wx/utils.h>
 #include <wx/msw/ole/activex.h>
 
+#include "resources.h"
+
 #include <exdisp.h>
 
 #if !wxCHECK_VERSION(2,9,0)
 #error "wxWidgets >= 2.9 is required to compile this code"
 #endif
+
+#include "updater.h"
 
 namespace winsparkle
 {
@@ -120,25 +124,12 @@ protected:
     // enable/disable resizing of the dialog
     void MakeResizable(bool resizable = true);
 
-	static BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType,
-		LPTSTR lpszName, LONG_PTR lParam);
-
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
 
     static const int MESSAGE_AREA_WIDTH = 300;
 };
-
-BOOL CALLBACK WinSparkleDialog::GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType,
-							  LPTSTR lpszName, LONG_PTR lParam)
-{
-	if (IS_INTRESOURCE(lpszName))
-		*((LPTSTR*)lParam) = lpszName;
-	else
-		*((LPTSTR*)lParam) = _tcsdup(lpszName);
-	return FALSE; // stop on the first icon found
-}
 
 WinSparkleDialog::WinSparkleDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
@@ -149,31 +140,8 @@ WinSparkleDialog::WinSparkleDialog()
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	// load the dialog box icon: the first 48x48 application icon will be loaded, if available;
-	// otherwise, the standard winsparkle icon will be used.
 	wxIcon bigIcon;
-	bool iconLoaded = false;
-	HMODULE hParentExe = GetModuleHandle(NULL);
-	if (hParentExe)
-	{
-		LPTSTR iconName = 0;
-		EnumResourceNames(hParentExe, RT_GROUP_ICON, GetFirstIconProc, (LONG_PTR)&iconName);
-		if (GetLastError() == ERROR_SUCCESS || GetLastError() == ERROR_RESOURCE_ENUM_USER_STOP)
-		{
-			HANDLE hIcon = LoadImage(hParentExe, iconName, IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR);
-			if (hIcon)
-			{
-				bigIcon.SetHICON(hIcon);
-				bigIcon.SetWidth(48);
-				bigIcon.SetHeight(48);
-				iconLoaded = true;
-			}
-			if (!IS_INTRESOURCE(iconName))
-				free(iconName);
-		}
-	}
-	if (!iconLoaded)
-		bigIcon.LoadFile("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+	Resources::LoadDialogIcon(bigIcon);
 
 	topSizer->Add
               (
@@ -261,6 +229,8 @@ public:
     void StateUpdateError();
     // change state into "a new version is available"
     void StateUpdateAvailable(const Appcast& info);
+	// change state into "downloading update"
+	void StateRunUpdate(const Appcast& info);
 
 private:
     void EnablePulsing(bool enable);
@@ -271,6 +241,10 @@ private:
     void OnSkipVersion(wxCommandEvent&);
     void OnRemindLater(wxCommandEvent&);
     void OnInstall(wxCommandEvent&);
+
+	void OnProgressUpdate(wxCommandEvent &ev);
+	void OnUpdateComplete(wxCommandEvent &ev);
+	void OnUpdateCancelled(wxCommandEvent &ev);
 
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const wxString& url);
@@ -292,13 +266,20 @@ private:
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast       m_appcast;
 
+	// current updater thread (only valid after StateRunUpdate())
+	Updater		 *m_updater;
+	bool		  m_runUpdateOnClose;
+	wxString	  m_downloadedInstallerPath;
+
     static const int RELNOTES_WIDTH = 400;
     static const int RELNOTES_HEIGHT = 200;
 };
 
-
 UpdateDialog::UpdateDialog() : m_timer(this)
 {
+	m_updater = NULL;
+	m_runUpdateOnClose = false;
+
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
     m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
@@ -376,8 +357,11 @@ UpdateDialog::UpdateDialog() : m_timer(this)
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnSkipVersion, this, ID_SKIP_VERSION);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRemindLater, this, ID_REMIND_LATER);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnInstall, this, ID_INSTALL);
-}
 
+	Bind(wxEVT_COMMAND_THREAD, &UpdateDialog::OnProgressUpdate, this, Updater::PROGRESS_PERCENT_UPDATE);
+	Bind(wxEVT_COMMAND_THREAD, &UpdateDialog::OnUpdateComplete, this, Updater::UPDATE_COMPLETE);
+	Bind(wxEVT_COMMAND_THREAD, &UpdateDialog::OnUpdateCancelled, this, Updater::UPDATE_CANCELLED);
+}
 
 void UpdateDialog::EnablePulsing(bool enable)
 {
@@ -387,16 +371,66 @@ void UpdateDialog::EnablePulsing(bool enable)
         m_timer.Stop();
 }
 
+void UpdateDialog::OnProgressUpdate(wxCommandEvent &ev)
+{
+	m_progress->SetValue(ev.GetInt());
+}
+
+void UpdateDialog::OnUpdateCancelled(wxCommandEvent &ev)
+{
+	LayoutChangesGuard guard(this);
+
+	m_updater = NULL;
+	HIDE(m_progress);
+
+	if (ev.GetInt() != 0)
+	{
+		// the user requested this cancellation.
+		Close();
+	}
+	else
+	{
+		SetMessage(_("The update was cancelled due to an error."));
+		m_closeButton->SetLabelText(_("Close"));
+	}
+}
+
+void UpdateDialog::OnUpdateComplete(wxCommandEvent &ev)
+{
+	LayoutChangesGuard guard(this);
+
+	m_updater = NULL;
+
+	m_downloadedInstallerPath = ev.GetString();
+	m_runUpdateOnClose = (m_downloadedInstallerPath.length() > 0);
+
+	HIDE(m_progress);
+	if (m_runUpdateOnClose)
+	{
+		SetMessage(_("The update was downloaded successfully."));
+		m_closeButton->SetLabelText(_("Close and install"));
+	}
+}
 
 void UpdateDialog::OnTimer(wxTimerEvent&)
 {
     m_progress->Pulse();
 }
 
-
 void UpdateDialog::OnCloseButton(wxCommandEvent&)
 {
-    Close();
+	if (m_runUpdateOnClose)
+	{
+		Updater::RunUpdate(m_downloadedInstallerPath);
+		Close();
+	}
+	else if (m_updater)
+	{
+		m_updater->RequestStop();
+		m_closeButton->Disable();
+	}
+	else
+		Close();
 }
 
 
@@ -425,9 +459,7 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 
 void UpdateDialog::OnInstall(wxCommandEvent&)
 {
-    // FIXME: download the file within WinSparkle UI, stop the app,
-    // elevate privileges, launch the installer
-    wxLaunchDefaultBrowser(m_appcast.DownloadURL);
+	UI::RunUpdate(m_appcast);
     Close();
 }
 
@@ -513,7 +545,37 @@ void UpdateDialog::StateUpdateError()
     MakeResizable(false);
 }
 
+void UpdateDialog::StateRunUpdate(const Appcast& info)
+{
+	LayoutChangesGuard guard(this);
+	const wxString appname = Settings::GetAppName();
 
+	m_appcast = info;
+
+	m_heading->SetLabel(_("Updating"));
+	SetMessage(wxString::Format(_("Downloading the %s update..."), appname));
+
+	m_closeButton->SetLabel(_("Cancel"));
+	EnablePulsing(false);
+
+	SHOW(m_heading);
+	SHOW(m_progress);
+	SHOW(m_closeButtonSizer);
+	HIDE(m_releaseNotesSizer);
+	HIDE(m_updateButtonsSizer);
+	MakeResizable(false);
+
+	m_progress->SetRange(100);
+
+	m_updater = new Updater(m_appcast, this);
+	if (m_updater)
+	{
+		if (wxTHREAD_NO_ERROR == m_updater->Create())
+		{
+			m_updater->Run();
+		}
+	}
+}
 
 void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
@@ -683,6 +745,8 @@ const int MSG_UPDATE_ERROR = wxNewId();
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
+// Tell the UI to download and open the update
+const int MSG_RUN_UPDATE = wxNewId();
 
 /*--------------------------------------------------------------------------*
                                 Application
@@ -707,6 +771,7 @@ private:
     void OnUpdateAvailable(wxThreadEvent& event);
     void OnUpdateError(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
+	void OnRunUpdate(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -740,6 +805,7 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateError, this, MSG_UPDATE_ERROR);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
+	Bind(wxEVT_COMMAND_THREAD, &App::OnRunUpdate, this, MSG_RUN_UPDATE);
 }
 
 
@@ -820,6 +886,19 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
     delete appcast;
 
     ShowWindow();
+}
+
+void App::OnRunUpdate(wxThreadEvent& event)
+{
+	InitWindow();
+
+	Appcast *appcast = static_cast<Appcast*>(event.GetClientData());
+
+	m_win->StateRunUpdate(*appcast);
+
+	delete appcast;
+
+	ShowWindow();
 }
 
 
@@ -956,6 +1035,14 @@ void UI::NotifyUpdateAvailable(const Appcast& info)
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_UPDATE_AVAILABLE, new Appcast(info));
+}
+
+
+/*static*/
+void UI::RunUpdate(const Appcast& info)
+{
+	UIThreadAccess uit;
+	uit.App().SendMsg(MSG_RUN_UPDATE, new Appcast(info));
 }
 
 
