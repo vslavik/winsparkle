@@ -48,6 +48,8 @@ namespace
 #define NODE_CHANNEL    "channel"
 #define NODE_ITEM       "item"
 #define NODE_RELNOTES   NS_SPARKLE_NAME("releaseNotesLink")
+#define NODE_TITLE "title"
+#define NODE_DESCRIPTION "description"
 #define NODE_ENCLOSURE  "enclosure"
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
@@ -59,7 +61,7 @@ struct ContextData
     ContextData(Appcast& a, XML_Parser& p)
         : appcast(a),
           parser(p),
-          in_channel(0), in_item(0), in_relnotes(0)
+          in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0)
     {}
 
     // appcast we're parsing into
@@ -68,8 +70,8 @@ struct ContextData
     // the parser we're using
     XML_Parser& parser;
 
-    // is inside <channel>, <item> or <sparkle:releaseNotesLink> respectively?
-    int in_channel, in_item, in_relnotes;
+    // is inside <channel>, <item> or <sparkle:releaseNotesLink>, <title>, or <description> respectively?
+    int in_channel, in_item, in_relnotes, in_title, in_description;
 };
 
 
@@ -90,6 +92,14 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         if ( strcmp(name, NODE_RELNOTES) == 0 )
         {
             ctxt.in_relnotes++;
+        }
+        else if ( strcmp(name, NODE_TITLE) == 0 )
+        {
+            ctxt.in_title++;
+        }
+        else if ( strcmp(name, NODE_DESCRIPTION) == 0 )
+        {
+            ctxt.in_description++;
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0 )
         {
@@ -116,6 +126,14 @@ void XMLCALL OnEndElement(void *data, const char *name)
     {
         ctxt.in_relnotes--;
     }
+    else if ( ctxt.in_item && strcmp(name, NODE_TITLE) == 0 )
+    {
+        ctxt.in_title--;
+    }
+    else if ( ctxt.in_item && strcmp(name, NODE_DESCRIPTION) == 0 )
+    {
+        ctxt.in_description--;
+    }
     else if ( ctxt.in_channel && strcmp(name, NODE_ITEM) == 0 )
     {
         // One <item> in the channel is enough to get the information we
@@ -135,6 +153,10 @@ void XMLCALL OnText(void *data, const char *s, int len)
 
     if ( ctxt.in_relnotes )
         ctxt.appcast.ReleaseNotesURL.append(s, len);
+    else if ( ctxt.in_title )
+        ctxt.appcast.Title.append(s, len);
+    else if ( ctxt.in_description )
+        ctxt.appcast.Description.append(s, len);
 }
 
 } // anonymous namespace

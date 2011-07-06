@@ -45,6 +45,11 @@ struct Appcast
     /// URL of the release notes page
     std::string ReleaseNotesURL;
 
+    /// Title of the update
+    std::string Title;
+
+    /// Description of the update
+    std::string Description;
 
     /**
         Initializes the struct with data from XML appcast feed.

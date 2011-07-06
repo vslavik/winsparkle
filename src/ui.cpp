@@ -51,6 +51,8 @@
 #include <wx/msw/ole/activex.h>
 
 #include <exdisp.h>
+#include <mshtml.h>
+
 
 #if !wxCHECK_VERSION(2,9,0)
 #error "wxWidgets >= 2.9 is required to compile this code"
@@ -235,7 +237,7 @@ private:
     void OnInstall(wxCommandEvent&);
 
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
-    void ShowReleaseNotes(const wxString& url);
+    void ShowReleaseNotes(const Appcast& info);
 
 private:
     wxTimer       m_timer;
@@ -481,7 +483,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 {
     m_appcast = info;
 
-    const bool showRelnotes = !info.ReleaseNotesURL.empty();
+    const bool showRelnotes = !info.ReleaseNotesURL.empty() || !info.Description.empty();
 
     {
         LayoutChangesGuard guard(this);
@@ -516,11 +518,11 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
     // Only show the release notes now that the layout was updated, as it may
     // take some time to load the MSIE control:
     if ( showRelnotes )
-        ShowReleaseNotes(info.ReleaseNotesURL);
+        ShowReleaseNotes(info);
 }
 
 
-void UpdateDialog::ShowReleaseNotes(const wxString& url)
+void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 {
     if ( !m_webBrowser.IsOk() )
     {
@@ -553,14 +555,52 @@ void UpdateDialog::ShowReleaseNotes(const wxString& url)
         new wxActiveXContainer(m_browserParent, IID_IWebBrowser2, browser);
     }
 
-    m_webBrowser->Navigate
-                  (
-                      wxBasicString(url),
-                      NULL,  // Flags
-                      NULL,  // TargetFrameName
-                      NULL,  // PostData
-                      NULL   // Headers
-                  );
+    if( !info.ReleaseNotesURL.empty() )
+    {
+        m_webBrowser->Navigate
+                      (
+                          wxBasicString(info.ReleaseNotesURL),
+                          NULL,  // Flags
+                          NULL,  // TargetFrameName
+                          NULL,  // PostData
+                          NULL   // Headers
+                      );
+    }
+    else if ( !info.Description.empty() )
+    {
+        m_webBrowser->Navigate
+                      (
+                          wxBasicString("about:blank"),
+                          NULL,  // Flags
+                          NULL,  // TargetFrameName
+                          NULL,  // PostData
+                          NULL   // Headers
+                      );
+
+        HRESULT hr = E_FAIL;
+        IHTMLDocument2 *doc;
+        hr = m_webBrowser->get_Document((IDispatch **)&doc);
+        if ( FAILED(hr) || !doc )
+        {
+            LogError("Failed to get HTML document");
+            return;
+        }
+
+        // Creates a new one-dimensional array
+        SAFEARRAY *psaStrings = SafeArrayCreateVector(VT_VARIANT, 0, 1);
+        if ( psaStrings != NULL )
+        {
+            VARIANT *param;
+            SafeArrayAccessData(psaStrings, (LPVOID*)&param);
+            param->vt = VT_BSTR;
+            param->bstrVal = wxBasicString(info.Description);
+            SafeArrayUnaccessData(psaStrings);
+
+            doc->write(psaStrings);
+
+            SafeArrayDestroy(psaStrings);
+        }
+    }
 
     SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 }
