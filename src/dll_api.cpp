@@ -160,11 +160,15 @@ WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates()
 
 WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval)
 {
+    static const int MIN_CHECK_INTERVAL = 3600; // one hour
+
     try
     {
-        // Validate input
-        if (interval < 3600)
-            throw std::runtime_error("Invalid update interval (min: 3600 seconds)");
+        if ( interval < MIN_CHECK_INTERVAL )
+        {
+            winsparkle::LogError("Invalid update interval (min: 3600 seconds)");
+            interval = MIN_CHECK_INTERVAL;
+        }
 
         Settings::WriteConfigValue("UpdateInterval", interval);
     }
@@ -173,17 +177,17 @@ WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval)
 
 WIN_SPARKLE_API int win_sparkle_get_update_check_interval()
 {
-    static const int ONE_DAY = 60*60*24;
+    static const int DEFAULT_CHECK_INTERVAL = 60*60*24; // one day
 
     try
     {
         int interval;
-        Settings::ReadConfigValue("UpdateInterval", interval, ONE_DAY);
+        Settings::ReadConfigValue("UpdateInterval", interval, DEFAULT_CHECK_INTERVAL);
         return interval;
     }
     CATCH_ALL_EXCEPTIONS
 
-    return ONE_DAY;
+    return DEFAULT_CHECK_INTERVAL;
 }
 
 
