@@ -599,6 +599,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
             doc->write(psaStrings);
 
             SafeArrayDestroy(psaStrings);
+            doc->Release();
         }
     }
 
