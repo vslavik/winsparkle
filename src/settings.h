@@ -26,6 +26,7 @@
 #ifndef _settings_h_
 #define _settings_h_
 
+#include "winsparkle.h"
 #include "threads.h"
 
 #include <string>
@@ -34,6 +35,7 @@
 
 namespace winsparkle
 {
+
 
 /**
     Holds all of WinSparkle configuration.
@@ -98,6 +100,13 @@ public:
         return ms_registryPath;
     }
 
+    /// Return the registered upgrade handler
+    static sparkle_upgrade_handler GetUpgradeHandler() 
+    {
+      CriticalSectionLocker lock(ms_csVars);
+      return ms_upgradeHandler;
+    }
+
     //@}
 
     /**
@@ -141,6 +150,13 @@ public:
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_registryPath = path;
+    }
+
+    /// Set the install callback function
+    static void SetUpgradeHandler(sparkle_upgrade_handler upgradeHandler) 
+    {
+      CriticalSectionLocker lock(ms_csVars);
+      ms_upgradeHandler = upgradeHandler;
     }
     //@}
 
@@ -215,6 +231,10 @@ private:
     static std::wstring ms_companyName;
     static std::wstring ms_appName;
     static std::wstring ms_appVersion;
+
+    static sparkle_upgrade_handler ms_upgradeHandler;
+
+
 };
 
 } // namespace winsparkle

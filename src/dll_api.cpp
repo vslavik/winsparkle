@@ -190,6 +190,15 @@ WIN_SPARKLE_API int win_sparkle_get_update_check_interval()
     return DEFAULT_CHECK_INTERVAL;
 }
 
+WIN_SPARKLE_API void win_sparkle_register_upgrade_callback(sparkle_upgrade_handler handler)
+{
+    try
+    {
+      Settings::SetUpgradeHandler(handler);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 
 /*--------------------------------------------------------------------------*
                               Manual usage
