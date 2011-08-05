@@ -8,3 +8,4 @@ Release
 3rdparty/wxWidgets/build/msw/*_*/
 3rdparty/expat/win32/bin
 3rdparty/expat/win32/tmp
+*.pyc
