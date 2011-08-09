@@ -122,6 +122,9 @@ protected:
     // enable/disable resizing of the dialog
     void MakeResizable(bool resizable = true);
 
+	static BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType,
+		LPTSTR lpszName, LONG_PTR lParam);
+
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
@@ -129,6 +132,15 @@ protected:
     static const int MESSAGE_AREA_WIDTH = 300;
 };
 
+BOOL CALLBACK WinSparkleDialog::GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType,
+							  LPTSTR lpszName, LONG_PTR lParam)
+{
+	if (IS_INTRESOURCE(lpszName))
+		*((LPTSTR*)lParam) = lpszName;
+	else
+		*((LPTSTR*)lParam) = _tcsdup(lpszName);
+	return FALSE; // stop on the first icon found
+}
 
 WinSparkleDialog::WinSparkleDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
@@ -138,8 +150,34 @@ WinSparkleDialog::WinSparkleDialog()
     SetIcons(wxICON(UpdateAvailable));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
-    wxIcon bigIcon("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
-    topSizer->Add
+
+	// load the dialog box icon: the first 48x48 application icon will be loaded, if available;
+	// otherwise, the standard winsparkle icon will be used.
+	wxIcon bigIcon;
+	bool iconLoaded = false;
+	HMODULE hParentExe = GetModuleHandle(NULL);
+	if (hParentExe)
+	{
+		LPTSTR iconName = 0;
+		EnumResourceNames(hParentExe, RT_GROUP_ICON, GetFirstIconProc, (LONG_PTR)&iconName);
+		if (GetLastError() == ERROR_SUCCESS || GetLastError() == ERROR_RESOURCE_ENUM_USER_STOP)
+		{
+			HANDLE hIcon = LoadImage(hParentExe, iconName, IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR);
+			if (hIcon)
+			{
+				bigIcon.SetHICON(hIcon);
+				bigIcon.SetWidth(48);
+				bigIcon.SetHeight(48);
+				iconLoaded = true;
+			}
+			if (!IS_INTRESOURCE(iconName))
+				free(iconName);
+		}
+	}
+	if (!iconLoaded)
+		bigIcon.LoadFile("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+
+	topSizer->Add
               (
                   new wxStaticBitmap(this, wxID_ANY, bigIcon),
                   wxSizerFlags(0).Border(wxALL, 10)
@@ -391,8 +429,17 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
 {
     // FIXME: download the file within WinSparkle UI, stop the app,
     // elevate privileges, launch the installer
-    wxLaunchDefaultBrowser(m_appcast.DownloadURL);
-    Close();
+    sparkle_upgrade_handler handler = Settings::GetUpgradeHandler();
+    if (handler) 
+    {
+        Close();
+        handler(m_appcast.DownloadURL.c_str());
+    }
+    else
+    {
+        wxLaunchDefaultBrowser(m_appcast.DownloadURL);
+        Close();
+    }
 }
 
 

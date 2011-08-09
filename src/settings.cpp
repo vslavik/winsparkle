@@ -39,6 +39,7 @@ std::string  Settings::ms_registryPath;
 std::wstring Settings::ms_companyName;
 std::wstring Settings::ms_appName;
 std::wstring Settings::ms_appVersion;
+sparkle_upgrade_handler Settings::ms_upgradeHandler = NULL;
 
 
 /*--------------------------------------------------------------------------*

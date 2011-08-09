@@ -191,6 +191,16 @@ WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval);
  */
 WIN_SPARKLE_API int win_sparkle_get_update_check_interval();
 
+
+typedef void (*sparkle_upgrade_handler)(const char* url);
+
+/**
+    Set the upgrade handler for an alternate.
+
+    @since 0.4
+ */
+WIN_SPARKLE_API void win_sparkle_register_upgrade_callback(sparkle_upgrade_handler handler);
+
 //@}
 
 
