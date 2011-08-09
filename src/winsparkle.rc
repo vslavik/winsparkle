@@ -29,14 +29,22 @@
 
 UpdateAvailable ICON "../artwork/software-update-available.ico"
 
+#include <winver.h>
+#include "winsparkle-version.h"
+#include "winsparkle-resources.h"
 
+/*--------------------------------------------------------------------------*
+                                String table
+ *--------------------------------------------------------------------------*/
+
+STRINGTABLE
+BEGIN
+STR_UPDATE_BATCH	"@echo off\r\nsetlocal\r\ntaskkill /im "":appexename""\r\nstart /wait :setuppath\r\ndel "":setuppath""\r\ndel ""%~f0"""
+END
 
 /*--------------------------------------------------------------------------*
                               Version information
  *--------------------------------------------------------------------------*/
-
-#include <winver.h>
-#include "winsparkle-version.h"
 
 #define VER_NUM     WIN_SPARKLE_VERSION_MAJOR,WIN_SPARKLE_VERSION_MINOR,WIN_SPARKLE_VERSION_MICRO,0
 #define VER_STR     WIN_SPARKLE_VERSION_STRING

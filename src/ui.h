@@ -88,12 +88,19 @@ public:
      */
     static void AskForPermission();
 
+	/**
+		Shows the dialog for reporting progress while the update is downloaded.
+	 */
+	static void RunUpdate(const Appcast& info);
+
     /**
         Sets HINSTANCE of the DLL.
 
         Must be called on DLL initialization.
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
+
+	static HINSTANCE GetDllHINSTANCE() { return ms_hInstance; }
 
 protected:
     virtual void Run();
