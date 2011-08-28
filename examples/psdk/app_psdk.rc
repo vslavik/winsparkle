@@ -5,6 +5,8 @@
  *
  */
 
+appicon ICON "appicon.ico"
+
 #include <winver.h>
 
 // Get updates from this appcast feed:
