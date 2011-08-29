@@ -75,6 +75,16 @@ enum DownloadFlag
  */
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags = 0);
 
+/**
+    Returns filename part of @a url.
+
+    This is the filename that should be preferred as the name of the file used
+    to store data downloaded from this location.
+
+    Throws on error.
+ */
+std::string GetURLFileName(const std::string& url);
+
 } // namespace winsparkle
 
 #endif // _download_h_
