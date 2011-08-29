@@ -60,6 +60,20 @@ struct InetHandle
     HINTERNET m_handle;
 };
 
+bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
+{
+    DWORD outputSize = sizeof(output);
+    DWORD headerIndex = 0;
+    return HttpQueryInfoA
+           (
+               handle,
+               whatToGet | HTTP_QUERY_FLAG_NUMBER,
+               &output,
+               &outputSize,
+               &headerIndex
+           ) == TRUE;
+}
+
 } // anonymous namespace
 
 
@@ -101,6 +115,13 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
         throw Win32Exception();
 
     char buffer[1024];
+
+    // Get content length if possible:
+    DWORD contentLength;
+    if ( GetHttpHeader(conn, HTTP_QUERY_CONTENT_LENGTH, contentLength) )
+        sink->SetLength(contentLength);
+
+    // Download the data:
     for ( ;; )
     {
         DWORD read;
