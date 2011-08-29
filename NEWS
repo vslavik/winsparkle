@@ -1,4 +1,16 @@
 
+Version 0.4
+-----------
+
+- Added the ability to disable automatic checks.
+- Added the ability to change the update checks interval.
+- Added Visual Studio 201x project files.
+- Release notes included in appcast's <description> element are now recognized.
+- Added support for build numbers and shortVersionString.
+- Use application icon in the UI.
+- In-app downloads.
+
+
 Version 0.3
 -----------
 
@@ -7,6 +19,7 @@ Version 0.3
 - It is no longer necessary to call win_sparkle_set_appcast_url(), the
   feed can be specified in FeedURL resource with type set to APPCAST.
 - Added win_sparkle_set_registry_path().
+
 
 Version 0.2
 -----------
