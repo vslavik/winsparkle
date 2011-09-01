@@ -1,8 +1,13 @@
-Debug
-Release
+[Dd]ebug*
+[Rr]elease*
 *.ncb
 *.suo
+*.sdf
+*.opensdf
+*.tss
 *.vcproj.*.user
+*.vcxproj.user
+ipch
 3rdparty/wxWidgets/build/bakefiles/.bakefile_gen.state
 3rdparty/wxWidgets/lib/vc_lib
 3rdparty/wxWidgets/build/msw/*_*/
