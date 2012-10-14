@@ -1,0 +1,101 @@
+
+toolsets = vs2008 vs2010 vs2012;
+
+if ( $toolset == vs2008 )
+    SUFFIX = "";
+if ( $toolset == vs2010 )
+    SUFFIX = "-2010";
+if ( $toolset == vs2012 )
+    SUFFIX = "-2012";
+
+vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
+vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
+vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
+
+// Common settings:
+win32-crt-linkage = static;
+
+if ( $(config) == Release ) {
+    vs2008.option.VCCLCompilerTool.Optimization = 1;
+    vs2008.option.VCCLCompilerTool.FavorSizeOrSpeed = 2;
+    vs2008.option.VCCLCompilerTool.WholeProgramOptimization = true;
+    vs2008.option.VCCLCompilerTool.StringPooling = true;
+    vs2008.option.VCLinkerTool.LinkTimeCodeGeneration = 1;
+
+    vs2010.option.Configuration.WholeProgramOptimization = true;
+    vs2010.option.ClCompile.Optimization = MinSpace;
+    vs2010.option.ClCompile.FavorSizeOrSpeed = Size;
+    vs2010.option.ClCompile.WholeProgramOptimization = true;
+    vs2010.option.ClCompile.StringPooling = true;
+    vs2010.option.ClCompile.FunctionLevelLinking = true;
+    vs2010.option.Link.OptimizeReferences = true;
+    vs2010.option.Link.EnableCOMDATFolding = true;
+    vs2010.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+
+    vs2012.option.Configuration.WholeProgramOptimization = true;
+    vs2012.option.ClCompile.Optimization = MinSpace;
+    vs2012.option.ClCompile.FavorSizeOrSpeed = Size;
+    vs2012.option.ClCompile.WholeProgramOptimization = true;
+    vs2012.option.ClCompile.StringPooling = true;
+    vs2012.option.ClCompile.FunctionLevelLinking = true;
+    vs2012.option.Link.OptimizeReferences = true;
+    vs2012.option.Link.EnableCOMDATFolding = true;
+    vs2012.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+}
+
+// 3rd party library dependencies:
+submodule 3rdparty/dependencies.bkl;
+
+shared-library WinSparkle {
+
+    vs2008.projectfile = $(id)$(SUFFIX).vcproj;
+    vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
+    vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
+
+    defines += XML_STATIC;
+    includedirs += 3rdparty/expat/lib;
+    deps += expat;
+
+    includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;
+    deps += wx;
+
+    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet;
+
+    defines += BUILDING_WIN_SPARKLE;
+
+    // Public API headers:
+    headers {
+        include/winsparkle.h
+        include/winsparkle-version.h
+    }
+
+    includedirs += include;
+
+    // Private headers:
+    headers {
+        src/appcast.h
+        src/download.h
+        src/error.h
+        src/settings.h
+        src/threads.h
+        src/ui.h
+        src/updatechecker.h
+        src/utils.h
+    }
+
+    sources {
+        src/appcast.cpp
+        src/dll_api.cpp
+        src/dllmain.cpp
+        src/download.cpp
+        src/error.cpp
+        src/settings.cpp
+        src/threads.cpp
+        src/ui.cpp
+        src/updatechecker.cpp
+
+        src/winsparkle.rc
+    }
+}
+
+submodule examples/examples.bkl;
