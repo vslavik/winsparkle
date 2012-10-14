@@ -133,12 +133,19 @@ wxIcon GetApplicationIcon()
         return wxNullIcon;
 
     wxIcon icon;
-    icon.SetHICON(hIcon);
+    icon.SetHICON(static_cast<WXHICON>(hIcon));
     icon.SetWidth(48);
     icon.SetHeight(48);
 
     return icon;
 }
+
+
+struct EventPayload
+{
+    Appcast appcast;
+};
+
 
 } // anonymous namespace
 
@@ -740,7 +747,7 @@ public:
     App();
 
     // Sends a message with ID @a msg to the app.
-    void SendMsg(int msg, void *data = NULL);
+    void SendMsg(int msg, EventPayload *data = NULL);
 
 private:
     void InitWindow();
@@ -789,11 +796,11 @@ App::App()
 }
 
 
-void App::SendMsg(int msg, void *data)
+void App::SendMsg(int msg, EventPayload *data)
 {
     wxThreadEvent *event = new wxThreadEvent(wxEVT_COMMAND_THREAD, msg);
     if ( data )
-        event->SetClientData(data);
+        event->SetPayload(*data);
 
     wxQueueEvent(this, event);
 }
@@ -859,11 +866,8 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
 {
     InitWindow();
 
-    Appcast *appcast = static_cast<Appcast*>(event.GetClientData());
-
-    m_win->StateUpdateAvailable(*appcast);
-
-    delete appcast;
+    EventPayload payload(event.GetPayload<EventPayload>());
+    m_win->StateUpdateAvailable(payload.appcast);
 
     ShowWindow();
 }
@@ -1001,7 +1005,9 @@ void UI::NotifyNoUpdates()
 void UI::NotifyUpdateAvailable(const Appcast& info)
 {
     UIThreadAccess uit;
-    uit.App().SendMsg(MSG_UPDATE_AVAILABLE, new Appcast(info));
+    EventPayload payload;
+    payload.appcast = info;
+    uit.App().SendMsg(MSG_UPDATE_AVAILABLE, &payload);
 }
 
 
