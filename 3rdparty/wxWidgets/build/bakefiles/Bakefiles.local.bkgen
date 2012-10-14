@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
-
-    <add-flags files="wx.bkl" formats="msvs2008prj">
-        -DRUNTIME_LIBS=static -DWXUNIV=0
-    </add-flags>
-
-</bakefile-gen>
