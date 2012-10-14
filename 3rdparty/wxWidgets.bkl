@@ -1,0 +1,178 @@
+
+srcdir wxWidgets;
+
+vs2008.generate-solution = false;
+vs2010.generate-solution = false;
+vs2012.generate-solution = false;
+
+library wx {
+    vs2008.projectfile = ../$(id)$(SUFFIX).vcproj;
+    vs2010.projectfile = ../$(id)$(SUFFIX).vcxproj;
+    vs2012.projectfile = ../$(id)$(SUFFIX).vcxproj;
+
+    defines += WXBUILDING;
+    includedirs += ../wxWidgets_setup_h include;
+
+    headers {
+        ../wxWidgets_setup_h/wx/setup.h
+    }
+
+    sources {
+        src/common/any.cpp
+        src/common/appbase.cpp
+        src/common/appcmn.cpp
+        src/common/arrstr.cpp
+        src/common/artprov.cpp
+        src/common/bmpbase.cpp
+        src/common/btncmn.cpp
+        src/common/checkboxcmn.cpp
+        src/common/clntdata.cpp
+        src/common/cmdline.cpp
+        src/common/cmdproc.cpp
+        src/common/colourcmn.cpp
+        src/common/config.cpp
+        src/common/containr.cpp
+        src/common/convauto.cpp
+        src/common/ctrlcmn.cpp
+        src/common/ctrlsub.cpp
+        src/common/dcbase.cpp
+        src/common/dcbufcmn.cpp
+        src/common/dircmn.cpp
+        src/common/dlgcmn.cpp
+        src/common/dobjcmn.cpp
+        src/common/dpycmn.cpp
+        src/common/dynarray.cpp
+        src/common/dynlib.cpp
+        src/common/encconv.cpp
+        src/common/event.cpp
+        src/common/evtloopcmn.cpp
+        src/common/extended.c
+        src/common/file.cpp
+        src/common/filefn.cpp
+        src/common/filename.cpp
+        src/common/fontcmn.cpp
+        src/common/framecmn.cpp
+        src/common/gaugecmn.cpp
+        src/common/gbsizer.cpp
+        src/common/gdicmn.cpp
+        src/common/hash.cpp
+        src/common/hashmap.cpp
+        src/common/iconbndl.cpp
+        src/common/init.cpp
+        src/common/ipcbase.cpp
+        src/common/layout.cpp
+        src/common/list.cpp
+        src/common/log.cpp
+        src/common/longlong.cpp
+        src/common/matrix.cpp
+        src/common/menucmn.cpp
+        src/common/module.cpp
+        src/common/mousemanager.cpp
+        src/common/msgout.cpp
+        src/common/numformatter.cpp
+        src/common/object.cpp
+        src/common/overlaycmn.cpp
+        src/common/panelcmn.cpp
+        src/common/platinfo.cpp
+        src/common/powercmn.cpp
+        src/common/process.cpp
+        src/common/rendcmn.cpp
+        src/common/rgncmn.cpp
+        src/common/settcmn.cpp
+        src/common/sizer.cpp
+        src/common/statbmpcmn.cpp
+        src/common/stattextcmn.cpp
+        src/common/stdpbase.cpp
+        src/common/stockitem.cpp
+        src/common/strconv.cpp
+        src/common/string.cpp
+        src/common/stringimpl.cpp
+        src/common/strvararg.cpp
+        src/common/sysopt.cpp
+        src/common/textbuf.cpp
+        src/common/textcmn.cpp
+        src/common/time.cpp
+        src/common/timercmn.cpp
+        src/common/timerimpl.cpp
+        src/common/tokenzr.cpp
+        src/common/toplvcmn.cpp
+        src/common/unichar.cpp
+        src/common/uri.cpp
+        src/common/ustring.cpp
+        src/common/utilscmn.cpp
+        src/common/variant.cpp
+        src/common/wincmn.cpp
+        src/common/windowid.cpp
+        src/common/wrapsizer.cpp
+        src/common/wxcrt.cpp
+        src/generic/msgdlgg.cpp
+        src/generic/renderg.cpp
+        src/generic/scrlwing.cpp
+        src/generic/selstore.cpp
+        src/generic/statbmpg.cpp
+        src/generic/stattextg.cpp
+        src/generic/vscroll.cpp
+        src/msw/anybutton.cpp
+        src/msw/app.cpp
+        src/msw/artmsw.cpp
+        src/msw/basemsw.cpp
+        src/msw/bitmap.cpp
+        src/msw/brush.cpp
+        src/msw/button.cpp
+        src/msw/checkbox.cpp
+        src/msw/colour.cpp
+        src/msw/control.cpp
+        src/msw/cursor.cpp
+        src/msw/dc.cpp
+        src/msw/dcclient.cpp
+        src/msw/dcmemory.cpp
+        src/msw/dcscreen.cpp
+        src/msw/debughlp.cpp
+        src/msw/dialog.cpp
+        src/msw/dib.cpp
+        src/msw/dir.cpp
+        src/msw/display.cpp
+        src/msw/dlmsw.cpp
+        src/msw/evtloop.cpp
+        src/msw/evtloopconsole.cpp
+        src/msw/font.cpp
+        src/msw/fontutil.cpp
+        src/msw/frame.cpp
+        src/msw/gauge.cpp
+        src/msw/gdiimage.cpp
+        src/msw/icon.cpp
+        src/msw/imaglist.cpp
+        src/msw/main.cpp
+        src/msw/menu.cpp
+        src/msw/menuitem.cpp
+        src/msw/msgdlg.cpp
+        src/msw/mslu.cpp
+        src/msw/nativdlg.cpp
+        src/msw/nativewin.cpp
+        src/msw/nonownedwnd.cpp
+        src/msw/ole/activex.cpp
+        src/msw/ole/dataobj.cpp
+        src/msw/ole/oleutils.cpp
+        src/msw/ole/safearray.cpp
+        src/msw/ole/uuid.cpp
+        src/msw/panel.cpp
+        src/msw/pen.cpp
+        src/msw/power.cpp
+        src/msw/region.cpp
+        src/msw/registry.cpp
+        src/msw/renderer.cpp
+        src/msw/settings.cpp
+        src/msw/statbmp.cpp
+        src/msw/stattext.cpp
+        src/msw/stdpaths.cpp
+        src/msw/thread.cpp
+        src/msw/timer.cpp
+        src/msw/toplevel.cpp
+        src/msw/utils.cpp
+        src/msw/utilsexc.cpp
+        src/msw/utilsgui.cpp
+        src/msw/utilswin.cpp
+        src/msw/uxtheme.cpp
+        src/msw/window.cpp
+    }
+}

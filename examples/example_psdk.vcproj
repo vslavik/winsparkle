@@ -4,9 +4,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="WinSparkle"
-	ProjectGUID="{524CCCF2-61EA-5B64-A1D9-FF5497027B5F}"
-	RootNamespace="WinSparkle"
+	Name="example_psdk"
+	ProjectGUID="{AFBD6C55-82AB-5746-BABD-D254BE893418}"
+	RootNamespace="example_psdk"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -21,7 +21,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,8 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				AdditionalIncludeDirectories="..\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -54,15 +54,14 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
-				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
+				PreprocessorDefinitions="_UNICODE;UNICODE"
+				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib kernel32.lib user32.lib comctl32.lib rpcrt4.lib version.lib wininet.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -84,6 +83,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -91,7 +93,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -114,8 +116,8 @@
 				AdditionalOptions="/MP"
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				AdditionalIncludeDirectories="..\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -130,15 +132,14 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
-				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
+				PreprocessorDefinitions="_UNICODE;UNICODE"
+				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib kernel32.lib user32.lib comctl32.lib rpcrt4.lib version.lib wininet.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -163,6 +164,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -176,39 +180,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="src\appcast.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\dll_api.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\dllmain.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\download.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\error.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\settings.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\threads.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\ui.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\updatechecker.cpp"
+				RelativePath="psdk\app_psdk.c"
 				>
 			</File>
 		</Filter>
@@ -217,46 +189,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="include\winsparkle.h"
-				>
-			</File>
-			<File
-				RelativePath="include\winsparkle-version.h"
-				>
-			</File>
-			<File
-				RelativePath="src\appcast.h"
-				>
-			</File>
-			<File
-				RelativePath="src\download.h"
-				>
-			</File>
-			<File
-				RelativePath="src\error.h"
-				>
-			</File>
-			<File
-				RelativePath="src\settings.h"
-				>
-			</File>
-			<File
-				RelativePath="src\threads.h"
-				>
-			</File>
-			<File
-				RelativePath="src\ui.h"
-				>
-			</File>
-			<File
-				RelativePath="src\updatechecker.h"
-				>
-			</File>
-			<File
-				RelativePath="src\utils.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -264,7 +196,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="src\winsparkle.rc"
+				RelativePath="psdk\app_psdk.rc"
 				>
 			</File>
 		</Filter>

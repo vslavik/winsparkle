@@ -1,0 +1,38 @@
+
+srcdir expat/lib;
+
+vs2008.generate-solution = false;
+vs2010.generate-solution = false;
+vs2012.generate-solution = false;
+
+library expat {
+    vs2008.projectfile = ../../$(id)$(SUFFIX).vcproj;
+    vs2010.projectfile = ../../$(id)$(SUFFIX).vcxproj;
+    vs2012.projectfile = ../../$(id)$(SUFFIX).vcxproj;
+
+    defines += COMPILED_FROM_DSP;
+
+    headers {
+        ascii.h
+        asciitab.h
+        expat.h
+        expat_external.h
+        iasciitab.h
+        internal.h
+        latin1tab.h
+        nametab.h
+        utf8tab.h
+        winconfig.h
+        xmlrole.h
+        xmltok.h
+        xmltok_impl.h
+    }
+
+    sources {
+        xmlparse.c
+        xmlrole.c
+        xmltok.c
+        xmltok_impl.c
+        xmltok_ns.c
+    }
+}
