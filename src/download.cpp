@@ -60,6 +60,34 @@ struct InetHandle
     HINTERNET m_handle;
 };
 
+
+std::wstring MakeUserAgent()
+{
+    std::wstring userAgent =
+        Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
+        L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
+
+#ifdef _WIN64
+    userAgent += L" (Win64)";
+#else
+    // If we're running a 32bit process, check if we're on 64bit Windows OS:
+    typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+    LPFN_ISWOW64PROCESS f_IsWow64Process =
+        (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandleA("kernel32"), "IsWow64Process");
+
+    if( f_IsWow64Process )
+    {
+        BOOL wow64 = FALSE;
+        f_IsWow64Process(GetCurrentProcess(), &wow64);
+        if ( wow64 )
+            userAgent += L" (WOW64)";
+    }
+
+#endif
+
+    return userAgent;
+}
+
 } // anonymous namespace
 
 
@@ -69,13 +97,10 @@ struct InetHandle
 
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 {
-    std::wstring userAgent =
-        Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
-        L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
 
     InetHandle inet = InternetOpen
                       (
-                          userAgent.c_str(),
+                          MakeUserAgent().c_str(),
                           INTERNET_OPEN_TYPE_PRECONFIG,
                           NULL, // lpszProxyName
                           NULL, // lpszProxyBypass
