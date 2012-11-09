@@ -69,9 +69,39 @@ struct InetHandle
 
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 {
-    std::wstring userAgent =
+	BOOL isWow64 = FALSE;
+	BOOL is64 = FALSE;
+
+#ifdef _WIN64
+	is64 = TRUE;
+#else
+	// If we're running a 32bit process, check if we're running fake 32bit Windows on 64bit Windows
+	IsWow64Process(GetCurrentProcess(), &isWow64);
+
+	// If we're running a 32bit binary on a 64bit machine:
+	//isWow will be TRUE
+
+	// If we're running a 32bit binary on a 32bit machine:
+	//isWow will be FALSE
+
+	// If we have the capability of running a 64bit binary, ask for one even if we're currently running a 32bit binary
+	if(isWow64) is64 = TRUE;
+#endif
+
+	std::wstring userAgent;
+
+	if(is64)
+	{
+		userAgent =
+        Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
+        L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING) + L" WIN64";
+	}
+	else
+	{
+		userAgent =
         Settings::GetAppName() + L"/" + Settings::GetAppVersion() +
         L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
+	}
 
     InetHandle inet = InternetOpen
                       (
