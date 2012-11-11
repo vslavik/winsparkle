@@ -206,10 +206,11 @@ void RegistryWrite(const char *name, const char *value)
                  (const BYTE*)value,
                  strlen(value) + 1
              );
-    if ( result != ERROR_SUCCESS )
-        throw Win32Exception("Cannot write settings to registry");
 
     RegCloseKey(key);
+
+    if ( result != ERROR_SUCCESS )
+        throw Win32Exception("Cannot write settings to registry");
 }
 
 
