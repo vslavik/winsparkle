@@ -114,7 +114,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     if ( !conn )
         throw Win32Exception();
 
-    char buffer[1024];
+    char buffer[10240];
 
     // Get content length if possible:
     DWORD contentLength;
@@ -125,7 +125,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     for ( ;; )
     {
         DWORD read;
-        if ( !InternetReadFile(conn, buffer, 1024, &read) )
+        if ( !InternetReadFile(conn, buffer, sizeof(buffer), &read) )
             throw Win32Exception();
 
         if ( read == 0 )
