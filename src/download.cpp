@@ -116,6 +116,14 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 
     char buffer[10240];
 
+    // Check returned status code - we need to detect 404 instead of
+    // downloading the human-readable 404 page:
+    DWORD statusCode;
+    if ( GetHttpHeader(conn, HTTP_QUERY_STATUS_CODE, statusCode) && statusCode >= 400 )
+    {
+        throw std::runtime_error("Update file not found on the server.");
+    }
+
     // Get content length if possible:
     DWORD contentLength;
     if ( GetHttpHeader(conn, HTTP_QUERY_CONTENT_LENGTH, contentLength) )
