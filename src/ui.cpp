@@ -297,6 +297,7 @@ private:
     wxGauge      *m_progress;
     wxButton     *m_closeButton;
     wxSizer      *m_closeButtonSizer;
+    wxButton     *m_installButton;
     wxSizer      *m_updateButtonsSizer;
     wxSizer      *m_releaseNotesSizer;
     wxPanel      *m_browserParent;
@@ -365,7 +366,7 @@ UpdateDialog::UpdateDialog() : m_timer(this)
                           );
     m_updateButtonsSizer->Add
                           (
-                            new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -496,6 +497,7 @@ void UpdateDialog::StateNoUpdateFound()
     SetMessage(msg);
 
     m_closeButton->SetLabel(_("Close"));
+    m_closeButton->SetDefault();
     EnablePulsing(false);
 
     SHOW(m_heading);
@@ -517,6 +519,7 @@ void UpdateDialog::StateUpdateError()
     SetMessage(msg);
 
     m_closeButton->SetLabel(_("Cancel"));
+    m_closeButton->SetDefault();
     EnablePulsing(false);
 
     SHOW(m_heading);
@@ -556,6 +559,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         );
 
         EnablePulsing(false);
+
+        m_installButton->SetDefault();
 
         SHOW(m_heading);
         HIDE(m_progress);
