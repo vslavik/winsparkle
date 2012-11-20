@@ -29,6 +29,7 @@
 #include "error.h"
 #include "ui.h"
 #include "updatechecker.h"
+#include "updatedownloader.h"
 
 #include <ctime>
 
@@ -45,6 +46,9 @@ WIN_SPARKLE_API void win_sparkle_init()
 {
     try
     {
+        // first things first
+        UpdateDownloader::CleanLeftovers();
+
         bool checkUpdates;
         if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
         {
@@ -95,7 +99,7 @@ WIN_SPARKLE_API void win_sparkle_cleanup()
     {
         UI::ShutDown();
 
-        // FIXME: shut down any worker UpdateChecker threads too
+        // FIXME: shut down any worker UpdateChecker and UpdateDownloader threads too
     }
     CATCH_ALL_EXCEPTIONS
 }

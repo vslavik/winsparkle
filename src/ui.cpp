@@ -30,6 +30,7 @@
 #include "settings.h"
 #include "error.h"
 #include "updatechecker.h"
+#include "updatedownloader.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -42,12 +43,12 @@
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/filename.h>
 #include <wx/gauge.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include <wx/settings.h>
-#include <wx/utils.h>
 #include <wx/msw/ole/activex.h>
 
 #include <exdisp.h>
@@ -143,7 +144,9 @@ wxIcon GetApplicationIcon()
 
 struct EventPayload
 {
-    Appcast appcast;
+    Appcast     appcast;
+    size_t      sizeDownloaded, sizeTotal;
+    std::string updateFile;
 };
 
 
@@ -261,6 +264,7 @@ void WinSparkleDialog::SetHeadingFont(wxWindow *win)
 const int ID_SKIP_VERSION = wxNewId();
 const int ID_REMIND_LATER = wxNewId();
 const int ID_INSTALL = wxNewId();
+const int ID_RUN_INSTALLER = wxNewId();
 
 class UpdateDialog : public WinSparkleDialog
 {
@@ -275,6 +279,12 @@ public:
     void StateUpdateError();
     // change state into "a new version is available"
     void StateUpdateAvailable(const Appcast& info);
+    // change state into "downloading update"
+    void StateDownloading();
+    // update download progress
+    void DownloadProgress(size_t downloaded, size_t total);
+    // change state into "update downloaded"
+    void StateUpdateDownloaded(const std::string& updateFile);
 
 private:
     void EnablePulsing(bool enable);
@@ -286,6 +296,8 @@ private:
     void OnRemindLater(wxCommandEvent&);
     void OnInstall(wxCommandEvent&);
 
+    void OnRunInstaller(wxCommandEvent&);
+
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const Appcast& info);
 
@@ -295,8 +307,11 @@ private:
     wxStaticText *m_heading;
     wxStaticText *m_message;
     wxGauge      *m_progress;
+    wxStaticText *m_progressLabel;
     wxButton     *m_closeButton;
     wxSizer      *m_closeButtonSizer;
+    wxButton     *m_runInstallerButton;
+    wxSizer      *m_runInstallerButtonSizer;
     wxButton     *m_installButton;
     wxSizer      *m_updateButtonsSizer;
     wxSizer      *m_releaseNotesSizer;
@@ -305,7 +320,11 @@ private:
     wxAutoOleInterface<IWebBrowser2> m_webBrowser;
 
     // current appcast data (only valid after StateUpdateAvailable())
-    Appcast       m_appcast;
+    Appcast m_appcast;
+    // current update file (only valid after StateUpdateDownloaded)
+    wxString m_updateFile;
+    // downloader (only valid between OnInstall and OnUpdateDownloaded)
+    UpdateDownloader* m_downloader;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -324,7 +343,9 @@ UpdateDialog::UpdateDialog() : m_timer(this)
 
     m_progress = new wxGauge(this, wxID_ANY, 100,
                              wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
+    m_progressLabel = new wxStaticText(this, wxID_ANY, "");
     m_mainAreaSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
+    m_mainAreaSizer->Add(m_progressLabel, wxSizerFlags(0).Expand());
     m_mainAreaSizer->AddStretchSpacer(1);
 
     m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
@@ -377,6 +398,13 @@ UpdateDialog::UpdateDialog() : m_timer(this)
     m_closeButtonSizer->Add(m_closeButton, wxSizerFlags(0).Border(wxLEFT));
     m_buttonSizer->Add(m_closeButtonSizer, wxSizerFlags(1));
 
+    m_runInstallerButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+    // TODO: make this "Install and relaunch"
+    m_runInstallerButton = new wxButton(this, ID_RUN_INSTALLER, _("Install update"));
+    m_runInstallerButtonSizer->AddStretchSpacer(1);
+    m_runInstallerButtonSizer->Add(m_runInstallerButton, wxSizerFlags(0).Border(wxLEFT));
+    m_buttonSizer->Add(m_runInstallerButtonSizer, wxSizerFlags(1));
+
     m_mainAreaSizer->Add
                  (
                      m_buttonSizer,
@@ -391,6 +419,7 @@ UpdateDialog::UpdateDialog() : m_timer(this)
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnSkipVersion, this, ID_SKIP_VERSION);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRemindLater, this, ID_REMIND_LATER);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnInstall, this, ID_INSTALL);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRunInstaller, this, ID_RUN_INSTALLER);
 }
 
 
@@ -417,6 +446,15 @@ void UpdateDialog::OnCloseButton(wxCommandEvent&)
 
 void UpdateDialog::OnClose(wxCloseEvent&)
 {
+    if ( m_downloader )
+    {
+        m_downloader->TerminateAndJoin();
+        delete m_downloader;
+        m_downloader = NULL;
+
+        UpdateDownloader::CleanLeftovers();
+    }
+
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
@@ -440,9 +478,27 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 
 void UpdateDialog::OnInstall(wxCommandEvent&)
 {
-    // FIXME: download the file within WinSparkle UI, stop the app,
-    // elevate privileges, launch the installer
-    wxLaunchDefaultBrowser(m_appcast.DownloadURL);
+    StateDownloading();
+
+    // Run the download in background.
+    m_downloader = new UpdateDownloader(m_appcast);
+    m_downloader->Start();
+}
+
+
+void UpdateDialog::OnRunInstaller(wxCommandEvent&)
+{
+    wxBusyCursor bcur;
+
+    m_message->SetLabel(_("Launching the installer..."));
+    m_runInstallerButton->Disable();
+
+    if ( !wxLaunchDefaultApplication(m_updateFile) )
+    {
+        wxLogError(_("Failed to launch the installer."));
+        wxLog::FlushActive();
+    }
+
     Close();
 }
 
@@ -465,7 +521,9 @@ void UpdateDialog::StateCheckingUpdates()
 
     HIDE(m_heading);
     SHOW(m_progress);
+    HIDE(m_progressLabel);
     SHOW(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
@@ -502,7 +560,9 @@ void UpdateDialog::StateNoUpdateFound()
 
     SHOW(m_heading);
     HIDE(m_progress);
+    HIDE(m_progressLabel);
     SHOW(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
@@ -524,7 +584,9 @@ void UpdateDialog::StateUpdateError()
 
     SHOW(m_heading);
     HIDE(m_progress);
+    HIDE(m_progressLabel);
     SHOW(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
@@ -564,7 +626,9 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 
         SHOW(m_heading);
         HIDE(m_progress);
+        HIDE(m_progressLabel);
         HIDE(m_closeButtonSizer);
+        HIDE(m_runInstallerButtonSizer);
         SHOW(m_updateButtonsSizer);
         DoShowElement(m_releaseNotesSizer, showRelnotes);
         MakeResizable(showRelnotes);
@@ -574,6 +638,84 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
     // take some time to load the MSIE control:
     if ( showRelnotes )
         ShowReleaseNotes(info);
+}
+
+
+void UpdateDialog::StateDownloading()
+{
+    LayoutChangesGuard guard(this);
+
+    SetMessage(_("Downloading update..."));
+
+    m_closeButton->SetLabel(_("Cancel"));
+    EnablePulsing(false);
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    SHOW(m_progressLabel);
+    SHOW(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
+}
+
+
+void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
+{
+    wxString label;
+
+    if ( total )
+    {
+        if ( m_progress->GetRange() != total )
+            m_progress->SetRange(total);
+        m_progress->SetValue(downloaded);
+        label = wxString::Format
+                (
+                    _("%s of %s"),
+                    wxFileName::GetHumanReadableSize(downloaded, "", 1, wxSIZE_CONV_SI),
+                    wxFileName::GetHumanReadableSize(total, "", 1, wxSIZE_CONV_SI)
+                );
+    }
+    else
+    {
+        m_progress->Pulse();
+        label = wxFileName::GetHumanReadableSize(downloaded, "", 1, wxSIZE_CONV_SI);
+    }
+
+    if ( label != m_progressLabel->GetLabel() )
+      m_progressLabel->SetLabel(label);
+
+    Refresh();
+    Update();
+}
+
+
+void UpdateDialog::StateUpdateDownloaded(const std::string& updateFile)
+{
+    m_downloader->Join();
+    delete m_downloader;
+    m_downloader = NULL;
+
+    m_updateFile = updateFile;
+
+    LayoutChangesGuard guard(this);
+
+    SetMessage(_("Ready to install."));
+
+    m_progress->SetRange(1);
+    m_progress->SetValue(1);
+
+    m_runInstallerButton->SetDefault();
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    HIDE(m_progressLabel);
+    HIDE(m_closeButtonSizer);
+    SHOW(m_runInstallerButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
 }
 
 
@@ -738,6 +880,12 @@ const int MSG_UPDATE_AVAILABLE = wxNewId();
 // Notify the UI that a new version is available
 const int MSG_UPDATE_ERROR = wxNewId();
 
+// Inform the UI about download progress
+const int MSG_DOWNLOAD_PROGRESS = wxNewId();
+
+// Inform the UI that update download finished
+const int MSG_UPDATE_DOWNLOADED = wxNewId();
+
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
@@ -764,6 +912,8 @@ private:
     void OnNoUpdateFound(wxThreadEvent& event);
     void OnUpdateAvailable(wxThreadEvent& event);
     void OnUpdateError(wxThreadEvent& event);
+    void OnDownloadProgress(wxThreadEvent& event);
+    void OnUpdateDownloaded(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
 
 private:
@@ -797,6 +947,8 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateError, this, MSG_UPDATE_ERROR);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
 
@@ -864,6 +1016,24 @@ void App::OnUpdateError(wxThreadEvent&)
 {
     if ( m_win )
         m_win->StateUpdateError();
+}
+
+void App::OnDownloadProgress(wxThreadEvent& event)
+{
+    if ( m_win )
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->DownloadProgress(payload.sizeDownloaded, payload.sizeTotal);
+    }
+}
+
+void App::OnUpdateDownloaded(wxThreadEvent& event)
+{
+    if ( m_win )
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->StateUpdateDownloaded(payload.updateFile);
+    }
 }
 
 
@@ -1013,6 +1183,27 @@ void UI::NotifyUpdateAvailable(const Appcast& info)
     EventPayload payload;
     payload.appcast = info;
     uit.App().SendMsg(MSG_UPDATE_AVAILABLE, &payload);
+}
+
+
+/*static*/
+void UI::NotifyDownloadProgress(size_t downloaded, size_t total)
+{
+    UIThreadAccess uit;
+    EventPayload payload;
+    payload.sizeDownloaded = downloaded;
+    payload.sizeTotal = total;
+    uit.App().SendMsg(MSG_DOWNLOAD_PROGRESS, &payload);
+}
+
+
+/*static*/
+void UI::NotifyUpdateDownloaded(const std::string& updateFile)
+{
+    UIThreadAccess uit;
+    EventPayload payload;
+    payload.updateFile = updateFile;
+    uit.App().SendMsg(MSG_UPDATE_DOWNLOADED, &payload);
 }
 
 

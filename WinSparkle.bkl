@@ -80,6 +80,7 @@ shared-library WinSparkle {
         src/threads.h
         src/ui.h
         src/updatechecker.h
+        src/updatedownloader.h
         src/utils.h
     }
 
@@ -93,6 +94,7 @@ shared-library WinSparkle {
         src/threads.cpp
         src/ui.cpp
         src/updatechecker.cpp
+        src/updatedownloader.cpp
 
         src/winsparkle.rc
     }

@@ -79,6 +79,16 @@ public:
     static void NotifyUpdateAvailable(const Appcast& info);
 
     /**
+        Notifies the UI about download progress.
+     */
+    static void NotifyDownloadProgress(size_t downloaded, size_t total);
+
+    /**
+        Notifies the UI that an update was downloaded.
+     */
+    static void NotifyUpdateDownloaded(const std::string& updateFile);
+
+    /**
         Shows the WinSparkle window in "checking for updates..." state.
      */
     static void ShowCheckingUpdates();
