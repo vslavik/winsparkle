@@ -914,6 +914,7 @@ public:
         if ( ms_uiThread )
         {
             ms_uiThread->Join();
+            delete ms_uiThread;
             ms_uiThread = NULL;
         }
     }
