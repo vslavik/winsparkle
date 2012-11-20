@@ -72,6 +72,16 @@ public:
      */
     void Join();
 
+    /**
+        Signal the thread to terminate and call Join().
+
+        @note The thread must support this and call
+              CheckShouldTerminate() frequently.
+     */
+    void TerminateAndJoin();
+    
+    /// Check if the thread should terminate and throw TerminateThreadException if so.
+    void CheckShouldTerminate();
 
 protected:
     /// Signals Start() that the thread is up and ready.
@@ -87,6 +97,11 @@ protected:
     /// Is the thread joinable?
     virtual bool IsJoinable() const = 0;
 
+    /// This exception is thrown when the thread was terminated.
+    struct TerminateThreadException
+    {
+    };
+
 private:
     static unsigned __stdcall ThreadEntryPoint(void *data);
 
@@ -94,6 +109,7 @@ protected:
     HANDLE m_handle;
     unsigned m_id;
     HANDLE m_signalEvent;
+    HANDLE m_terminateEvent;
 };
 
 

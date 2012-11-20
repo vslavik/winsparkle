@@ -89,7 +89,7 @@ void SetThreadName(DWORD threadId, const char *name)
  *--------------------------------------------------------------------------*/
 
 Thread::Thread(const char *name)
-    : m_handle(NULL), m_id(0), m_signalEvent(NULL)
+    : m_handle(NULL), m_id(0), m_signalEvent(NULL), m_terminateEvent(NULL)
 {
     m_handle = (HANDLE)_beginthreadex
                        (
@@ -112,6 +112,8 @@ Thread::~Thread()
 {
     if ( m_signalEvent )
         CloseHandle(m_signalEvent);
+    if ( m_terminateEvent )
+        CloseHandle(m_terminateEvent);
     if ( m_handle )
         CloseHandle(m_handle);
 }
@@ -126,6 +128,10 @@ Thread::~Thread()
 
         if ( !thread->IsJoinable() )
             delete thread;
+    }
+    catch ( TerminateThreadException& )
+    {
+        // this is OK, just return
     }
     CATCH_ALL_EXCEPTIONS
 
@@ -148,10 +154,22 @@ void Thread::Start()
     if ( !m_signalEvent )
         throw Win32Exception();
 
+    m_terminateEvent = CreateEvent
+                    (
+                        NULL,  // default security attributes
+                        FALSE, // auto-reset
+                        FALSE, // initially non-signaled
+                        NULL   // anonymous
+                    );
+    if ( !m_terminateEvent )
+        throw Win32Exception();
+
     if ( ResumeThread(m_handle) == (DWORD)-1 )
     {
         CloseHandle(m_signalEvent);
         m_signalEvent = NULL;
+        CloseHandle(m_terminateEvent);
+        m_terminateEvent = NULL;
         throw Win32Exception();
     }
 
@@ -168,6 +186,20 @@ void Thread::Join()
 
     if ( WaitForSingleObject(m_handle, INFINITE) != WAIT_OBJECT_0 )
         throw Win32Exception();
+}
+
+
+void Thread::TerminateAndJoin()
+{
+    SetEvent(m_terminateEvent);
+    Join();
+}
+
+
+void Thread::CheckShouldTerminate()
+{
+    if ( WaitForSingleObject(m_terminateEvent, 0) == WAIT_OBJECT_0 )
+        throw TerminateThreadException();
 }
 
 
