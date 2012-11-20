@@ -36,6 +36,13 @@ namespace winsparkle
  */
 struct IDownloadSink
 {
+    /**
+        Inform the sink of total data size.
+
+        Note that this is not guaranteed to be called.
+     */
+    virtual void SetLength(size_t len) = 0;
+
     /// Add chunk of downloaded data
     virtual void Add(const void *data, size_t len) = 0;
 };
@@ -45,6 +52,8 @@ struct IDownloadSink
  */
 struct StringDownloadSink : public IDownloadSink
 {
+    virtual void SetLength(size_t) {}
+
     virtual void Add(const void *data, size_t len)
     {
         this->data.append(reinterpret_cast<const char*>(data), len);
@@ -74,6 +83,16 @@ enum DownloadFlag
     @see CheckConnection()
  */
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags = 0);
+
+/**
+    Returns filename part of @a url.
+
+    This is the filename that should be preferred as the name of the file used
+    to store data downloaded from this location.
+
+    Throws on error.
+ */
+std::string GetURLFileName(const std::string& url);
 
 } // namespace winsparkle
 

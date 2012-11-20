@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;comctl32.lib;rpcrt4.lib;version.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;comctl32.lib;rpcrt4.lib;version.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -107,6 +107,7 @@
     <ClCompile Include="src\threads.cpp" />
     <ClCompile Include="src\ui.cpp" />
     <ClCompile Include="src\updatechecker.cpp" />
+    <ClCompile Include="src\updatedownloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\winsparkle.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="src\threads.h" />
     <ClInclude Include="src\ui.h" />
     <ClInclude Include="src\updatechecker.h" />
+    <ClInclude Include="src\updatedownloader.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <ItemGroup>

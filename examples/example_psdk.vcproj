@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib kernel32.lib user32.lib rpcrt4.lib version.lib wininet.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -140,6 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib kernel32.lib user32.lib rpcrt4.lib version.lib wininet.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -182,6 +184,22 @@
 			<File
 				RelativePath="psdk\app_psdk.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\app_psdk_.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\app_psdk_.obj"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -198,6 +216,22 @@
 			<File
 				RelativePath="psdk\app_psdk.rc"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						ResourceOutputFileName="$(IntDir)\app_psdk_.res"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						ResourceOutputFileName="$(IntDir)\app_psdk_.res"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

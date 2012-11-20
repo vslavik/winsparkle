@@ -185,6 +185,9 @@ public:
         return rv;
     }
 
+    // Deletes value from registry.
+    static void DeleteConfigValue(const char *name);
+
     //@}
 
 private:

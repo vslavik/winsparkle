@@ -60,7 +60,6 @@ struct InetHandle
     HINTERNET m_handle;
 };
 
-
 std::wstring MakeUserAgent()
 {
     std::wstring userAgent =
@@ -88,11 +87,26 @@ std::wstring MakeUserAgent()
     return userAgent;
 }
 
+
+bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
+{
+    DWORD outputSize = sizeof(output);
+    DWORD headerIndex = 0;
+    return HttpQueryInfoA
+           (
+               handle,
+               whatToGet | HTTP_QUERY_FLAG_NUMBER,
+               &output,
+               &outputSize,
+               &headerIndex
+           ) == TRUE;
+}
+
 } // anonymous namespace
 
 
 /*--------------------------------------------------------------------------*
-                                DownloadFile()
+                                public functions
  *--------------------------------------------------------------------------*/
 
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
@@ -125,11 +139,26 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     if ( !conn )
         throw Win32Exception();
 
-    char buffer[1024];
+    char buffer[10240];
+
+    // Check returned status code - we need to detect 404 instead of
+    // downloading the human-readable 404 page:
+    DWORD statusCode;
+    if ( GetHttpHeader(conn, HTTP_QUERY_STATUS_CODE, statusCode) && statusCode >= 400 )
+    {
+        throw std::runtime_error("Update file not found on the server.");
+    }
+
+    // Get content length if possible:
+    DWORD contentLength;
+    if ( GetHttpHeader(conn, HTTP_QUERY_CONTENT_LENGTH, contentLength) )
+        sink->SetLength(contentLength);
+
+    // Download the data:
     for ( ;; )
     {
         DWORD read;
-        if ( !InternetReadFile(conn, buffer, 1024, &read) )
+        if ( !InternetReadFile(conn, buffer, sizeof(buffer), &read) )
             throw Win32Exception();
 
         if ( read == 0 )
@@ -137,6 +166,24 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 
         sink->Add(buffer, read);
     }
+}
+
+
+std::string GetURLFileName(const std::string& url)
+{
+    char path[512];
+
+    URL_COMPONENTSA urlc;
+    memset(&urlc, 0, sizeof(urlc));
+    urlc.dwStructSize = sizeof(urlc);
+    urlc.lpszUrlPath = path;
+    urlc.dwUrlPathLength = sizeof(path);
+
+    if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
+        throw Win32Exception();
+
+    const char *lastSlash = strrchr(path, '/');
+    return std::string(lastSlash ? lastSlash + 1 : path);
 }
 
 } // namespace winsparkle

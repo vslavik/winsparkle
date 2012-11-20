@@ -214,6 +214,31 @@ void RegistryWrite(const char *name, const char *value)
 }
 
 
+void RegistryDelete(const char *name)
+{
+    const std::string subkey = Settings::GetRegistryPath();
+
+    HKEY key;
+    LONG result = RegOpenKeyExA
+                  (
+                      HKEY_CURRENT_USER,
+                      subkey.c_str(),
+                      0,
+                      KEY_SET_VALUE,
+                      &key
+                  );
+    if ( result != ERROR_SUCCESS )
+        throw Win32Exception("Cannot delete settings from registry");
+
+    result = RegDeleteValueA(key, name);
+
+    RegCloseKey(key);
+
+    if ( result != ERROR_SUCCESS )
+        throw Win32Exception("Cannot delete settings from registry");
+}
+
+
 int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
 {
     const std::string subkey = Settings::GetRegistryPath();
@@ -304,6 +329,13 @@ std::string Settings::DoReadConfigValue(const char *name)
         return buf;
     else
         return std::string();
+}
+
+void Settings::DeleteConfigValue(const char *name)
+{
+    CriticalSectionLocker lock(g_csConfigValues);
+
+    RegistryDelete(name);
 }
 
 } // namespace winsparkle
