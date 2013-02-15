@@ -66,7 +66,7 @@ extern "C" {
 
     @see win_sparkle_cleanup()
  */
-WIN_SPARKLE_API void win_sparkle_init();
+WIN_SPARKLE_API void __cdecl win_sparkle_init();
 
 /**
     Cleans up after WinSparkle.
@@ -74,7 +74,7 @@ WIN_SPARKLE_API void win_sparkle_init();
     Should be called by the app when it's shutting down. Cancels any
     pending Sparkle operations and shuts down its helper threads.
  */
-WIN_SPARKLE_API void win_sparkle_cleanup();
+WIN_SPARKLE_API void __cdecl win_sparkle_cleanup();
 
 //@}
 
@@ -106,7 +106,7 @@ WIN_SPARKLE_API void win_sparkle_cleanup();
 
     @param url  URL of the appcast.
  */
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 
 /**
     Sets application metadata.
@@ -126,9 +126,9 @@ WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url);
 
     @since 0.3
  */
-WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
-                                                 const wchar_t *app_name,
-                                                 const wchar_t *app_version);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_name,
+                                                         const wchar_t *app_name,
+                                                         const wchar_t *app_version);
 
 /**
     Set the registry path where settings will be stored.
@@ -148,7 +148,7 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
 
     @since 0.3
  */
-WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path);
 
 /**
     Sets whether updates are checked automatically or only through a manual call.
@@ -159,7 +159,7 @@ WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path);
 
     @since 0.4
  */
-WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_automatic_check_for_updates(int state);
 
 /**
     Gets the automatic update checking state
@@ -170,7 +170,7 @@ WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state);
 
     @since 0.4
  */
-WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates();
+WIN_SPARKLE_API int __cdecl win_sparkle_get_automatic_check_for_updates();
 
 /**
     Sets the automatic update interval.
@@ -180,7 +180,7 @@ WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates();
 
     @since 0.4
  */
-WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval);
 
 /**
     Gets the automatic update interval in seconds.
@@ -189,7 +189,7 @@ WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval);
 
     @since 0.4
  */
-WIN_SPARKLE_API int win_sparkle_get_update_check_interval();
+WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
 //@}
 
@@ -217,7 +217,7 @@ WIN_SPARKLE_API int win_sparkle_get_update_check_interval();
 
     This function returns immediately.
  */
-WIN_SPARKLE_API void win_sparkle_check_update_with_ui();
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
 
 //@}
 

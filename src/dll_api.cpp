@@ -42,7 +42,7 @@ extern "C"
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_init()
+WIN_SPARKLE_API void __cdecl win_sparkle_init()
 {
     try
     {
@@ -93,7 +93,7 @@ WIN_SPARKLE_API void win_sparkle_init()
 }
 
 
-WIN_SPARKLE_API void win_sparkle_cleanup()
+WIN_SPARKLE_API void __cdecl win_sparkle_cleanup()
 {
     try
     {
@@ -109,7 +109,7 @@ WIN_SPARKLE_API void win_sparkle_cleanup()
                                Configuration
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url)
 {
     try
     {
@@ -118,9 +118,9 @@ WIN_SPARKLE_API void win_sparkle_set_appcast_url(const char *url)
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
-                                                 const wchar_t *app_name,
-                                                 const wchar_t *app_version)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_name,
+                                                         const wchar_t *app_name,
+                                                         const wchar_t *app_version)
 {
     try
     {
@@ -131,7 +131,7 @@ WIN_SPARKLE_API void win_sparkle_set_app_details(const wchar_t *company_name,
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path)
 {
     try
     {
@@ -140,7 +140,7 @@ WIN_SPARKLE_API void win_sparkle_set_registry_path(const char *path)
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_automatic_check_for_updates(int state)
 {
     try
     {
@@ -149,7 +149,7 @@ WIN_SPARKLE_API void win_sparkle_set_automatic_check_for_updates(int state)
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates()
+WIN_SPARKLE_API int __cdecl win_sparkle_get_automatic_check_for_updates()
 {
     try
     {
@@ -162,7 +162,7 @@ WIN_SPARKLE_API int win_sparkle_get_automatic_check_for_updates()
     return 0;
 }
 
-WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
 {
     static const int MIN_CHECK_INTERVAL = 3600; // one hour
 
@@ -179,7 +179,7 @@ WIN_SPARKLE_API void win_sparkle_set_update_check_interval(int interval)
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API int win_sparkle_get_update_check_interval()
+WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval()
 {
     static const int DEFAULT_CHECK_INTERVAL = 60*60*24; // one day
 
@@ -199,7 +199,7 @@ WIN_SPARKLE_API int win_sparkle_get_update_check_interval()
                               Manual usage
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void win_sparkle_check_update_with_ui()
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
 {
     try
     {
