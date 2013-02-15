@@ -331,7 +331,9 @@ private:
 };
 
 
-UpdateDialog::UpdateDialog() : m_timer(this)
+UpdateDialog::UpdateDialog()
+    : m_timer(this),
+      m_downloader(NULL)
 {
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
