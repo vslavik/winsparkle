@@ -249,9 +249,7 @@ void UpdateChecker::Run()
         }
 
         // Check if the user opted to ignore this particular version.
-        std::string toSkip;
-        if ( Settings::ReadConfigValue("SkipThisVersion", toSkip) &&
-             toSkip == appcast.Version )
+        if ( ShouldSkipUpdate(appcast) )
         {
             UI::NotifyNoUpdates();
             return;
@@ -266,6 +264,19 @@ void UpdateChecker::Run()
     }
 }
 
+bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
+{
+    std::string toSkip;
+    if ( Settings::ReadConfigValue("SkipThisVersion", toSkip) )
+    {
+        return toSkip == appcast.Version;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 /*--------------------------------------------------------------------------*
                             ManualUpdateChecker
@@ -277,6 +288,15 @@ int ManualUpdateChecker::GetAppcastDownloadFlags() const
     // This is good for finding updates that are too new to propagate through
     // caches yet.
     return Download_NoCached;
+}
+
+bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
+{
+    // If I chose "Skip version" it should not prompt me for automatic updates,
+    // but if I explicitly open the dialog using
+    // win_sparkle_check_update_with_ui() it should still show that version.
+    // This is the semantics in Sparkle for Mac.
+    return false;
 }
 
 } // namespace winsparkle

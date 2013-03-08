@@ -33,6 +33,8 @@
 namespace winsparkle
 {
 
+struct Appcast;
+
 /**
     This class checks the appcast for updates.
 
@@ -61,6 +63,9 @@ protected:
     /// Returns flags to be used when checking the appcast
     virtual int GetAppcastDownloadFlags() const { return 0; }
 
+    /// Should give version be ignored?
+    virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return false; }
@@ -78,6 +83,7 @@ public:
 
 protected:
     virtual int GetAppcastDownloadFlags() const;
+    virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 };
 
 } // namespace winsparkle
