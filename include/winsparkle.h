@@ -44,6 +44,21 @@ extern "C" {
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
+
+/*--------------------------------------------------------------------------*
+                       Callbacks
+ *--------------------------------------------------------------------------*/
+
+enum WinsparkleCallbackType {
+    WINSPARKLE_CT_ASK_FOR_PERMISSION = 0,
+    WINSPARKLE_CT_SHOW_CHECKING_UPDATES,
+    WINSPARKLE_CT_SHUTDOWN_DIALOG,
+};
+
+typedef void(*callbackFunction)(int);
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_callback(callbackFunction func);
+
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/

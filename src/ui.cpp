@@ -32,6 +32,8 @@
 #include "updatechecker.h"
 #include "updatedownloader.h"
 
+#include "winsparkle.h"
+
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
 #define wxNO_XRC_LIB
@@ -974,6 +976,8 @@ int App::OnExit()
     delete m_win;
     m_win = 0;
 
+    UI::SendAppExitMessage();
+
     return 0;
 }
 
@@ -1125,6 +1129,7 @@ CriticalSection UIThreadAccess::ms_uiThreadCS;
 
 
 HINSTANCE UI::ms_hInstance = NULL;
+callbackFunction UI::ms_callback = NULL;
 
 
 UI::UI() : Thread("WinSparkle UI thread")
@@ -1162,8 +1167,18 @@ void UI::Run()
 
 
 /*static*/
+void UI::SetCallback(callbackFunction func)
+{
+    ms_callback = func;
+}
+
+
+/*static*/
 void UI::ShutDown()
 {
+    if (ms_callback)
+        ms_callback(WINSPARKLE_CT_SHUTDOWN_DIALOG);
+
     UIThreadAccess uit;
 
     if ( !uit.IsRunning() )
@@ -1232,6 +1247,9 @@ void UI::NotifyUpdateError()
 /*static*/
 void UI::ShowCheckingUpdates()
 {
+    if (ms_callback)
+        ms_callback(WINSPARKLE_CT_SHOW_CHECKING_UPDATES);
+
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_SHOW_CHECKING_UPDATES);
 }
@@ -1240,8 +1258,19 @@ void UI::ShowCheckingUpdates()
 /*static*/
 void UI::AskForPermission()
 {
+    if (ms_callback)
+        ms_callback(WINSPARKLE_CT_ASK_FOR_PERMISSION);
+
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
 }
+
+
+void UI::SendAppExitMessage()
+{
+    if (ms_callback)
+        ms_callback(WINSPARKLE_CT_SHUTDOWN_DIALOG);
+}
+
 
 } // namespace winsparkle
