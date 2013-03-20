@@ -904,11 +904,15 @@ public:
     // Sends a message with ID @a msg to the app.
     void SendMsg(int msg, EventPayload *data = NULL);
 
+protected:
+    bool OnInit();
+    int  OnExit();
+
 private:
     void InitWindow();
     void ShowWindow();
 
-    void OnWindowClose(wxCloseEvent& event);
+    void OnUpdateWindowClose(wxCloseEvent& event);
     void OnTerminate(wxThreadEvent& event);
     void OnShowCheckingUpdates(wxThreadEvent& event);
     void OnNoUpdateFound(wxThreadEvent& event);
@@ -928,20 +932,8 @@ App::App()
 {
     m_win = NULL;
 
-    // Keep the wx "main" thread running even without windows. This greatly
-    // simplifies threads handling, because we don't have to correctly
-    // implement wx-thread restarting.
-    //
-    // Note that this only works if we don't explicitly call ExitMainLoop(),
-    // except in reaction to win_sparkle_cleanup()'s message.
-    // win_sparkle_cleanup() relies on the availability of wxApp instance and
-    // if the event loop terminated, wxEntry() would return and wxApp instance
-    // would be destroyed.
-    //
-    // Also note that this is efficient, because if there are no windows, the
-    // thread will sleep waiting for a new event. We could safe some memory
-    // by shutting the thread down when it's no longer needed, though.
-    SetExitOnFrameDelete(false);
+    // Exits the application when the UpdateDialog quit.
+    SetExitOnFrameDelete(true);
 
     // Bind events to their handlers:
     Bind(wxEVT_COMMAND_THREAD, &App::OnTerminate, this, MSG_TERMINATE);
@@ -965,19 +957,30 @@ void App::SendMsg(int msg, EventPayload *data)
 }
 
 
-void App::InitWindow()
+bool App::OnInit()
 {
-    if ( !m_win )
-    {
-        m_win = new UpdateDialog();
-        m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnWindowClose, this);
-    }
+    wxASSERT(m_win == 0);
+
+    m_win = new UpdateDialog();
+    m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnUpdateWindowClose, this);
+    return true;
+}
+
+
+int App::OnExit()
+{
+    wxASSERT(m_win != 0);
+
+    delete m_win;
+    m_win = 0;
+
+    return 0;
 }
 
 
 void App::ShowWindow()
 {
-    wxASSERT( m_win );
+    wxASSERT(m_win);
 
     m_win->Freeze();
     m_win->Show();
@@ -986,22 +989,27 @@ void App::ShowWindow()
 }
 
 
-void App::OnWindowClose(wxCloseEvent& event)
+void App::OnUpdateWindowClose(wxCloseEvent& event)
 {
-    m_win = NULL;
     event.Skip();
+    ExitMainLoop();
 }
 
 
 void App::OnTerminate(wxThreadEvent&)
 {
-    ExitMainLoop();
+    // if the application still runs, close it manually
+    if (m_win)
+    {
+        m_win->Close();
+    }
 }
 
 
 void App::OnShowCheckingUpdates(wxThreadEvent&)
 {
-    InitWindow();
+    wxASSERT(m_win);
+
     m_win->StateCheckingUpdates();
     ShowWindow();
 }
@@ -1009,43 +1017,42 @@ void App::OnShowCheckingUpdates(wxThreadEvent&)
 
 void App::OnNoUpdateFound(wxThreadEvent&)
 {
-    if ( m_win )
-        m_win->StateNoUpdateFound();
+    wxASSERT(m_win);
+
+    m_win->StateNoUpdateFound();
 }
 
 
 void App::OnUpdateError(wxThreadEvent&)
 {
-    if ( m_win )
-        m_win->StateUpdateError();
+    wxASSERT(m_win);
+
+    m_win->StateUpdateError();
 }
 
 void App::OnDownloadProgress(wxThreadEvent& event)
 {
-    if ( m_win )
-    {
-        EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->DownloadProgress(payload.sizeDownloaded, payload.sizeTotal);
-    }
+    wxASSERT(m_win);
+
+    EventPayload payload(event.GetPayload<EventPayload>());
+    m_win->DownloadProgress(payload.sizeDownloaded, payload.sizeTotal);
 }
 
 void App::OnUpdateDownloaded(wxThreadEvent& event)
 {
-    if ( m_win )
-    {
-        EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateUpdateDownloaded(payload.updateFile);
-    }
+    wxASSERT(m_win);
+
+    EventPayload payload(event.GetPayload<EventPayload>());
+    m_win->StateUpdateDownloaded(payload.updateFile);
 }
 
 
 void App::OnUpdateAvailable(wxThreadEvent& event)
 {
-    InitWindow();
+    wxASSERT(m_win);
 
     EventPayload payload(event.GetPayload<EventPayload>());
     m_win->StateUpdateAvailable(payload.appcast);
-
     ShowWindow();
 }
 
