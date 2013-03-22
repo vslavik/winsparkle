@@ -47,6 +47,13 @@ typedef void(*callbackFunction)(int);
 class UI : public Thread
 {
 public:
+    /**
+        Sets the callback function,
+
+        Can be used to notify the host application that an event like opening
+        the update dialog or closing it happened, giving it the chance to react
+        to behaviour of WinSparkle.
+     */
     static void SetCallback(callbackFunction func);
 
     /**
