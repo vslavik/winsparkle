@@ -26,14 +26,11 @@ If you prefer to build WinSparkle yourself, you can do so. All 3rd party
 dependencies are included in the sources archive available for download, you
 don't need to install anything else.
 
-At the moment, only Visual C++ 2008 project files are provided, so you'll
-need that (Express edition suffices). In principle, there's nothing in the code
-preventing it from being compiled by other compilers.
+At the moment, projects for Visual C++ 2008, 2010 and 2012 are provided, so
+you'll need that (Express edition suffices). In principle, there's nothing in
+the code preventing it from being compiled by other compilers.
 
-Compilation is done in two easy steps:
-
-1. Open the 3rdparty/WinSparkleDeps.sln solution and build it.
-2. Open the WinSparkle.sln solution and build it.
+To compile the library, just open WinSparkle.sln solution and build it.
 
 
  Where can I get some examples?
