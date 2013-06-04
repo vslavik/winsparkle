@@ -45,7 +45,7 @@
              WIN_SPARKLE_VERSION_MINOR >= (minor))               \
             ||                                                   \
             (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
-            (WIN_SPARKLE_VERSION_MINOR == (minor) &&             \
+             WIN_SPARKLE_VERSION_MINOR == (minor) &&             \
              WIN_SPARKLE_VERSION_MICRO >= (micro))               \
         )
 
