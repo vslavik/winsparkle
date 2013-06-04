@@ -39,14 +39,14 @@
  */
 #define WIN_SPARKLE_CHECK_VERSION(major, minor, micro)           \
         (                                                        \
-            WIN_SPARKLE_VERSION_MAJOR > (major)                  \
+            (WIN_SPARKLE_VERSION_MAJOR > (major))                \
             ||                                                   \
-            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
-             WIN_SPARKLE_VERSION_MINOR >= (minor))               \
+            ((WIN_SPARKLE_VERSION_MAJOR == (major)) &&           \
+             (WIN_SPARKLE_VERSION_MINOR >= (minor)))             \
             ||                                                   \
-            (WIN_SPARKLE_VERSION_MAJOR == (major) &&             \
-            (WIN_SPARKLE_VERSION_MINOR == (minor) &&             \
-             WIN_SPARKLE_VERSION_MICRO >= (micro))               \
+            ((WIN_SPARKLE_VERSION_MAJOR == (major)) &&           \
+             (WIN_SPARKLE_VERSION_MINOR == (minor)) &&           \
+             (WIN_SPARKLE_VERSION_MICRO >= (micro)))             \
         )
 
 #define _WIN_SPARKLE_MAKE_STR(x) #x
