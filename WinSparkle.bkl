@@ -16,6 +16,10 @@ vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
 win32-crt-linkage = static;
 archs = x86 x86_64;
 
+// Build binaries compatible with Windows XP (SP3) -- it's still useful for
+// installer stuff like WinSparkle.dll
+vs2012.option.Configuration.PlatformToolset = v110_xp;
+
 if ( $(config) == Release ) {
     vs2008.option.VCCLCompilerTool.Optimization = 1;
     vs2008.option.VCCLCompilerTool.FavorSizeOrSpeed = 2;
