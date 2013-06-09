@@ -46,6 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 				PreprocessorDefinitions="WXBUILDING;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
@@ -58,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE"
+				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -130,7 +131,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE"
+				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -184,6 +185,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 				PreprocessorDefinitions="WXBUILDING;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
@@ -196,7 +198,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE"
+				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -268,7 +270,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE"
+				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool

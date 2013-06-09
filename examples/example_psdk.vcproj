@@ -46,6 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				RuntimeLibrary="1"
@@ -58,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;UNICODE"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool
@@ -137,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;UNICODE"
+				PreprocessorDefinitions="_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool
@@ -201,6 +202,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				RuntimeLibrary="1"
@@ -213,7 +215,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;UNICODE"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool
@@ -292,7 +294,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_UNICODE;UNICODE"
+				PreprocessorDefinitions="_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="..\include"
 			/>
 			<Tool

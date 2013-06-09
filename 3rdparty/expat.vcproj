@@ -45,6 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
@@ -56,7 +57,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE"
+				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -125,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE"
+				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -177,6 +178,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
@@ -188,7 +190,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE"
+				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -257,7 +259,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE"
+				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"

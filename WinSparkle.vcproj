@@ -46,6 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="1"
@@ -58,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
+				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -135,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
+				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -197,6 +198,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
+				Optimization="0"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="1"
@@ -209,7 +211,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
+				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -286,7 +288,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE"
+				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
