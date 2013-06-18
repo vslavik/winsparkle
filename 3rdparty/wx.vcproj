@@ -4,9 +4,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="wx"
-	ProjectGUID="{8219BFF9-5C5B-5938-8CB9-EB3EFCE84617}"
-	RootNamespace="wx"
+	Name="WinSparkle_wx"
+	ProjectGUID="{499A5238-5AAC-5FD3-8902-819D787108A5}"
+	RootNamespace="WinSparkle_wx"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

@@ -4,9 +4,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="expat"
-	ProjectGUID="{8D88AE38-FF38-5A85-83D1-BB6816ED2F58}"
-	RootNamespace="expat"
+	Name="WinSparkle_expat"
+	ProjectGUID="{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}"
+	RootNamespace="WinSparkle_expat"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

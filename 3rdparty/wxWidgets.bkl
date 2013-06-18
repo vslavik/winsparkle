@@ -5,10 +5,10 @@ vs2008.generate-solution = false;
 vs2010.generate-solution = false;
 vs2012.generate-solution = false;
 
-library wx {
-    vs2008.projectfile = ../$(id)$(SUFFIX).vcproj;
-    vs2010.projectfile = ../$(id)$(SUFFIX).vcxproj;
-    vs2012.projectfile = ../$(id)$(SUFFIX).vcxproj;
+library WinSparkle_wx {
+    vs2008.projectfile = ../wx$(SUFFIX).vcproj;
+    vs2010.projectfile = ../wx$(SUFFIX).vcxproj;
+    vs2012.projectfile = ../wx$(SUFFIX).vcxproj;
 
     defines += WXBUILDING;
     includedirs += ../wxWidgets_setup_h include;

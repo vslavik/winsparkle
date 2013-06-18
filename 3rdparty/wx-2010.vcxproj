@@ -21,10 +21,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8219BFF9-5C5B-5938-8CB9-EB3EFCE84617}</ProjectGuid>
+    <ProjectGuid>{499A5238-5AAC-5FD3-8902-819D787108A5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>wx</RootNamespace>
-    <ProjectName>wx</ProjectName>
+    <RootNamespace>WinSparkle_wx</RootNamespace>
+    <ProjectName>WinSparkle_wx</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

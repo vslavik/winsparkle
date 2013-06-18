@@ -21,10 +21,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8D88AE38-FF38-5A85-83D1-BB6816ED2F58}</ProjectGuid>
+    <ProjectGuid>{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>expat</RootNamespace>
-    <ProjectName>expat</ProjectName>
+    <RootNamespace>WinSparkle_expat</RootNamespace>
+    <ProjectName>WinSparkle_expat</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

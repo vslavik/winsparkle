@@ -207,10 +207,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="3rdparty\expat-2012.vcxproj">
-      <Project>{8d88ae38-ff38-5a85-83d1-bb6816ed2f58}</Project>
+      <Project>{47b228cb-24fe-5250-b1fc-dfc81d3e69df}</Project>
     </ProjectReference>
     <ProjectReference Include="3rdparty\wx-2012.vcxproj">
-      <Project>{8219bff9-5c5b-5938-8cb9-eb3efce84617}</Project>
+      <Project>{499a5238-5aac-5fd3-8902-819d787108a5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
