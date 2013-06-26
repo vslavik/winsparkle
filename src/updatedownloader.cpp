@@ -80,14 +80,11 @@ std::string CreateUniqueTempDirectory()
 
 struct UpdateDownloadSink : public IDownloadSink
 {
-    UpdateDownloadSink(Thread& thread, const std::string& filename)
+    UpdateDownloadSink(Thread& thread, const std::string& dir)
         : m_thread(thread),
+          m_dir(dir), m_path(""), m_file(NULL),
           m_downloaded(0), m_total(0), m_lastUpdate(-1)
-    {
-        m_file = fopen(filename.c_str(), "wb");
-        if ( !m_file )
-            throw std::runtime_error("Cannot save update file");
-    }
+    {}
 
     ~UpdateDownloadSink() { Close(); }
 
@@ -100,10 +97,26 @@ struct UpdateDownloadSink : public IDownloadSink
         }
     }
 
+    std::string GetFilePath(void) { return m_path; }
+
     virtual void SetLength(size_t l) { m_total = l; }
+
+    virtual void SetFilename(const std::string& filename)
+    {
+        if ( m_file )
+            throw std::runtime_error("Update file already set");
+
+        m_path = m_dir + "\\" + filename;
+        m_file = fopen(m_path.c_str(), "wb");
+        if ( !m_file )
+            throw std::runtime_error("Cannot save update file");
+    }
 
     virtual void Add(const void *data, size_t len)
     {
+        if ( !m_file )
+            throw std::runtime_error("Filename is not net");
+
         m_thread.CheckShouldTerminate();
 
         if ( fwrite(data, len, 1, m_file) != 1 )
@@ -123,6 +136,8 @@ struct UpdateDownloadSink : public IDownloadSink
     Thread& m_thread;
     size_t m_downloaded, m_total;
     FILE *m_file;
+    std::string m_dir;
+    std::string m_path;
     clock_t m_lastUpdate;
 };
 
@@ -154,11 +169,10 @@ void UpdateDownloader::Run()
       const std::string tmpdir = CreateUniqueTempDirectory();
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
 
-      std::string filename = tmpdir + "\\" + GetURLFileName(m_appcast.DownloadURL);
-      UpdateDownloadSink sink(*this, filename);
+      UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink);
       sink.Close();
-      UI::NotifyUpdateDownloaded(filename);
+      UI::NotifyUpdateDownloaded(sink.GetFilePath());
     }
     catch ( ... )
     {
