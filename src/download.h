@@ -43,6 +43,11 @@ struct IDownloadSink
      */
     virtual void SetLength(size_t len) = 0;
 
+    /**
+       Inform the sink of detected filename
+     */
+    virtual void SetFilename(const std::string& filename) = 0;
+
     /// Add chunk of downloaded data
     virtual void Add(const void *data, size_t len) = 0;
 };
@@ -53,6 +58,8 @@ struct IDownloadSink
 struct StringDownloadSink : public IDownloadSink
 {
     virtual void SetLength(size_t) {}
+
+    virtual void SetFilename(const std::string& filename) {}
 
     virtual void Add(const void *data, size_t len)
     {
