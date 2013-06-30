@@ -154,6 +154,47 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     if ( GetHttpHeader(conn, HTTP_QUERY_CONTENT_LENGTH, contentLength) )
         sink->SetLength(contentLength);
 
+    // Get filename fron Content-Disposition, if available
+    char contentDisposition[512];
+    DWORD cdSize = 512;
+    bool filename_set = false;
+    if ( HttpQueryInfoA(conn, HTTP_QUERY_CONTENT_DISPOSITION, contentDisposition, &cdSize, NULL) )
+    {
+        char *ptr = strstr(contentDisposition, "filename=");
+        if ( ptr )
+        {
+            char c_filename[512];
+            ptr += 9;
+            while ( *ptr == ' ' )
+                ptr++;
+
+            bool quoted = false;
+            if ( *ptr == '"' || *ptr == '\'')
+            {
+                quoted = true;
+                ptr++;
+            }
+
+            char *ptr2 = c_filename;
+            while ( *ptr != ';' && *ptr != 0)
+                *ptr2++ = *ptr++;
+
+            if ( quoted )
+                *(ptr2 - 1) = 0;
+            else
+                *ptr2 = 0;
+
+            std::string filename( c_filename );
+            sink->SetFilename(filename);
+            filename_set = true;
+        }
+    }
+
+    if ( !filename_set )
+    {
+        sink->SetFilename(GetURLFileName(url));
+    }
+
     // Download the data:
     for ( ;; )
     {
