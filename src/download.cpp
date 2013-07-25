@@ -102,6 +102,12 @@ bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
            ) == TRUE;
 }
 
+std::string GetURLFileName(const URL_COMPONENTSA& urlc)
+{
+    const char *lastSlash = strrchr(urlc.lpszUrlPath, '/');
+    return std::string(lastSlash ? lastSlash + 1 : urlc.lpszUrlPath);
+}
+
 } // anonymous namespace
 
 
@@ -111,6 +117,15 @@ bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
 
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 {
+    char url_path[512];
+    URL_COMPONENTSA urlc;
+    memset(&urlc, 0, sizeof(urlc));
+    urlc.dwStructSize = sizeof(urlc);
+    urlc.lpszUrlPath = url_path;
+    urlc.dwUrlPathLength = sizeof(url_path);
+
+    if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
+        throw Win32Exception();
 
     InetHandle inet = InternetOpen
                       (
@@ -126,6 +141,8 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     DWORD dwFlags = 0;
     if ( flags & Download_NoCached )
         dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+    if ( urlc.nScheme == INTERNET_SCHEME_HTTPS )
+        dwFlags |= INTERNET_FLAG_SECURE;
 
     InetHandle conn = InternetOpenUrlA
                       (
@@ -192,7 +209,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 
     if ( !filename_set )
     {
-        sink->SetFilename(GetURLFileName(url));
+        sink->SetFilename(GetURLFileName(urlc));
     }
 
     // Download the data:
@@ -207,24 +224,6 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 
         sink->Add(buffer, read);
     }
-}
-
-
-std::string GetURLFileName(const std::string& url)
-{
-    char path[512];
-
-    URL_COMPONENTSA urlc;
-    memset(&urlc, 0, sizeof(urlc));
-    urlc.dwStructSize = sizeof(urlc);
-    urlc.lpszUrlPath = path;
-    urlc.dwUrlPathLength = sizeof(path);
-
-    if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
-        throw Win32Exception();
-
-    const char *lastSlash = strrchr(path, '/');
-    return std::string(lastSlash ? lastSlash + 1 : path);
 }
 
 } // namespace winsparkle
