@@ -125,10 +125,32 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
           (HKCU\Software\<company_name>\<app_name>\WinSparkle is used.)
 
     @since 0.3
+
+    @see win_sparkle_set_app_build_version();
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_name,
                                                          const wchar_t *app_name,
                                                          const wchar_t *app_version);
+
+/**
+    Sets application build version number.
+
+    This is the internal version number that is not normally shown to the user.
+    It can be used for finer granularity that official release versions, e.g. for
+    interim builds.
+
+    If this function is called, then the provided *build* number is used for comparing
+    versions; it is compared to the "version" attribute in the appcast and corresponds
+    to OS X Sparkle's CFBundleVersion handling. If used, then the appcast must
+    also contain the "shortVersionString" attribute with human-readable display
+    version string. The version passed to win_sparkle_set_app_details()
+    corresponds to this and is used for display.
+
+    @since 0.4
+
+    @see win_sparkle_set_app_details()
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build);
 
 /**
     Set the registry path where settings will be stored.

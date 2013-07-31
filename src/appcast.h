@@ -36,8 +36,9 @@ namespace winsparkle
  */
 struct Appcast
 {
-    /// App version
+    /// App version fields
     std::string Version;
+    std::string ShortVersionString;
 
     /// URL of the update
     std::string DownloadURL;

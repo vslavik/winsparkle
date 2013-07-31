@@ -238,7 +238,7 @@ void UpdateChecker::Run()
         Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
         const std::string currentVersion =
-                WideToAnsi(Settings::GetAppVersion());
+                WideToAnsi(Settings::GetAppBuildVersion());
 
         // Check if our version is out of date.
         if ( CompareVersions(currentVersion, appcast.Version) >= 0 )

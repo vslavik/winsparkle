@@ -53,6 +53,7 @@ namespace
 #define NODE_ENCLOSURE  "enclosure"
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
+#define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
 
 
 // context data for the parser
@@ -112,6 +113,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                     ctxt.appcast.DownloadURL = value;
                 else if ( strcmp(name, ATTR_VERSION) == 0 )
                     ctxt.appcast.Version = value;
+                else if ( strcmp(name, ATTR_SHORTVERSION) == 0 )
+                    ctxt.appcast.ShortVersionString = value;
             }
         }
     }

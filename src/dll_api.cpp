@@ -131,6 +131,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build)
+{
+    try
+    {
+        Settings::SetAppBuildVersion(build);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path)
 {
     try

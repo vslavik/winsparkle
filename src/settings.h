@@ -80,6 +80,18 @@ public:
         return ms_appVersion;
     }
 
+    /// Return (internal) application build version
+    static std::wstring GetAppBuildVersion()
+    {
+        {
+            CriticalSectionLocker lock(ms_csVars);
+            if ( !ms_appBuildVersion.empty() )
+                return ms_appBuildVersion;
+        }
+        // fallback if build number wasn't set:
+        return GetAppVersion();
+    }
+
     /// Return name of the vendor
     static std::wstring GetCompanyName()
     {
@@ -127,6 +139,13 @@ public:
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_appVersion = version;
+    }
+
+    /// Set application's build version number
+    static void SetAppBuildVersion(const wchar_t *version)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_appBuildVersion = version;
     }
 
     /// Set company name
@@ -218,6 +237,7 @@ private:
     static std::wstring ms_companyName;
     static std::wstring ms_appName;
     static std::wstring ms_appVersion;
+    static std::wstring ms_appBuildVersion;
 };
 
 } // namespace winsparkle

@@ -607,6 +607,16 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
 
         const wxString appname = Settings::GetAppName();
 
+        wxString ver_my = Settings::GetAppVersion();
+        wxString ver_new = info.ShortVersionString;
+        if ( ver_new.empty() )
+            ver_new = info.Version;
+        if ( ver_my == ver_new )
+        {
+            ver_my = wxString::Format("%s (%s)", ver_my, Settings::GetAppBuildVersion());
+            ver_new = wxString::Format("%s (%s)", ver_new, info.Version);
+        }
+
         m_heading->SetLabel(
             wxString::Format(_("A new version of %s is available!"), appname));
 
@@ -615,9 +625,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
             wxString::Format
             (
                 _("%s %s is now available (you have %s). Would you like to download it now?"),
-                appname,
-                info.Version,
-                Settings::GetAppVersion()
+                appname, ver_new, ver_my
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
         );
