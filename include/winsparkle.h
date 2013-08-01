@@ -44,6 +44,41 @@ extern "C" {
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
+
+/*--------------------------------------------------------------------------*
+                       Callbacks
+ *--------------------------------------------------------------------------*/
+
+enum WinsparkleCallbackType {
+    WINSPARKLE_CT_ASK_FOR_PERMISSION = 0,
+    WINSPARKLE_CT_SHOW_CHECKING_UPDATES,
+    WINSPARKLE_CT_SHUTDOWN_DIALOG,
+};
+
+typedef void(*callbackFunction)(int);
+
+/**
+    @name Callback function
+ */
+//@{
+
+/**
+    Sets the callback function.
+
+    The host application can use this function to set a callback function that
+    is called when an event occurs. You should call this function directly after
+    WinSparkle is initialized.
+
+    For now the callback is invoked when a dialog is about to get shown or get
+    closed giving the host application to react to it. The callback function itself
+    is invoked with an integer, signaling the type of event that happened.
+
+    @see win_sparkle_init
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_set_callback(callbackFunction func);
+
+//@}
+
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/

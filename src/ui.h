@@ -32,6 +32,8 @@
 namespace winsparkle
 {
 
+typedef void(*callbackFunction)(int);
+
 /**
     The main UI thread.
 
@@ -45,6 +47,15 @@ namespace winsparkle
 class UI : public Thread
 {
 public:
+    /**
+        Sets the callback function,
+
+        Can be used to notify the host application that an event like opening
+        the update dialog or closing it happened, giving it the chance to react
+        to behaviour of WinSparkle.
+     */
+    static void SetCallback(callbackFunction func);
+
     /**
         Shuts the UI thread down.
 
@@ -105,6 +116,8 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
+    static void SendAppExitMessage();
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
@@ -113,6 +126,7 @@ private:
     UI();
 
     static HINSTANCE ms_hInstance;
+    static callbackFunction ms_callback;
 
     friend class UIThreadAccess;
 };

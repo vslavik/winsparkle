@@ -26,7 +26,6 @@
 #include "threads.h"
 #include "error.h"
 
-#include <windows.h>
 #include <process.h>
 
 namespace winsparkle
