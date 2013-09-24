@@ -62,6 +62,9 @@
 namespace winsparkle
 {
 
+ShutDownPollCallback ms_shutDownPollCallback = NULL;
+ShutDownRequestCallback ms_shutDownRequestCallback = NULL;
+
 /*--------------------------------------------------------------------------*
                                   helpers
  *--------------------------------------------------------------------------*/
@@ -495,11 +498,20 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     m_message->SetLabel(_("Launching the installer..."));
     m_runInstallerButton->Disable();
 
+	while(!UI::IsHostReadyToShutDown())
+	{
+		Sleep(2000);
+	}
+
     if ( !wxLaunchDefaultApplication(m_updateFile) )
     {
         wxLogError(_("Failed to launch the installer."));
         wxLog::FlushActive();
     }
+	else
+	{
+		UI::RequestHostTermination();
+	}
 
     Close();
 }
@@ -1243,6 +1255,36 @@ void UI::AskForPermission()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
+}
+
+void UI::SetShutDownPollCallback(ShutDownPollCallback callback)
+{
+	ms_shutDownPollCallback = callback;
+}
+
+bool UI::IsHostReadyToShutDown()
+{
+	if(ms_shutDownPollCallback != NULL)
+	{
+		return (*ms_shutDownPollCallback)();
+	}
+	//If no callback instanciated, there  is no point
+	//in waiting for it to return true, so we just go ahead an
+	//return true right away
+	return true;
+}
+
+void UI::SetShutDownRequestCallback(ShutDownRequestCallback callback)
+{
+	ms_shutDownRequestCallback = callback;
+}
+
+void UI::RequestHostTermination()
+{
+	if(ms_shutDownRequestCallback != NULL)
+	{
+		(*ms_shutDownRequestCallback)();
+	}
 }
 
 } // namespace winsparkle
