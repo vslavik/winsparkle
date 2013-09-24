@@ -500,6 +500,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 
 	while(!UI::IsHostReadyToShutDown())
 	{
+		//FIXME: Do something proper instead of this loop.
 		Sleep(2000);
 	}
 
