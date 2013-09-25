@@ -31,6 +31,7 @@
 #include "error.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
+#include "hostpoller.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -288,7 +289,11 @@ public:
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
     void StateUpdateDownloaded(const std::string& updateFile);
-
+	//change state into "waiting for host application to terminate"
+	void StateWaitForHostToTerminate();
+	//run the downloaded installer and tell the host to terminate
+	void ExecuteInstaller();
+	
 private:
     void EnablePulsing(bool enable);
     void OnTimer(wxTimerEvent& event);
@@ -328,6 +333,7 @@ private:
     wxString m_updateFile;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
+	HostPoller* m_hostpoller;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -460,6 +466,13 @@ void UpdateDialog::OnClose(wxCloseEvent&)
         UpdateDownloader::CleanLeftovers();
     }
 
+	if( m_hostpoller )
+	{
+		m_hostpoller->TerminateAndJoin();
+		delete m_hostpoller;
+		m_hostpoller = NULL;
+	}
+
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
@@ -490,6 +503,19 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
     m_downloader->Start();
 }
 
+void UpdateDialog::ExecuteInstaller()
+{
+		if ( !wxLaunchDefaultApplication(m_updateFile) )
+		{
+			wxLogError(_("Failed to launch the installer."));
+			wxLog::FlushActive();
+		}
+		else
+		{
+			Close();
+			UI::RequestHostTermination();
+		}
+}
 
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 {
@@ -498,23 +524,18 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     m_message->SetLabel(_("Launching the installer..."));
     m_runInstallerButton->Disable();
 
-	while(!UI::IsHostReadyToShutDown())
+	if(!UI::IsHostReadyToShutDown())
 	{
-		//FIXME: Do something proper instead of this loop.
-		Sleep(2000);
+		//Show UI stuff and wait
+		UpdateDialog::StateWaitForHostToTerminate();
+		m_hostpoller = new HostPoller();
+		m_hostpoller->Start();
 	}
-
-    if ( !wxLaunchDefaultApplication(m_updateFile) )
-    {
-        wxLogError(_("Failed to launch the installer."));
-        wxLog::FlushActive();
-    }
 	else
 	{
-		UI::RequestHostTermination();
+		ExecuteInstaller();
+		Close();
 	}
-
-    Close();
 }
 
 
@@ -533,6 +554,25 @@ void UpdateDialog::StateCheckingUpdates()
 
     m_closeButton->SetLabel(_("Cancel"));
     EnablePulsing(true);
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    HIDE(m_progressLabel);
+    SHOW(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
+}
+
+void UpdateDialog::StateWaitForHostToTerminate()
+{
+	LayoutChangesGuard guard(this);
+
+	SetMessage(_("Shutting down..."));
+
+	m_closeButton->SetLabel(_("Cancel"));
+	EnablePulsing(true);
 
     HIDE(m_heading);
     SHOW(m_progress);
@@ -912,6 +952,12 @@ const int MSG_UPDATE_DOWNLOADED = wxNewId();
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
+//Tell the UI to tell the user we are waiting for the application to shut down
+const int MSG_WAIT_FOR_HOST_TO_TERMINATE = wxNewId();
+
+//Tell the UI to tell the application to Terminate
+const int MSG_TELL_HOST_TO_TERMINATE = wxNewId();
+
 
 /*--------------------------------------------------------------------------*
                                 Application
@@ -938,6 +984,8 @@ private:
     void OnDownloadProgress(wxThreadEvent& event);
     void OnUpdateDownloaded(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
+	void OnWaitForHostToTerminate(wxThreadEvent& event);
+	void OnTellHostToTerminate(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -973,6 +1021,8 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
+	Bind(wxEVT_COMMAND_THREAD, &App::OnWaitForHostToTerminate, this, MSG_WAIT_FOR_HOST_TO_TERMINATE);
+	Bind(wxEVT_COMMAND_THREAD, &App::OnTellHostToTerminate, this, MSG_TELL_HOST_TO_TERMINATE);
 }
 
 
@@ -1083,6 +1133,22 @@ void App::OnAskForPermission(wxThreadEvent& event)
         UpdateChecker *check = new UpdateChecker();
         check->Start();
     }
+}
+
+void App::OnWaitForHostToTerminate(wxThreadEvent& event)
+{
+	if( m_win )
+	{
+		m_win->StateWaitForHostToTerminate();
+	}
+}
+
+void App::OnTellHostToTerminate(wxThreadEvent& event)
+{
+	if( m_win )
+	{
+		m_win->ExecuteInstaller();
+	}
 }
 
 
@@ -1286,6 +1352,13 @@ void UI::RequestHostTermination()
 	{
 		(*ms_shutDownRequestCallback)();
 	}
+}
+
+/*static*/
+void UI::ExecuteInstaller()
+{
+	UIThreadAccess uit;
+	uit.App().SendMsg(MSG_TELL_HOST_TO_TERMINATE);
 }
 
 } // namespace winsparkle

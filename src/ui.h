@@ -127,6 +127,7 @@ public:
 	*/
 	static void RequestHostTermination();
 
+	static void ExecuteInstaller();
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }

@@ -109,8 +109,14 @@ int RegisterMainClass()
     return RegisterClass(&wc) != 0;
 }
 
+int counter = 0;
 int shutDownPollCallback()
 {
+	if( counter < 5)
+	{
+		counter++;
+		return FALSE;
+	}
 	return TRUE;
 }
 
