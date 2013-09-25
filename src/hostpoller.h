@@ -10,10 +10,10 @@ namespace winsparkle
 class HostPoller : public Thread
 {
 public:
-	HostPoller();
+    HostPoller();
 
 protected:
-	virtual void Run();
+    virtual void Run();
     virtual bool IsJoinable() const { return true; }
 
 };

@@ -107,27 +107,27 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
-	/**
-		Set the ShutDownPollCallback function
-	*/
-	static void SetShutDownPollCallback(ShutDownPollCallback callback);
+    /**
+        Set the ShutDownPollCallback function
+    */
+    static void SetShutDownPollCallback(ShutDownPollCallback callback);
 
-	/**
-		Ask the host if he's ready to terminate using the provided callback
-	*/
-	static bool IsHostReadyToShutDown();
-	
-	/**
-		Set the ShutDownRequestCallback function
-	*/
-	static void SetShutDownRequestCallback(ShutDownRequestCallback callback);
+    /**
+        Ask the host if he's ready to terminate using the provided callback
+    */
+    static bool IsHostReadyToShutDown();
+    
+    /**
+        Set the ShutDownRequestCallback function
+    */
+    static void SetShutDownRequestCallback(ShutDownRequestCallback callback);
 
-	/**
-		Tell the host to terminate.
-	*/
-	static void RequestHostTermination();
+    /**
+        Tell the host to terminate.
+    */
+    static void RequestHostTermination();
 
-	static void ExecuteInstaller();
+    static void ExecuteInstaller();
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }

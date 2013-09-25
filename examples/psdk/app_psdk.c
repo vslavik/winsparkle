@@ -112,17 +112,17 @@ int RegisterMainClass()
 int counter = 0;
 int shutDownPollCallback()
 {
-	if( counter < 5)
-	{
-		counter++;
-		return FALSE;
-	}
-	return TRUE;
+    if( counter < 5)
+    {
+        counter++;
+        return FALSE;
+    }
+    return TRUE;
 }
 
 void shutDownRequestCallback()
 {
-	exit(0);
+    exit(0);
 }
 
 int CreateMainWindow()
@@ -182,8 +182,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     /* initialize WinSparkle as soon as the app itself is initialized, right
        before entering the event loop: */
-	win_sparkle_set_shutdown_poll_callback(&shutDownPollCallback);
-	win_sparkle_set_shutdown_request_callback(&shutDownRequestCallback);
+    win_sparkle_set_shutdown_poll_callback(&shutDownPollCallback);
+    win_sparkle_set_shutdown_request_callback(&shutDownRequestCallback);
     win_sparkle_init();
 
     {
