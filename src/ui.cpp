@@ -31,7 +31,6 @@
 #include "error.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
-#include "hostpoller.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -289,8 +288,6 @@ public:
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
     void StateUpdateDownloaded(const std::string& updateFile);
-    //change state into "waiting for host application to terminate"
-    void StateWaitForHostToTerminate();
     //run the downloaded installer and tell the host to terminate
     void ExecuteInstaller();
     
@@ -309,6 +306,8 @@ private:
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const Appcast& info);
 
+    //change state into "Unable to terminate host"
+    void StateHostUnableToTerminate();
 private:
     wxTimer       m_timer;
     wxSizer      *m_buttonSizer;
@@ -333,7 +332,6 @@ private:
     wxString m_updateFile;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
-    HostPoller* m_hostpoller;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -466,13 +464,6 @@ void UpdateDialog::OnClose(wxCloseEvent&)
         UpdateDownloader::CleanLeftovers();
     }
 
-    if( m_hostpoller )
-    {
-        m_hostpoller->TerminateAndJoin();
-        delete m_hostpoller;
-        m_hostpoller = NULL;
-    }
-
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
@@ -527,9 +518,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     if(!UI::IsHostReadyToShutDown())
     {
         //Show UI stuff and wait
-        UpdateDialog::StateWaitForHostToTerminate();
-        m_hostpoller = new HostPoller();
-        m_hostpoller->Start();
+        UpdateDialog::StateHostUnableToTerminate();
     }
     else
     {
@@ -565,20 +554,42 @@ void UpdateDialog::StateCheckingUpdates()
     MakeResizable(false);
 }
 
-void UpdateDialog::StateWaitForHostToTerminate()
+void UpdateDialog::StateHostUnableToTerminate()
 {
     LayoutChangesGuard guard(this);
+    wxString appName;
+    try
+    {
+        appName = Settings::GetAppName();
+    }
+    catch( std::exception& )
+    {
+        appName = "";
+    }
+    wxString heading = wxString::Format(_("Unable to restart %s"), appName);
+    m_heading->SetLabel(heading);
 
-    SetMessage(_("Shutting down..."));
+    wxString msg;
+    msg = wxString::Format
+          (
+              _("%s can not be shut down at this time. Make sure "
+               "you don't have any unsaved documents or unfinished downloads "
+               "running and try again."),
+               appName
+          );
 
-    m_closeButton->SetLabel(_("Cancel"));
-    EnablePulsing(true);
+    SetMessage(msg);
 
-    HIDE(m_heading);
-    SHOW(m_progress);
+    m_runInstallerButton->SetLabel(_("Retry update"));
+    m_runInstallerButton->Enable();
+    m_runInstallerButton->SetDefault();
+    EnablePulsing(false);
+
+    SHOW(m_heading);
+    HIDE(m_progress);
     HIDE(m_progressLabel);
-    SHOW(m_closeButtonSizer);
-    HIDE(m_runInstallerButtonSizer);
+    HIDE(m_closeButtonSizer);
+    SHOW(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
@@ -952,9 +963,6 @@ const int MSG_UPDATE_DOWNLOADED = wxNewId();
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
-//Tell the UI to tell the user we are waiting for the application to shut down
-const int MSG_WAIT_FOR_HOST_TO_TERMINATE = wxNewId();
-
 //Tell the UI to tell the application to Terminate
 const int MSG_TELL_HOST_TO_TERMINATE = wxNewId();
 
@@ -984,7 +992,6 @@ private:
     void OnDownloadProgress(wxThreadEvent& event);
     void OnUpdateDownloaded(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
-    void OnWaitForHostToTerminate(wxThreadEvent& event);
     void OnTellHostToTerminate(wxThreadEvent& event);
 
 private:
@@ -1021,7 +1028,6 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
-    Bind(wxEVT_COMMAND_THREAD, &App::OnWaitForHostToTerminate, this, MSG_WAIT_FOR_HOST_TO_TERMINATE);
     Bind(wxEVT_COMMAND_THREAD, &App::OnTellHostToTerminate, this, MSG_TELL_HOST_TO_TERMINATE);
 }
 
@@ -1132,14 +1138,6 @@ void App::OnAskForPermission(wxThreadEvent& event)
     {
         UpdateChecker *check = new UpdateChecker();
         check->Start();
-    }
-}
-
-void App::OnWaitForHostToTerminate(wxThreadEvent& event)
-{
-    if( m_win )
-    {
-        m_win->StateWaitForHostToTerminate();
     }
 }
 
@@ -1333,7 +1331,7 @@ bool UI::IsHostReadyToShutDown()
 {
     if(ms_shutDownPollCallback != NULL)
     {
-        return (*ms_shutDownPollCallback)();
+        return (bool) (*ms_shutDownPollCallback)();
     }
     //If no callback instanciated, there  is no point
     //in waiting for it to return true, so we just go ahead an

@@ -112,7 +112,7 @@ int RegisterMainClass()
 int counter = 0;
 int shutDownPollCallback()
 {
-    if( counter < 5)
+    if( counter < 1)
     {
         counter++;
         return FALSE;
