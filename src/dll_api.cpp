@@ -224,11 +224,11 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
 
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
 {
-	try
-	{
-		UpdateChecker *check = new ManualUpdateChecker();
-		check->Start();
-	}
+    try
+    {
+        UpdateChecker *check = new ManualUpdateChecker();
+        check->Start();
+    }
     CATCH_ALL_EXCEPTIONS
 }
 
