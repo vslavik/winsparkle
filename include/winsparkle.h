@@ -249,10 +249,12 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
     available" window is shown.
 
     There are times when an application might want to force update checks 
-    without showing the UI.Use with caution, it probably makes more sense 
+    without showing the UI. Use with caution, it probably makes more sense 
     to use the automatic update checks on interval option or manual check with UI.
 
-    This function return immediately.
+    This function returns immediately.
+
+    @since 0.4
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui();
 
