@@ -29,7 +29,6 @@
 #include <stddef.h>
 
 #include "winsparkle-version.h"
-#include "../src/winsparkletypes.h"
 
 #if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER)
 #pragma comment(lib, "WinSparkle.lib")
@@ -225,7 +224,7 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
     @since 0.4
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(ShutDownPollCallback callback);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(int (*callback)());
 
 /**
     @param callback A function implemented by the host that terminates the
@@ -235,7 +234,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(ShutDownPoll
 
     @since 0.4
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(ShutDownRequestCallback callback);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(void (*callback)());
 
 //@}
 
