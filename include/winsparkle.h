@@ -213,6 +213,29 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
  */
 WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
+/**
+    Set the shutdown_poll_callback function. This function will be called 
+    to ask the host if it's ready to shut down.
+
+    @param callback The ShutDownCallback function. This function should 
+                    implemented by host and will be called by WinSparkle to
+                    as the host if he is ready to shut down. Returns true
+                    if ready, false otherwise.
+
+    @since 0.4
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(int (*callback)());
+
+/**
+    @param callback A function implemented by the host that terminates the
+                    application. Will be called by WinSparkle when starting
+                    the update, once WinSparkle has gotten a positive response
+                    from the ShutDownPoll callback.
+
+    @since 0.4
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(void (*callback)());
+
 //@}
 
 

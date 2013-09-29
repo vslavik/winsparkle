@@ -196,6 +196,7 @@
     <ClInclude Include="src\updatechecker.h" />
     <ClInclude Include="src\updatedownloader.h" />
     <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\winsparkletypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\winsparkle.rc" />
