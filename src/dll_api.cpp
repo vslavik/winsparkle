@@ -222,4 +222,17 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
+{
+    try
+    {
+        // Run the check in background. Only show UI if updates
+        // are available.
+        UpdateChecker *check = new ManualUpdateChecker();
+        check->Start();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+
 } // extern "C"
