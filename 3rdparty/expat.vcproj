@@ -46,7 +46,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -57,7 +57,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -111,7 +111,7 @@
 				AdditionalOptions="/MP"
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -179,7 +179,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -190,7 +190,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;_UNICODE;UNICODE;_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -244,7 +244,7 @@
 				AdditionalOptions="/MP"
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -259,7 +259,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;COMPILED_FROM_DSP;_UNICODE;UNICODE;NDEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"

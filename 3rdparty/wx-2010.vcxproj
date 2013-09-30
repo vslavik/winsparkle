@@ -72,7 +72,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WXBUILDING;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include</AdditionalIncludeDirectories>
@@ -87,7 +87,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WXBUILDING;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include</AdditionalIncludeDirectories>
@@ -104,7 +104,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WXBUILDING;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include</AdditionalIncludeDirectories>
@@ -127,7 +127,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WXBUILDING;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include</AdditionalIncludeDirectories>
@@ -193,6 +193,7 @@
     <ClCompile Include="wxWidgets\src\common\longlong.cpp" />
     <ClCompile Include="wxWidgets\src\common\matrix.cpp" />
     <ClCompile Include="wxWidgets\src\common\menucmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\modalhook.cpp" />
     <ClCompile Include="wxWidgets\src\common\module.cpp" />
     <ClCompile Include="wxWidgets\src\common\mousemanager.cpp" />
     <ClCompile Include="wxWidgets\src\common\msgout.cpp" />
@@ -218,6 +219,8 @@
     <ClCompile Include="wxWidgets\src\common\sysopt.cpp" />
     <ClCompile Include="wxWidgets\src\common\textbuf.cpp" />
     <ClCompile Include="wxWidgets\src\common\textcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\textmeasurecmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\threadinfo.cpp" />
     <ClCompile Include="wxWidgets\src\common\time.cpp" />
     <ClCompile Include="wxWidgets\src\common\timercmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\timerimpl.cpp" />
@@ -292,6 +295,7 @@
     <ClCompile Include="wxWidgets\src\msw\statbmp.cpp" />
     <ClCompile Include="wxWidgets\src\msw\stattext.cpp" />
     <ClCompile Include="wxWidgets\src\msw\stdpaths.cpp" />
+    <ClCompile Include="wxWidgets\src\msw\textmeasure.cpp" />
     <ClCompile Include="wxWidgets\src\msw\thread.cpp" />
     <ClCompile Include="wxWidgets\src\msw\timer.cpp" />
     <ClCompile Include="wxWidgets\src\msw\toplevel.cpp" />
