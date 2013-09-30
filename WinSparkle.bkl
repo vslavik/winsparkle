@@ -16,6 +16,8 @@ vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
 win32-crt-linkage = static;
 archs = x86 x86_64;
 
+defines += _CRT_SECURE_NO_WARNINGS;
+
 // Build binaries compatible with Windows XP (SP3) -- it's still useful for
 // installer stuff like WinSparkle.dll
 vs2012.option.Configuration.PlatformToolset = v110_xp;
