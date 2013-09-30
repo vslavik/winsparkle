@@ -48,7 +48,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -121,7 +121,7 @@
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -200,7 +200,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -211,7 +211,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
@@ -273,7 +273,7 @@
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -288,7 +288,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include"
 			/>
 			<Tool
