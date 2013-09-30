@@ -1491,6 +1491,7 @@
 #define wxUSE_TREELISTCTRL        0
 #define wxUSE_UIACTIONSIMULATOR   0
 #define wxUSE_WEBVIEW             0 /*TODO--may be simpler to use instead of homegrown code*/
+#define wxUSE_PREFERENCES_EDITOR  0
 
 #endif // _WX_SETUP_H_
 

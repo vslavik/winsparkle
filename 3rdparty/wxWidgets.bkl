@@ -66,6 +66,7 @@ library WinSparkle_wx {
         src/common/longlong.cpp
         src/common/matrix.cpp
         src/common/menucmn.cpp
+        src/common/modalhook.cpp
         src/common/module.cpp
         src/common/mousemanager.cpp
         src/common/msgout.cpp
@@ -91,6 +92,8 @@ library WinSparkle_wx {
         src/common/sysopt.cpp
         src/common/textbuf.cpp
         src/common/textcmn.cpp
+        src/common/textmeasurecmn.cpp
+        src/common/threadinfo.cpp
         src/common/time.cpp
         src/common/timercmn.cpp
         src/common/timerimpl.cpp
@@ -165,6 +168,7 @@ library WinSparkle_wx {
         src/msw/statbmp.cpp
         src/msw/stattext.cpp
         src/msw/stdpaths.cpp
+        src/msw/textmeasure.cpp
         src/msw/thread.cpp
         src/msw/timer.cpp
         src/msw/toplevel.cpp
