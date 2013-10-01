@@ -28,7 +28,6 @@
 
 #include "threads.h"
 #include "appcast.h"
-#include "winsparkletypes.h"
 
 
 namespace winsparkle
