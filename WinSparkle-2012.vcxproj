@@ -25,7 +25,6 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WinSparkle</RootNamespace>
     <ProjectName>WinSparkle</ProjectName>
-    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -85,7 +84,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
@@ -93,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,7 +104,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
@@ -113,7 +112,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,7 +126,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
@@ -138,7 +137,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,7 +154,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;_USRDLL;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
@@ -166,7 +165,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>3rdparty\expat\lib;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
