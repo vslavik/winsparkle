@@ -218,15 +218,20 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 typedef int (*win_sparkle_shutdown_poll_callback_t)();
 
 /**
-    Set the shutdown_poll_callback function. This function will be called 
-    to ask the host if it's ready to shut down.
+    Set callback for querying the application if it can be closed.
 
-    @param callback The ShutDownCallback function. This function should 
-                    implemented by host and will be called by WinSparkle to
-                    as the host if he is ready to shut down. Returns true
-                    if ready, false otherwise.
+    This callback will be called to ask the host if it's ready to shut down,
+    before attempting to launch the installer. The callback returns TRUE if
+    the host application can be safely shut down or FALSE if not (e.g. because
+    the user has unsaved documents).
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
 
     @since 0.4
+
+    @see win_sparkle_set_shutdown_request_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_shutdown_poll_callback_t callback);
 
@@ -235,12 +240,19 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_
 typedef void (*win_sparkle_shutdown_request_callback_t)();
 
 /**
-    @param callback A function implemented by the host that terminates the
-                    application. Will be called by WinSparkle when starting
-                    the update, once WinSparkle has gotten a positive response
-                    from the ShutDownPoll callback.
+    Set callback for shutting down the application.
+
+    This callback will be called to ask the host to shut down immediately after
+    launching the installer. It will only be called if the call to the callback
+    set with win_sparkle_set_shutdown_poll_callback() returned TRUE.
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
 
     @since 0.4
+
+    @see win_sparkle_set_shutdown_poll_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
 
