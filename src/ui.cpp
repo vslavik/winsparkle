@@ -59,8 +59,8 @@
 namespace winsparkle
 {
 
-ShutDownPollCallback ms_shutDownPollCallback = NULL;
-ShutDownRequestCallback ms_shutDownRequestCallback = NULL;
+win_sparkle_shutdown_poll_callback_t ms_shutDownPollCallback = NULL;
+win_sparkle_shutdown_request_callback_t ms_shutDownRequestCallback = NULL;
 
 /*--------------------------------------------------------------------------*
                                   helpers
@@ -1319,7 +1319,7 @@ void UI::AskForPermission()
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
 }
 
-void UI::SetShutDownPollCallback(ShutDownPollCallback callback)
+void UI::SetShutDownPollCallback(win_sparkle_shutdown_poll_callback_t callback)
 {
     ms_shutDownPollCallback = callback;
 }
@@ -1336,7 +1336,7 @@ bool UI::IsHostReadyToShutDown()
     return true;
 }
 
-void UI::SetShutDownRequestCallback(ShutDownRequestCallback callback)
+void UI::SetShutDownRequestCallback(win_sparkle_shutdown_request_callback_t callback)
 {
     ms_shutDownRequestCallback = callback;
 }

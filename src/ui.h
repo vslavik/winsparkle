@@ -107,7 +107,7 @@ public:
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
     /**
-        Set the ShutDownPollCallback function
+        Set the win_sparkle_shutdown_poll_callback_t function
     */
     static void SetShutDownPollCallback(ShutDownPollCallback callback);
 
@@ -117,7 +117,7 @@ public:
     static bool IsHostReadyToShutDown();
     
     /**
-        Set the ShutDownRequestCallback function
+        Set the win_sparkle_shutdown_request_callback_t function
     */
     static void SetShutDownRequestCallback(ShutDownRequestCallback callback);
 

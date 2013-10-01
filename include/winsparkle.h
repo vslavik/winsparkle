@@ -213,6 +213,10 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
  */
 WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
+
+/// Callback type for win_sparkle_shutdown_poll_callback()
+typedef int (*win_sparkle_shutdown_poll_callback_t)();
+
 /**
     Set the shutdown_poll_callback function. This function will be called 
     to ask the host if it's ready to shut down.
@@ -224,7 +228,11 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
     @since 0.4
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(int (*callback)());
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_shutdown_poll_callback_t callback);
+
+
+/// Callback type for win_sparkle_shutdown_request_callback()
+typedef void (*win_sparkle_shutdown_request_callback_t)();
 
 /**
     @param callback A function implemented by the host that terminates the
@@ -234,7 +242,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(int (*callba
 
     @since 0.4
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(void (*callback)());
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
 
 //@}
 
