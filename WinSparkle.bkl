@@ -1,5 +1,5 @@
 
-toolsets = vs2008 vs2010 vs2012;
+toolsets = vs2008 vs2010 vs2012 vs2013;
 
 if ( $toolset == vs2008 )
     SUFFIX = "";
@@ -7,18 +7,24 @@ if ( $toolset == vs2010 )
     SUFFIX = "-2010";
 if ( $toolset == vs2012 )
     SUFFIX = "-2012";
+if ( $toolset == vs2013 )
+    SUFFIX = "-2013";
 
 vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
+vs2013.solutionfile = WinSparkle$(SUFFIX).sln;
 
 // Common settings:
 win32-crt-linkage = static;
 archs = x86 x86_64;
 
+defines += _CRT_SECURE_NO_WARNINGS;
+
 // Build binaries compatible with Windows XP (SP3) -- it's still useful for
 // installer stuff like WinSparkle.dll
 vs2012.option.Configuration.PlatformToolset = v110_xp;
+vs2013.option.Configuration.PlatformToolset = v120_xp;
 
 if ( $(config) == Release ) {
     vs2008.option.VCCLCompilerTool.Optimization = 1;
@@ -46,6 +52,16 @@ if ( $(config) == Release ) {
     vs2012.option.Link.OptimizeReferences = true;
     vs2012.option.Link.EnableCOMDATFolding = true;
     vs2012.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+
+    vs2013.option.Configuration.WholeProgramOptimization = true;
+    vs2013.option.ClCompile.Optimization = MinSpace;
+    vs2013.option.ClCompile.FavorSizeOrSpeed = Size;
+    vs2013.option.ClCompile.WholeProgramOptimization = true;
+    vs2013.option.ClCompile.StringPooling = true;
+    vs2013.option.ClCompile.FunctionLevelLinking = true;
+    vs2013.option.Link.OptimizeReferences = true;
+    vs2013.option.Link.EnableCOMDATFolding = true;
+    vs2013.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
 }
 
 // 3rd party library dependencies:
@@ -56,6 +72,7 @@ shared-library WinSparkle {
     vs2008.projectfile = $(id)$(SUFFIX).vcproj;
     vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
+    vs2013.projectfile = $(id)$(SUFFIX).vcxproj;
 
     defines += XML_STATIC;
     includedirs += 3rdparty/expat/lib;

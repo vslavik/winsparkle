@@ -25,7 +25,6 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>example_psdk</RootNamespace>
     <ProjectName>example_psdk</ProjectName>
-    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -85,7 +84,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
@@ -93,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,7 +103,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
@@ -112,7 +111,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,7 +124,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
@@ -136,7 +135,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,7 +151,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
@@ -163,7 +162,7 @@
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

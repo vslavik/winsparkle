@@ -48,7 +48,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
-				PreprocessorDefinitions="WXBUILDING;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -116,7 +116,7 @@
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
-				PreprocessorDefinitions="WXBUILDING;WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -131,7 +131,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -187,7 +187,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
-				PreprocessorDefinitions="WXBUILDING;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -198,7 +198,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;_UNICODE;UNICODE;_DEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -255,7 +255,7 @@
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
-				PreprocessorDefinitions="WXBUILDING;WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -270,7 +270,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WXBUILDING;_UNICODE;UNICODE;NDEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WXBUILDING;_UNICODE;UNICODE;NDEBUG"
 				AdditionalIncludeDirectories="wxWidgets_setup_h;wxWidgets\include"
 			/>
 			<Tool
@@ -500,6 +500,10 @@
 				>
 			</File>
 			<File
+				RelativePath="wxWidgets\src\common\modalhook.cpp"
+				>
+			</File>
+			<File
 				RelativePath="wxWidgets\src\common\module.cpp"
 				>
 			</File>
@@ -597,6 +601,14 @@
 			</File>
 			<File
 				RelativePath="wxWidgets\src\common\textcmn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\common\textmeasurecmn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\common\threadinfo.cpp"
 				>
 			</File>
 			<File
@@ -893,6 +905,10 @@
 			</File>
 			<File
 				RelativePath="wxWidgets\src\msw\stdpaths.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\msw\textmeasure.cpp"
 				>
 			</File>
 			<File

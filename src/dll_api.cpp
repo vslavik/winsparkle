@@ -237,9 +237,23 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
+{
+    try
+    {
+        // Run the check in background. Only show UI if updates
+        // are available.
+        UpdateChecker *check = new ManualUpdateChecker();
+        check->Start();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+
 /*--------------------------------------------------------------------------*
                              Silent Update Functions 
  *--------------------------------------------------------------------------*/
+
 WIN_SPARKLE_API int __cdecl win_sparkle_check_update_silent()
 {
     if(ms_ghostUpdater == NULL)
@@ -268,5 +282,6 @@ WIN_SPARKLE_API int __cdecl win_sparkle_run_installer()
     }
     return ms_ghostUpdater->RunInstaller();
 }
+
 
 } // extern "C"
