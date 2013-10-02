@@ -30,6 +30,7 @@
 #include "ui.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
+#include "ghostupdater.h"
 
 #include <ctime>
 
@@ -38,6 +39,7 @@ using namespace winsparkle;
 extern "C"
 {
 
+GhostUpdater* ms_ghostUpdater;
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/
@@ -66,7 +68,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
                 {
                     // Run the check in background. Only show UI if updates
                     // are available.
-                    UpdateChecker *check = new UpdateChecker();
+                    UpdateChecker *check = new UIUpdateChecker();
                     check->Start();
                 }
             }
@@ -92,6 +94,14 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_init_silent(void (*checkCallback)(int, int), void (*downloadCallback)(int))
+{
+    try
+    {
+        ms_ghostUpdater = new GhostUpdater(checkCallback, downloadCallback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
 
 WIN_SPARKLE_API void __cdecl win_sparkle_cleanup()
 {
@@ -99,6 +109,11 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup()
     {
         UI::ShutDown();
 
+        if(ms_ghostUpdater != NULL)
+        {
+            delete ms_ghostUpdater;
+            ms_ghostUpdater = NULL;
+        }
         // FIXME: shut down any worker UpdateChecker and UpdateDownloader threads too
     }
     CATCH_ALL_EXCEPTIONS
@@ -220,6 +235,38 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS
+}
+
+/*--------------------------------------------------------------------------*
+                             Silent Update Functions 
+ *--------------------------------------------------------------------------*/
+WIN_SPARKLE_API int __cdecl win_sparkle_check_update_silent()
+{
+    if(ms_ghostUpdater == NULL)
+    {
+        return WIN_SPARKLE_SILENT_MODE_NOT_INITIALIZED_ERROR;
+    }
+    ms_ghostUpdater->CheckForUpdates();
+    return SUCCESS_ERROR;
+}
+
+WIN_SPARKLE_API int __cdecl win_sparkle_download_update_silent()
+{
+    if(ms_ghostUpdater == NULL)
+    {
+        return WIN_SPARKLE_SILENT_MODE_NOT_INITIALIZED_ERROR;
+    }
+    ms_ghostUpdater->DownloadUpdates();
+    return SUCCESS_ERROR;
+}
+
+WIN_SPARKLE_API int __cdecl win_sparkle_run_installer()
+{
+    if(ms_ghostUpdater == NULL)
+    {
+        return WIN_SPARKLE_SILENT_MODE_NOT_INITIALIZED_ERROR;
+    }
+    return ms_ghostUpdater->RunInstaller();
 }
 
 } // extern "C"

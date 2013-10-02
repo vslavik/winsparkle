@@ -483,7 +483,7 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
     StateDownloading();
 
     // Run the download in background.
-    m_downloader = new UpdateDownloader(m_appcast);
+    m_downloader = new UIUpdateDownloader(m_appcast);
     m_downloader->Start();
 }
 
@@ -1067,7 +1067,7 @@ void App::OnAskForPermission(wxThreadEvent& event)
 
     if ( shouldCheck )
     {
-        UpdateChecker *check = new UpdateChecker();
+        UpdateChecker *check = new UIUpdateChecker();
         check->Start();
     }
 }

@@ -41,6 +41,7 @@
 #define MAIN_WIN_CLASS_NAME    _TEXT("app_psdk_main_win_class")
 
 #define IDB_CHECK_FOR_UPDATES   100
+#define IDB_CHECK_FOR_UPDATES_SILENT   200
 
 
 /*-------------------------------------------------------------------------*
@@ -55,6 +56,22 @@ HWND g_hwndMain;
    callbacks
  *-------------------------------------------------------------------------*/
 
+void OnUpdateDownloaded(int errorCode)
+{
+    if( !errorCode )
+    {
+        win_sparkle_run_installer();
+    }
+}
+
+void OnUpdateAvailable(int isUpdateAvailable, int errorCode)
+{
+    if ( !errorCode && isUpdateAvailable )
+    {
+        win_sparkle_download_update_silent();
+    }
+}
+
 void OnCheckForUpdates(HWND hwnd,
                        int id,
                        HWND hwndCtl,
@@ -63,6 +80,11 @@ void OnCheckForUpdates(HWND hwnd,
     if ( id == IDB_CHECK_FOR_UPDATES )
     {
         win_sparkle_check_update_with_ui();
+    }
+    if ( id == IDB_CHECK_FOR_UPDATES_SILENT )
+    {
+        win_sparkle_init_silent(&OnUpdateAvailable, &OnUpdateDownloaded);
+        win_sparkle_check_update_silent();
     }
 }
 
@@ -132,6 +154,15 @@ int CreateMainWindow()
         g_hwndMain, (HMENU)-1, g_hInstance, NULL
     );
 
+    CreateWindow
+    (
+        _TEXT("button"),
+        _TEXT("Do silent update"),
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        100, 150, 250, 32,
+        g_hwndMain, (HMENU)IDB_CHECK_FOR_UPDATES_SILENT, g_hInstance, NULL
+    );
+     
     CreateWindow
     (
         _TEXT("button"),

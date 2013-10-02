@@ -66,20 +66,63 @@ protected:
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 
-protected:
     virtual void Run();
     virtual bool IsJoinable() const { return false; }
+
+    virtual void NoUpdates() = 0;
+    virtual void UpdateAvailable(const Appcast& appcast) = 0;
+    virtual void UpdateError(int errorCode) = 0;
+
+};
+
+
+
+/**
+    Update checker used for checking without UI
+*/
+class SilentUpdateChecker : public UpdateChecker
+{
+public:
+    SilentUpdateChecker(void (*callback)(int, int))
+        : UpdateChecker(), 
+        m_updateCheckerCallback(callback){}
+
+    Appcast GetAppcast();
+
+protected:
+    virtual void NoUpdates();
+    virtual void UpdateAvailable(const Appcast& appcast);
+    virtual void UpdateError(int errorCode);
+
+private:
+    void (*m_updateCheckerCallback)(int, int);
+    Appcast* m_appcast;
+};
+
+
+/**
+    Update checker used for checking with UI
+*/
+class UIUpdateChecker : public UpdateChecker
+{
+public:
+    UIUpdateChecker() : UpdateChecker(){}
+
+protected:
+    virtual void NoUpdates();
+    virtual void UpdateAvailable(const Appcast& appcast);
+    virtual void UpdateError(int errorCode);
 };
 
 
 /**
     Update checker used for manual checking.
  */
-class ManualUpdateChecker : public UpdateChecker
+class ManualUpdateChecker : public UIUpdateChecker
 {
 public:
     /// Creates checker thread.
-    ManualUpdateChecker() : UpdateChecker() {}
+    ManualUpdateChecker() : UIUpdateChecker() {}
 
 protected:
     virtual int GetAppcastDownloadFlags() const;

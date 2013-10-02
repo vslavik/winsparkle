@@ -173,7 +173,7 @@ void Appcast::Load(const std::string& xml)
 {
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
-        throw std::runtime_error("Failed to create XML parser.");
+        throw XMLParserCreationError("Failed to create XML parser.");
 
     ContextData ctxt(*this, p);
 
@@ -188,7 +188,7 @@ void Appcast::Load(const std::string& xml)
         std::string msg("XML parser error: ");
         msg.append(XML_ErrorString(XML_GetErrorCode(p)));
         XML_ParserFree(p);
-        throw std::runtime_error(msg);
+        throw XMLParserError(msg);
     }
 
     XML_ParserFree(p);

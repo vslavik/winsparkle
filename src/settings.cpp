@@ -71,7 +71,7 @@ std::wstring GetVerInfoLang(void *fi)
 
     translationsCnt /= sizeof(struct TranslationInfo);
     if ( translationsCnt == 0 )
-        throw std::runtime_error("No translations in VarFileInfo resource?");
+        throw NoTranslationsError("No translations in VarFileInfo resource?");
 
     // TODO: be smarter about which language to use:
     //       1. use app main thread's locale

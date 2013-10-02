@@ -163,7 +163,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     DWORD statusCode;
     if ( GetHttpHeader(conn, HTTP_QUERY_STATUS_CODE, statusCode) && statusCode >= 400 )
     {
-        throw std::runtime_error("Update file not found on the server.");
+        throw FileNotFoundError("Update file not found on the server.");
     }
 
     // Get content length if possible:
