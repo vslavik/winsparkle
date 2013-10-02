@@ -285,6 +285,15 @@ bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
 /*--------------------------------------------------------------------------*
                             SilentUpdateChecker
  *--------------------------------------------------------------------------*/
+SilentUpdateChecker::~SilentUpdateChecker()
+{
+    if( m_appcast )
+    {
+        delete m_appcast;	
+        m_appcast = NULL;
+    }
+}
+
 void SilentUpdateChecker::NoUpdates()
 {
     m_updateCheckerCallback(0, SUCCESS_ERROR);

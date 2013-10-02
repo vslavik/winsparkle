@@ -85,7 +85,11 @@ class SilentUpdateChecker : public UpdateChecker
 public:
     SilentUpdateChecker(void (*callback)(int, int))
         : UpdateChecker(), 
-        m_updateCheckerCallback(callback){}
+        m_updateCheckerCallback(callback),
+        m_appcast(NULL)
+    {}
+
+    ~SilentUpdateChecker();
 
     Appcast GetAppcast();
 
