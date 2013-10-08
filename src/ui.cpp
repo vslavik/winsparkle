@@ -28,6 +28,7 @@
 #include "error.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
+#include "appcontroller.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -47,6 +48,7 @@
 #include <wx/timer.h>
 #include <wx/settings.h>
 #include <wx/msw/ole/activex.h>
+#include <wx/msgdlg.h>
 
 #include <exdisp.h>
 #include <mshtml.h>
@@ -484,9 +486,19 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
     m_downloader->Start();
 }
 
-
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 {
+    if( !ApplicationController::IsReadyToShutdown() )
+    {
+        wxMessageDialog dlg(this,
+                            wxString::Format(_("%s cannot be restarted."), Settings::GetAppName()),
+                            _("Software Update"),
+                            wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
+        dlg.SetExtendedMessage(_("Make sure that you don't have any unsaved documents and try again."));
+        dlg.ShowModal();
+        return;
+    }
+
     wxBusyCursor bcur;
 
     m_message->SetLabel(_("Launching the installer..."));
@@ -497,8 +509,11 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
         wxLogError(_("Failed to launch the installer."));
         wxLog::FlushActive();
     }
-
-    Close();
+    else
+    {
+        Close();
+        ApplicationController::RequestShutdown();
+    }
 }
 
 

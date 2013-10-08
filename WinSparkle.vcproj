@@ -338,6 +338,10 @@
 				>
 			</File>
 			<File
+				RelativePath="src\appcontroller.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\dll_api.cpp"
 				>
 			</File>
@@ -389,6 +393,10 @@
 			</File>
 			<File
 				RelativePath="src\appcast.h"
+				>
+			</File>
+			<File
+				RelativePath="src\appcontroller.h"
 				>
 			</File>
 			<File

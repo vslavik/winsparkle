@@ -213,6 +213,49 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
  */
 WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
+
+/// Callback type for win_sparkle_can_shutdown_callback()
+typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
+
+/**
+    Set callback for querying the application if it can be closed.
+
+    This callback will be called to ask the host if it's ready to shut down,
+    before attempting to launch the installer. The callback returns TRUE if
+    the host application can be safely shut down or FALSE if not (e.g. because
+    the user has unsaved documents).
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
+
+    @since 0.4
+
+    @see win_sparkle_set_shutdown_request_callback()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
+
+
+/// Callback type for win_sparkle_shutdown_request_callback()
+typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
+
+/**
+    Set callback for shutting down the application.
+
+    This callback will be called to ask the host to shut down immediately after
+    launching the installer. It will only be called if the call to the callback
+    set with win_sparkle_set_can_shutdown_callback() returned TRUE.
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
+
+    @since 0.4
+
+    @see win_sparkle_set_can_shutdown_callback()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
+
 //@}
 
 

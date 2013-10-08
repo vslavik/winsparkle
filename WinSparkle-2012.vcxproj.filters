@@ -26,6 +26,9 @@
     <ClInclude Include="src\appcast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\appcontroller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\download.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -53,6 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\appcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dll_api.cpp">
