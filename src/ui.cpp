@@ -28,6 +28,7 @@
 #include "error.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
+#include "appcontroller.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -501,7 +502,7 @@ void UpdateDialog::ExecuteInstaller()
         else
         {
             Close();
-            UI::RequestHostTermination();
+            ApplicationController::RequestShutdown();
         }
 }
 
@@ -512,7 +513,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     m_message->SetLabel(_("Launching the installer..."));
     m_runInstallerButton->Disable();
 
-    if(!UI::IsHostReadyToShutDown())
+    if(!ApplicationController::IsReadyToShutdown())
     {
         //Show UI stuff and wait
         UpdateDialog::StateHostUnableToTerminate();
@@ -1317,36 +1318,6 @@ void UI::AskForPermission()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
-}
-
-void UI::SetShutDownPollCallback(win_sparkle_shutdown_poll_callback_t callback)
-{
-    ms_shutDownPollCallback = callback;
-}
-
-bool UI::IsHostReadyToShutDown()
-{
-    if(ms_shutDownPollCallback != NULL)
-    {
-        return (bool) (*ms_shutDownPollCallback)();
-    }
-    //If no callback instanciated, there  is no point
-    //in waiting for it to return true, so we just go ahead an
-    //return true right away
-    return true;
-}
-
-void UI::SetShutDownRequestCallback(win_sparkle_shutdown_request_callback_t callback)
-{
-    ms_shutDownRequestCallback = callback;
-}
-
-void UI::RequestHostTermination()
-{
-    if(ms_shutDownRequestCallback != NULL)
-    {
-        (*ms_shutDownRequestCallback)();
-    }
 }
 
 /*static*/

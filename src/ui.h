@@ -106,25 +106,6 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
-    /**
-        Set the win_sparkle_shutdown_poll_callback_t function
-    */
-    static void SetShutDownPollCallback(ShutDownPollCallback callback);
-
-    /**
-        Ask the host if he's ready to terminate using the provided callback
-    */
-    static bool IsHostReadyToShutDown();
-    
-    /**
-        Set the win_sparkle_shutdown_request_callback_t function
-    */
-    static void SetShutDownRequestCallback(ShutDownRequestCallback callback);
-
-    /**
-        Tell the host to terminate.
-    */
-    static void RequestHostTermination();
 
     static void ExecuteInstaller();
 protected:

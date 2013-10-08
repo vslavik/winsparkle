@@ -25,6 +25,7 @@
 
 #include "winsparkle.h"
 
+#include "appcontroller.h"
 #include "settings.h"
 #include "error.h"
 #include "ui.h"
@@ -207,7 +208,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_
 {
     try
     {
-        UI::SetShutDownPollCallback(callback);
+        ApplicationController::SetShutdownPollCallback(callback);
     }
     CATCH_ALL_EXCEPTIONS
 }
@@ -216,7 +217,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
 {
     try
     {
-        UI::SetShutDownRequestCallback(callback);
+        ApplicationController::SetShutdownRequestCallback(callback);
     }
     CATCH_ALL_EXCEPTIONS
 }

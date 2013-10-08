@@ -96,6 +96,7 @@ shared-library WinSparkle {
     // Private headers:
     headers {
         src/appcast.h
+        src/appcontroller.h
         src/download.h
         src/error.h
         src/settings.h
@@ -108,6 +109,7 @@ shared-library WinSparkle {
 
     sources {
         src/appcast.cpp
+        src/appcontroller.cpp
         src/dll_api.cpp
         src/dllmain.cpp
         src/download.cpp
