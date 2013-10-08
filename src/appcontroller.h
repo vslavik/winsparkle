@@ -57,8 +57,8 @@ public:
      */
     //@{
 
-    /// Set the win_sparkle_shutdown_poll_callback_t function
-    static void SetShutdownPollCallback(win_sparkle_shutdown_poll_callback_t callback)
+    /// Set the win_sparkle_can_shutdown_callback_t function
+    static void SetCanShutdownCallback(win_sparkle_can_shutdown_callback_t callback)
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_cbIsReadyToShutdown = callback;
@@ -79,7 +79,7 @@ private:
     // guards the variables below:
     static CriticalSection ms_csVars;
 
-    static win_sparkle_shutdown_poll_callback_t    ms_cbIsReadyToShutdown;
+    static win_sparkle_can_shutdown_callback_t     ms_cbIsReadyToShutdown;
     static win_sparkle_shutdown_request_callback_t ms_cbRequestShutdown;
 };
 

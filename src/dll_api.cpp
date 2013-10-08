@@ -204,11 +204,11 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval()
     return DEFAULT_CHECK_INTERVAL;
 }
 
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_shutdown_poll_callback_t callback)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
 {
     try
     {
-        ApplicationController::SetShutdownPollCallback(callback);
+        ApplicationController::SetCanShutdownCallback(callback);
     }
     CATCH_ALL_EXCEPTIONS
 }

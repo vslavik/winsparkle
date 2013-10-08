@@ -214,8 +214,8 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
 WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
 
-/// Callback type for win_sparkle_shutdown_poll_callback()
-typedef int (__cdecl *win_sparkle_shutdown_poll_callback_t)();
+/// Callback type for win_sparkle_can_shutdown_callback()
+typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 
 /**
     Set callback for querying the application if it can be closed.
@@ -233,7 +233,7 @@ typedef int (__cdecl *win_sparkle_shutdown_poll_callback_t)();
 
     @see win_sparkle_set_shutdown_request_callback()
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_poll_callback(win_sparkle_shutdown_poll_callback_t callback);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
 
 
 /// Callback type for win_sparkle_shutdown_request_callback()
@@ -244,7 +244,7 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
 
     This callback will be called to ask the host to shut down immediately after
     launching the installer. It will only be called if the call to the callback
-    set with win_sparkle_set_shutdown_poll_callback() returned TRUE.
+    set with win_sparkle_set_can_shutdown_callback() returned TRUE.
 
     @note There's no guaranteed about the thread from which the callback is called,
           except that it certainly *won't* be called from the app's main thread.
@@ -252,7 +252,7 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
 
     @since 0.4
 
-    @see win_sparkle_set_shutdown_poll_callback()
+    @see win_sparkle_set_can_shutdown_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
 

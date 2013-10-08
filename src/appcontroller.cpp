@@ -31,7 +31,7 @@ namespace winsparkle
 
 CriticalSection ApplicationController::ms_csVars;
 
-win_sparkle_shutdown_poll_callback_t    ApplicationController::ms_cbIsReadyToShutdown = NULL;
+win_sparkle_can_shutdown_callback_t     ApplicationController::ms_cbIsReadyToShutdown = NULL;
 win_sparkle_shutdown_request_callback_t ApplicationController::ms_cbRequestShutdown = NULL;
 
 
