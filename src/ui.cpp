@@ -48,6 +48,7 @@
 #include <wx/timer.h>
 #include <wx/settings.h>
 #include <wx/msw/ole/activex.h>
+#include <wx/msgdlg.h>
 
 #include <exdisp.h>
 #include <mshtml.h>
@@ -59,9 +60,6 @@
 
 namespace winsparkle
 {
-
-win_sparkle_shutdown_poll_callback_t ms_shutDownPollCallback = NULL;
-win_sparkle_shutdown_request_callback_t ms_shutDownRequestCallback = NULL;
 
 /*--------------------------------------------------------------------------*
                                   helpers
@@ -286,9 +284,7 @@ public:
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
     void StateUpdateDownloaded(const std::string& updateFile);
-    //run the downloaded installer and tell the host to terminate
-    void ExecuteInstaller();
-    
+
 private:
     void EnablePulsing(bool enable);
     void OnTimer(wxTimerEvent& event);
@@ -304,8 +300,6 @@ private:
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const Appcast& info);
 
-    //change state into "Unable to terminate host"
-    void StateHostUnableToTerminate();
 private:
     wxTimer       m_timer;
     wxSizer      *m_buttonSizer;
@@ -492,36 +486,33 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
     m_downloader->Start();
 }
 
-void UpdateDialog::ExecuteInstaller()
-{
-        if ( !wxLaunchDefaultApplication(m_updateFile) )
-        {
-            wxLogError(_("Failed to launch the installer."));
-            wxLog::FlushActive();
-        }
-        else
-        {
-            Close();
-            ApplicationController::RequestShutdown();
-        }
-}
-
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 {
+    if( !ApplicationController::IsReadyToShutdown() )
+    {
+        wxMessageDialog dlg(this,
+                            wxString::Format(_("%s cannot be restarted."), Settings::GetAppName()),
+                            _("Software Update"),
+                            wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
+        dlg.SetExtendedMessage(_("Make sure that you don't have any unsaved documents and try again."));
+        dlg.ShowModal();
+        return;
+    }
+
     wxBusyCursor bcur;
 
     m_message->SetLabel(_("Launching the installer..."));
     m_runInstallerButton->Disable();
 
-    if(!ApplicationController::IsReadyToShutdown())
+    if ( !wxLaunchDefaultApplication(m_updateFile) )
     {
-        //Show UI stuff and wait
-        UpdateDialog::StateHostUnableToTerminate();
+        wxLogError(_("Failed to launch the installer."));
+        wxLog::FlushActive();
     }
     else
     {
-        ExecuteInstaller();
         Close();
+        ApplicationController::RequestShutdown();
     }
 }
 
@@ -547,47 +538,6 @@ void UpdateDialog::StateCheckingUpdates()
     HIDE(m_progressLabel);
     SHOW(m_closeButtonSizer);
     HIDE(m_runInstallerButtonSizer);
-    HIDE(m_releaseNotesSizer);
-    HIDE(m_updateButtonsSizer);
-    MakeResizable(false);
-}
-
-void UpdateDialog::StateHostUnableToTerminate()
-{
-    LayoutChangesGuard guard(this);
-    wxString appName;
-    try
-    {
-        appName = Settings::GetAppName();
-    }
-    catch( std::exception& )
-    {
-        appName = "";
-    }
-    wxString heading = wxString::Format(_("Unable to restart %s"), appName);
-    m_heading->SetLabel(heading);
-
-    wxString msg;
-    msg = wxString::Format
-          (
-              _("%s can not be shut down at this time. Make sure "
-               "you don't have any unsaved documents or unfinished downloads "
-               "running and try again."),
-               appName
-          );
-
-    SetMessage(msg);
-
-    m_runInstallerButton->SetLabel(_("Retry update"));
-    m_runInstallerButton->Enable();
-    m_runInstallerButton->SetDefault();
-    EnablePulsing(false);
-
-    SHOW(m_heading);
-    HIDE(m_progress);
-    HIDE(m_progressLabel);
-    HIDE(m_closeButtonSizer);
-    SHOW(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
@@ -961,9 +911,6 @@ const int MSG_UPDATE_DOWNLOADED = wxNewId();
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
-//Tell the UI to tell the application to Terminate
-const int MSG_TELL_HOST_TO_TERMINATE = wxNewId();
-
 
 /*--------------------------------------------------------------------------*
                                 Application
@@ -990,7 +937,6 @@ private:
     void OnDownloadProgress(wxThreadEvent& event);
     void OnUpdateDownloaded(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
-    void OnTellHostToTerminate(wxThreadEvent& event);
 
 private:
     UpdateDialog *m_win;
@@ -1026,7 +972,6 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
-    Bind(wxEVT_COMMAND_THREAD, &App::OnTellHostToTerminate, this, MSG_TELL_HOST_TO_TERMINATE);
 }
 
 
@@ -1136,14 +1081,6 @@ void App::OnAskForPermission(wxThreadEvent& event)
     {
         UpdateChecker *check = new UpdateChecker();
         check->Start();
-    }
-}
-
-void App::OnTellHostToTerminate(wxThreadEvent& event)
-{
-    if( m_win )
-    {
-        m_win->ExecuteInstaller();
     }
 }
 
@@ -1318,13 +1255,6 @@ void UI::AskForPermission()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
-}
-
-/*static*/
-void UI::ExecuteInstaller()
-{
-    UIThreadAccess uit;
-    uit.App().SendMsg(MSG_TELL_HOST_TO_TERMINATE);
 }
 
 } // namespace winsparkle

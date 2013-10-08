@@ -29,7 +29,6 @@
 #include "threads.h"
 #include "appcast.h"
 
-
 namespace winsparkle
 {
 
@@ -106,8 +105,6 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
-
-    static void ExecuteInstaller();
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
