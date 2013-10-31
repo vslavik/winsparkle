@@ -77,7 +77,7 @@ std::string GetWin32ErrorMessage(const char *extraMsg, DWORD err)
  *--------------------------------------------------------------------------*/
 
 Win32Exception::Win32Exception(const char *extraMsg)
-    : std::runtime_error(GetWin32ErrorMessage(extraMsg, GetLastError()))
+    : WinSparkleError(GetWin32ErrorMessage(extraMsg, GetLastError()), WIN32_ERROR)
 {
 }
 

@@ -227,7 +227,7 @@ void UpdateChecker::Run()
     {
         const std::string url = Settings::GetAppcastURL();
         if ( url.empty() )
-            throw std::runtime_error("Appcast URL not specified.");
+            throw AppcastURLNotSpecifiedError("Appcast URL not specified.");
 
         StringDownloadSink appcast_xml;
         DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
@@ -244,22 +244,27 @@ void UpdateChecker::Run()
         if ( CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
-            UI::NotifyNoUpdates();
+            NoUpdates();
             return;
         }
 
         // Check if the user opted to ignore this particular version.
         if ( ShouldSkipUpdate(appcast) )
         {
-            UI::NotifyNoUpdates();
+            NoUpdates();
             return;
         }
 
-        UI::NotifyUpdateAvailable(appcast);
+        UpdateAvailable(appcast);
+    }
+    catch ( WinSparkleError e )
+    {
+        UpdateError(e.ErrorCode());
+        throw;
     }
     catch ( ... )
     {
-        UI::NotifyUpdateError();
+        UpdateError(UNKNOWN_ERROR);
         throw;
     }
 }
@@ -275,6 +280,58 @@ bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
     {
         return false;
     }
+}
+
+/*--------------------------------------------------------------------------*
+                            SilentUpdateChecker
+ *--------------------------------------------------------------------------*/
+SilentUpdateChecker::~SilentUpdateChecker()
+{
+    if( m_appcast )
+    {
+        delete m_appcast;	
+        m_appcast = NULL;
+    }
+}
+
+void SilentUpdateChecker::NoUpdates()
+{
+    m_updateCheckerCallback(0, SUCCESS_ERROR);
+}
+
+void SilentUpdateChecker::UpdateAvailable(const Appcast& appcast)
+{
+    m_appcast = new Appcast(appcast);
+    m_updateCheckerCallback(1, SUCCESS_ERROR);
+}
+
+void SilentUpdateChecker::UpdateError(int errorCode)
+{
+    m_updateCheckerCallback(0, errorCode);
+}
+
+Appcast SilentUpdateChecker::GetAppcast()
+{
+    return *m_appcast;
+}
+
+/*--------------------------------------------------------------------------*
+                            UIUpdateChecker
+ *--------------------------------------------------------------------------*/
+
+void UIUpdateChecker::NoUpdates()
+{
+    UI::NotifyNoUpdates();
+}
+
+void UIUpdateChecker::UpdateAvailable(const Appcast& appcast)
+{
+    UI::NotifyUpdateAvailable(appcast);
+}
+
+void UIUpdateChecker::UpdateError(int errorCode)
+{
+    UI::NotifyUpdateError();
 }
 
 
@@ -298,5 +355,6 @@ bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
     // This is the semantics in Sparkle for Mac.
     return false;
 }
+
 
 } // namespace winsparkle

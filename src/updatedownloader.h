@@ -44,7 +44,7 @@ class UpdateDownloader : public Thread
 {
 public:
     /// Creates updater thread.
-    UpdateDownloader(const Appcast& appcast);
+    UpdateDownloader(const Appcast& appcast, bool isSilent=false);
 
     /**
         Perform any necessary cleanup after previous updates.
@@ -59,10 +59,44 @@ protected:
     // Thread methods:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
+    
+    virtual void UpdateDownloaded(std::string filePath) = 0;
+    virtual void UpdateError(int errorCode) = 0;
 
 private:
     Appcast m_appcast;
+    bool m_isSilent;
 };
+
+class UIUpdateDownloader : public UpdateDownloader
+{
+public:
+    UIUpdateDownloader(const Appcast& appcast) : UpdateDownloader(appcast){}
+
+protected:
+    virtual void UpdateDownloaded(std::string filePath);
+    virtual void UpdateError(int errorCode);
+};
+
+class SilentUpdateDownloader : public UpdateDownloader
+{
+public:
+    SilentUpdateDownloader(const Appcast& appcast, void (*downloadedCallback)(int)) : 
+      UpdateDownloader(appcast, true), m_downloadedCallback(downloadedCallback)
+      {} 
+
+    std::string GetFilePath();
+
+protected:
+    virtual void UpdateDownloaded(std::string filePath);
+    virtual void UpdateError(int errorCode);
+
+private:
+    void (*m_downloadedCallback)(int);
+    std::string m_filePath;
+};
+
+
 
 } // namespace winsparkle
 

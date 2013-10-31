@@ -53,6 +53,12 @@
     <ClInclude Include="src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ghostupdater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\errorcodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
@@ -86,6 +92,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\updatedownloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ghostupdater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\errorcodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

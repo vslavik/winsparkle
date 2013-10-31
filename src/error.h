@@ -27,9 +27,25 @@
 #define _error_h_
 
 #include <stdexcept>
+#include "errorcodes.h"
 
 namespace winsparkle
 {
+
+/**
+    Extension for std::runtime_error that includes an error code
+*/
+class WinSparkleError : public std::runtime_error
+{
+public:
+    WinSparkleError(const std::string message, int errorCode) :
+      std::runtime_error(message), m_errorCode(errorCode)
+      {}
+
+      int ErrorCode(){ return m_errorCode; }
+protected:
+    int m_errorCode;
+};
 
 /**
     Exception thrown if a Platform SDK error happens.
@@ -37,7 +53,7 @@ namespace winsparkle
     This exception automatically sets the error message to the appropriate
     error message for GetLastError()'s error code.
  */
-class Win32Exception : public std::runtime_error
+class Win32Exception : public WinSparkleError
 {
 public:
     /**
@@ -46,6 +62,70 @@ public:
         @param extraMsg  Extra message shown in front of the win32 error.
      */
     Win32Exception(const char *extraMsg = NULL);
+};
+
+class XMLParserError : public WinSparkleError 
+{
+public:
+    XMLParserError(std::string message) : 
+        WinSparkleError(message, XML_PARSER_ERROR)
+        {}
+};
+
+class XMLParserCreationError : public WinSparkleError
+{
+public:
+    XMLParserCreationError(std::string message) :
+      WinSparkleError(message, XML_PARSER_CREATION_ERROR)
+      {}
+};
+
+class FileNotFoundError : public WinSparkleError
+{
+public:
+    FileNotFoundError(std::string message) : 
+      WinSparkleError(message, FILE_NOT_FOUND_ERROR)
+      {}
+};
+
+class NoTranslationsError : public WinSparkleError
+{
+public:
+    NoTranslationsError(std::string message) : 
+      WinSparkleError(message, NO_TRANSLATIONS_FOUND_ERROR)
+      {}
+};
+
+class AppcastURLNotSpecifiedError : public WinSparkleError
+{
+public:
+    AppcastURLNotSpecifiedError(std::string message) : 
+      WinSparkleError(message, APPCAST_URL_NOT_SPECIFIED_ERROR)
+      {}
+};
+
+class UpdateFileAlreadySetError : public WinSparkleError
+{
+public:
+    UpdateFileAlreadySetError(std::string message) : 
+      WinSparkleError(message, UPDATE_FILE_ALREADY_SET_ERROR)
+      {}
+};
+
+class UpdateUnableToSaveFileError : public WinSparkleError
+{
+public:
+    UpdateUnableToSaveFileError(std::string message) : 
+      WinSparkleError(message, UPDATE_UNABLE_TO_SAVE_FILE_ERROR)
+      {}
+};
+
+class UpdateFileNotSetError : public WinSparkleError
+{
+public:
+    UpdateFileNotSetError(std::string message) : 
+      WinSparkleError(message, UPDATE_FILE_NOT_SET_ERROR)
+      {}
 };
 
 /**

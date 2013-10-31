@@ -304,6 +304,76 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui();
 
+/*--------------------------------------------------------------------------*
+                            Silent Update Functions
+                        Don't want to use WinSparkles UI?
+                    Use these functions and implement UI yourself.
+ *--------------------------------------------------------------------------*/
+
+/**
+    Initialize WinSparkle in SilentMode. Using silent mode the host application 
+    can drive the update on its own and not rely upon WinSparkle to do it for it.
+
+    Note that cleanup will have to be called when shutting down host, just as when doing
+    UI updates.
+
+    @param	checkCallback	A callback function of type void that takes two integers.
+                            When the callback function gets called the first 
+                            integer argument will be 1 if an update is available,
+                            0 otherwise.
+                            The second parameter will contain an errorCode and will
+                            be zero if no errors occured.
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_init_silent(void (*checkCallback)(int, int), 
+                                                        void (*dlCallback)(int));
+
+/**
+    Perform a silent update check. Requires WinSparkle to have been initialized 
+    in silent mode with win_sparkle_init_silent.
+
+    When WinSparkle has determined whether an update is availbable or it has
+    encountered an error, it will call the callback function specified in the
+    initialization with the corresponding value. An error code of 0 will
+    signal that no errors occured.
+
+    This function returns immediately.
+    The return value is an error code indicating wether the update check
+    process was successfully started. If the function returns 0 then no
+    errors occured while starting the update checker thread.
+    Note that this does not mean that the updatecheck was successful as
+    errors can still occur while checking for updates.
+*/
+WIN_SPARKLE_API int __cdecl win_sparkle_check_update_silent();
+
+/**
+    Download an update in silent mode. Requires WinSparkle to have been 
+    initialized in silent mode with win_sparkle_init_silent.
+    Can only be called after an update has been found and the callback 
+    called by win_sparkle_check_update_silent has confirmed that.
+    
+    When an update has been downloaded or an error has occured the 
+    updateCallback set by win_sparkle_init_silent will be called with 
+    the error code as parameter. The parameter will be zero if an update
+    was successfully downloaded.
+
+    Returns immediately. The return value is an error code indicating 
+    whether the download process was successfully started. If the
+    function returns 0 then no errors occured while starting the download.
+    Note that this does not mean that the download was successful as 
+    error can still occur in the downloading process.
+*/
+WIN_SPARKLE_API int __cdecl win_sparkle_download_update_silent();
+
+/**
+    Run the installer downloaded by win_sparkle_download_update_silent()
+    Can only be called after the callback called by 
+    win_sparkle_download_update_silent has been called with error code 0.
+
+    @return	0 if successful non-zero error code otherwise.
+*/
+WIN_SPARKLE_API int __cdecl win_sparkle_run_installer();
+
+
 //@}
 
 #ifdef __cplusplus

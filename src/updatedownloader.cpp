@@ -34,6 +34,7 @@
 #include <sstream>
 #include <rpc.h>
 #include <time.h>
+#include <string>
 
 namespace winsparkle
 {
@@ -80,10 +81,11 @@ std::string CreateUniqueTempDirectory()
 
 struct UpdateDownloadSink : public IDownloadSink
 {
-    UpdateDownloadSink(Thread& thread, const std::string& dir)
+    UpdateDownloadSink(UpdateDownloader& thread, const std::string& dir, bool isSilent=false)
         : m_thread(thread),
           m_dir(dir), m_path(""), m_file(NULL),
-          m_downloaded(0), m_total(0), m_lastUpdate(-1)
+          m_downloaded(0), m_total(0), m_lastUpdate(-1),
+          m_isSilent(isSilent)
     {}
 
     ~UpdateDownloadSink() { Close(); }
@@ -104,32 +106,35 @@ struct UpdateDownloadSink : public IDownloadSink
     virtual void SetFilename(const std::string& filename)
     {
         if ( m_file )
-            throw std::runtime_error("Update file already set");
+            throw UpdateFileAlreadySetError("Update file already set");
 
         m_path = m_dir + "\\" + filename;
         m_file = fopen(m_path.c_str(), "wb");
         if ( !m_file )
-            throw std::runtime_error("Cannot save update file");
+            throw UpdateUnableToSaveFileError("Cannot save update file");
     }
 
     virtual void Add(const void *data, size_t len)
     {
         if ( !m_file )
-            throw std::runtime_error("Filename is not net");
+            throw UpdateFileAlreadySetError("Filename is not set");
 
         m_thread.CheckShouldTerminate();
 
         if ( fwrite(data, len, 1, m_file) != 1 )
-            throw std::runtime_error("Cannot save update file");
+            throw UpdateUnableToSaveFileError("Cannot save update file");
         m_downloaded += len;
 
-        // only update at most 10 times/sec so that we don't flood the UI:
-        clock_t now = clock();
-        if ( now == -1 || m_downloaded == m_total ||
-             ((double(now - m_lastUpdate) / CLOCKS_PER_SEC) >= 0.1) )
+        if(!m_isSilent)
         {
-          UI::NotifyDownloadProgress(m_downloaded, m_total);
-          m_lastUpdate = now;
+            // only update at most 10 times/sec so that we don't flood the UI:
+            clock_t now = clock();
+            if ( now == -1 || m_downloaded == m_total ||
+                 ((double(now - m_lastUpdate) / CLOCKS_PER_SEC) >= 0.1) )
+            {
+                UI::NotifyDownloadProgress(m_downloaded, m_total);
+                m_lastUpdate = now;
+            }
         }
     }
 
@@ -139,6 +144,7 @@ struct UpdateDownloadSink : public IDownloadSink
     std::string m_dir;
     std::string m_path;
     clock_t m_lastUpdate;
+    bool m_isSilent;
 };
 
 } // anonymous namespace
@@ -148,9 +154,9 @@ struct UpdateDownloadSink : public IDownloadSink
                             updater initialization
  *--------------------------------------------------------------------------*/
 
-UpdateDownloader::UpdateDownloader(const Appcast& appcast)
+UpdateDownloader::UpdateDownloader(const Appcast& appcast, bool isSilent)
     : Thread("WinSparkle updater"),
-      m_appcast(appcast)
+      m_appcast(appcast), m_isSilent(isSilent)
 {
 }
 
@@ -169,14 +175,19 @@ void UpdateDownloader::Run()
       const std::string tmpdir = CreateUniqueTempDirectory();
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
 
-      UpdateDownloadSink sink(*this, tmpdir);
+      UpdateDownloadSink sink(*this, tmpdir, m_isSilent);
       DownloadFile(m_appcast.DownloadURL, &sink);
       sink.Close();
-      UI::NotifyUpdateDownloaded(sink.GetFilePath());
+      UpdateDownloaded(sink.GetFilePath());
+    }
+    catch(WinSparkleError& e)
+    {
+        UpdateError(e.ErrorCode());
+        throw;
     }
     catch ( ... )
     {
-        UI::NotifyUpdateError();
+        UpdateError(UNKNOWN_ERROR);
         throw;
     }
 }
@@ -209,6 +220,32 @@ void UpdateDownloader::CleanLeftovers()
         Settings::DeleteConfigValue("UpdateTempDir");
     }
     // else: try another time, this is just a "soft" error
+}
+
+void UIUpdateDownloader::UpdateDownloaded(std::string filePath)
+{
+      UI::NotifyUpdateDownloaded(filePath);
+}
+
+void UIUpdateDownloader::UpdateError(int errorCode)
+{
+    UI::NotifyUpdateError();
+}
+
+void SilentUpdateDownloader::UpdateDownloaded(std::string filePath)
+{
+    m_filePath = filePath;
+    m_downloadedCallback(SUCCESS_ERROR);
+}
+
+void SilentUpdateDownloader::UpdateError(int errorCode)
+{
+    m_downloadedCallback(errorCode);
+}
+
+std::string SilentUpdateDownloader::GetFilePath()
+{
+    return m_filePath;
 }
 
 } // namespace winsparkle
