@@ -44,7 +44,7 @@
 #include <wx/filename.h>
 #include <wx/gauge.h>
 #include <wx/statbmp.h>
-#include <wx/stattext.h>
+
 #include <wx/timer.h>
 #include <wx/settings.h>
 #include <wx/msw/ole/activex.h>
@@ -58,8 +58,19 @@
 #error "wxWidgets >= 2.9 is required to compile this code"
 #endif
 
+#if defined(_)
+#undef _
+#endif
+#define _(s)          UI::LocalizedString((s))
+
+
 namespace winsparkle
 {
+
+CriticalSection UI::ms_csVars;
+
+win_sparkle_localized_string_callback_t     UI::ms_cbLocalizedString = NULL;
+
 
 /*--------------------------------------------------------------------------*
                                   helpers
@@ -1255,6 +1266,28 @@ void UI::AskForPermission()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
+}
+
+const wxString UI::LocalizedString( const char *str )
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbLocalizedString ) {
+            str = (*ms_cbLocalizedString)(str);
+		}
+		else
+		{
+#if wxUSE_INTL
+#if ! defined(WXINTL_NO_GETTEXT_MACRO)
+			return wxGetTranslation(str);
+#endif
+#endif
+ 		}
+    }
+
+    // default implementations:
+
+    return wxString::FromUTF8(str);
 }
 
 } // namespace winsparkle

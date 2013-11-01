@@ -306,6 +306,32 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui();
 
 //@}
 
+/*--------------------------------------------------------------------------*
+                           Localization Callback
+ *--------------------------------------------------------------------------*/
+
+/**
+    @name Localize WinSparkle UI strings via an application callback
+ */
+//@{
+
+/// Callback type for win_sparkle_localized_string_callback()
+typedef const char* (__cdecl *win_sparkle_localized_string_callback_t)( const char *keyStr );
+
+/**
+	Set callback for localizing WinSparkle UI strings
+
+    This callback will be called to ask the host to localize a string required for display in the WinSparkle UI.
+	The host should return a localized string or the string passed in if a translation is not available.
+	The strings required by WinSparkle are found in ui.cpp. Search for use of the __() macro to identify these strings.
+
+	Note: If this callback is set, it will override the standard wx localization mechanism.
+*/
+WIN_SPARKLE_API void __cdecl set_win_sparkle_localized_string_callback(win_sparkle_localized_string_callback_t callback);
+
+//@}
+
+
 #ifdef __cplusplus
 }
 #endif

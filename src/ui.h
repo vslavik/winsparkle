@@ -26,8 +26,10 @@
 #ifndef _ui_h_
 #define _ui_h_
 
+#include "winsparkle.h"
 #include "threads.h"
 #include "appcast.h"
+#include <wx/stattext.h>
 
 namespace winsparkle
 {
@@ -105,6 +107,15 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
+	    /// Set the win_sparkle_localized_string_callback_t function
+    static void SetLocalizedStringCallback(win_sparkle_localized_string_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbLocalizedString = callback;
+    }
+
+	static const wxString LocalizedString( const char *str );
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
@@ -113,6 +124,11 @@ private:
     UI();
 
     static HINSTANCE ms_hInstance;
+ 
+	// guards the variables below:
+    static CriticalSection ms_csVars;
+
+    static win_sparkle_localized_string_callback_t     ms_cbLocalizedString;
 
     friend class UIThreadAccess;
 };

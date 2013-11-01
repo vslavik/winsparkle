@@ -252,5 +252,17 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+/*--------------------------------------------------------------------------*
+                           Localization Callback
+ *--------------------------------------------------------------------------*/
+
+WIN_SPARKLE_API void __cdecl set_win_sparkle_localized_string_callback(win_sparkle_localized_string_callback_t callback)
+{
+	try
+    {
+        UI::SetLocalizedStringCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
 
 } // extern "C"
