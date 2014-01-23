@@ -52,6 +52,9 @@ struct Appcast
     /// Description of the update
     std::string Description;
 
+	// Operating system
+	std::string Os;
+
     /**
         Initializes the struct with data from XML appcast feed.
 
