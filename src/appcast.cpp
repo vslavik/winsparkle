@@ -27,6 +27,8 @@
 #include "error.h"
 
 #include <expat.h>
+#include <vector>
+#include <algorithm>
 
 namespace winsparkle
 {
@@ -54,25 +56,25 @@ namespace
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
-
+#define ATTR_OS         NS_SPARKLE_NAME("os")
+#define OS_MARKER       "windows"
 
 // context data for the parser
 struct ContextData
 {
-    ContextData(Appcast& a, XML_Parser& p)
-        : appcast(a),
-          parser(p),
+    ContextData(XML_Parser& p)
+        : parser(p),
           in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0)
     {}
-
-    // appcast we're parsing into
-    Appcast& appcast;
 
     // the parser we're using
     XML_Parser& parser;
 
     // is inside <channel>, <item> or <sparkle:releaseNotesLink>, <title>, or <description> respectively?
     int in_channel, in_item, in_relnotes, in_title, in_description;
+
+    // parsed <item>s
+    std::vector<Appcast> items;
 };
 
 
@@ -87,6 +89,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     else if ( ctxt.in_channel && strcmp(name, NODE_ITEM) == 0 )
     {
         ctxt.in_item++;
+        Appcast item;
+        ctxt.items.push_back(item);
     }
     else if ( ctxt.in_item )
     {
@@ -104,17 +108,20 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0 )
         {
+            const int size = ctxt.items.size();
             for ( int i = 0; attrs[i]; i += 2 )
             {
                 const char *name = attrs[i];
                 const char *value = attrs[i+1];
 
                 if ( strcmp(name, ATTR_URL) == 0 )
-                    ctxt.appcast.DownloadURL = value;
+                    ctxt.items[size-1].DownloadURL = value;
                 else if ( strcmp(name, ATTR_VERSION) == 0 )
-                    ctxt.appcast.Version = value;
+                    ctxt.items[size-1].Version = value;
                 else if ( strcmp(name, ATTR_SHORTVERSION) == 0 )
-                    ctxt.appcast.ShortVersionString = value;
+                    ctxt.items[size-1].ShortVersionString = value;
+                else if ( strcmp(name, ATTR_OS) == 0 )
+                    ctxt.items[size-1].Os = value;
             }
         }
     }
@@ -139,13 +146,18 @@ void XMLCALL OnEndElement(void *data, const char *name)
     }
     else if ( ctxt.in_channel && strcmp(name, NODE_ITEM) == 0 )
     {
-        // One <item> in the channel is enough to get the information we
-        // need, stop parsing now that we processed it.
-        XML_StopParser(ctxt.parser, XML_TRUE);
+        ctxt.in_item--;
+        if (ctxt.items[ctxt.items.size()-1].Os == OS_MARKER) {
+            // we've found os-specific <item>, no need to continue parsing
+            XML_StopParser(ctxt.parser, XML_TRUE);
+        }
     }
     else if ( strcmp(name, NODE_CHANNEL) == 0 )
     {
         ctxt.in_channel--;
+        // we've reached the end of <channel> element,
+        // so we stop parsing
+        XML_StopParser(ctxt.parser, XML_TRUE);
     }
 }
 
@@ -153,13 +165,19 @@ void XMLCALL OnEndElement(void *data, const char *name)
 void XMLCALL OnText(void *data, const char *s, int len)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
+    const int size = ctxt.items.size();
 
     if ( ctxt.in_relnotes )
-        ctxt.appcast.ReleaseNotesURL.append(s, len);
+        ctxt.items[size-1].ReleaseNotesURL.append(s, len);
     else if ( ctxt.in_title )
-        ctxt.appcast.Title.append(s, len);
+        ctxt.items[size-1].Title.append(s, len);
     else if ( ctxt.in_description )
-        ctxt.appcast.Description.append(s, len);
+        ctxt.items[size-1].Description.append(s, len);
+}
+
+bool is_windows_item(const Appcast &item)
+{
+    return item.Os == OS_MARKER;
 }
 
 } // anonymous namespace
@@ -175,7 +193,7 @@ void Appcast::Load(const std::string& xml)
     if ( !p )
         throw std::runtime_error("Failed to create XML parser.");
 
-    ContextData ctxt(*this, p);
+    ContextData ctxt(p);
 
     XML_SetUserData(p, &ctxt);
     XML_SetElementHandler(p, OnStartElement, OnEndElement);
@@ -192,6 +210,13 @@ void Appcast::Load(const std::string& xml)
     }
 
     XML_ParserFree(p);
+
+    // Search for first <item> which has "sparkle:os=windows" attribute.
+    // If none, use the first item.
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_item);
+    if (it == ctxt.items.end())
+        it = ctxt.items.begin();
+    *this = *it;
 }
 
 } // namespace winsparkle
