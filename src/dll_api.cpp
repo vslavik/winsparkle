@@ -219,6 +219,11 @@ WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time()
     return DEFAULT_LAST_CHECK_TIME;
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_skip_this_version(const char* version)
+{
+    Settings::WriteConfigValue("SkipThisVersion", version);
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
 {
     try
