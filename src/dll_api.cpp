@@ -204,6 +204,26 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval()
     return DEFAULT_CHECK_INTERVAL;
 }
 
+WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time()
+{
+    static const time_t DEFAULT_LAST_CHECK_TIME = -1;
+
+    try
+    {
+        time_t last_check;
+        Settings::ReadConfigValue("LastCheckTime", last_check, DEFAULT_LAST_CHECK_TIME);
+        return last_check;
+    }
+    CATCH_ALL_EXCEPTIONS
+
+    return DEFAULT_LAST_CHECK_TIME;
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_skip_this_version(const char* version)
+{
+    Settings::WriteConfigValue("SkipThisVersion", version);
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
 {
     try

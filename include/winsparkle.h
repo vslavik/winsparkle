@@ -213,6 +213,23 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
  */
 WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 
+/**
+    Gets the time for the last update check.
+
+    Default value is -1, indicating that the update check has never run.
+
+    @since 0.4
+*/
+WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time();
+
+/**
+    Set the version to skip.
+
+    Set the version to an empty string to clear value.
+
+    @since 0.4
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_skip_this_version(const char* version);
 
 /// Callback type for win_sparkle_can_shutdown_callback()
 typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
