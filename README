@@ -7,8 +7,9 @@ applications. It is heavily inspired by the Sparkle framework for OS X
 written by Andy Matuschak and others, to the point of sharing the same 
 updates format (appcasts) and having very similar user interface.
 
-See http://winsparkle.org for more information about WinSparkle and
-documentation on how to use it.
+See http://winsparkle.org for more information about WinSparkle.
+
+Documentation: https://github.com/vslavik/winsparkle/wiki
 
 
  Using prebuilt binaries
