@@ -232,8 +232,7 @@ void UpdateChecker::Run()
         StringDownloadSink appcast_xml;
         DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
 
-        Appcast appcast;
-        appcast.Load(appcast_xml.data);
+        Appcast appcast = Appcast::Load(appcast_xml.data);
 
         Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
@@ -241,7 +240,7 @@ void UpdateChecker::Run()
                 WideToAnsi(Settings::GetAppBuildVersion());
 
         // Check if our version is out of date.
-        if ( CompareVersions(currentVersion, appcast.Version) >= 0 )
+        if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
             UI::NotifyNoUpdates();

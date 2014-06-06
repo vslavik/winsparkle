@@ -187,7 +187,7 @@ bool is_windows_item(const Appcast &item)
                                Appcast class
  *--------------------------------------------------------------------------*/
 
-void Appcast::Load(const std::string& xml)
+Appcast Appcast::Load(const std::string& xml)
 {
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
@@ -211,12 +211,16 @@ void Appcast::Load(const std::string& xml)
 
     XML_ParserFree(p);
 
+    if (ctxt.items.empty())
+        return Appcast(); // invalid
+
     // Search for first <item> which has "sparkle:os=windows" attribute.
     // If none, use the first item.
     std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_item);
-    if (it == ctxt.items.end())
-        it = ctxt.items.begin();
-    *this = *it;
+    if (it != ctxt.items.end())
+        return *it;
+    else
+        return ctxt.items.front();
 }
 
 } // namespace winsparkle
