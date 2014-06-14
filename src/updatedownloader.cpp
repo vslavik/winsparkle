@@ -28,7 +28,10 @@
 #include "settings.h"
 #include "ui.h"
 #include "error.h"
+#include "appcontroller.h"
 
+#include <wx/setup.h>
+#include <wx/app.h>
 #include <wx/string.h>
 
 #include <sstream>
@@ -141,6 +144,34 @@ struct UpdateDownloadSink : public IDownloadSink
     clock_t m_lastUpdate;
 };
 
+struct FullIntegrationDownloadSink : public UpdateDownloadSink
+{
+	FullIntegrationDownloadSink(Thread& thread, const std::string& dir)
+        : UpdateDownloadSink(thread, dir)
+    {}
+
+	virtual void Add(const void *data, size_t len)
+    {
+        if ( !m_file )
+            throw std::runtime_error("Filename is not net");
+
+        m_thread.CheckShouldTerminate();
+
+        if ( fwrite(data, len, 1, m_file) != 1 )
+            throw std::runtime_error("Cannot save update file");
+        m_downloaded += len;
+
+        // only update at most 10 times/sec so that we don't flood the callback
+        clock_t now = clock();
+        if ( now == -1 || m_downloaded == m_total ||
+             ((double(now - m_lastUpdate) / CLOCKS_PER_SEC) >= 0.1) )
+        {
+			ApplicationController::ReportDownloadProgress(m_downloaded, m_total);
+          m_lastUpdate = now;
+        }
+    }
+};
+
 } // anonymous namespace
 
 
@@ -178,6 +209,48 @@ void UpdateDownloader::Run()
     {
         UI::NotifyUpdateError();
         throw;
+    }
+}
+
+
+/*--------------------------------------------------------------------------*
+                              full integration downloading
+ *--------------------------------------------------------------------------*/
+
+void FullIntegrationDownloader::Run()
+{
+    // no initialization to do, so signal readiness immediately
+    SignalReady();
+
+    try
+    {
+      const std::string tmpdir = CreateUniqueTempDirectory();
+      Settings::WriteConfigValue("UpdateTempDir", tmpdir);
+
+      FullIntegrationDownloadSink sink(*this, tmpdir);
+      DownloadFile(m_appcast.DownloadURL, &sink);
+      sink.Close();
+	  InstallUpdate(sink.GetFilePath());
+    }
+	CATCH_ALL_EXCEPTIONS
+}
+
+void FullIntegrationDownloader::InstallUpdate(const std::string& updateFile)
+{
+	if( !ApplicationController::IsReadyToShutdown() )
+    {
+        return;
+    }
+
+	//Launching the installer...
+
+    if ( !wxLaunchDefaultApplication(updateFile))
+    {
+		return;
+    }
+    else
+    {
+        ApplicationController::RequestShutdown();
     }
 }
 

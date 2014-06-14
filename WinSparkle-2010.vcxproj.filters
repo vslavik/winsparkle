@@ -79,14 +79,14 @@
     <ClCompile Include="src\threads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\updatechecker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\updatedownloader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
