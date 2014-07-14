@@ -328,11 +328,12 @@ void FullIntegrationUpdateChecker::Run()
         // Check if our version is out of date.
         if ( appcast.IsValid())
         {
-            //report the results to the callback
-			ApplicationController::CheckUpdateResult(CompareVersions(currentVersion, appcast.Version));
+        	//Save this for later incase we want to download and install the update
+		ApplicationController::m_appcast = appcast;
+            	//report the results to the callback
+		ApplicationController::CheckUpdateResult(CompareVersions(currentVersion, appcast.Version));
 
-			//Save this for later incase we want to download and install the update
-			ApplicationController::m_appcast = appcast;
+			
         }
     }
     CATCH_ALL_EXCEPTIONS
