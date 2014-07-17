@@ -143,9 +143,9 @@ wxIcon GetApplicationIcon()
 
 struct EventPayload
 {
-    Appcast     appcast;
-    size_t      sizeDownloaded, sizeTotal;
-    std::string updateFile;
+    Appcast      appcast;
+    size_t       sizeDownloaded, sizeTotal;
+    std::wstring updateFile;
 };
 
 
@@ -283,7 +283,7 @@ public:
     // update download progress
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
-    void StateUpdateDownloaded(const std::string& updateFile);
+    void StateUpdateDownloaded(const std::wstring& updateFile);
 
 private:
     void EnablePulsing(bool enable);
@@ -713,7 +713,7 @@ void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
 }
 
 
-void UpdateDialog::StateUpdateDownloaded(const std::string& updateFile)
+void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile)
 {
     m_downloader->Join();
     delete m_downloader;
@@ -1221,7 +1221,7 @@ void UI::NotifyDownloadProgress(size_t downloaded, size_t total)
 
 
 /*static*/
-void UI::NotifyUpdateDownloaded(const std::string& updateFile)
+void UI::NotifyUpdateDownloaded(const std::wstring& updateFile)
 {
     UIThreadAccess uit;
     EventPayload payload;

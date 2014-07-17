@@ -178,7 +178,7 @@ std::string Settings::GetDefaultRegistryPath()
 namespace
 {
 
-void RegistryWrite(const char *name, const char *value)
+void RegistryWrite(const char *name, const wchar_t *value)
 {
     const std::string subkey = Settings::GetRegistryPath();
 
@@ -198,14 +198,14 @@ void RegistryWrite(const char *name, const char *value)
     if ( result != ERROR_SUCCESS )
         throw Win32Exception("Cannot write settings to registry");
 
-    result = RegSetValueExA
+    result = RegSetValueEx
              (
                  key,
-                 name,
+                 AnsiToWide(name).c_str(),
                  0,
                  REG_SZ,
                  (const BYTE*)value,
-                 strlen(value) + 1
+                 (wcslen(value) + 1) * sizeof(wchar_t)
              );
 
     RegCloseKey(key);
@@ -240,7 +240,7 @@ void RegistryDelete(const char *name)
 }
 
 
-int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
+int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
 {
     const std::string subkey = Settings::GetRegistryPath();
 
@@ -262,10 +262,10 @@ int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
 
     DWORD buflen = len;
     DWORD type;
-    result = RegQueryValueExA
+    result = RegQueryValueEx
              (
                  key,
-                 name,
+                 AnsiToWide(name).c_str(),
                  0,
                  &type,
                  (BYTE*)buf,
@@ -292,7 +292,7 @@ int DoRegistryRead(HKEY root, const char *name, char *buf, size_t len)
 }
 
 
-int RegistryRead(const char *name, char *buf, size_t len)
+int RegistryRead(const char *name, wchar_t *buf, size_t len)
 {
     // Try reading from HKCU first. If that fails, look at HKLM too, in case
     // some settings have globally set values (either by the installer or the
@@ -313,7 +313,7 @@ CriticalSection g_csConfigValues;
 } // anonymous namespace
 
 
-void Settings::DoWriteConfigValue(const char *name, const char *value)
+void Settings::DoWriteConfigValue(const char *name, const wchar_t *value)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
@@ -321,15 +321,15 @@ void Settings::DoWriteConfigValue(const char *name, const char *value)
 }
 
 
-std::string Settings::DoReadConfigValue(const char *name)
+std::wstring Settings::DoReadConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    char buf[512];
+    wchar_t buf[512];
     if ( RegistryRead(name, buf, sizeof(buf)) )
         return buf;
     else
-        return std::string();
+        return std::wstring();
 }
 
 void Settings::DeleteConfigValue(const char *name)

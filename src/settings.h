@@ -27,6 +27,7 @@
 #define _settings_h_
 
 #include "threads.h"
+#include "utils.h"
 
 #include <string>
 #include <sstream>
@@ -176,9 +177,19 @@ public:
     template<typename T>
     static void WriteConfigValue(const char *name, const T& value)
     {
-        std::ostringstream s;
+        std::wostringstream s;
         s << value;
         DoWriteConfigValue(name, s.str().c_str());
+    }
+
+    static void WriteConfigValue(const char *name, const std::string& value)
+    {
+        DoWriteConfigValue(name, AnsiToWide(value).c_str());
+    }
+
+    static void WriteConfigValue(const char *name, const std::wstring& value)
+    {
+        DoWriteConfigValue(name, value.c_str());
     }
 
     // Reads a value from registry. Returns true if it was present,
@@ -186,12 +197,27 @@ public:
     template<typename T>
     static bool ReadConfigValue(const char *name, T& value)
     {
-        const std::string v = DoReadConfigValue(name);
+        const std::wstring v = DoReadConfigValue(name);
         if ( v.empty() )
             return false;
-        std::istringstream s(v);
+        std::wistringstream s(v);
         s >> value;
         return !s.fail();
+    }
+
+    static bool ReadConfigValue(const char *name, std::string& value)
+    {
+        const std::wstring v = DoReadConfigValue(name);
+        if (v.empty())
+            return false;
+        value = WideToAnsi(v);
+        return true;
+    }
+
+    static bool ReadConfigValue(const char *name, std::wstring& value)
+    {
+        value = DoReadConfigValue(name);
+        return !value.empty();
     }
 
     // Reads a value from registry, substituting default value if not present.
@@ -225,8 +251,8 @@ private:
 
     static std::string GetDefaultRegistryPath();
 
-    static void DoWriteConfigValue(const char *name, const char *value);
-    static std::string DoReadConfigValue(const char *name);
+    static void DoWriteConfigValue(const char *name, const wchar_t *value);
+    static std::wstring DoReadConfigValue(const char *name);
 
 private:
     // guards the variables below:

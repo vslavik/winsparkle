@@ -45,7 +45,7 @@ namespace winsparkle
 namespace
 {
 
-std::string CreateUniqueTempDirectory()
+std::wstring CreateUniqueTempDirectory()
 {
     // We need to put downloaded updates into a directory of their own, because
     // if we put it in $TMP, some DLLs could be there and interfere with the
@@ -53,25 +53,23 @@ std::string CreateUniqueTempDirectory()
     //
     // This code creates a new randomized directory name and tries to create it;
     // this process is repeated if the directory already exists.
-    char tmpdir[MAX_PATH+1];
-    if ( GetTempPathA(sizeof(tmpdir), tmpdir) == 0 )
+    wchar_t tmpdir[MAX_PATH+1];
+    if ( GetTempPath(MAX_PATH+1, tmpdir) == 0 )
         throw Win32Exception("Cannot create temporary directory");
 
     for ( ;; )
     {
-        std::ostringstream sdir;
-        sdir << tmpdir << "Update-";
+        std::wstring dir(tmpdir);
+        dir += L"Update-";
 
         UUID uuid;
         UuidCreate(&uuid);
-        RPC_CSTR uuidStr;
-        UuidToStringA(&uuid, &uuidStr);
-        sdir << uuidStr;
-        RpcStringFreeA(&uuidStr);
+        RPC_WSTR uuidStr;
+        RPC_STATUS status = UuidToString(&uuid, &uuidStr);
+        dir += reinterpret_cast<wchar_t*>(uuidStr);
+        RpcStringFree(&uuidStr);
 
-        const std::string dir(sdir.str());
-
-        if ( CreateDirectoryA(dir.c_str(), NULL) )
+        if ( CreateDirectory(dir.c_str(), NULL) )
             return dir;
         else if ( GetLastError() != ERROR_ALREADY_EXISTS )
             throw Win32Exception("Cannot create temporary directory");
@@ -80,9 +78,9 @@ std::string CreateUniqueTempDirectory()
 
 struct UpdateDownloadSink : public IDownloadSink
 {
-    UpdateDownloadSink(Thread& thread, const std::string& dir)
+    UpdateDownloadSink(Thread& thread, const std::wstring& dir)
         : m_thread(thread),
-          m_dir(dir), m_path(""), m_file(NULL),
+          m_dir(dir), m_file(NULL),
           m_downloaded(0), m_total(0), m_lastUpdate(-1)
     {}
 
@@ -97,17 +95,17 @@ struct UpdateDownloadSink : public IDownloadSink
         }
     }
 
-    std::string GetFilePath(void) { return m_path; }
+    std::wstring GetFilePath(void) { return m_path; }
 
     virtual void SetLength(size_t l) { m_total = l; }
 
-    virtual void SetFilename(const std::string& filename)
+    virtual void SetFilename(const std::wstring& filename)
     {
         if ( m_file )
             throw std::runtime_error("Update file already set");
 
-        m_path = m_dir + "\\" + filename;
-        m_file = fopen(m_path.c_str(), "wb");
+        m_path = m_dir + L"\\" + filename;
+        m_file = _wfopen(m_path.c_str(), L"wb");
         if ( !m_file )
             throw std::runtime_error("Cannot save update file");
     }
@@ -136,8 +134,8 @@ struct UpdateDownloadSink : public IDownloadSink
     Thread& m_thread;
     size_t m_downloaded, m_total;
     FILE *m_file;
-    std::string m_dir;
-    std::string m_path;
+    std::wstring m_dir;
+    std::wstring m_path;
     clock_t m_lastUpdate;
 };
 
@@ -166,7 +164,7 @@ void UpdateDownloader::Run()
 
     try
     {
-      const std::string tmpdir = CreateUniqueTempDirectory();
+      const std::wstring tmpdir = CreateUniqueTempDirectory();
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
 
       UpdateDownloadSink sink(*this, tmpdir);
