@@ -188,13 +188,13 @@ void UpdateDownloader::CleanLeftovers()
 {
     // Note: this is called at startup. Do not use wxWidgets from this code!
 
-    std::string tmpdir;
+    std::wstring tmpdir;
     if ( !Settings::ReadConfigValue("UpdateTempDir", tmpdir) )
         return;
 
     tmpdir.append(1, '\0'); // double NULL-terminate for SHFileOperation
 
-    SHFILEOPSTRUCTA fos = {0};
+    SHFILEOPSTRUCT fos = {0};
     fos.wFunc = FO_DELETE;
     fos.pFrom = tmpdir.c_str();
     fos.fFlags = FOF_NO_UI | // Vista+-only
@@ -202,7 +202,7 @@ void UpdateDownloader::CleanLeftovers()
                  FOF_NOCONFIRMATION |
                  FOF_NOERRORUI;
 
-    if ( SHFileOperationA(&fos) == 0 )
+    if ( SHFileOperation(&fos) == 0 )
     {
         Settings::DeleteConfigValue("UpdateTempDir");
     }
