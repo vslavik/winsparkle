@@ -805,19 +805,41 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
             return;
         }
 
-        // Creates a new one-dimensional array
+        // If the code below looks crazy, that's because it is. Apparently,
+        // the document may be in some uninitialized state first time around,
+        // so we need to write an empty string into it first and only then the
+        // real content. (At least that's what wxWebView does...)
+        //
+        // See https://github.com/vslavik/winsparkle/issues/29
         SAFEARRAY *psaStrings = SafeArrayCreateVector(VT_VARIANT, 0, 1);
         if ( psaStrings != NULL )
         {
             VARIANT *param;
             SafeArrayAccessData(psaStrings, (LPVOID*)&param);
             param->vt = VT_BSTR;
-            param->bstrVal = wxBasicString(info.Description);
+            param->bstrVal = SysAllocString(OLESTR(""));
             SafeArrayUnaccessData(psaStrings);
 
             doc->write(psaStrings);
+            doc->close();
 
             SafeArrayDestroy(psaStrings);
+
+            psaStrings = SafeArrayCreateVector(VT_VARIANT, 0, 1);
+            if (psaStrings != NULL)
+            {
+                VARIANT *param;
+                SafeArrayAccessData(psaStrings, (LPVOID*) &param);
+                param->vt = VT_BSTR;
+                param->bstrVal = wxBasicString(info.Description);
+                SafeArrayUnaccessData(psaStrings);
+
+                doc->write(psaStrings);
+                doc->close();
+
+                SafeArrayDestroy(psaStrings);
+            }
+
             doc->Release();
         }
     }
