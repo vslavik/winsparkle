@@ -26,6 +26,12 @@ defines += _CRT_SECURE_NO_WARNINGS;
 vs2012.option.Configuration.PlatformToolset = v110_xp;
 vs2013.option.Configuration.PlatformToolset = v120_xp;
 
+// For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
+if ( $(arch) == x86 ) {
+    vs2012.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
+    vs2013.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
+}
+
 if ( $(config) == Release ) {
     vs2008.option.VCCLCompilerTool.Optimization = 1;
     vs2008.option.VCCLCompilerTool.FavorSizeOrSpeed = 2;
