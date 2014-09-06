@@ -14,21 +14,28 @@ binary_base  := WinSparkle-$(VERSION)
 sources_arch := $(sources_base).7z
 binary_arch  := $(binary_base).zip
 binary_files := \
-	AUTHORS COPYING NEWS README \
-	Release/WinSparkle.dll \
-	Release/WinSparkle.lib \
 	include/winsparkle.h \
 	include/winsparkle-version.h \
+	Release/WinSparkle.dll \
+	Release/WinSparkle.lib \
+	Release/WinSparkle.pdb \
+	x64/Release/WinSparkle.dll \
+	x64/Release/WinSparkle.lib \
+	x64/Release/WinSparkle.pdb \
+	AUTHORS COPYING NEWS README
 
 
-
-
-all: $(binary_arch) $(sources_arch)
+all: binary sources
+binary: $(binary_arch)
+sources: $(sources_arch)
 
 $(binary_arch): $(binary_files)
 	@rm -rf $(binary_base) $@
 	@mkdir $(binary_base)
-	cp -Ra $(binary_files) $(binary_base)
+	@mkdir -p $(binary_base)/include
+	@mkdir -p $(binary_base)/Release
+	@mkdir -p $(binary_base)/x64/Release
+	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
 	zip -9 -r  $@ $(binary_base)
 	@rm -rf $(binary_base) $(binary_base).tar
 
@@ -45,4 +52,4 @@ clean:
 	rm -f $(sources_arch)
 
 
-.PHONY: all clean
+.PHONY: all binary sources clean
