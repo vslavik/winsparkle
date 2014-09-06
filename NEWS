@@ -2,11 +2,15 @@
 Version 0.4
 -----------
 
+- Added API for gracefully shutting down the host app.
 - Added the ability to disable automatic checks.
 - Added the ability to change the update checks interval.
+- Added x64 support.
 - Added Visual Studio 201x project files.
 - Release notes included in appcast's <description> element are now recognized.
 - Added support for build numbers and shortVersionString.
+- Added support for sparkle:os="windows" attribute on appcast items.
+- Fixed appcasts over HTTPS.
 - Use application icon in the UI.
 - In-app downloads.
 
