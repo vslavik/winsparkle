@@ -34,6 +34,7 @@
 #include <sstream>
 #include <rpc.h>
 #include <time.h>
+#include <Shlobj.h>
 
 namespace winsparkle
 {
@@ -74,6 +75,15 @@ std::wstring CreateUniqueTempDirectory()
         else if ( GetLastError() != ERROR_ALREADY_EXISTS )
             throw Win32Exception("Cannot create temporary directory");
     }
+}
+
+std::wstring GetDownloadDirectory()
+{
+	PWSTR path;
+	if (!SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, 0, NULL, &path))) {
+        throw Win32Exception("Cannot get path to user's download directory");	
+	}
+	return std::wstring(path);
 }
 
 struct UpdateDownloadSink : public IDownloadSink
@@ -164,8 +174,12 @@ void UpdateDownloader::Run()
 
     try
     {
+	  /*  JCW - prefer to simply download to users download dir
+
       const std::wstring tmpdir = CreateUniqueTempDirectory();
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
+	  */
+      const std::wstring tmpdir = GetDownloadDirectory();
 
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink);

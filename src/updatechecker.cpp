@@ -276,18 +276,19 @@ bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
     }
 }
 
-
-/*--------------------------------------------------------------------------*
-                            ManualUpdateChecker
- *--------------------------------------------------------------------------*/
-
-int ManualUpdateChecker::GetAppcastDownloadFlags() const
+int UpdateChecker::GetAppcastDownloadFlags() const
 {
-    // Manual check should always connect to the server and bypass any caching.
+    // Bypass any caching.
     // This is good for finding updates that are too new to propagate through
     // caches yet.
     return Download_NoCached;
 }
+
+
+
+/*--------------------------------------------------------------------------*
+                            ManualUpdateChecker
+ *--------------------------------------------------------------------------*/
 
 bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
 {

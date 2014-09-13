@@ -388,7 +388,7 @@ UpdateDialog::UpdateDialog()
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Download update")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -555,7 +555,7 @@ void UpdateDialog::StateNoUpdateFound()
     {
         msg = wxString::Format
               (
-                  _("%s %s is currently the newest version available."),
+                  _("%s version %s is currently the newest version available."),
                   Settings::GetAppName(),
                   Settings::GetAppVersion()
               );
@@ -589,7 +589,7 @@ void UpdateDialog::StateUpdateError()
 
     m_heading->SetLabel(_("Update Error!"));
 
-    wxString msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+    wxString msg = _("An error occurred retrieving application update information.\n\nPossible causes:\n  * no internet connection\n  * the update installer is already running");
     SetMessage(msg);
 
     m_closeButton->SetLabel(_("Cancel"));
@@ -625,8 +625,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
             ver_new = info.Version;
         if ( ver_my == ver_new )
         {
-            ver_my = wxString::Format("%s (%s)", ver_my, Settings::GetAppBuildVersion());
-            ver_new = wxString::Format("%s (%s)", ver_new, info.Version);
+            ver_my = wxString::Format("%s, build %s", ver_my, Settings::GetAppBuildVersion());
+            ver_new = wxString::Format("%s, build %s", ver_new, info.Version);
         }
 
         m_heading->SetLabel(
@@ -636,7 +636,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         (
             wxString::Format
             (
-                _("%s %s is now available (you have %s). Would you like to download it now?"),
+                _("%s version %s is now available (you have version %s). Would you like to download it now?"),
                 appname, ver_new, ver_my
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
