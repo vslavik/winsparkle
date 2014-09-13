@@ -261,7 +261,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
     {
         // Run the check in background. Only show UI if updates
         // are available.
-        UpdateChecker *check = new ManualUpdateChecker();
+        UpdateChecker *check = new UpdateChecker();
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS
