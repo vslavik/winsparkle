@@ -237,6 +237,16 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_dialog_position(int x, int y)
+{
+    try
+    {
+        Settings::WriteConfigValue("DialogPositionX", x);
+        Settings::WriteConfigValue("DialogPositionY", y);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 /*--------------------------------------------------------------------------*
                               Manual usage
  *--------------------------------------------------------------------------*/

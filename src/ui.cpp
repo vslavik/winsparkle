@@ -159,7 +159,7 @@ struct EventPayload
 class WinSparkleDialog : public wxDialog
 {
 protected:
-    WinSparkleDialog();
+    WinSparkleDialog(const wxPoint& pos = wxDefaultPosition);
 
     void UpdateLayout();
     static void SetBoldFont(wxWindow *win);
@@ -176,9 +176,9 @@ protected:
 };
 
 
-WinSparkleDialog::WinSparkleDialog()
+WinSparkleDialog::WinSparkleDialog(const wxPoint& pos)
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
-               wxDefaultPosition, wxDefaultSize,
+               pos, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
     SetIcons(wxICON(UpdateAvailable));
@@ -268,7 +268,7 @@ const int ID_RUN_INSTALLER = wxNewId();
 class UpdateDialog : public WinSparkleDialog
 {
 public:
-    UpdateDialog();
+    UpdateDialog(const wxPoint& pos = wxDefaultPosition);
 
     // changes state into "checking for updates"
     void StateCheckingUpdates();
@@ -330,8 +330,8 @@ private:
 };
 
 
-UpdateDialog::UpdateDialog()
-    : m_timer(this),
+UpdateDialog::UpdateDialog(const wxPoint& pos /*= wxDefaultPosition*/)
+    : WinSparkleDialog(pos), m_timer(this),
       m_downloader(NULL)
 {
     m_heading = new wxStaticText(this, wxID_ANY, "");
@@ -855,11 +855,11 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 class AskPermissionDialog : public WinSparkleDialog
 {
 public:
-    AskPermissionDialog();
+    AskPermissionDialog(const wxPoint& pos = wxDefaultPosition);
 };
 
 
-AskPermissionDialog::AskPermissionDialog()
+AskPermissionDialog::AskPermissionDialog(const wxPoint& pos) : WinSparkleDialog(pos)
 {
     wxStaticText *heading =
             new wxStaticText(this, wxID_ANY,
@@ -1011,7 +1011,10 @@ void App::InitWindow()
 {
     if ( !m_win )
     {
-        m_win = new UpdateDialog();
+		wxPoint pos;
+		Settings::ReadConfigValue("DialogPositionX", pos.x, wxDefaultPosition.x);
+		Settings::ReadConfigValue("DialogPositionY", pos.y, wxDefaultPosition.y);
+        m_win = new UpdateDialog(pos);
         m_win->Bind(wxEVT_CLOSE_WINDOW, &App::OnWindowClose, this);
     }
 }
@@ -1094,7 +1097,10 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
 
 void App::OnAskForPermission(wxThreadEvent& event)
 {
-    AskPermissionDialog dlg;
+	wxPoint pos;
+	Settings::ReadConfigValue("DialogPositionX", pos.x, wxDefaultPosition.x);
+	Settings::ReadConfigValue("DialogPositionY", pos.y, wxDefaultPosition.y);
+    AskPermissionDialog dlg(pos);
     bool shouldCheck = (dlg.ShowModal() == wxID_OK);
 
     Settings::WriteConfigValue("CheckForUpdates", shouldCheck);

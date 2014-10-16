@@ -264,6 +264,15 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
 
+/**
+    Set the dialogs' position when they appear. If this function is not called wxDefaultPosition is used.
+
+    @since 0.5
+
+    @see win_sparkle_set_can_shutdown_callback()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_dialog_position(int x, int y);
+
 //@}
 
 
