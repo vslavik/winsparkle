@@ -723,7 +723,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile)
 
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Ready to install."));
+    SetMessage(_("Download complete"));
 
     m_progress->SetRange(1);
     m_progress->SetValue(1);
