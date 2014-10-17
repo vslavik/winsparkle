@@ -192,7 +192,9 @@
     <ClCompile Include="wxWidgets\src\common\hashmap.cpp" />
     <ClCompile Include="wxWidgets\src\common\iconbndl.cpp" />
     <ClCompile Include="wxWidgets\src\common\init.cpp" />
+    <ClCompile Include="wxWidgets\src\common\intl.cpp" />
     <ClCompile Include="wxWidgets\src\common\ipcbase.cpp" />
+    <ClCompile Include="wxWidgets\src\common\languageinfo.cpp" />
     <ClCompile Include="wxWidgets\src\common\layout.cpp" />
     <ClCompile Include="wxWidgets\src\common\list.cpp" />
     <ClCompile Include="wxWidgets\src\common\log.cpp" />
@@ -232,6 +234,7 @@
     <ClCompile Include="wxWidgets\src\common\timerimpl.cpp" />
     <ClCompile Include="wxWidgets\src\common\tokenzr.cpp" />
     <ClCompile Include="wxWidgets\src\common\toplvcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\translation.cpp" />
     <ClCompile Include="wxWidgets\src\common\unichar.cpp" />
     <ClCompile Include="wxWidgets\src\common\uri.cpp" />
     <ClCompile Include="wxWidgets\src\common\ustring.cpp" />
@@ -241,6 +244,7 @@
     <ClCompile Include="wxWidgets\src\common\windowid.cpp" />
     <ClCompile Include="wxWidgets\src\common\wrapsizer.cpp" />
     <ClCompile Include="wxWidgets\src\common\wxcrt.cpp" />
+    <ClCompile Include="wxWidgets\src\common\xlocale.cpp" />
     <ClCompile Include="wxWidgets\src\generic\msgdlgg.cpp" />
     <ClCompile Include="wxWidgets\src\generic\renderg.cpp" />
     <ClCompile Include="wxWidgets\src\generic\scrlwing.cpp" />

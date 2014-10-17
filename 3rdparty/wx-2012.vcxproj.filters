@@ -502,5 +502,17 @@
     <ClCompile Include="wxWidgets\src\msw\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\translation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\intl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\languageinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\xlocale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

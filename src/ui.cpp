@@ -388,7 +388,7 @@ UpdateDialog::UpdateDialog(const wxPoint& pos /*= wxDefaultPosition*/)
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Download update")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -946,6 +946,8 @@ public:
     // Sends a message with ID @a msg to the app.
     void SendMsg(int msg, EventPayload *data = NULL);
 
+	//Inits locale
+	virtual bool OnInit();
 private:
     void InitWindow();
     void ShowWindow();
@@ -962,6 +964,7 @@ private:
 
 private:
     UpdateDialog *m_win;
+	wxLocale m_locale;  // locale we'll be using
 };
 
 IMPLEMENT_APP_NO_MAIN(App)
@@ -1006,6 +1009,22 @@ void App::SendMsg(int msg, EventPayload *data)
     wxQueueEvent(this, event);
 }
 
+bool App::OnInit()
+{
+    if ( !wxApp::OnInit() )
+        return false;
+
+	std::string sLang;
+	if (Settings::ReadConfigValue("Language", sLang)) {
+		wxLanguage elang = wxLANGUAGE_DEFAULT;
+		if (sLang == std::string("de_DE"))
+			elang = wxLANGUAGE_GERMAN;
+		m_locale.Init(elang, wxLOCALE_DONT_LOAD_DEFAULT);
+		wxLocale::AddCatalogLookupPathPrefix(".");
+		m_locale.AddCatalog(std::string("WinSparkle_") + sLang);
+	}
+    return true;
+}
 
 void App::InitWindow()
 {

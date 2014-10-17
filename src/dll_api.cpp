@@ -31,6 +31,7 @@
 #include "ui.h"
 #include "updatechecker.h"
 #include "updatedownloader.h"
+#include <wx/stdpaths.h>
 
 #include <ctime>
 
@@ -243,6 +244,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_dialog_position(int x, int y)
     {
         Settings::WriteConfigValue("DialogPositionX", x);
         Settings::WriteConfigValue("DialogPositionY", y);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_locale(const char* lang)
+{
+    try
+    {
+		Settings::WriteConfigValue("Language", std::string(lang));
     }
     CATCH_ALL_EXCEPTIONS
 }
