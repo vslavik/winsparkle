@@ -264,6 +264,18 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
 
+/**
+	For localization. Sets the locale to lang. WinSparkle_xx_XX.mo of the correct language is expected to be in a 
+	folder bearing this language's name next to the executable. E.g. For German
+	WinSparkle_de_DE.mo must be located in de_DE folder.
+
+	@param[in] lang - Currently only supports "de_DE" for German. Default is English, no need to copy .mo files
+						for	English
+
+    @since 0.5
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_locale(const char* lang);
+
 //@}
 
 

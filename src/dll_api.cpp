@@ -237,6 +237,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_locale(const char* lang)
+{
+    try
+    {
+		Settings::WriteConfigValue("Language", std::string(lang));
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 /*--------------------------------------------------------------------------*
                               Manual usage
  *--------------------------------------------------------------------------*/

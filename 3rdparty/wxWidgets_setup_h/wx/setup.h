@@ -374,14 +374,14 @@
 #define wxUSE_STDPATHS      1
 
 // use wxTextBuffer class: required by wxTextFile
-#define wxUSE_TEXTBUFFER    0
+#define wxUSE_TEXTBUFFER    1
 
 // use wxTextFile class: requires wxFile and wxTextBuffer, required by
 // wxFileConfig
-#define wxUSE_TEXTFILE      0
+#define wxUSE_TEXTFILE      1
 
 // i18n support: _() macro, wxLocale class. Requires wxTextFile.
-#define wxUSE_INTL          0
+#define wxUSE_INTL          1
 
 // Provide wxFoo_l() functions similar to standard foo() functions but taking
 // an extra locale parameter.
@@ -396,7 +396,7 @@
 //
 // Recommended setting: 1 but may be disabled if you are writing programs
 // running only in C locale anyhow
-#define wxUSE_XLOCALE       0
+#define wxUSE_XLOCALE       1
 
 // Set wxUSE_DATETIME to 1 to compile the wxDateTime and related classes which
 // allow to manipulate dates, times and time intervals. wxDateTime replaces the
