@@ -431,7 +431,7 @@ UpdateDialog::UpdateDialog()
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Download update")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -766,7 +766,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile)
 
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Ready to install."));
+    SetMessage(_("Download complete"));
 
     m_progress->SetRange(1);
     m_progress->SetValue(1);
