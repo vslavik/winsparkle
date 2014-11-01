@@ -168,6 +168,17 @@ protected:
     // enable/disable resizing of the dialog
     void MakeResizable(bool resizable = true);
 
+	//This part is for centering the sparkle dialog on top of main app window
+public:
+	struct HandleData {
+		unsigned long process_id;
+		HWND best_handle;
+	};
+	static BOOL IsMainWindow(HWND handle);
+protected:
+	HWND FindMainWindow(unsigned long process_id);
+	wxPoint GetCenterPoint();
+
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
@@ -175,10 +186,42 @@ protected:
     static const int MESSAGE_AREA_WIDTH = 300;
 };
 
+BOOL WinSparkleDialog::IsMainWindow(HWND handle)
+{   
+    return GetWindow(handle, GW_OWNER) == (HWND)0 && IsWindowVisible(handle);
+}
+
+BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
+{
+    WinSparkleDialog::HandleData& data = *(WinSparkleDialog::HandleData*)lParam;
+    unsigned long process_id = 0;
+    GetWindowThreadProcessId(handle, &process_id);
+    if (data.process_id != process_id || !WinSparkleDialog::IsMainWindow(handle)) {
+        return TRUE;
+    }
+    data.best_handle = handle;
+    return FALSE;   
+}
+
+HWND WinSparkleDialog::FindMainWindow(unsigned long process_id)
+{
+    HandleData data;
+    data.process_id = process_id;
+    data.best_handle = 0;
+    EnumWindows(EnumWindowsCallback, (LPARAM)&data);
+    return data.best_handle;
+}
+
+wxPoint WinSparkleDialog::GetCenterPoint()
+{
+	RECT rect;
+	GetWindowRect(FindMainWindow(GetCurrentProcessId()), &rect);
+	return wxPoint(max(0, (rect.left + rect.right)/2 - 280), max(0, (rect.top + rect.bottom)/2 - 200));
+}
 
 WinSparkleDialog::WinSparkleDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
-               wxDefaultPosition, wxDefaultSize,
+               GetCenterPoint(), wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
     SetIcons(wxICON(UpdateAvailable));
