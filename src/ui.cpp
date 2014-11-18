@@ -38,6 +38,7 @@
 #include <wx/setup.h>
 
 #include <wx/app.h>
+#include <wx/dcclient.h>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -183,13 +184,9 @@ WinSparkleDialog::WinSparkleDialog()
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-    HDC screen = GetDC(NULL);
-    double hPixelsPerInch = GetDeviceCaps(screen, LOGPIXELSX);
-    double vPixelsPerInch = GetDeviceCaps(screen, LOGPIXELSY);
-    ReleaseDC(NULL, screen);
-
-    m_scaleX = hPixelsPerInch / 96.0;
-    m_scaleY = vPixelsPerInch / 96.0;
+    wxSize dpi = wxClientDC(this).GetPPI();
+    m_scaleX = dpi.x / 96.0;
+    m_scaleY = dpi.y / 96.0;
 
     SetIcons(wxICON(UpdateAvailable));
 
