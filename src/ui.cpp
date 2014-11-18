@@ -104,6 +104,36 @@ void DoShowElement(wxSizer *s, bool show)
 #define SHOW(c)    DoShowElement(c, true)
 #define HIDE(c)    DoShowElement(c, false)
 
+wxIcon LoadNamedIcon(HMODULE module, const wchar_t *iconName, int size)
+{
+    HICON hIcon = NULL;
+
+    typedef HRESULT(WINAPI *LPFN_LOADICONWITHSCALEDOWN)(HINSTANCE, PCWSTR, int, int, HICON*);
+    LPFN_LOADICONWITHSCALEDOWN f_LoadIconWithScaleDown =
+        (LPFN_LOADICONWITHSCALEDOWN) GetProcAddress(GetModuleHandleA("comctl32"), "LoadIconWithScaleDown");
+
+    if (f_LoadIconWithScaleDown)
+    {
+        if (FAILED(f_LoadIconWithScaleDown(module, iconName, size, size, &hIcon)))
+            hIcon = NULL;
+    }
+
+    if (!hIcon)
+    {
+        hIcon = static_cast<HICON>(LoadImage(module, iconName, IMAGE_ICON, size, size, LR_DEFAULTCOLOR));
+    }
+
+    if (!hIcon)
+        return wxNullIcon;
+
+    wxIcon icon;
+    icon.SetHICON(static_cast<WXHICON>(hIcon));
+    icon.SetWidth(size);
+    icon.SetHeight(size);
+
+    return icon;
+}
+
 BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszName, LONG_PTR lParam)
 {
     if (IS_INTRESOURCE(lpszName))
@@ -113,7 +143,7 @@ BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszNam
     return FALSE; // stop on the first icon found
 }
 
-wxIcon GetApplicationIcon()
+wxIcon GetApplicationIcon(int size)
 {
     HMODULE hParentExe = GetModuleHandle(NULL);
     if ( !hParentExe )
@@ -125,18 +155,10 @@ wxIcon GetApplicationIcon()
     if ( GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_RESOURCE_ENUM_USER_STOP )
         return wxNullIcon;
 
-    HANDLE hIcon = LoadImage(hParentExe, iconName, IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR);
+    wxIcon icon = LoadNamedIcon(hParentExe, iconName, size);
 
     if ( !IS_INTRESOURCE(iconName) )
         free(iconName);
-
-    if ( !hIcon )
-        return wxNullIcon;
-
-    wxIcon icon;
-    icon.SetHICON(static_cast<WXHICON>(hIcon));
-    icon.SetWidth(48);
-    icon.SetHeight(48);
 
     return icon;
 }
@@ -189,15 +211,15 @@ WinSparkleDialog::WinSparkleDialog()
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
 
-    SetIcons(wxICON(UpdateAvailable));
+    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Load the dialog box icon: the first 48x48 application icon will be loaded, if available,
     // otherwise, the standard WinSparkle icon will be used.
-    wxIcon bigIcon = GetApplicationIcon();
+    wxIcon bigIcon = GetApplicationIcon(PX(48));
     if ( !bigIcon.IsOk() )
-        bigIcon.LoadFile("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", PX(48));
 
     topSizer->Add
               (
