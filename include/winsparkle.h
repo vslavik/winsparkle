@@ -233,7 +233,7 @@ typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
     the host application can be safely shut down or FALSE if not (e.g. because
     the user has unsaved documents).
 
-    @note There's no guaranteed about the thread from which the callback is called,
+    @note There's no guarantee about the thread from which the callback is called,
           except that it certainly *won't* be called from the app's main thread.
           Make sure the callback is thread-safe.
 
@@ -251,10 +251,13 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
     Set callback for shutting down the application.
 
     This callback will be called to ask the host to shut down immediately after
-    launching the installer. It will only be called if the call to the callback
-    set with win_sparkle_set_can_shutdown_callback() returned TRUE.
+    launching the installer. Its implementation should gracefully terminate the
+    application.
 
-    @note There's no guaranteed about the thread from which the callback is called,
+    It will only be called if the call to the callback set with
+    win_sparkle_set_can_shutdown_callback() returns TRUE.
+
+    @note There's no guarantee about the thread from which the callback is called,
           except that it certainly *won't* be called from the app's main thread.
           Make sure the callback is thread-safe.
 
