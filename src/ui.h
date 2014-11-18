@@ -105,6 +105,8 @@ public:
      */
     static void SetDllHINSTANCE(HINSTANCE h) { ms_hInstance = h; }
 
+    static HINSTANCE GetDllHINSTANCE() { return ms_hInstance; }
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }

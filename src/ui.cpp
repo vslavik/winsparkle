@@ -38,6 +38,7 @@
 #include <wx/setup.h>
 
 #include <wx/app.h>
+#include <wx/dcclient.h>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -103,6 +104,36 @@ void DoShowElement(wxSizer *s, bool show)
 #define SHOW(c)    DoShowElement(c, true)
 #define HIDE(c)    DoShowElement(c, false)
 
+wxIcon LoadNamedIcon(HMODULE module, const wchar_t *iconName, int size)
+{
+    HICON hIcon = NULL;
+
+    typedef HRESULT(WINAPI *LPFN_LOADICONWITHSCALEDOWN)(HINSTANCE, PCWSTR, int, int, HICON*);
+    LPFN_LOADICONWITHSCALEDOWN f_LoadIconWithScaleDown =
+        (LPFN_LOADICONWITHSCALEDOWN) GetProcAddress(GetModuleHandleA("comctl32"), "LoadIconWithScaleDown");
+
+    if (f_LoadIconWithScaleDown)
+    {
+        if (FAILED(f_LoadIconWithScaleDown(module, iconName, size, size, &hIcon)))
+            hIcon = NULL;
+    }
+
+    if (!hIcon)
+    {
+        hIcon = static_cast<HICON>(LoadImage(module, iconName, IMAGE_ICON, size, size, LR_DEFAULTCOLOR));
+    }
+
+    if (!hIcon)
+        return wxNullIcon;
+
+    wxIcon icon;
+    icon.SetHICON(static_cast<WXHICON>(hIcon));
+    icon.SetWidth(size);
+    icon.SetHeight(size);
+
+    return icon;
+}
+
 BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszName, LONG_PTR lParam)
 {
     if (IS_INTRESOURCE(lpszName))
@@ -112,7 +143,7 @@ BOOL CALLBACK GetFirstIconProc(HMODULE hModule, LPCTSTR lpszType, LPTSTR lpszNam
     return FALSE; // stop on the first icon found
 }
 
-wxIcon GetApplicationIcon()
+wxIcon GetApplicationIcon(int size)
 {
     HMODULE hParentExe = GetModuleHandle(NULL);
     if ( !hParentExe )
@@ -124,18 +155,10 @@ wxIcon GetApplicationIcon()
     if ( GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_RESOURCE_ENUM_USER_STOP )
         return wxNullIcon;
 
-    HANDLE hIcon = LoadImage(hParentExe, iconName, IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR);
+    wxIcon icon = LoadNamedIcon(hParentExe, iconName, size);
 
     if ( !IS_INTRESOURCE(iconName) )
         free(iconName);
-
-    if ( !hIcon )
-        return wxNullIcon;
-
-    wxIcon icon;
-    icon.SetHICON(static_cast<WXHICON>(hIcon));
-    icon.SetWidth(48);
-    icon.SetHeight(48);
 
     return icon;
 }
@@ -172,6 +195,10 @@ protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
 
+    // High DPI support:
+    double        m_scaleFactor;
+    #define PX(x) (int((x) * m_scaleFactor))
+
     static const int MESSAGE_AREA_WIDTH = 300;
 };
 
@@ -181,24 +208,27 @@ WinSparkleDialog::WinSparkleDialog()
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-    SetIcons(wxICON(UpdateAvailable));
+    wxSize dpi = wxClientDC(this).GetPPI();
+    m_scaleFactor = dpi.y / 96.0;
+
+    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Load the dialog box icon: the first 48x48 application icon will be loaded, if available,
     // otherwise, the standard WinSparkle icon will be used.
-    wxIcon bigIcon = GetApplicationIcon();
+    wxIcon bigIcon = GetApplicationIcon(PX(48));
     if ( !bigIcon.IsOk() )
-        bigIcon.LoadFile("UpdateAvailable", wxBITMAP_TYPE_ICO_RESOURCE, 48, 48);
+        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", PX(48));
 
     topSizer->Add
               (
                   new wxStaticBitmap(this, wxID_ANY, bigIcon),
-                  wxSizerFlags(0).Border(wxALL, 10)
+                  wxSizerFlags(0).Border(wxALL, PX(10))
               );
 
     m_mainAreaSizer = new wxBoxSizer(wxVERTICAL);
-    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
+    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, PX(10)));
 
     SetSizer(topSizer);
 
@@ -336,16 +366,16 @@ UpdateDialog::UpdateDialog()
 {
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
-    m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+    m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, PX(10)));
 
     m_message = new wxStaticText(this, wxID_ANY, "",
-                                 wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1));
+                                 wxDefaultPosition, wxSize(PX(MESSAGE_AREA_WIDTH), -1));
     m_mainAreaSizer->Add(m_message, wxSizerFlags(0).Expand());
 
     m_progress = new wxGauge(this, wxID_ANY, 100,
-                             wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, 16));
+                             wxDefaultPosition, wxSize(PX(MESSAGE_AREA_WIDTH), PX(16)));
     m_progressLabel = new wxStaticText(this, wxID_ANY, "");
-    m_mainAreaSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, 10));
+    m_mainAreaSizer->Add(m_progress, wxSizerFlags(0).Expand().Border(wxTOP|wxBOTTOM, PX(10)));
     m_mainAreaSizer->Add(m_progressLabel, wxSizerFlags(0).Expand());
     m_mainAreaSizer->AddStretchSpacer(1);
 
@@ -353,16 +383,16 @@ UpdateDialog::UpdateDialog()
 
     wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
     SetBoldFont(notesLabel);
-    m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, 10));
+    m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, PX(10)));
 
     m_browserParent = new wxPanel(this, wxID_ANY,
                                   wxDefaultPosition,
-                                  wxSize(RELNOTES_WIDTH, RELNOTES_HEIGHT));
+                                  wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
     m_browserParent->SetBackgroundColour(*wxWHITE);
     m_releaseNotesSizer->Add
                          (
                              m_browserParent,
-                             wxSizerFlags(1).Expand().Border(wxTOP, 10)
+                             wxSizerFlags(1).Expand().Border(wxTOP, PX(10))
                          );
 
     m_mainAreaSizer->Add
@@ -378,13 +408,13 @@ UpdateDialog::UpdateDialog()
     m_updateButtonsSizer->Add
                           (
                             new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-                            wxSizerFlags().Border(wxRIGHT, 20)
+                            wxSizerFlags().Border(wxRIGHT, PX(20))
                           );
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
                             new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
-                            wxSizerFlags().Border(wxRIGHT, 10)
+                            wxSizerFlags().Border(wxRIGHT, PX(10))
                           );
     m_updateButtonsSizer->Add
                           (
@@ -409,7 +439,7 @@ UpdateDialog::UpdateDialog()
     m_mainAreaSizer->Add
                  (
                      m_buttonSizer,
-                     wxSizerFlags(0).Expand().Border(wxTOP, 10)
+                     wxSizerFlags(0).Expand().Border(wxTOP, PX(10))
                  );
 
     UpdateLayout();
@@ -520,7 +550,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 void UpdateDialog::SetMessage(const wxString& text, int width)
 {
     m_message->SetLabel(text);
-    m_message->Wrap(width);
+    m_message->Wrap(PX(width));
 }
 
 
@@ -865,7 +895,7 @@ AskPermissionDialog::AskPermissionDialog()
             new wxStaticText(this, wxID_ANY,
                              _("Check for updates automatically?"));
     SetHeadingFont(heading);
-    m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, 10));
+    m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, PX(10)));
 
     wxStaticText *message =
             new wxStaticText
@@ -876,9 +906,9 @@ AskPermissionDialog::AskPermissionDialog()
                         _("Should %s automatically check for updates? You can always check for updates manually from the menu."),
                         Settings::GetAppName()
                     ),
-                    wxDefaultPosition, wxSize(MESSAGE_AREA_WIDTH, -1)
+                    wxDefaultPosition, wxSize(PX(MESSAGE_AREA_WIDTH), -1)
                 );
-    message->Wrap(MESSAGE_AREA_WIDTH);
+    message->Wrap(PX(MESSAGE_AREA_WIDTH));
     m_mainAreaSizer->Add(message, wxSizerFlags(0).Expand());
 
     m_mainAreaSizer->AddStretchSpacer(1);
@@ -898,7 +928,7 @@ AskPermissionDialog::AskPermissionDialog()
     m_mainAreaSizer->Add
                  (
                      buttonSizer,
-                     wxSizerFlags(0).Right().Border(wxTOP, 10)
+                     wxSizerFlags(0).Right().Border(wxTOP, PX(10))
                  );
 
     UpdateLayout();
