@@ -202,11 +202,11 @@ WinSparkleDialog::WinSparkleDialog()
     topSizer->Add
               (
                   new wxStaticBitmap(this, wxID_ANY, bigIcon),
-                  wxSizerFlags(0).Border(wxALL, 10)
+                  wxSizerFlags(0).Border(wxALL, PX(10))
               );
 
     m_mainAreaSizer = new wxBoxSizer(wxVERTICAL);
-    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, 10));
+    topSizer->Add(m_mainAreaSizer, wxSizerFlags(1).Expand().Border(wxALL, PX(10)));
 
     SetSizer(topSizer);
 
