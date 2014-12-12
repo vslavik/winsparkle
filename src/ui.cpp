@@ -861,7 +861,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
                 VARIANT *param;
                 SafeArrayAccessData(psaStrings, (LPVOID*) &param);
                 param->vt = VT_BSTR;
-                param->bstrVal = wxBasicString(info.Description);
+                param->bstrVal = wxBasicString(wxString::FromUTF8(info.Description.c_str()));
                 SafeArrayUnaccessData(psaStrings);
 
                 doc->write(psaStrings);
