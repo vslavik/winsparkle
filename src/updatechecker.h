@@ -86,6 +86,20 @@ protected:
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 };
 
+
+/**
+    Update checker used for fully integrated checking.
+ */
+class FullIntegrationUpdateChecker : public ManualUpdateChecker
+{
+public:
+    /// Creates checker thread.
+    FullIntegrationUpdateChecker() : ManualUpdateChecker() {}
+
+protected:
+    virtual void Run();
+};
+
 } // namespace winsparkle
 
 #endif // _updatechecker_h_

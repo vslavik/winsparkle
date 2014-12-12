@@ -29,10 +29,14 @@
 namespace winsparkle
 {
 
+Appcast ApplicationController::m_appcast;
+
 CriticalSection ApplicationController::ms_csVars;
 
 win_sparkle_can_shutdown_callback_t     ApplicationController::ms_cbIsReadyToShutdown = NULL;
 win_sparkle_shutdown_request_callback_t ApplicationController::ms_cbRequestShutdown = NULL;
+win_sparkle_check_update_callback_t ApplicationController::ms_cbCheckUpdate = NULL;
+win_sparkle_download_progress_callback_t ApplicationController::ms_cbDownloadProgress = NULL;
 
 
 bool ApplicationController::IsReadyToShutdown()
@@ -55,6 +59,38 @@ void ApplicationController::RequestShutdown()
         if ( ms_cbRequestShutdown )
         {
             (*ms_cbRequestShutdown)();
+            return;
+        }
+    }
+
+    // default implementations:
+
+    // nothing yet
+}
+
+void ApplicationController::CheckUpdateResult(int result)
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbCheckUpdate )
+        {
+            (*ms_cbCheckUpdate)(result);
+            return;
+        }
+    }
+
+    // default implementations:
+
+    // nothing yet
+}
+
+void ApplicationController::ReportDownloadProgress(unsigned int progress, unsigned int total)
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbDownloadProgress )
+        {
+            (*ms_cbDownloadProgress)(progress, total);
             return;
         }
     }

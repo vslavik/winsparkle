@@ -28,6 +28,7 @@
 
 #include "winsparkle.h"
 #include "threads.h"
+#include "appcast.h"
 
 
 namespace winsparkle
@@ -50,6 +51,12 @@ public:
     /// Tell the host to terminate.
     static void RequestShutdown();
 
+    /// Tell the host if an update is available.
+    static void CheckUpdateResult(int result);
+
+    /// Tell the host about the progress
+    static void ReportDownloadProgress(unsigned int progress, unsigned int total);
+
     //@}
 
     /**
@@ -71,6 +78,30 @@ public:
         ms_cbRequestShutdown = callback;
     }
 
+    /// Set the win_sparkle_check_update_callback_t function
+    static void SetCheckUpdateCallback(win_sparkle_check_update_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbCheckUpdate = callback;
+    }
+
+    /// Set the win_sparkle_check_update_callback_t function
+    static void SetDownloadProgressCallback(win_sparkle_download_progress_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbDownloadProgress = callback;
+    }
+
+    //@}
+
+	 /**
+        Public variables
+     */
+    //@{
+	
+	// appcast data received from CheckUpdate during full integration
+    static Appcast m_appcast;
+	
     //@}
 
 private:
@@ -81,6 +112,8 @@ private:
 
     static win_sparkle_can_shutdown_callback_t     ms_cbIsReadyToShutdown;
     static win_sparkle_shutdown_request_callback_t ms_cbRequestShutdown;
+    static win_sparkle_check_update_callback_t ms_cbCheckUpdate;
+    static win_sparkle_download_progress_callback_t ms_cbDownloadProgress;
 };
 
 } // namespace winsparkle

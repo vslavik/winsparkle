@@ -60,8 +60,22 @@ protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
 
-private:
     Appcast m_appcast;
+};
+
+/**
+   downloader used for fully integrated downloading.
+ */
+class FullIntegrationDownloader : public UpdateDownloader
+{
+public:
+    /// Creates checker thread.
+    FullIntegrationDownloader(const Appcast& appcast) : UpdateDownloader(appcast) {}
+	virtual void InstallUpdate(const std::string& updateFile);
+	
+protected:
+    // Thread methods:
+    virtual void Run();
 };
 
 } // namespace winsparkle

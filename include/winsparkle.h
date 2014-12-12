@@ -317,6 +317,116 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui();
 
 //@}
 
+
+/*--------------------------------------------------------------------------*
+                              Full Integration
+ *--------------------------------------------------------------------------*/
+
+/**
+    @name Allows the full integration WinSparkle so that there is zero UI
+ */
+//@{
+
+/**
+    Initializes WinSparkle without any checks or UI.  This code assumes that 
+	such calls will be performed manually with other full integration calls
+	and callbacks.
+
+    This function returns immediately.
+
+    @since 0.5
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_init();
+
+/**
+    Cleans up WinSparkle but does not clean up the UI since it is not used
+	when fully integrated.
+
+    This function returns immediately.
+
+    @since 0.5
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_cleanup();
+
+
+/// Callback type for win_sparkle_check_update_callback()
+typedef void (__cdecl *win_sparkle_check_update_callback_t)(int);
+
+/**
+    Set callback for checking for an update when fully integrated.
+
+    This callback will be called with the return value of the fully integrated
+	check for update.  The call back should then save the value to be viewed by
+	the main thread and be acted upon.
+
+	The result is the integer comparison between the current version and the latest version.
+	Negative means a newer version is available, zero means the program is up-to-date, and 
+	positive means that program is a newer version that has not yet been released.
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
+
+    @since 0.5
+
+    @see win_sparkle_full_integration_check_update()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_check_update_callback(win_sparkle_check_update_callback_t);
+
+/**
+    Checks if an update is available.
+
+    Since this is the fully integrated check, it returns the response of the comparison
+	to the check_update_callback and does nothing otherwise.  This function should only 
+	be used when fully integrating WinSparkle.
+
+	Make sure the appcast url is set before calling this function.
+
+    This function returns immediately.
+
+    @since 0.5
+
+    @see win_sparkle_set_check_update_callback()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_check_update();
+
+/**
+    Downloads and Installs the latest update.
+
+    This relies on the full integration update check to be called before 
+	this function call.
+
+    This function returns immediately.
+
+    @since 0.5
+
+    @see win_sparkle_set_download_progress_callback() and win_sparkle_set_download_message_callback()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_download_and_install_update();
+
+
+/// Callback type for win_sparkle_check_update_callback()
+typedef void (__cdecl *win_sparkle_download_progress_callback_t)(unsigned int, unsigned int);
+
+/**
+    Set callback for reporting download progress.
+
+    Only the fully integrated download will report this information as the other 
+	download methods all have a UI.
+
+    @note There's no guaranteed about the thread from which the callback is called,
+          except that it certainly *won't* be called from the app's main thread.
+          Make sure the callback is thread-safe.
+
+    @since 0.5
+
+    @see win_sparkle_download_and_install_update()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_download_progress_callback(win_sparkle_download_progress_callback_t);
+
+//@}
+
+
 #ifdef __cplusplus
 }
 #endif

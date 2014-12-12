@@ -31,6 +31,7 @@
 #include "settings.h"
 #include "download.h"
 #include "utils.h"
+#include "appcontroller.h"
 
 #include <ctime>
 #include <vector>
@@ -296,6 +297,46 @@ bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
     // win_sparkle_check_update_with_ui() it should still show that version.
     // This is the semantics in Sparkle for Mac.
     return false;
+}
+
+
+/*--------------------------------------------------------------------------*
+                            FullIntegrationUpdateChecker
+ *--------------------------------------------------------------------------*/
+
+void FullIntegrationUpdateChecker::Run()
+{
+    // no initialization to do, so signal readiness immediately
+    SignalReady();
+
+    try
+    {
+        const std::string url = Settings::GetAppcastURL();
+        if ( url.empty() )
+            throw std::runtime_error("Appcast URL not specified.");
+
+        StringDownloadSink appcast_xml;
+        DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
+
+        Appcast appcast = Appcast::Load(appcast_xml.data);
+
+        Settings::WriteConfigValue("LastCheckTime", time(NULL));
+
+        const std::string currentVersion =
+                WideToAnsi(Settings::GetAppBuildVersion());
+
+        // Check if our version is out of date.
+        if ( appcast.IsValid())
+        {
+        	//Save this for later incase we want to download and install the update
+		ApplicationController::m_appcast = appcast;
+            	//report the results to the callback
+		ApplicationController::CheckUpdateResult(CompareVersions(currentVersion, appcast.Version));
+
+			
+        }
+    }
+    CATCH_ALL_EXCEPTIONS
 }
 
 } // namespace winsparkle

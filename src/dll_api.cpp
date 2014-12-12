@@ -267,5 +267,68 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+/*--------------------------------------------------------------------------*
+                              Full Integration
+ *--------------------------------------------------------------------------*/
+
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_init()
+{
+    try
+    {
+        // we still need to clean up the leftovers but everything else must be handled manually
+        UpdateDownloader::CleanLeftovers();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_cleanup()
+{
+    try
+    {
+		//There's no ui but we still may need to shut down the threads from the fixme below
+        // FIXME: shut down any worker UpdateChecker and UpdateDownloader threads too
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_check_update_callback(win_sparkle_check_update_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetCheckUpdateCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_full_integration_check_update()
+{
+    try
+    {
+        // Runs the check in background and returns to the call back the results of the comparison (negative, 0, positive)
+        UpdateChecker *check = new FullIntegrationUpdateChecker();
+        check->Start();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_download_and_install_update()
+{
+    try
+    {
+		UpdateDownloader *download = new FullIntegrationDownloader(ApplicationController::m_appcast);
+        download->Start();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_download_progress_callback(win_sparkle_download_progress_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetDownloadProgressCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
 
 } // extern "C"
