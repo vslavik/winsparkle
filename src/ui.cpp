@@ -509,11 +509,24 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 
 void UpdateDialog::OnInstall(wxCommandEvent&)
 {
-    StateDownloading();
+    if ( m_appcast.ShouldOpenWebBrowser() )
+    {
+        if ( ShellExecute(GetHWND(), L"open", AnsiToWide(m_appcast.WebBrowserURL).c_str(), NULL, NULL, SW_SHOWNORMAL) <= (HINSTANCE) 32 )
+        {
+            wxMessageDialog dlg(this, _("Failed to launch web browser."), _("Software Update"),
+                wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
+            dlg.ShowModal();
+        }
+        Close();
+    }
+    else
+    {
+        StateDownloading();
 
-    // Run the download in background.
-    m_downloader = new UpdateDownloader(m_appcast);
-    m_downloader->Start();
+        // Run the download in background.
+        m_downloader = new UpdateDownloader(m_appcast);
+        m_downloader->Start();
+    }
 }
 
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
@@ -662,11 +675,18 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         m_heading->SetLabel(
             wxString::Format(_("A new version of %s is available!"), appname));
 
+        const char *msg = _("%s %s is now available (you have %s). Would you like to download it now?");
+        if ( info.ShouldOpenWebBrowser() ) 
+        {
+            m_installButton->SetLabel(_("Visit web site"));
+            msg = _("%s %s is now available (you have %s). Would you like to visit the web site to download it?");
+        }
+
         SetMessage
         (
             wxString::Format
             (
-                _("%s %s is now available (you have %s). Would you like to download it now?"),
+                msg,
                 appname, ver_new, ver_my
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
