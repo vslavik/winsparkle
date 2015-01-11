@@ -75,9 +75,9 @@ struct Appcast
     /// Returns true if the struct constains valid data.
     bool IsValid() const { return !Version.empty(); }
 
-    /// If true, then visit the web site (WebBrowserURL) instead of downloading and
-    /// installing ourselves.
-    bool ShouldOpenWebBrowser() const { return DownloadURL.empty() && !WebBrowserURL.empty(); }
+    /// If true, then download and install the update ourselves.
+    /// If false, launch a web browser to WebBrowserURL.
+    bool HasDownload() const { return !DownloadURL.empty(); }
 };
 
 } // namespace winsparkle

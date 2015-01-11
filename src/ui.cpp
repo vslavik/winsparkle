@@ -509,14 +509,9 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 
 void UpdateDialog::OnInstall(wxCommandEvent&)
 {
-    if ( m_appcast.ShouldOpenWebBrowser() )
+    if ( !m_appcast.HasDownload() )
     {
-        if ( ShellExecute(GetHWND(), L"open", AnsiToWide(m_appcast.WebBrowserURL).c_str(), NULL, NULL, SW_SHOWNORMAL) <= (HINSTANCE) 32 )
-        {
-            wxMessageDialog dlg(this, _("Failed to launch web browser."), _("Software Update"),
-                wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
-            dlg.ShowModal();
-        }
+        wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
         Close();
     }
     else
@@ -676,9 +671,9 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
             wxString::Format(_("A new version of %s is available!"), appname));
 
         const char *msg = _("%s %s is now available (you have %s). Would you like to download it now?");
-        if ( info.ShouldOpenWebBrowser() ) 
+        if ( !info.HasDownload() ) 
         {
-            m_installButton->SetLabel(_("Visit web site"));
+            m_installButton->SetLabel(_("Get update"));
             msg = _("%s %s is now available (you have %s). Would you like to visit the web site to download it?");
         }
 

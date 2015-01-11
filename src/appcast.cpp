@@ -65,7 +65,7 @@ struct ContextData
 {
     ContextData(XML_Parser& p)
         : parser(p),
-		in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0)
+        in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0)
     {}
 
     // the parser we're using
