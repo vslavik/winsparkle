@@ -46,6 +46,9 @@ struct Appcast
     /// URL of the release notes page
     std::string ReleaseNotesURL;
 
+    /// URL to launch in web browser (instead of downloading update ourselves)
+    std::string WebBrowserURL;
+
     /// Title of the update
     std::string Title;
 
@@ -71,6 +74,10 @@ struct Appcast
 
     /// Returns true if the struct constains valid data.
     bool IsValid() const { return !Version.empty(); }
+
+    /// If true, then download and install the update ourselves.
+    /// If false, launch a web browser to WebBrowserURL.
+    bool HasDownload() const { return !DownloadURL.empty(); }
 };
 
 } // namespace winsparkle

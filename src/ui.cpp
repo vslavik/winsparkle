@@ -509,11 +509,19 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 
 void UpdateDialog::OnInstall(wxCommandEvent&)
 {
-    StateDownloading();
+    if ( !m_appcast.HasDownload() )
+    {
+        wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
+        Close();
+    }
+    else
+    {
+        StateDownloading();
 
-    // Run the download in background.
-    m_downloader = new UpdateDownloader(m_appcast);
-    m_downloader->Start();
+        // Run the download in background.
+        m_downloader = new UpdateDownloader(m_appcast);
+        m_downloader->Start();
+    }
 }
 
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
@@ -662,11 +670,18 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         m_heading->SetLabel(
             wxString::Format(_("A new version of %s is available!"), appname));
 
+        const char *msg = _("%s %s is now available (you have %s). Would you like to download it now?");
+        if ( !info.HasDownload() ) 
+        {
+            m_installButton->SetLabel(_("Get update"));
+            msg = _("%s %s is now available (you have %s). Would you like to visit the web site to download it?");
+        }
+
         SetMessage
         (
             wxString::Format
             (
-                _("%s %s is now available (you have %s). Would you like to download it now?"),
+                msg,
                 appname, ver_new, ver_my
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
