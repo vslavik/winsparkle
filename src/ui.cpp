@@ -243,6 +243,17 @@ protected:
     // enable/disable resizing of the dialog
     void MakeResizable(bool resizable = true);
 
+	//This part is for centering the sparkle dialog on top of main app window
+public:
+	struct HandleData {
+		unsigned long process_id;
+		HWND best_handle;
+	};
+	static BOOL IsMainWindow(HWND handle);
+protected:
+	HWND FindMainWindow(unsigned long process_id);
+	wxPoint GetCenterPoint();
+
 protected:
     // sizer for the main area of the dialog (to the right of the icon)
     wxSizer      *m_mainAreaSizer;
@@ -254,10 +265,42 @@ protected:
     static const int MESSAGE_AREA_WIDTH = 300;
 };
 
+BOOL WinSparkleDialog::IsMainWindow(HWND handle)
+{   
+    return GetWindow(handle, GW_OWNER) == (HWND)0 && IsWindowVisible(handle);
+}
+
+BOOL CALLBACK EnumWindowsCallback(HWND handle, LPARAM lParam)
+{
+    WinSparkleDialog::HandleData& data = *(WinSparkleDialog::HandleData*)lParam;
+    unsigned long process_id = 0;
+    GetWindowThreadProcessId(handle, &process_id);
+    if (data.process_id != process_id || !WinSparkleDialog::IsMainWindow(handle)) {
+        return TRUE;
+    }
+    data.best_handle = handle;
+    return FALSE;   
+}
+
+HWND WinSparkleDialog::FindMainWindow(unsigned long process_id)
+{
+    HandleData data;
+    data.process_id = process_id;
+    data.best_handle = 0;
+    EnumWindows(EnumWindowsCallback, (LPARAM)&data);
+    return data.best_handle;
+}
+
+wxPoint WinSparkleDialog::GetCenterPoint()
+{
+	RECT rect;
+	GetWindowRect(FindMainWindow(GetCurrentProcessId()), &rect);
+	return wxPoint(max(0, (rect.left + rect.right)/2 - 280), max(0, (rect.top + rect.bottom)/2 - 200));
+}
 
 WinSparkleDialog::WinSparkleDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
-               wxDefaultPosition, wxDefaultSize,
+               GetCenterPoint(), wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
     wxSize dpi = wxClientDC(this).GetPPI();
@@ -470,7 +513,7 @@ UpdateDialog::UpdateDialog()
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Download update")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -820,7 +863,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile)
 
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Ready to install."));
+    SetMessage(_("Download complete"));
 
     m_progress->SetRange(1);
     m_progress->SetValue(1);
@@ -1043,6 +1086,8 @@ public:
     // Sends a message with ID @a msg to the app.
     void SendMsg(int msg, EventPayload *data = NULL);
 
+	//Inits locale
+	virtual bool OnInit();
 private:
     void InitWindow();
     void ShowWindow();
@@ -1059,6 +1104,7 @@ private:
 
 private:
     UpdateDialog *m_win;
+	wxLocale m_locale;  // locale we'll be using
 };
 
 IMPLEMENT_APP_NO_MAIN(App)
@@ -1103,6 +1149,27 @@ void App::SendMsg(int msg, EventPayload *data)
     wxQueueEvent(this, event);
 }
 
+bool App::OnInit()
+{
+    if ( !wxApp::OnInit() )
+        return false;
+
+	std::string sLang;
+	wxLanguage elang = wxLANGUAGE_DEFAULT;
+	if (Settings::ReadConfigValue("Language", sLang)) { //Locale has been manually set - use it
+		if (sLang == std::string("de_DE"))
+			elang = wxLANGUAGE_GERMAN;
+	} else { //Use system locale if no manual setting is available and a translation is available
+		WCHAR lpLocaleName[LOCALE_NAME_MAX_LENGTH];
+		GetUserDefaultLocaleName(lpLocaleName, LOCALE_NAME_MAX_LENGTH);
+		if (wcsstr(lpLocaleName, L"de") == lpLocaleName)
+			sLang = std::string("de_DE");
+	}
+	m_locale.Init(elang, wxLOCALE_DONT_LOAD_DEFAULT);
+	wxLocale::AddCatalogLookupPathPrefix(".");
+	m_locale.AddCatalog(std::string("WinSparkle_") + sLang);
+    return true;
+}
 
 void App::InitWindow()
 {
