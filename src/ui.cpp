@@ -791,6 +791,7 @@ void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
         m_progress->SetValue(downloaded);
         label = wxString::Format
                 (
+                    // TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
                     _("%s of %s"),
                     wxFileName::GetHumanReadableSize(downloaded, "", 1, wxSIZE_CONV_SI),
                     wxFileName::GetHumanReadableSize(total, "", 1, wxSIZE_CONV_SI)
