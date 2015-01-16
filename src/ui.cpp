@@ -40,6 +40,7 @@
 #include <wx/app.h>
 #include <wx/dcclient.h>
 #include <wx/dialog.h>
+#include <wx/evtloop.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/filename.h>
@@ -1132,7 +1133,10 @@ void App::OnWindowClose(wxCloseEvent& event)
 
 void App::OnTerminate(wxThreadEvent&)
 {
-    ExitMainLoop();
+    wxEventLoopBase *activeLoop = wxEventLoop::GetActive();
+    if (!activeLoop->IsMain())
+        activeLoop->Exit(wxID_CANCEL);
+    GetMainLoop()->ScheduleExit(0);
 }
 
 
