@@ -468,6 +468,10 @@
 				>
 			</File>
 			<File
+				RelativePath="wxWidgets\src\common\image.cpp"
+				>
+			</File>
+			<File
 				RelativePath="wxWidgets\src\common\init.cpp"
 				>
 			</File>

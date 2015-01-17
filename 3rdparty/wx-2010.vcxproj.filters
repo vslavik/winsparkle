@@ -142,6 +142,9 @@
     <ClCompile Include="wxWidgets\src\common\iconbndl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
