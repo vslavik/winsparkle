@@ -58,6 +58,9 @@ struct Appcast
     // Operating system
     std::string Os;
 
+    // Minimum OS version required for update
+    std::string MinOSVersion;
+
     /**
         Initializes the struct with data from XML appcast feed.
 

@@ -29,6 +29,7 @@
 #include <expat.h>
 #include <vector>
 #include <algorithm>
+#include <Windows.h>
 
 namespace winsparkle
 {
@@ -54,6 +55,7 @@ namespace
 #define NODE_DESCRIPTION "description"
 #define NODE_LINK       "link"
 #define NODE_ENCLOSURE  "enclosure"
+#define NODE_MIN_OS_VERSION NS_SPARKLE_NAME("minimumSystemVersion")
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
@@ -68,7 +70,7 @@ struct ContextData
     ContextData(XML_Parser& p)
         : parser(p),
         in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0),
-        in_version(0), in_shortversion(0)
+        in_version(0), in_shortversion(0), in_min_os_version(0)
     {}
 
     // the parser we're using
@@ -78,12 +80,31 @@ struct ContextData
     int in_channel, in_item, in_relnotes, in_title, in_description, in_link;
 
     // is inside <sparkle:version> or <sparkle:shortVersionString> node?
-    int in_version, in_shortversion;
+    int in_version, in_shortversion, in_min_os_version;
 
     // parsed <item>s
     std::vector<Appcast> items;
 };
 
+bool is_windows_version_acceptable(const Appcast &item)
+{
+    if (item.MinOSVersion.empty())
+        return true;
+
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
+    DWORDLONG const dwlConditionMask = VerSetConditionMask(
+        VerSetConditionMask(
+        VerSetConditionMask(
+        0, VER_MAJORVERSION, VER_GREATER_EQUAL),
+        VER_MINORVERSION, VER_GREATER_EQUAL),
+        VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+
+    sscanf(item.MinOSVersion.c_str(), "%d.%d.%d", &osvi.dwMajorVersion,
+        &osvi.dwMinorVersion, &osvi.wServicePackMajor);
+
+    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
+        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+}
 
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 {
@@ -125,6 +146,10 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         {
             ctxt.in_shortversion++;
         }
+        else if (strcmp(name, NODE_MIN_OS_VERSION) == 0)
+        {
+            ctxt.in_min_os_version++;
+        }
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
             const int size = ctxt.items.size();
@@ -163,6 +188,10 @@ void XMLCALL OnEndElement(void *data, const char *name)
     {
         ctxt.in_description--;
     }
+    else if ( ctxt.in_item && strcmp(name, NODE_MIN_OS_VERSION) == 0 )
+    {
+        ctxt.in_min_os_version--;
+    }
     else if ( ctxt.in_link && strcmp(name, NODE_LINK) == 0 )
     {
         ctxt.in_link--;
@@ -178,7 +207,9 @@ void XMLCALL OnEndElement(void *data, const char *name)
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
         ctxt.in_item--;
-        if (ctxt.items[ctxt.items.size()-1].Os == OS_MARKER) {
+        if (ctxt.items[ctxt.items.size() - 1].Os == OS_MARKER && 
+            is_windows_version_acceptable(ctxt.items[ctxt.items.size() - 1])) 
+        {
             // we've found os-specific <item>, no need to continue parsing
             XML_StopParser(ctxt.parser, XML_TRUE);
         }
@@ -209,12 +240,14 @@ void XMLCALL OnText(void *data, const char *s, int len)
     else if ( ctxt.in_version )
         ctxt.items[size-1].Version.append(s, len);
     else if ( ctxt.in_shortversion )
-        ctxt.items[size-1].ShortVersionString.append(s, len);
+        ctxt.items[size - 1].ShortVersionString.append(s, len);
+    else if ( ctxt.in_min_os_version )
+        ctxt.items[size - 1].MinOSVersion.append(s, len);
 }
 
 bool is_windows_item(const Appcast &item)
 {
-    return item.Os == OS_MARKER;
+    return item.Os == OS_MARKER && is_windows_version_acceptable(item);
 }
 
 } // anonymous namespace
@@ -251,13 +284,19 @@ Appcast Appcast::Load(const std::string& xml)
     if (ctxt.items.empty())
         return Appcast(); // invalid
 
-    // Search for first <item> which has "sparkle:os=windows" attribute.
-    // If none, use the first item.
+    // Search for first <item> which has "sparkle:os=windows" attribute and meets the minimum os version, if set.
+    // If none, use the first item that meets the minimum os version, if set.
     std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_item);
     if (it != ctxt.items.end())
         return *it;
     else
-        return ctxt.items.front();
+    {
+        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_version_acceptable);
+        if (it != ctxt.items.end())
+            return *it;
+        else 
+            return Appcast(); // There are no items that meet the set minimum os version
+    }
 }
 
 } // namespace winsparkle
