@@ -454,7 +454,7 @@
 #define wxUSE_TEXTFILE      0
 
 // i18n support: _() macro, wxLocale class. Requires wxTextFile.
-#define wxUSE_INTL          0
+#define wxUSE_INTL          1
 
 // Provide wxFoo_l() functions similar to standard foo() functions but taking
 // an extra locale parameter.
@@ -609,7 +609,7 @@
 #define wxUSE_FONTENUM 0
 
 // wxFontMapper class
-#define wxUSE_FONTMAP 0
+#define wxUSE_FONTMAP 1
 
 // wxMimeTypesManager class
 #define wxUSE_MIMETYPE 0

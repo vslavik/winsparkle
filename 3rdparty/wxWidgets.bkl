@@ -52,7 +52,9 @@ library WinSparkle_wx {
         src/common/file.cpp
         src/common/filefn.cpp
         src/common/filename.cpp
+        src/common/fmapbase.cpp
         src/common/fontcmn.cpp
+        src/common/fontmap.cpp
         src/common/framecmn.cpp
         src/common/gaugecmn.cpp
         src/common/gbsizer.cpp
@@ -62,7 +64,9 @@ library WinSparkle_wx {
         src/common/iconbndl.cpp
         src/common/image.cpp
         src/common/init.cpp
+        src/common/intl.cpp
         src/common/ipcbase.cpp
+        src/common/languageinfo.cpp
         src/common/layout.cpp
         src/common/list.cpp
         src/common/longlong.cpp
@@ -101,6 +105,7 @@ library WinSparkle_wx {
         src/common/timerimpl.cpp
         src/common/tokenzr.cpp
         src/common/toplvcmn.cpp
+        src/common/translation.cpp
         src/common/unichar.cpp
         src/common/uri.cpp
         src/common/ustring.cpp
