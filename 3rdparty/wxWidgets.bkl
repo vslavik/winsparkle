@@ -65,7 +65,6 @@ library WinSparkle_wx {
         src/common/ipcbase.cpp
         src/common/layout.cpp
         src/common/list.cpp
-        src/common/log.cpp
         src/common/longlong.cpp
         src/common/matrix.cpp
         src/common/menucmn.cpp

@@ -208,7 +208,7 @@
 // Default is 1
 //
 // Recommended setting: 1 (always)
-#define wxUSE_LOG 1
+#define wxUSE_LOG 0
 
 // Recommended setting: 1
 #define wxUSE_LOGWINDOW 0

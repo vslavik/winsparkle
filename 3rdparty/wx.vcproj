@@ -488,10 +488,6 @@
 				>
 			</File>
 			<File
-				RelativePath="wxWidgets\src\common\log.cpp"
-				>
-			</File>
-			<File
 				RelativePath="wxWidgets\src\common\longlong.cpp"
 				>
 			</File>
