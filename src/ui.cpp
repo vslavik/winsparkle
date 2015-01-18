@@ -597,8 +597,11 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 
     if ( !wxLaunchDefaultApplication(m_updateFile) )
     {
-        wxLogError(_("Failed to launch the installer."));
-        wxLog::FlushActive();
+        wxMessageDialog dlg(this,
+            _("Failed to launch the installer."),
+            _("Software Update"),
+            wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
+        dlg.ShowModal();
     }
     else
     {

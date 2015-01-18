@@ -191,11 +191,11 @@
     <ClCompile Include="wxWidgets\src\common\hash.cpp" />
     <ClCompile Include="wxWidgets\src\common\hashmap.cpp" />
     <ClCompile Include="wxWidgets\src\common\iconbndl.cpp" />
+    <ClCompile Include="wxWidgets\src\common\image.cpp" />
     <ClCompile Include="wxWidgets\src\common\init.cpp" />
     <ClCompile Include="wxWidgets\src\common\ipcbase.cpp" />
     <ClCompile Include="wxWidgets\src\common\layout.cpp" />
     <ClCompile Include="wxWidgets\src\common\list.cpp" />
-    <ClCompile Include="wxWidgets\src\common\log.cpp" />
     <ClCompile Include="wxWidgets\src\common\longlong.cpp" />
     <ClCompile Include="wxWidgets\src\common\matrix.cpp" />
     <ClCompile Include="wxWidgets\src\common\menucmn.cpp" />
