@@ -1,0 +1,32 @@
+project_identifier: winsparkle
+base_url: http://api.crowdin.net
+base_path: .
+preserve_hierarchy: false
+
+files:
+  -
+    source: /winsparkle.pot
+    translation: /%locale_with_underscore%.po
+    languages_mapping:
+      locale_with_underscore:
+        bg: bg
+        bs: bs
+        co: co
+        cs: cs
+        da: da
+        de: de
+        es-ES: es
+        eu: eu
+        fr: fr
+        hu: hu
+        id: id
+        it: it
+        ja: ja
+        nl: nl
+        pl: pl
+        ru: ru
+        sv-SE: sv
+        tr: tr
+        uk: uk
+        zh-CN: zh_CN
+        zh-TW: zh_TW
