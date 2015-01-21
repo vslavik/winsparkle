@@ -218,6 +218,9 @@ void CenterWindowOnHostApplication(wxTopLevelWindow *win)
     data.process_id = GetCurrentProcessId();
     EnumWindows(EnumProcessWindowsCallback, (LPARAM) &data);
 
+    if (data.biggest.IsEmpty())
+        return; // no window to center on
+
     // and center WinSparkle on it:
     wxSize winsz = win->GetClientSize();
     wxPoint pos(data.biggest.x + (data.biggest.width - winsz.x) / 2,
