@@ -40,6 +40,7 @@
 #include <wx/app.h>
 #include <wx/dcclient.h>
 #include <wx/dialog.h>
+#include <wx/display.h>
 #include <wx/evtloop.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -69,27 +70,6 @@ namespace winsparkle
 
 namespace
 {
-
-// Locks window updates to reduce flicker. Redoes layout in dtor.
-struct LayoutChangesGuard
-{
-    LayoutChangesGuard(wxWindow *win) : m_win(win)
-    {
-        m_win->Freeze();
-    }
-
-    ~LayoutChangesGuard()
-    {
-        m_win->Layout();
-        m_win->GetSizer()->SetSizeHints(m_win);
-        m_win->Refresh();
-        m_win->Thaw();
-        m_win->Update();
-    }
-
-    wxWindow *m_win;
-};
-
 
 // shows/hides layout element
 void DoShowElement(wxWindow *w, bool show)
@@ -211,6 +191,25 @@ wxRect GetHostApplicationScreenArea()
     return data.biggest;
 }
 
+wxPoint GetWindowOriginSoThatItFits(int display, const wxRect& windowRect)
+{
+    wxPoint pos = windowRect.GetTopLeft();
+    wxRect desktop = wxDisplay(display).GetClientArea();
+    if (!desktop.Contains(windowRect))
+    {
+        if (pos.x < desktop.x)
+            pos.x = desktop.x;
+        if (pos.y < desktop.y)
+            pos.y = desktop.y;
+       wxPoint bottomRightDiff = windowRect.GetBottomRight() - desktop.GetBottomRight();
+       if (bottomRightDiff.x > 0)
+           pos.x -= bottomRightDiff.x;
+       if (bottomRightDiff.y > 0)
+           pos.y -= bottomRightDiff.y;
+    }
+    return pos;
+}
+
 void CenterWindowOnHostApplication(wxTopLevelWindow *win)
 {
     // find application's biggest window:
@@ -221,12 +220,55 @@ void CenterWindowOnHostApplication(wxTopLevelWindow *win)
     if (data.biggest.IsEmpty())
         return; // no window to center on
 
+    const wxRect& host(data.biggest);
+
     // and center WinSparkle on it:
     wxSize winsz = win->GetClientSize();
-    wxPoint pos(data.biggest.x + (data.biggest.width - winsz.x) / 2,
-                data.biggest.y + (data.biggest.height - winsz.y) / 2);
+    wxPoint pos(host.x + (host.width - winsz.x) / 2,
+                host.y + (host.height - winsz.y) / 2);
+
+    // make sure the window is fully visible:
+    int display = wxDisplay::GetFromPoint(wxPoint(host.x + host.width / 2,
+                                                  host.y + host.height / 2));
+    if (display != wxNOT_FOUND)
+    {
+        pos = GetWindowOriginSoThatItFits(display, wxRect(pos, winsz));
+    }
+
     win->Move(pos);
 }
+
+void EnsureWindowIsFullyVisible(wxTopLevelWindow *win)
+{
+    int display = wxDisplay::GetFromWindow(win);
+    if (display == wxNOT_FOUND)
+        return;
+
+    wxPoint pos = GetWindowOriginSoThatItFits(display, win->GetRect());
+    win->Move(pos);
+}
+
+
+// Locks window updates to reduce flicker. Redoes layout in dtor.
+struct LayoutChangesGuard
+{
+    LayoutChangesGuard(wxTopLevelWindow *win) : m_win(win)
+    {
+        m_win->Freeze();
+    }
+
+    ~LayoutChangesGuard()
+    {
+        m_win->Layout();
+        m_win->GetSizer()->SetSizeHints(m_win);
+        m_win->Refresh();
+        EnsureWindowIsFullyVisible(m_win);
+        m_win->Thaw();
+        m_win->Update();
+    }
+
+    wxTopLevelWindow *m_win;
+};
 
 } // anonymous namespace
 
