@@ -612,7 +612,7 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
         wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
         Close();
     }
-    else
+    else if ( m_downloader == NULL )
     {
         StateDownloading();
 
