@@ -63,6 +63,7 @@ namespace
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
 #define NODE_SHORTVERSION ATTR_SHORTVERSION   // attributes.
 #define OS_MARKER       "windows"
+#define OS_MARKER_LEN   7
 
 // context data for the parser
 struct ContextData
@@ -172,6 +173,32 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 }
 
 
+/**
+ * Returns true if item os is exactly "windows"
+ *   or if item is "windows-x64" on 64bit
+ *   or if item is "windows-x86" on 32bit
+ *   and is above minimum version
+ */
+bool is_suitable_windows_item(const Appcast &item)
+{
+    if (!is_windows_version_acceptable(item))
+        return false;
+
+    if (item.Os == OS_MARKER)
+        return true;
+
+    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
+        return false;
+
+    // Check suffix for matching bitness
+#ifdef _WIN64
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+#else
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
+#endif
+}
+
+
 void XMLCALL OnEndElement(void *data, const char *name)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
@@ -207,12 +234,8 @@ void XMLCALL OnEndElement(void *data, const char *name)
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
         ctxt.in_item--;
-        if (ctxt.items[ctxt.items.size() - 1].Os == OS_MARKER && 
-            is_windows_version_acceptable(ctxt.items[ctxt.items.size() - 1])) 
-        {
-            // we've found os-specific <item>, no need to continue parsing
+        if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
             XML_StopParser(ctxt.parser, XML_TRUE);
-        }
     }
     else if ( strcmp(name, NODE_CHANNEL) == 0 )
     {
@@ -243,11 +266,6 @@ void XMLCALL OnText(void *data, const char *s, int len)
         ctxt.items[size - 1].ShortVersionString.append(s, len);
     else if ( ctxt.in_min_os_version )
         ctxt.items[size - 1].MinOSVersion.append(s, len);
-}
-
-bool is_windows_item(const Appcast &item)
-{
-    return item.Os == OS_MARKER && is_windows_version_acceptable(item);
 }
 
 } // anonymous namespace
@@ -284,9 +302,12 @@ Appcast Appcast::Load(const std::string& xml)
     if (ctxt.items.empty())
         return Appcast(); // invalid
 
-    // Search for first <item> which has "sparkle:os=windows" attribute and meets the minimum os version, if set.
-    // If none, use the first item that meets the minimum os version, if set.
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_item);
+    /*
+     * Search for first <item> which specifies with the attribute sparkle:os set to "windows"
+     * or "windows-x64"/"windows-x86" based on this modules bitness and meets the minimum
+     * os version, if set. If none, use the first item that meets the minimum os version, if set.
+     */
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
     if (it != ctxt.items.end())
         return *it;
     else
