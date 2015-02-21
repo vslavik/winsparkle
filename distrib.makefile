@@ -22,7 +22,7 @@ binary_files := \
 	x64/Release/WinSparkle.dll \
 	x64/Release/WinSparkle.lib \
 	x64/Release/WinSparkle.pdb \
-	AUTHORS COPYING NEWS README
+	AUTHORS COPYING NEWS README.md
 
 
 all: binary sources
