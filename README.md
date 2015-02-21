@@ -9,35 +9,45 @@ updates format (appcasts) and having very similar user interface.
 
 See http://winsparkle.org for more information about WinSparkle.
 
-Documentation: https://github.com/vslavik/winsparkle/wiki
+Documentation: [wiki](https://github.com/vslavik/winsparkle/wiki) and
+the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/include/winsparkle.h).
 
 
  Using prebuilt binaries
 -------------------------
 
-The easiest way to use WinSparkle is to download the prebuilt WinSparkle.dll
-binary. It doesn't have any extra dependencies (not even msvcr*.dll) and is
+The easiest way to use WinSparkle is to download the prebuilt `WinSparkle.dll`
+binary. It doesn't have any extra dependencies (not even `msvcr*.dll`) and is
 compatible with all Windows compilers.
 
 
  Building from sources
 -----------------------
 
-If you prefer to build WinSparkle yourself, you can do so. All 3rd party
-dependencies are included in the sources archive available for download, you
-don't need to install anything else.
+If you prefer to build WinSparkle yourself, you can do so.  You'll have to
+compile from a git checkout; some of the dependencies are included as git
+submodules.
+
+Check the sources out and initialize the submodules:
+
+    $ git clone git://github.com/vslavik/winsparkle.git
+    $ cd winsparkle
+    $ git submodule init
+    $ git submodule update
+
+To compile the library, just open `WinSparkle.sln` (or the one corresponding to
+your compiler version) solution and build it.
 
 At the moment, projects for Visual C++ 2008, 2010 and 2012 are provided, so
 you'll need that (Express edition suffices). In principle, there's nothing in
 the code preventing it from being compiled by other compilers.
 
-To compile the library, just open WinSparkle.sln solution and build it.
-
 
  Where can I get some examples?
 --------------------------------
 
-Download the sources archive and have a look at the examples/ folder.
+Download the sources archive and have a look at the
+[examples/](https://github.com/vslavik/winsparkle/tree/master/examples) folder.
 
 
  Using latest development versions
@@ -57,9 +67,3 @@ them after checking the tree out:
     $ git submodule update
 
 Then compile WinSparkle as described above; no extra steps are required.
-
-
- Where to get help
--------------------
-
-See http://winsparkle.org
