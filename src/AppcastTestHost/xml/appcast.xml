@@ -1,0 +1,14 @@
+﻿<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>WinSparkle Dot Net Example Updates</title>
+    <link>http://localhost:8000/xml/appcast.xml</link>
+    <description>Appcast for WinSparkle Dot Net Example app updates.</description>
+    <language>en</language>
+    <item>
+      <title>Version 1.1.0</title>
+      <sparkle:releaseNotesLink>http://localhost:8000/html/releasenotes_1-1-0.html</sparkle:releaseNotesLink>
+      <pubDate>Fri, 13 Mar 2015 10:00:00 -0700</pubDate>
+      <enclosure url="http://localhost:8000/release/WinSparkleDotNetExampleInstaller_1.1.0.0.msi" sparkle:version="1.1.0" type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
