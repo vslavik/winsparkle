@@ -1,0 +1,8 @@
+﻿<Window x:Class="WinSparkleDotNetExample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WinSparkleDotNetExample" Name="TheWindow" Height="350" Width="525">
+    <Grid>
+        <Label Content="{Binding ElementName=TheWindow, Path=Version}" />
+    </Grid>
+</Window>
