@@ -127,6 +127,7 @@ shared-library WinSparkle {
         src/updatedownloader.cpp
 
         src/winsparkle.rc
+        translations/translations.rc
     }
 }
 

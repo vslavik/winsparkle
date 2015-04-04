@@ -441,6 +441,10 @@
 				RelativePath="src\winsparkle.rc"
 				>
 			</File>
+			<File
+				RelativePath="translations\translations.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
