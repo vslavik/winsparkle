@@ -60,6 +60,7 @@ namespace
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
+#define ATTR_ARGUMENTS  NS_SPARKLE_NAME("installerArguments")
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
 #define NODE_SHORTVERSION ATTR_SHORTVERSION   // attributes.
 #define OS_MARKER       "windows"
@@ -167,6 +168,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                     ctxt.items[size-1].ShortVersionString = value;
                 else if ( strcmp(name, ATTR_OS) == 0 )
                     ctxt.items[size-1].Os = value;
+                else if ( strcmp(name, ATTR_ARGUMENTS) == 0 )
+                    ctxt.items[size-1].InstallerArguments = value;
             }
         }
     }
