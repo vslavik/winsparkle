@@ -170,7 +170,7 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink);
       sink.Close();
-      UI::NotifyUpdateDownloaded(sink.GetFilePath());
+      UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
     }
     catch ( ... )
     {

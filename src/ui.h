@@ -86,7 +86,7 @@ public:
     /**
         Notifies the UI that an update was downloaded.
      */
-    static void NotifyUpdateDownloaded(const std::wstring& updateFile);
+    static void NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &appcast);
 
     /**
         Shows the WinSparkle window in "checking for updates..." state.

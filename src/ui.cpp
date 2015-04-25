@@ -411,7 +411,7 @@ public:
     // update download progress
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
-    void StateUpdateDownloaded(const std::wstring& updateFile);
+    void StateUpdateDownloaded(const std::wstring& updateFile, const std::string &installerArguments);
 
 private:
     void EnablePulsing(bool enable);
@@ -424,6 +424,8 @@ private:
     void OnInstall(wxCommandEvent&);
 
     void OnRunInstaller(wxCommandEvent&);
+
+    bool RunInstaller();
 
     void SetMessage(const wxString& text, int width = MESSAGE_AREA_WIDTH);
     void ShowReleaseNotes(const Appcast& info);
@@ -450,6 +452,8 @@ private:
     Appcast m_appcast;
     // current update file (only valid after StateUpdateDownloaded)
     wxString m_updateFile;
+    // space separated arguments to update file (only valid after StateUpdateDownloaded)
+    std::string m_installerArguments;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
 
@@ -640,7 +644,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     m_message->SetLabel(_("Launching the installer..."));
     m_runInstallerButton->Disable();
 
-    if ( !wxLaunchDefaultApplication(m_updateFile) )
+    if ( !RunInstaller() )
     {
         wxMessageDialog dlg(this,
             _("Failed to launch the installer."),
@@ -655,6 +659,20 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     }
 }
 
+bool UpdateDialog::RunInstaller()
+{
+    if (m_installerArguments.empty()) 
+    {
+        // keep old way of calling updater to not accidentally break any existing code
+        return wxLaunchDefaultApplication(m_updateFile);
+    } 
+    else 
+    {
+        // wxExecute() returns a process id, or zero on failure
+        long processId = wxExecute(m_updateFile + " " + m_installerArguments);
+        return processId != 0;
+    }
+}
 
 void UpdateDialog::SetMessage(const wxString& text, int width)
 {
@@ -855,13 +873,14 @@ void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
 }
 
 
-void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile)
+void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const std::string& installerArguments)
 {
     m_downloader->Join();
     delete m_downloader;
     m_downloader = NULL;
 
     m_updateFile = updateFile;
+    m_installerArguments = installerArguments;
 
     LayoutChangesGuard guard(this);
 
@@ -1223,7 +1242,7 @@ void App::OnUpdateDownloaded(wxThreadEvent& event)
     if ( m_win )
     {
         EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateUpdateDownloaded(payload.updateFile);
+        m_win->StateUpdateDownloaded(payload.updateFile, payload.appcast.InstallerArguments);
     }
 }
 
@@ -1391,11 +1410,12 @@ void UI::NotifyDownloadProgress(size_t downloaded, size_t total)
 
 
 /*static*/
-void UI::NotifyUpdateDownloaded(const std::wstring& updateFile)
+void UI::NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &appcast)
 {
     UIThreadAccess uit;
     EventPayload payload;
     payload.updateFile = updateFile;
+    payload.appcast = appcast;
     uit.App().SendMsg(MSG_UPDATE_DOWNLOADED, &payload);
 }
 
