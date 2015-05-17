@@ -61,6 +61,11 @@
 #error "wxWidgets >= 2.9 is required to compile this code"
 #endif
 
+// Hack to build with Fedora 20 MinGW
+#ifndef ERROR_RESOURCE_ENUM_USER_STOP
+#define ERROR_RESOURCE_ENUM_USER_STOP                      15106
+#endif
+
 namespace winsparkle
 {
 
@@ -1283,11 +1288,11 @@ class UIThreadAccess
 public:
     UIThreadAccess() : m_lock(ms_uiThreadCS) {}
 
-    App& App()
+    winsparkle::App& App()
     {
         StartIfNeeded();
         return wxGetApp();
-    };
+    }
 
     bool IsRunning() const { return ms_uiThread != NULL; }
 

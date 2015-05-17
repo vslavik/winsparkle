@@ -29,7 +29,7 @@
 #include <expat.h>
 #include <vector>
 #include <algorithm>
-#include <Windows.h>
+#include <windows.h>
 
 namespace winsparkle
 {

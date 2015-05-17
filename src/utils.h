@@ -55,7 +55,7 @@ inline std::basic_string<TOut> ConvertString(const std::basic_string<TIn>& s)
     std::basic_string<TOut> out;
     out.reserve(s.length());
 
-    for ( std::basic_string<TIn>::const_iterator i = s.begin(); i != s.end(); ++i )
+    for ( typename std::basic_string<TIn>::const_iterator i = s.begin(); i != s.end(); ++i )
     {
         out += static_cast<TOut>(*i);
     }
