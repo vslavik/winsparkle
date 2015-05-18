@@ -152,7 +152,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
                           NULL, // lpszHeaders
                           -1,   // dwHeadersLength
                           dwFlags,
-                          NULL  // dwContext
+                          0     // dwContext
                       );
     if ( !conn )
         throw Win32Exception();
