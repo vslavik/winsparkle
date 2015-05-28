@@ -307,14 +307,14 @@ protected:
 
 
 WinSparkleDialog::WinSparkleDialog()
-    : wxDialog(NULL, wxID_ANY, _("Software Update"),
+    : wxDialog(NULL, wxID_ANY, UI::GetLocalizedString(WSS_SOFTWAREUPDATE,_(L"Software Update")),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT)
 {
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
 
-    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
+    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), UI::GetLocalizedString(WSS_UPDATEAVAILABLE, L"UpdateAvailable").c_str(), GetSystemMetrics(SM_CXSMICON)));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -322,7 +322,7 @@ WinSparkleDialog::WinSparkleDialog()
     // otherwise, the standard WinSparkle icon will be used.
     wxIcon bigIcon = GetApplicationIcon(PX(48));
     if ( !bigIcon.IsOk() )
-        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", PX(48));
+        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), UI::GetLocalizedString(WSS_UPDATEAVAILABLE, L"UpdateAvailable").c_str(), PX(48));
 
     topSizer->Add
               (
@@ -488,7 +488,7 @@ UpdateDialog::UpdateDialog()
 
     m_releaseNotesSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, _("Release notes:"));
+    wxStaticText *notesLabel = new wxStaticText(this, wxID_ANY, UI::GetLocalizedString(WSS_RELEASENOTES, _(L"Release notes:")));
     SetBoldFont(notesLabel);
     m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, PX(10)));
 
@@ -514,18 +514,18 @@ UpdateDialog::UpdateDialog()
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
     m_updateButtonsSizer->Add
                           (
-                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+                            new wxButton(this, ID_SKIP_VERSION, UI::GetLocalizedString(WSS_SKIPTHISVERSION,_(L"Skip this version"))),
                             wxSizerFlags().Border(wxRIGHT, PX(20))
                           );
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
-                            new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
+                            new wxButton(this, ID_REMIND_LATER, UI::GetLocalizedString(WSS_REMINDMELATER, _(L"Remind me later"))),
                             wxSizerFlags().Border(wxRIGHT, PX(10))
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, UI::GetLocalizedString(WSS_INSTALLUPDATE, _(L"Install update"))),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -538,7 +538,7 @@ UpdateDialog::UpdateDialog()
 
     m_runInstallerButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     // TODO: make this "Install and relaunch"
-    m_runInstallerButton = new wxButton(this, ID_RUN_INSTALLER, _("Install update"));
+    m_runInstallerButton = new wxButton(this, ID_RUN_INSTALLER, UI::GetLocalizedString(WSS_INSTALLUPDATE, _(L"Install update")));
     m_runInstallerButtonSizer->AddStretchSpacer(1);
     m_runInstallerButtonSizer->Add(m_runInstallerButton, wxSizerFlags(0).Border(wxLEFT));
     m_buttonSizer->Add(m_runInstallerButtonSizer, wxSizerFlags(1));
@@ -636,24 +636,24 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     if( !ApplicationController::IsReadyToShutdown() )
     {
         wxMessageDialog dlg(this,
-                            wxString::Format(_("%s cannot be restarted."), Settings::GetAppName()),
-                            _("Software Update"),
+                            wxString::Format(UI::GetLocalizedString(WSS_CANNOTBERESTARTED_FMT1, _(L"%s cannot be restarted.")).c_str(), Settings::GetAppName()),
+                            UI::GetLocalizedString(WSS_SOFTWAREUPDATE, _(L"Software Update")),
                             wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
-        dlg.SetExtendedMessage(_("Make sure that you don't have any unsaved documents and try again."));
+        dlg.SetExtendedMessage(UI::GetLocalizedString(WSS_UNSAVEDDOCUMENTSTRYAGAIN, _(L"Make sure that you don't have any unsaved documents and try again.")));
         dlg.ShowModal();
         return;
     }
 
     wxBusyCursor bcur;
 
-    m_message->SetLabel(_("Launching the installer..."));
+    m_message->SetLabel(UI::GetLocalizedString(WSS_LAUNCHINGINSTALLER, _(L"Launching the installer...")));
     m_runInstallerButton->Disable();
 
     if ( !RunInstaller() )
     {
         wxMessageDialog dlg(this,
-            _("Failed to launch the installer."),
-            _("Software Update"),
+            UI::GetLocalizedString(WSS_FAILEDTOLAUNCHINSTALLER, _(L"Failed to launch the installer.")),
+            UI::GetLocalizedString(WSS_SOFTWAREUPDATE, _(L"Software Update")),
             wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
         dlg.ShowModal();
     }
@@ -690,9 +690,9 @@ void UpdateDialog::StateCheckingUpdates()
 {
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Checking for updates..."));
+    SetMessage(UI::GetLocalizedString(WSS_CHECKINGFORUPDATES, _(L"Checking for updates...")));
 
-    m_closeButton->SetLabel(_("Cancel"));
+    m_closeButton->SetLabel(UI::GetLocalizedString(WSS_CANCEL, _(L"Cancel")));
     EnablePulsing(true);
 
     HIDE(m_heading);
@@ -710,14 +710,14 @@ void UpdateDialog::StateNoUpdateFound()
 {
     LayoutChangesGuard guard(this);
 
-    m_heading->SetLabel(_("You're up to date!"));
+    m_heading->SetLabel(UI::GetLocalizedString(WSS_UPTODATE, _(L"You're up to date!")));
 
     wxString msg;
     try
     {
         msg = wxString::Format
               (
-                  _("%s %s is currently the newest version available."),
+                  UI::GetLocalizedString(WSS_ISCURRENT_FMT2, _(L"%s %s is currently the newest version available.")).c_str(),
                   Settings::GetAppName(),
                   Settings::GetAppVersion()
               );
@@ -730,7 +730,7 @@ void UpdateDialog::StateNoUpdateFound()
 
     SetMessage(msg);
 
-    m_closeButton->SetLabel(_("Close"));
+    m_closeButton->SetLabel(UI::GetLocalizedString(WSS_CLOSE, _(L"Close")));
     m_closeButton->SetDefault();
     EnablePulsing(false);
 
@@ -749,12 +749,12 @@ void UpdateDialog::StateUpdateError()
 {
     LayoutChangesGuard guard(this);
 
-    m_heading->SetLabel(_("Update Error!"));
+    m_heading->SetLabel(UI::GetLocalizedString(WSS_UPDATEERROR, _(L"Update Error!")));
 
-    wxString msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+    wxString msg = (UI::GetLocalizedString(WSS_ERROROCCURRED, L"An error occurred in retrieving update information; are you connected to the internet? Please try again later."));
     SetMessage(msg);
 
-    m_closeButton->SetLabel(_("Cancel"));
+    m_closeButton->SetLabel(_(UI::GetLocalizedString(WSS_CANCEL, L"Cancel")));
     m_closeButton->SetDefault();
     EnablePulsing(false);
 
@@ -792,16 +792,16 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info)
         }
 
         m_heading->SetLabel(
-            wxString::Format(_("A new version of %s is available!"), appname));
+            wxString::Format(UI::GetLocalizedString(WSS_NEWVERSION_FMT1, L"A new version of %s is available!").c_str(), appname));
 
         if ( !info.HasDownload() )
-            m_installButton->SetLabel(_("Get update"));
+            m_installButton->SetLabel(UI::GetLocalizedString(WSS_GETUPDATE, _(L"Get update")));
 
         SetMessage
         (
             wxString::Format
             (
-                _("%s %s is now available (you have %s). Would you like to download it now?"),
+                UI::GetLocalizedString(WSS_NOWAVAILABLE_FMT3, _(L"%s %s is now available (you have %s). Would you like to download it now?")).c_str(),
                 appname, ver_new, ver_my
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
@@ -832,9 +832,9 @@ void UpdateDialog::StateDownloading()
 {
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Downloading update..."));
+    SetMessage(UI::GetLocalizedString(WSS_DOWNLOADING, _(L"Downloading update...")));
 
-    m_closeButton->SetLabel(_("Cancel"));
+    m_closeButton->SetLabel(UI::GetLocalizedString(WSS_CANCEL, _(L"Cancel")));
     EnablePulsing(false);
 
     HIDE(m_heading);
@@ -859,7 +859,7 @@ void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
         m_progress->SetValue(downloaded);
         label = wxString::Format
                 (
-                    _("%s of %s"),
+                    UI::GetLocalizedString(WSS_PROGRESSOF_FMT2, _(L"%s of %s")).c_str(),
                     wxFileName::GetHumanReadableSize(downloaded, "", 1, wxSIZE_CONV_SI),
                     wxFileName::GetHumanReadableSize(total, "", 1, wxSIZE_CONV_SI)
                 );
@@ -889,7 +889,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
 
     LayoutChangesGuard guard(this);
 
-    SetMessage(_("Ready to install."));
+    SetMessage(UI::GetLocalizedString(WSS_READYTOINSTALL, _(L"Ready to install.")));
 
     m_progress->SetRange(1);
     m_progress->SetValue(1);
@@ -1029,7 +1029,7 @@ AskPermissionDialog::AskPermissionDialog()
 {
     wxStaticText *heading =
             new wxStaticText(this, wxID_ANY,
-                             _("Check for updates automatically?"));
+                             UI::GetLocalizedString(WSS_CHECKAUTOMATICALLYQUESTIONHEADER, _(L"Check for updates automatically?")));
     SetHeadingFont(heading);
     m_mainAreaSizer->Add(heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, PX(10)));
 
@@ -1039,7 +1039,7 @@ AskPermissionDialog::AskPermissionDialog()
                     this, wxID_ANY,
                     wxString::Format
                     (
-                        _("Should %s automatically check for updates? You can always check for updates manually from the menu."),
+						UI::GetLocalizedString(WSS_CHECKAUTOMATICALLYQUESTION_FMT1, _(L"Should %s automatically check for updates? You can always check for updates manually from the menu.")).c_str(),
                         Settings::GetAppName()
                     ),
                     wxDefaultPosition, wxSize(PX(MESSAGE_AREA_WIDTH), -1)
@@ -1053,12 +1053,12 @@ AskPermissionDialog::AskPermissionDialog()
 
     buttonSizer->Add
                  (
-                     new wxButton(this, wxID_OK, _("Check automatically")),
+                     new wxButton(this, wxID_OK, UI::GetLocalizedString(WSS_CHECKAUTOMATICALLY, _(L"Check automatically"))),
                      wxSizerFlags().Border(wxRIGHT)
                  );
     buttonSizer->Add
                  (
-                     new wxButton(this, wxID_CANCEL, _("Don't check"))
+                     new wxButton(this, wxID_CANCEL, UI::GetLocalizedString(WSS_DONTCHECK, _(L"Don't check")))
                  );
 
     m_mainAreaSizer->Add
@@ -1450,6 +1450,34 @@ void UI::AskForPermission()
 {
     UIThreadAccess uit;
     uit.App().SendMsg(MSG_ASK_FOR_PERMISSION);
+}
+
+
+/*static*/
+UI::StringMap UI::m_stringMap;
+
+/*static*/
+void UI::SetLocalizedString(WinSparkleStringID stringID, const wchar_t* localized)
+{
+	m_stringMap[stringID] = localized;
+}
+
+/*static*/
+std::wstring UI::GetLocalizedString(WinSparkleStringID stringID, const wchar_t* defaultVal /* =L"" */)
+{
+	//Find the given string id in our map
+	StringMap::iterator it = m_stringMap.find(stringID);
+
+	//If we find it, return the string. If it's an empty string, use the default value instead.
+	if (it != m_stringMap.end() && it->second.length() > 0)
+		return it->second;
+
+	//Otherwise, return the default value if available
+	if (defaultVal)
+		return defaultVal;
+
+	//If no default given, return an empty string
+	return L"";
 }
 
 } // namespace winsparkle

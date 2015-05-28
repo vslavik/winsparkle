@@ -28,6 +28,8 @@
 
 #include "threads.h"
 #include "appcast.h"
+#include "stringids.h"
+#include <map>
 
 namespace winsparkle
 {
@@ -107,12 +109,19 @@ public:
 
     static HINSTANCE GetDllHINSTANCE() { return ms_hInstance; }
 
+	static void SetLocalizedString(WinSparkleStringID stringID, const wchar_t* localized);
+
+	static std::wstring GetLocalizedString(WinSparkleStringID stringID, const wchar_t* defaultVal = L"");
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return true; }
 
 private:
     UI();
+
+	typedef std::map<WinSparkleStringID, std::wstring> StringMap;
+	static StringMap m_stringMap;
 
     static HINSTANCE ms_hInstance;
 
