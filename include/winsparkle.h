@@ -29,6 +29,7 @@
 #include <stddef.h>
 
 #include "winsparkle-version.h"
+#include "stringids.h"
 
 #if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER)
 #pragma comment(lib, "WinSparkle.lib")
@@ -244,8 +245,10 @@ typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
 
 
+
 /// Callback type for win_sparkle_shutdown_request_callback()
-typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
+typedef void(__cdecl *win_sparkle_shutdown_request_callback_t)();
+
 
 /**
     Set callback for shutting down the application.
@@ -266,6 +269,11 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
     @see win_sparkle_set_can_shutdown_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
+
+/**
+	Set a localized string.
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_localized_string(WinSparkleStringID stringID, const wchar_t* localized);
 
 //@}
 

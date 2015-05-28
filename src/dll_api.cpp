@@ -237,6 +237,16 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_localized_string(WinSparkleStringID stringID, const wchar_t* localized)
+{
+	try
+	{
+		UI::SetLocalizedString(stringID, localized);
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
+
 /*--------------------------------------------------------------------------*
                               Manual usage
  *--------------------------------------------------------------------------*/

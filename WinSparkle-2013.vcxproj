@@ -192,6 +192,7 @@
     <ClCompile Include="src\updatedownloader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\stringids.h" />
     <ClInclude Include="include\winsparkle.h" />
     <ClInclude Include="include\winsparkle-version.h" />
     <ClInclude Include="src\appcast.h" />
