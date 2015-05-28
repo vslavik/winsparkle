@@ -314,7 +314,7 @@ WinSparkleDialog::WinSparkleDialog()
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
 
-    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), UI::GetLocalizedString(WSS_UPDATEAVAILABLE, L"UpdateAvailable").c_str(), GetSystemMetrics(SM_CXSMICON)));
+    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -322,7 +322,7 @@ WinSparkleDialog::WinSparkleDialog()
     // otherwise, the standard WinSparkle icon will be used.
     wxIcon bigIcon = GetApplicationIcon(PX(48));
     if ( !bigIcon.IsOk() )
-        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), UI::GetLocalizedString(WSS_UPDATEAVAILABLE, L"UpdateAvailable").c_str(), PX(48));
+        bigIcon = LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", PX(48));
 
     topSizer->Add
               (
