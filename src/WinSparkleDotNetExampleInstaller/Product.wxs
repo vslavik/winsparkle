@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define ProductName = "WinSparkleDotNetExample" ?>
+<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="$(var.ProductName)" Language="1033" Version="!(bind.FileVersion.WinSparkleDotNetExample.exe)" Manufacturer="Test App" UpgradeCode="bfd1d263-758a-48e9-aad3-0d576b0ef1e7">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="WinSparkleDotNetExample" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+    
+    <!--Directory Structure-->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.PlatformProgramFilesFolder)">
+        <Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+      </Directory>
+    </Directory>
+    
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+    </UI>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+	</Product>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			 <Component Id="ProductComponent" Guid="95E222A0-20B1-48EF-997B-9F0D359B55D9">
+         <File Id="WinSparkle.dll" Name="WinSparkle.dll" Source="..\WinSparkleDotNetExample\bin\$(var.Configuration)\WinSparkle.dll" Vital="yes" KeyPath="no" DiskId="1"/>
+         <File Id="WinSparkleDotNet.dll" Name="WinSparkleDotNet.dll" Source="..\WinSparkleDotNetExample\bin\$(var.Configuration)\WinSparkleDotNet.dll" Vital="yes" KeyPath="no" DiskId="1"/>
+         <File Id="WinSparkleDotNetExample.exe" Name="WinSparkleDotNetExample.exe" Source="..\WinSparkleDotNetExample\bin\$(var.Configuration)\WinSparkleDotNetExample.exe" Vital="yes" KeyPath="yes" DiskId="1"/>
+			 </Component> 
+		</ComponentGroup>
+	</Fragment>
+</Wix>
+
+
