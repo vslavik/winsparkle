@@ -62,6 +62,10 @@ void OnCheckForUpdates(HWND hwnd,
 {
     if ( id == IDB_CHECK_FOR_UPDATES )
     {
+        /* Manually check for updates. This is user-initiated action and
+           always shows visible UI. You only need to call it if you have
+           a "Check for updates" menu item, otherwise win_sparkle_init()
+           checks for updates automatically. */
         win_sparkle_check_update_with_ui();
     }
 }
@@ -164,8 +168,9 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     ShowWindow(g_hwndMain, nCmdShow);
 
-    /* initialize WinSparkle as soon as the app itself is initialized, right
-       before entering the event loop: */
+    /* Initialize WinSparkle as soon as the app itself is initialized, right
+       before entering the event loop. This also checks for updates and
+       shows update UI if there any. */
     win_sparkle_init();
 
     {
