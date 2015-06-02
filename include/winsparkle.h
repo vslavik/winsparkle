@@ -293,6 +293,10 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
 
     This function returns immediately.
 
+    @note Because this function is intended for manual, user-initiated checks
+          for updates, it ignores "Skip this version" even if the user checked
+          it previously.
+
     @see win_sparkle_check_update_without_ui()
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
@@ -308,6 +312,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
     checks on interval option or manual check with visible UI.
 
     This function returns immediately.
+
+    @note This function currently ignores "Skip this version" even if the user
+          checked it previously.
 
     @since 0.4
 
