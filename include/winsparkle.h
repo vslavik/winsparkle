@@ -313,8 +313,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
 
     This function returns immediately.
 
-    @note This function currently ignores "Skip this version" even if the user
-          checked it previously.
+    @note This function respects "Skip this version" choice by the user.
 
     @since 0.4
 
