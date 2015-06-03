@@ -33,6 +33,7 @@
 #include "updatedownloader.h"
 
 #include <ctime>
+#include <windows.h>
 
 using namespace winsparkle;
 
@@ -47,9 +48,28 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
 {
     try
     {
+        // finish initialization
+        if (!Settings::GetLanguage().IsOk())
+        {
+            LANGID lang = 0;
+            if (IsWindowsVistaOrGreater())
+            {
+                auto f_GetThreadUILanguage = LOAD_DYNAMIC_FUNC(GetThreadUILanguage, kernel32);
+                if (f_GetThreadUILanguage)
+                    lang = f_GetThreadUILanguage();
+            }
+            if (PRIMARYLANGID(lang) == 0)
+            {
+                lang = LANGIDFROMLCID(GetThreadLocale());
+            }
+            if (PRIMARYLANGID(lang) != 0)
+                Settings::SetLanguage(lang);
+        }
+
         // first things first
         UpdateDownloader::CleanLeftovers();
 
+        // check for updates
         bool checkUpdates;
         if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
         {
@@ -101,6 +121,29 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup()
         UI::ShutDown();
 
         // FIXME: shut down any worker UpdateChecker and UpdateDownloader threads too
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+
+/*--------------------------------------------------------------------------*
+                              Language Settings
+*--------------------------------------------------------------------------*/
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_lang(const char *lang)
+{
+    try
+    {
+        Settings::SetLanguage(lang);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_langid(unsigned short lang)
+{
+    try
+    {
+        Settings::SetLanguage(lang);
     }
     CATCH_ALL_EXCEPTIONS
 }

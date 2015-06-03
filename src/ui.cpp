@@ -41,6 +41,7 @@
 #include <wx/dcclient.h>
 #include <wx/dialog.h>
 #include <wx/evtloop.h>
+#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/filename.h>
@@ -222,6 +223,13 @@ void CenterWindowOnHostApplication(wxTopLevelWindow *win)
                 data.biggest.y + (data.biggest.height - winsz.y) / 2);
     win->Move(pos);
 }
+
+
+class DllTranslationsLoader : public wxResourceTranslationsLoader
+{
+protected:
+    virtual WXHINSTANCE GetModule() const { return UI::GetDllHINSTANCE(); }
+};
 
 } // anonymous namespace
 
@@ -1039,6 +1047,8 @@ class App : public wxApp
 public:
     App();
 
+    virtual bool OnInit();
+
     // Sends a message with ID @a msg to the app.
     void SendMsg(int msg, EventPayload *data = NULL);
 
@@ -1090,6 +1100,41 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
+}
+
+
+bool App::OnInit()
+{
+    if (!wxApp::OnInit())
+        return false;
+
+    wxString language;
+    Settings::Lang langset = Settings::GetLanguage();
+    if (!langset.lang.empty())
+    {
+        language = langset.lang;
+    }
+    else if (langset.langid != 0)
+    {
+        auto f_LCIDToLocaleName = LOAD_DYNAMIC_FUNC(LCIDToLocaleName, kernel32);
+        if (f_LCIDToLocaleName)
+        {
+            WCHAR strNameBuffer[LOCALE_NAME_MAX_LENGTH];
+            if (f_LCIDToLocaleName(MAKELCID(langset.langid, SORT_DEFAULT), strNameBuffer, LOCALE_NAME_MAX_LENGTH, 0) != 0)
+                language = strNameBuffer;
+        }
+        // else: just use the default on Windows XP
+    }
+    language.Replace("-", "_");
+
+    wxTranslations *trans = new wxTranslations();
+    wxTranslations::Set(trans);
+
+    trans->SetLoader(new DllTranslationsLoader());
+    trans->SetLanguage(language);
+    trans->AddCatalog("winsparkle");
+
+    return true;
 }
 
 
