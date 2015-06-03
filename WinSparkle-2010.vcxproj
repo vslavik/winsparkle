@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\winsparkle.rc" />
+    <ResourceCompile Include="translations\translations.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="3rdparty\expat-2010.vcxproj">

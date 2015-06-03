@@ -80,6 +80,50 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup();
 
 
 /*--------------------------------------------------------------------------*
+                             Language settings
+*--------------------------------------------------------------------------*/
+
+/**
+@name Language settings
+
+These functions set user interface language. They must be called before
+win_sparkle_init() to have any effect. If none of them is called, WinSparkle
+detects the UI language automatically.
+*/
+//@{
+
+/**
+    Sets UI language from its ISO code.
+
+    This function must be called before win_sparkle_init().
+
+    @param lang ISO 639 language code with an optional ISO 3116 country
+                code, e.g. "fr", "pt-PT", "pt-BR" or "pt_BR", as used
+                e.g. by ::GetThreadPreferredUILanguages() too.
+
+    @since 0.4
+
+    @see win_sparkle_set_langid()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_lang(const char *lang);
+
+/**
+    Sets UI language from its Win32 LANGID code.
+
+    This function must be called before win_sparkle_init().
+
+    @param lang Language code (LANGID) as created by the MAKELANGID macro
+                or returned by e.g. ::GetThreadUILanguage()
+
+    @since 0.4
+
+    @see win_sparkle_set_lang()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_langid(unsigned short lang);
+
+//@}
+
+/*--------------------------------------------------------------------------*
                                Configuration
  *--------------------------------------------------------------------------*/
 

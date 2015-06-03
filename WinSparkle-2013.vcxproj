@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\winsparkle.rc" />
+    <ResourceCompile Include="translations\translations.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="3rdparty\expat-2013.vcxproj">
@@ -216,6 +217,13 @@
       <Project>{499a5238-5aac-5fd3-8902-819d787108a5}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="WinSparkle.Targets">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="WinSparkle.targets" />
+  </ImportGroup>
 </Project>

@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WinSparkle\n"
+"POT-Creation-Date: 2015-01-18 16:10+0100\n"
+"PO-Revision-Date: 2015-01-18 16:10+0100\n"
+"Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
+"Language-Team: \n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.3\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: src\n"
+
+#: src/ui.cpp:260 src/ui.cpp:586 src/ui.cpp:602
+msgid "Software Update"
+msgstr ""
+
+#: src/ui.cpp:437
+msgid "Release notes:"
+msgstr ""
+
+#: src/ui.cpp:463
+msgid "Skip this version"
+msgstr ""
+
+#: src/ui.cpp:469
+msgid "Remind me later"
+msgstr ""
+
+#: src/ui.cpp:474 src/ui.cpp:487
+msgid "Install update"
+msgstr ""
+
+#: src/ui.cpp:585
+#, c-format
+msgid "%s cannot be restarted."
+msgstr ""
+
+#: src/ui.cpp:588
+msgid "Make sure that you don't have any unsaved documents and try again."
+msgstr ""
+
+#: src/ui.cpp:595
+msgid "Launching the installer..."
+msgstr ""
+
+#: src/ui.cpp:601
+msgid "Failed to launch the installer."
+msgstr ""
+
+#: src/ui.cpp:625
+msgid "Checking for updates..."
+msgstr ""
+
+#: src/ui.cpp:627 src/ui.cpp:689 src/ui.cpp:769
+msgid "Cancel"
+msgstr ""
+
+#: src/ui.cpp:645
+msgid "You're up to date!"
+msgstr ""
+
+#: src/ui.cpp:652
+#, c-format
+msgid "%s %s is currently the newest version available."
+msgstr ""
+
+#: src/ui.cpp:665
+msgid "Close"
+msgstr ""
+
+#: src/ui.cpp:684
+msgid "Update Error!"
+msgstr ""
+
+#: src/ui.cpp:686
+msgid ""
+"An error occurred in retrieving update information; are you connected to the "
+"internet? Please try again later."
+msgstr ""
+
+#: src/ui.cpp:727
+#, c-format
+msgid "A new version of %s is available!"
+msgstr ""
+
+#: src/ui.cpp:730
+msgid "Get update"
+msgstr ""
+
+#: src/ui.cpp:736
+#, c-format
+msgid ""
+"%s %s is now available (you have %s). Would you like to download it now?"
+msgstr ""
+
+#: src/ui.cpp:767
+msgid "Downloading update..."
+msgstr ""
+
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:795
+#, c-format
+msgid "%s of %s"
+msgstr ""
+
+#: src/ui.cpp:824
+msgid "Ready to install."
+msgstr ""
+
+#: src/ui.cpp:964
+msgid "Check for updates automatically?"
+msgstr ""
+
+#: src/ui.cpp:974
+#, c-format
+msgid ""
+"Should %s automatically check for updates? You can always check for updates "
+"manually from the menu."
+msgstr ""
+
+#: src/ui.cpp:988
+msgid "Check automatically"
+msgstr ""
+
+#: src/ui.cpp:993
+msgid "Don't check"
+msgstr ""

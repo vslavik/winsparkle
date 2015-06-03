@@ -118,7 +118,13 @@
     <ClCompile Include="wxWidgets\src\common\filename.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\fmapbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\fontcmn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\fontmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\framecmn.cpp">
@@ -148,7 +154,13 @@
     <ClCompile Include="wxWidgets\src\common\init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\intl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\ipcbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\languageinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\layout.cpp">
@@ -263,6 +275,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\toplvcmn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\translation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\unichar.cpp">

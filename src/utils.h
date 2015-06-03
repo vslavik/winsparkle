@@ -74,6 +74,37 @@ inline std::wstring AnsiToWide(const std::string& s)
 }
 
 
+// Checking of Windows version
+
+inline bool IsWindowsVistaOrGreater()
+{
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
+    DWORDLONG const dwlConditionMask = VerSetConditionMask(
+        VerSetConditionMask(
+        VerSetConditionMask(
+        0, VER_MAJORVERSION, VER_GREATER_EQUAL),
+        VER_MINORVERSION, VER_GREATER_EQUAL),
+        VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+    osvi.dwMajorVersion = HIBYTE(_WIN32_WINNT_VISTA);
+    osvi.dwMinorVersion = LOBYTE(_WIN32_WINNT_VISTA);
+    osvi.wServicePackMajor = 0;
+
+    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+}
+
+
+// Dynamic loading of symbols that may be unavailable on earlier
+// versions of Windows
+
+template<typename T>
+inline T* LoadDynamicFunc(const char *func, const char *dll)
+{
+    return reinterpret_cast<T*>(GetProcAddress(GetModuleHandleA(dll), func));
+}
+
+#define LOAD_DYNAMIC_FUNC(func, dll) \
+    LoadDynamicFunc<decltype(func)>(#func, #dll)
+
 } // namespace winsparkle
 
 #endif // _utils_h_

@@ -177,7 +177,9 @@
     <ClCompile Include="wxWidgets\src\common\file.cpp" />
     <ClCompile Include="wxWidgets\src\common\filefn.cpp" />
     <ClCompile Include="wxWidgets\src\common\filename.cpp" />
+    <ClCompile Include="wxWidgets\src\common\fmapbase.cpp" />
     <ClCompile Include="wxWidgets\src\common\fontcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\fontmap.cpp" />
     <ClCompile Include="wxWidgets\src\common\framecmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\gaugecmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\gbsizer.cpp" />
@@ -187,7 +189,9 @@
     <ClCompile Include="wxWidgets\src\common\iconbndl.cpp" />
     <ClCompile Include="wxWidgets\src\common\image.cpp" />
     <ClCompile Include="wxWidgets\src\common\init.cpp" />
+    <ClCompile Include="wxWidgets\src\common\intl.cpp" />
     <ClCompile Include="wxWidgets\src\common\ipcbase.cpp" />
+    <ClCompile Include="wxWidgets\src\common\languageinfo.cpp" />
     <ClCompile Include="wxWidgets\src\common\layout.cpp" />
     <ClCompile Include="wxWidgets\src\common\list.cpp" />
     <ClCompile Include="wxWidgets\src\common\longlong.cpp" />
@@ -226,6 +230,7 @@
     <ClCompile Include="wxWidgets\src\common\timerimpl.cpp" />
     <ClCompile Include="wxWidgets\src\common\tokenzr.cpp" />
     <ClCompile Include="wxWidgets\src\common\toplvcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\translation.cpp" />
     <ClCompile Include="wxWidgets\src\common\unichar.cpp" />
     <ClCompile Include="wxWidgets\src\common\uri.cpp" />
     <ClCompile Include="wxWidgets\src\common\ustring.cpp" />

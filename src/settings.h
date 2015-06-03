@@ -114,6 +114,40 @@ public:
     //@}
 
     /**
+        UI language.
+    */
+    //@{
+
+    struct Lang
+    {
+        Lang() : langid(0) {}
+        bool IsOk() const { return !lang.empty() || langid != 0; }
+
+        std::string lang;
+        unsigned short langid;
+    };
+
+    static Lang GetLanguage()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        return ms_lang;
+    }
+
+    static void SetLanguage(const char *lang)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_lang.lang = lang;
+    }
+    
+    static void SetLanguage(unsigned short langid)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_lang.langid = langid;
+    }
+
+    //@}
+
+    /**
         Overwriting app metadata.
 
         Normally, they would be retrieved from resources, but it's sometimes
@@ -258,6 +292,7 @@ private:
     // guards the variables below:
     static CriticalSection ms_csVars;
 
+    static Lang         ms_lang;
     static std::string  ms_appcastURL;
     static std::string  ms_registryPath;
     static std::wstring ms_companyName;

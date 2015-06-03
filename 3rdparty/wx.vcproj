@@ -436,7 +436,15 @@
 				>
 			</File>
 			<File
+				RelativePath="wxWidgets\src\common\fmapbase.cpp"
+				>
+			</File>
+			<File
 				RelativePath="wxWidgets\src\common\fontcmn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\common\fontmap.cpp"
 				>
 			</File>
 			<File
@@ -476,7 +484,15 @@
 				>
 			</File>
 			<File
+				RelativePath="wxWidgets\src\common\intl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="wxWidgets\src\common\ipcbase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\common\languageinfo.cpp"
 				>
 			</File>
 			<File
@@ -629,6 +645,10 @@
 			</File>
 			<File
 				RelativePath="wxWidgets\src\common\toplvcmn.cpp"
+				>
+			</File>
+			<File
+				RelativePath="wxWidgets\src\common\translation.cpp"
 				>
 			</File>
 			<File
