@@ -54,6 +54,7 @@
 
 #include <exdisp.h>
 #include <mshtml.h>
+#include <commctrl.h>
 
 
 #if !wxCHECK_VERSION(2,9,0)
@@ -109,10 +110,7 @@ wxIcon LoadNamedIcon(HMODULE module, const wchar_t *iconName, int size)
 {
     HICON hIcon = NULL;
 
-    typedef HRESULT(WINAPI *LPFN_LOADICONWITHSCALEDOWN)(HINSTANCE, PCWSTR, int, int, HICON*);
-    LPFN_LOADICONWITHSCALEDOWN f_LoadIconWithScaleDown =
-        (LPFN_LOADICONWITHSCALEDOWN) GetProcAddress(GetModuleHandleA("comctl32"), "LoadIconWithScaleDown");
-
+    auto f_LoadIconWithScaleDown = LOAD_DYNAMIC_FUNC(LoadIconWithScaleDown, comctl32);
     if (f_LoadIconWithScaleDown)
     {
         if (FAILED(f_LoadIconWithScaleDown(module, iconName, size, size, &hIcon)))

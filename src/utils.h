@@ -74,6 +74,18 @@ inline std::wstring AnsiToWide(const std::string& s)
 }
 
 
+// Dynamic loading of symbols that may be unavailable on earlier
+// versions of Windows
+
+template<typename T>
+inline T* LoadDynamicFunc(const char *func, const char *dll)
+{
+    return reinterpret_cast<T*>(GetProcAddress(GetModuleHandleA(dll), func));
+}
+
+#define LOAD_DYNAMIC_FUNC(func, dll) \
+    LoadDynamicFunc<decltype(func)>(#func, #dll)
+
 } // namespace winsparkle
 
 #endif // _utils_h_
