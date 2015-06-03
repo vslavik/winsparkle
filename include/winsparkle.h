@@ -101,7 +101,7 @@ detects the UI language automatically.
                 code, e.g. "fr", "pt-PT", "pt-BR" or "pt_BR", as used
                 e.g. by ::GetThreadPreferredUILanguages() too.
 
-    @since 0.4
+    @since 0.5
 
     @see win_sparkle_set_langid()
 */
@@ -115,7 +115,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_lang(const char *lang);
     @param lang Language code (LANGID) as created by the MAKELANGID macro
                 or returned by e.g. ::GetThreadUILanguage()
 
-    @since 0.4
+    @since 0.5
 
     @see win_sparkle_set_lang()
 */
