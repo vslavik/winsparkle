@@ -4,129 +4,129 @@ msgstr ""
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
 "PO-Revision-Date: 2015-06-03 12:57-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
-"Language-Team: Ukrainian\n"
-"Language: uk_UA\n"
+"Language-Team: Catalan\n"
+"Language: ca_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: crowdin.com\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
-"X-Crowdin-Language: uk\n"
+"X-Crowdin-Language: ca\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
 #: src/ui.cpp:259 src/ui.cpp:585
 msgid "Software Update"
-msgstr "Оновлення ПЗ"
+msgstr "Actualització de programari"
 
 #: src/ui.cpp:436
 msgid "Release notes:"
-msgstr "Замітки до випуску:"
+msgstr "Notes de la versió:"
 
 #: src/ui.cpp:462
 msgid "Skip this version"
-msgstr "Пропустити цю версію"
+msgstr "Omet aquesta versió"
 
 #: src/ui.cpp:468
 msgid "Remind me later"
-msgstr "Нагадати пізніше"
+msgstr "Recorda-m’ho més tard"
 
 #: src/ui.cpp:473 src/ui.cpp:486
 msgid "Install update"
-msgstr "Встановити оновлення"
+msgstr "Instal·la l’actualització"
 
 #: src/ui.cpp:584
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s не може бути перезапущено."
+msgstr "No s’ha pogut reiniciar %s."
 
 #: src/ui.cpp:587
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Переконайтеся, що у Вас немає якихось незбережених документів, і спробуйте ще раз."
+msgstr "Assegureu-vos que no teniu cap document sense desar i torneu a provar-ho."
 
 #: src/ui.cpp:594
 msgid "Launching the installer..."
-msgstr "Запуск інсталятора..."
+msgstr "S’està obrint l’instal·lador…"
 
 #: src/ui.cpp:599
 msgid "Failed to launch the installer."
-msgstr "Не вдалося запустити інсталятор."
+msgstr "No s’ha pogut obrir l’instal·lador."
 
 #: src/ui.cpp:621
 msgid "Checking for updates..."
-msgstr "Перевірка наявності оновлень..."
+msgstr "S’està comprovant si hi ha actualitzacions…"
 
 #: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
 msgid "Cancel"
-msgstr "Скасувати"
+msgstr "Cancel·la"
 
 #: src/ui.cpp:641
 msgid "You're up to date!"
-msgstr "У Вас усе найновіше!"
+msgstr "Ja teniu la versió més recent."
 
 #: src/ui.cpp:648
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s — наразі найновіша доступна версія."
+msgstr "%s %s és la versió més nova disponible ara."
 
 #: src/ui.cpp:661
 msgid "Close"
-msgstr "Закрити"
+msgstr "Tanca"
 
 #: src/ui.cpp:680
 msgid "Update Error!"
-msgstr "Помилка оновлення!"
+msgstr "S’ha produït un error d’actualització."
 
 #: src/ui.cpp:682
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Сталася помилка під час отримання інформації оновлення; Ви підключені до Інтернету? Будь ласка, спробуйте ще раз пізніше."
+msgstr "No s’ha pogut recuperar la informació d’actualitzacions. Comproveu que la vostra connexió d’Internet estigui activa i proveu un altre cop més tard."
 
 #: src/ui.cpp:723
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Доступна нова версія %s!"
+msgstr "Hi ha una versió actualitzada de l’aplicació %s."
 
 #: src/ui.cpp:726
 msgid "Get update"
-msgstr "Отримати оновлення"
+msgstr "Aconsegueix l’actualització"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
 #: src/ui.cpp:732
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s уже доступна (у Вас — %s). Ви хотіли б завантажити її зараз?"
+msgstr "%s %s està disponible (teniu la versió %s). Voleu baixar-la ara?"
 
 #: src/ui.cpp:763
 msgid "Downloading update..."
-msgstr "Завантаження оновлення..."
+msgstr "S’està baixant l’actualització…"
 
 #: src/ui.cpp:791
 #, c-format
 msgid "%s of %s"
-msgstr "%s з %s"
+msgstr "%s/%s"
 
 #: src/ui.cpp:820
 msgid "Ready to install."
-msgstr "Готово до встановлення."
+msgstr "La instal·lació és a punt."
 
 #: src/ui.cpp:960
 msgid "Check for updates automatically?"
-msgstr "Перевіряти наявність оновлень автоматично?"
+msgstr "Voleu comprovar si hi ha actualitzacions automàticament?"
 
 #: src/ui.cpp:970
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Чи має %s автоматично перевіряти наявність оновлень? Ви завжди можете перевірити наявність оновлень вручну з меню."
+msgstr "Voleu que %s comprovi si hi ha actualitzacions automàticament? Sempre podreu fer-ho manualment des del menú."
 
 #: src/ui.cpp:984
 msgid "Check automatically"
-msgstr "Перевіряти автоматично"
+msgstr "Comprova automàticament"
 
 #: src/ui.cpp:989
 msgid "Don't check"
-msgstr "Не перевіряти"
+msgstr "No comprovis res"
 

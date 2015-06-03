@@ -1,5 +1,6 @@
 winsparkle_bg      MOFILE  "bg.mo"
 winsparkle_bs      MOFILE  "bs.mo"
+winsparkle_ca_ES   MOFILE  "ca_ES.mo"
 winsparkle_co      MOFILE  "co.mo"
 winsparkle_cs      MOFILE  "cs.mo"
 winsparkle_da      MOFILE  "da.mo"
