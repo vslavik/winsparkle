@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-01-18 10:13-0500\n"
+"PO-Revision-Date: 2015-06-24 13:58-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -16,6 +16,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
+"X-Crowdin-Language: pt-PT\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
 #: src/ui.cpp:259 src/ui.cpp:585
@@ -82,7 +83,7 @@ msgstr "Erro ao atualizar!"
 
 #: src/ui.cpp:682
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Ocorreu um erro ao obter as informações da atualização. Está ligado à internet? Por favor tente mais tarde."
+msgstr "Ocorreu um erro ao obter as informações da atualização. Está ligado à Internet? Por favor tente novamente."
 
 #: src/ui.cpp:723
 #, c-format
