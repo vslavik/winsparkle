@@ -45,8 +45,10 @@ namespace
 #define CONCAT3(a,b,c) MVAL(a)##MVAL(b)##MVAL(c)
 
 #define NS_SPARKLE      "http://www.andymatuschak.org/xml-namespaces/sparkle"
+#define NS_XML          "http://www.w3.org/XML/1998/namespace"
 #define NS_SEP          '#'
 #define NS_SPARKLE_NAME(name) NS_SPARKLE "#" name
+#define NS_XML_NAME(name) NS_XML "#" name
 
 #define NODE_CHANNEL    "channel"
 #define NODE_ITEM       "item"
@@ -57,6 +59,7 @@ namespace
 #define NODE_ENCLOSURE  "enclosure"
 #define NODE_MIN_OS_VERSION NS_SPARKLE_NAME("minimumSystemVersion")
 #define ATTR_URL        "url"
+#define ATTR_LANG       NS_XML_NAME("lang")
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
@@ -66,6 +69,7 @@ namespace
 #define OS_MARKER       "windows"
 #define OS_MARKER_LEN   7
 
+static std::string g_lang = "";
 // context data for the parser
 struct ContextData
 {
@@ -88,10 +92,26 @@ struct ContextData
     std::vector<Appcast> items;
 };
 
+/**
+* Returns true if item language is exactly user set,
+* If no set, return true anyway.
+*/
+bool is_suitable_language_item(const Appcast &item)
+{
+    bool ret = false;
+    if (g_lang.empty() || item.Lang == g_lang)
+    {
+        ret = true;
+    }
+    return ret;
+}
+
 bool is_windows_version_acceptable(const Appcast &item)
 {
     if (item.MinOSVersion.empty())
-        return true;
+    {
+        return is_suitable_language_item(item);
+    }
 
     OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
     DWORDLONG const dwlConditionMask = VerSetConditionMask(
@@ -105,7 +125,7 @@ bool is_windows_version_acceptable(const Appcast &item)
         &osvi.dwMinorVersion, &osvi.wServicePackMajor);
 
     return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
-        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE && is_suitable_language_item(item);
 }
 
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
@@ -127,6 +147,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         if ( strcmp(name, NODE_RELNOTES) == 0 )
         {
             ctxt.in_relnotes++;
+            const int size = ctxt.items.size();
+            for (int i = 0; attrs[i]; i += 2)
+            {
+                const char *name = attrs[i];
+                const char *value = attrs[i + 1];
+
+                if (!strcmp(name, ATTR_LANG))
+                {
+                    ctxt.items[size - 1].Lang = value;
+                }
+            }
         }
         else if ( strcmp(name, NODE_TITLE) == 0 )
         {
@@ -135,6 +166,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         else if ( strcmp(name, NODE_DESCRIPTION) == 0 )
         {
             ctxt.in_description++;
+            const int size = ctxt.items.size();
+            for (int i = 0; attrs[i]; i += 2)
+            {
+                const char *name = attrs[i];
+                const char *value = attrs[i + 1];
+
+                if (!strcmp(name, ATTR_LANG))
+                {
+                    ctxt.items[size - 1].Lang = value;
+                }
+            }
         }
         else if ( strcmp(name, NODE_LINK) == 0 )
         {
@@ -175,7 +217,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     }
 }
 
-
 /**
  * Returns true if item os is exactly "windows"
  *   or if item is "windows-x64" on 64bit
@@ -188,16 +229,18 @@ bool is_suitable_windows_item(const Appcast &item)
         return false;
 
     if (item.Os == OS_MARKER)
-        return true;
+    {
+        return is_suitable_language_item(item);
+    }
 
     if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
         return false;
 
     // Check suffix for matching bitness
 #ifdef _WIN64
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0 && is_suitable_language_item(item);
 #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0 && is_suitable_language_item(item);
 #endif
 }
 
@@ -278,12 +321,12 @@ void XMLCALL OnText(void *data, const char *s, int len)
                                Appcast class
  *--------------------------------------------------------------------------*/
 
-Appcast Appcast::Load(const std::string& xml)
+Appcast Appcast::Load(const std::string& xml, const std::string& lang)
 {
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
         throw std::runtime_error("Failed to create XML parser.");
-
+    g_lang = lang;
     ContextData ctxt(p);
 
     XML_SetUserData(p, &ctxt);

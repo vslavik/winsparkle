@@ -46,6 +46,9 @@ struct Appcast
     /// URL of the release notes page
     std::string ReleaseNotesURL;
 
+    /// Local Info£¬ like en, en-US, zh-CN, zh-TW, etc.
+    std::string Lang;
+
     /// URL to launch in web browser (instead of downloading update ourselves)
     std::string WebBrowserURL;
 
@@ -76,7 +79,7 @@ struct Appcast
 
         @param xml Appcast feed data.
      */
-    static Appcast Load(const std::string& xml);
+    static Appcast Load(const std::string& xml, const std::string& lang);
 
     /// Returns true if the struct constains valid data.
     bool IsValid() const { return !Version.empty(); }
