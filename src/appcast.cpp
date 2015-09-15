@@ -69,7 +69,6 @@ namespace
 #define OS_MARKER       "windows"
 #define OS_MARKER_LEN   7
 
-static std::string g_lang = "";
 // context data for the parser
 struct ContextData
 {
@@ -96,10 +95,10 @@ struct ContextData
 * Returns true if item language is exactly user set,
 * If no set, return true anyway.
 */
-bool is_suitable_language_item(const Appcast &item)
+bool is_suitable_language_item(const Appcast &item, std::string lang)
 {
     bool ret = false;
-    if (g_lang.empty() || item.Lang == g_lang)
+    if (lang.empty() || item.Lang == lang)
     {
         ret = true;
     }
@@ -109,9 +108,7 @@ bool is_suitable_language_item(const Appcast &item)
 bool is_windows_version_acceptable(const Appcast &item)
 {
     if (item.MinOSVersion.empty())
-    {
-        return is_suitable_language_item(item);
-    }
+        return true;
 
     OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
     DWORDLONG const dwlConditionMask = VerSetConditionMask(
@@ -125,7 +122,7 @@ bool is_windows_version_acceptable(const Appcast &item)
         &osvi.dwMinorVersion, &osvi.wServicePackMajor);
 
     return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
-        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE && is_suitable_language_item(item);
+        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
 }
 
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
@@ -229,18 +226,16 @@ bool is_suitable_windows_item(const Appcast &item)
         return false;
 
     if (item.Os == OS_MARKER)
-    {
-        return is_suitable_language_item(item);
-    }
+        return true;
 
     if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
         return false;
 
     // Check suffix for matching bitness
 #ifdef _WIN64
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0 && is_suitable_language_item(item);
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
 #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0 && is_suitable_language_item(item);
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
 #endif
 }
 
@@ -280,8 +275,6 @@ void XMLCALL OnEndElement(void *data, const char *name)
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
         ctxt.in_item--;
-        if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
-            XML_StopParser(ctxt.parser, XML_TRUE);
     }
     else if ( strcmp(name, NODE_CHANNEL) == 0 )
     {
@@ -326,7 +319,7 @@ Appcast Appcast::Load(const std::string& xml, const std::string& lang)
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
         throw std::runtime_error("Failed to create XML parser.");
-    g_lang = lang;
+
     ContextData ctxt(p);
 
     XML_SetUserData(p, &ctxt);
@@ -353,12 +346,24 @@ Appcast Appcast::Load(const std::string& xml, const std::string& lang)
      * or "windows-x64"/"windows-x86" based on this modules bitness and meets the minimum
      * os version, if set. If none, use the first item that meets the minimum os version, if set.
      */
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), 
+        [=](const Appcast& item)
+        {
+            bool ret = false;
+            ret = is_suitable_windows_item(item) && is_suitable_language_item(item, lang);
+            return ret;
+        });
     if (it != ctxt.items.end())
         return *it;
     else
     {
-        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_version_acceptable);
+        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), 
+            [=](const Appcast& item)
+            {
+                bool ret = false;
+                ret = is_windows_version_acceptable(item) && is_suitable_language_item(item, lang);
+                return ret;
+            });
         if (it != ctxt.items.end())
             return *it;
         else 
