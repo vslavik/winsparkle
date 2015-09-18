@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-06-24 13:58-0400\n"
+"PO-Revision-Date: 2015-09-18 05:30-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "Language: pt_BR\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: src/ui.cpp:259 src/ui.cpp:585
 msgid "Software Update"
-msgstr "Atualização de software"
+msgstr "Atualização do Software"
 
 #: src/ui.cpp:436
 msgid "Release notes:"
@@ -46,7 +46,7 @@ msgstr "%s não pode ser reiniciado."
 
 #: src/ui.cpp:587
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Certifique-se de que você não tem quaisquer documentos não salvos e tente novamente."
+msgstr "Tenha certeza de que você não tem quaisquer documentos não salvos e tente de novo."
 
 #: src/ui.cpp:594
 msgid "Launching the installer..."
@@ -54,7 +54,7 @@ msgstr "Executando o instalador..."
 
 #: src/ui.cpp:599
 msgid "Failed to launch the installer."
-msgstr "Falha ao executar o instalador."
+msgstr "Falha ao iniciar o instalador."
 
 #: src/ui.cpp:621
 msgid "Checking for updates..."
@@ -71,7 +71,7 @@ msgstr "Sua versão está atualizada!"
 #: src/ui.cpp:648
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s é atualmente a versão mais recente disponível."
+msgstr "%s %s é atualmente a versão mais nova disponível."
 
 #: src/ui.cpp:661
 msgid "Close"
@@ -120,7 +120,7 @@ msgstr "Procurar atualizações automaticamente?"
 #: src/ui.cpp:970
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Fazer o %s procurar por atualizações automaticamente? Você sempre pode procurar por atualizações manualmente através do menu."
+msgstr "O %s deveria procurar atualizações automaticamente? Você pode sempre procurar atualizações manualmente no menu."
 
 #: src/ui.cpp:984
 msgid "Check automatically"
