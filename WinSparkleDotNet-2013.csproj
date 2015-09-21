@@ -34,11 +34,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="WinSparkle.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\WinSparkleDotNet\WinSparkle.cs" />
+    <Compile Include="src\WinSparkleDotNet\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WinSparkle-2013.vcxproj">
+    <ProjectReference Include="WinSparkle-2013.vcxproj">
       <Project>{524cccf2-61ea-5b64-a1d9-ff5497027b5f}</Project>
       <Name>WinSparkle</Name>
     </ProjectReference>

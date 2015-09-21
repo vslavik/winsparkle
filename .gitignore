@@ -1,11 +1,46 @@
-[Dd]ebug*
-[Rr]elease*
-*.ncb
+# User-specific files
 *.suo
-*.sdf
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Build results
+[Dd]ebug*
+[Dd]ebugPublic/
+[Rr]elease*
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
 *.opensdf
 *.VC.opendb
 *.VC.db
+*.sdf
+*.cachefile
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!*.[Cc]ache/
+
 *.tss
 *.vcproj.*.user
 *.vcxproj.user
@@ -17,3 +52,8 @@ translations/*.mo
 3rdparty/expat/win32/bin
 3rdparty/expat/win32/tmp
 packages
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
