@@ -10,7 +10,7 @@ namespace WinSparkleDotNet
         ///
         /// <value> The last check time. </value>
         /// 
-        /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
+        /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public static DateTime LastCheckTime
@@ -32,7 +32,7 @@ namespace WinSparkleDotNet
         ///
         /// <value> The update interval. </value>
         /// 
-        /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
+        /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public static TimeSpan UpdateInterval
@@ -54,7 +54,7 @@ namespace WinSparkleDotNet
         ///
         /// <value> true if automatic check for updates, false if not. </value>
         /// 
-        /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
+        /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public static bool AutomaticCheckForUpdates
@@ -90,7 +90,7 @@ namespace WinSparkleDotNet
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Initialze();
+        public static extern void Initialize();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>  Cleans up after WinSparkle.
@@ -113,7 +113,7 @@ namespace WinSparkleDotNet
         ///     </para>
         /// </summary>
         ///
-        /// <remarks>  Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
+        /// <remarks>  Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
         ///
         /// <param name="url">   URL of the appcast. </param>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ namespace WinSparkleDotNet
         ///         the location of WinSparkle settings in registry. 
         ///     </para>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -180,7 +180,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -213,7 +213,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -237,7 +237,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -261,7 +261,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -281,7 +281,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -306,7 +306,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -329,7 +329,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         /// </remarks>
         ///
@@ -340,8 +340,8 @@ namespace WinSparkleDotNet
         [return: MarshalAs(UnmanagedType.I4)]
         private static extern int GetLastCheckTime();
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate int win_sparkle_can_shutdown_callback_t();
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate bool CanShutdownCallback();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
@@ -358,7 +358,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         ///     <para>
         ///         There's no guarantee about the thread from which the callback is called,
@@ -371,10 +371,12 @@ namespace WinSparkleDotNet
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_can_shutdown_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SetCanShutdownCallback(win_sparkle_can_shutdown_callback_t callback);
+        public static extern void SetCanShutdownCallback(
+            [param: MarshalAs(UnmanagedType.FunctionPtr)] CanShutdownCallback callback
+            );
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void win_sparkle_shutdown_request_callback_t();
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void ShutdownRequestCallback();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
@@ -394,7 +396,7 @@ namespace WinSparkleDotNet
         ///
         /// <remarks>
         ///     <para>
-        ///         Can only be called @em before the first call to <see cref="Initialze"/>
+        ///         Can only be called @em before the first call to <see cref="Initialize"/>
         ///     </para>
         ///     <para>
         ///         There's no guarantee about the thread from which the callback is called,
@@ -407,7 +409,9 @@ namespace WinSparkleDotNet
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_shutdown_request_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SetShutdownRequestCallback(win_sparkle_shutdown_request_callback_t callback);
+        public static extern void SetShutdownRequestCallback(
+            [param:MarshalAs(UnmanagedType.FunctionPtr)] ShutdownRequestCallback callback
+            );
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
