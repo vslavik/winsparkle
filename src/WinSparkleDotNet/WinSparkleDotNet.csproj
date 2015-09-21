@@ -31,12 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="WinSparkle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
