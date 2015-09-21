@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace WinSparkleDotNet
 {
-    sealed class WinSparkle
+    sealed public class WinSparkle
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   Get the last check time. </summary>
@@ -13,7 +13,7 @@ namespace WinSparkleDotNet
         /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public DateTime LastCheckTime
+        public static DateTime LastCheckTime
         {
             get
             {
@@ -35,7 +35,7 @@ namespace WinSparkleDotNet
         /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public TimeSpan UpdateInterval
+        public static TimeSpan UpdateInterval
         {
             get
             {
@@ -57,7 +57,7 @@ namespace WinSparkleDotNet
         /// <remarks> Can only be called @em before the first call to <see cref="Initialze"/> </remarks>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public bool AutomaticCheckForUpdates
+        public static bool AutomaticCheckForUpdates
         {
             get
             {
@@ -89,7 +89,7 @@ namespace WinSparkleDotNet
         /// <see cref="Cleanup"/>
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        [DllImport("WinSparle.dll", EntryPoint = "win_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Initialze();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ namespace WinSparkleDotNet
         ///
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        [DllImport("WinSparle.dll", EntryPoint = "win_sparkle_cleanup", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_cleanup", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Cleanup();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
