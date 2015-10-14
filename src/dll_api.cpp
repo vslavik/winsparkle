@@ -262,6 +262,15 @@ WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time()
     return DEFAULT_LAST_CHECK_TIME;
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetErrorCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
 {
     try
@@ -276,6 +285,24 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_spark
     try
     {
         ApplicationController::SetShutdownRequestCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_did_not_find_update_callback(win_sparkle_did_not_find_update_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetDidNotFindUpdateCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetUpdateCancelledCallback(callback);
     }
     CATCH_ALL_EXCEPTIONS
 }

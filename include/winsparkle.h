@@ -266,6 +266,16 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 */
 WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time();
 
+/// Callback type for win_sparkle_error_callback()
+typedef void (__cdecl *win_sparkle_error_callback_t)();
+
+/**
+    Set callback to be called when the updater encounters an error.
+
+    @since 0.5
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback);
+
 /// Callback type for win_sparkle_can_shutdown_callback()
 typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 
@@ -310,6 +320,39 @@ typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
     @see win_sparkle_set_can_shutdown_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t);
+
+/// Callback type for win_sparkle_did_not_find_update_callback()
+typedef void (__cdecl *win_sparkle_did_not_find_update_callback_t)();
+
+/**
+    Set callback to be called when the updater did not find an update.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action after WinSparkle checks for updates.
+
+    @since 0.5
+
+    @see win_sparkle_did_find_update_callback()
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_did_not_find_update_callback(win_sparkle_did_not_find_update_callback_t callback);
+
+/// Callback type for win_sparkle_update_cancelled_callback()
+typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
+
+/**
+    Set callback to be called when the user cancels a download.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action when the installation is interrupted.
+
+    @since 0.5
+
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
 //@}
 

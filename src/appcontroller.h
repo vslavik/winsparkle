@@ -53,9 +53,32 @@ public:
     //@}
 
     /**
+        Notifications.
+     */
+    //@{
+
+    /// Notify that an error occurred.
+    static void NotifyUpdateError();
+
+    /// Notify that an update has not been found.
+    static void NotifyUpdateNotFound();
+
+    /// Notify that an update was cancelled.
+    static void NotifyUpdateCancelled();
+
+    //@}
+
+    /**
         Behavior customizations -- callbacks.
      */
     //@{
+
+    /// Set the win_sparkle_error_callback_t function
+    static void SetErrorCallback(win_sparkle_error_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbError = callback;
+    }
 
     /// Set the win_sparkle_can_shutdown_callback_t function
     static void SetCanShutdownCallback(win_sparkle_can_shutdown_callback_t callback)
@@ -71,6 +94,20 @@ public:
         ms_cbRequestShutdown = callback;
     }
 
+    /// Set the win_sparkle_did_not_find_update_callback_t function
+    static void SetDidNotFindUpdateCallback(win_sparkle_did_not_find_update_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbDidNotFindUpdate = callback;
+    }
+
+    /// Set the win_sparkle_update_cancelled_callback_t function
+    static void SetUpdateCancelledCallback(win_sparkle_update_cancelled_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbUpdateCancelled = callback;
+    }
+
     //@}
 
 private:
@@ -79,8 +116,11 @@ private:
     // guards the variables below:
     static CriticalSection ms_csVars;
 
-    static win_sparkle_can_shutdown_callback_t     ms_cbIsReadyToShutdown;
-    static win_sparkle_shutdown_request_callback_t ms_cbRequestShutdown;
+    static win_sparkle_error_callback_t               ms_cbError;
+    static win_sparkle_can_shutdown_callback_t        ms_cbIsReadyToShutdown;
+    static win_sparkle_shutdown_request_callback_t    ms_cbRequestShutdown;
+    static win_sparkle_did_not_find_update_callback_t ms_cbDidNotFindUpdate;
+    static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;
 };
 
 } // namespace winsparkle

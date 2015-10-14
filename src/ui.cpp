@@ -466,6 +466,8 @@ private:
     std::string m_installerArguments;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
+    // whether an error occurred (used to properly call NotifyUpdateCancelled)
+    bool m_errorOccurred;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -476,6 +478,8 @@ UpdateDialog::UpdateDialog()
     : m_timer(this),
       m_downloader(NULL)
 {
+    m_errorOccurred = false;
+
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
     m_mainAreaSizer->Add(m_heading, wxSizerFlags(0).Expand().Border(wxBOTTOM, PX(10)));
@@ -601,6 +605,18 @@ void UpdateDialog::OnClose(wxCloseEvent&)
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
     Destroy();
+
+    // If the update was not downloaded and the appcast is empty and we're closing,
+    // it means that we're about to restart or there was an error, and that the
+    // window-close event wasn't initiated by the user.
+    if ( m_errorOccurred )
+    {
+        ApplicationController::NotifyUpdateError();
+    }
+    else if ( m_appcast.IsValid() && m_updateFile.IsEmpty() )
+    {
+        ApplicationController::NotifyUpdateCancelled();
+    }
 }
 
 
@@ -713,6 +729,8 @@ void UpdateDialog::StateCheckingUpdates()
 
 void UpdateDialog::StateNoUpdateFound()
 {
+    ApplicationController::NotifyUpdateNotFound();
+
     LayoutChangesGuard guard(this);
 
     m_heading->SetLabel(_("You're up to date!"));
@@ -752,6 +770,8 @@ void UpdateDialog::StateNoUpdateFound()
 
 void UpdateDialog::StateUpdateError()
 {
+    m_errorOccurred = true;
+
     LayoutChangesGuard guard(this);
 
     m_heading->SetLabel(_("Update Error!"));
