@@ -154,6 +154,7 @@ struct EventPayload
     Appcast      appcast;
     size_t       sizeDownloaded, sizeTotal;
     std::wstring updateFile;
+    bool         installAutomatically;
 };
 
 
@@ -411,11 +412,11 @@ public:
     // changes state into "checking for updates"
     void StateCheckingUpdates();
     // change state into "no updates found"
-    void StateNoUpdateFound();
+    void StateNoUpdateFound(bool installAutomatically);
     // change state into "update error"
     void StateUpdateError();
     // change state into "a new version is available"
-    void StateUpdateAvailable(const Appcast& info);
+    void StateUpdateAvailable(const Appcast& info, bool installAutomatically);
     // change state into "downloading update"
     void StateDownloading();
     // update download progress
@@ -466,6 +467,8 @@ private:
     std::string m_installerArguments;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
+    // whether the update should be installed without prompting the user
+    bool m_installAutomatically;
     // whether an error occurred (used to properly call NotifyUpdateCancelled)
     bool m_errorOccurred;
 
@@ -478,6 +481,7 @@ UpdateDialog::UpdateDialog()
     : m_timer(this),
       m_downloader(NULL)
 {
+    m_installAutomatically = false;
     m_errorOccurred = false;
 
     m_heading = new wxStaticText(this, wxID_ANY, "");
@@ -727,9 +731,17 @@ void UpdateDialog::StateCheckingUpdates()
 }
 
 
-void UpdateDialog::StateNoUpdateFound()
+void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 {
+    m_installAutomatically = installAutomatically;
+
     ApplicationController::NotifyUpdateNotFound();
+
+    if ( m_installAutomatically )
+    {
+        Close();
+        return;
+    }
 
     LayoutChangesGuard guard(this);
 
@@ -795,9 +807,17 @@ void UpdateDialog::StateUpdateError()
 
 
 
-void UpdateDialog::StateUpdateAvailable(const Appcast& info)
+void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomatically)
 {
     m_appcast = info;
+    m_installAutomatically = installAutomatically;
+
+    if ( installAutomatically )
+    {
+        wxCommandEvent nullEvent;
+        OnInstall(nullEvent);
+        return;
+    }
 
     const bool showRelnotes = !info.ReleaseNotesURL.empty() || !info.Description.empty();
 
@@ -912,6 +932,13 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
 
     m_updateFile = updateFile;
     m_installerArguments = installerArguments;
+
+    if ( m_installAutomatically )
+    {
+        wxCommandEvent nullEvent;
+        OnRunInstaller(nullEvent);
+        return;
+    }
 
     LayoutChangesGuard guard(this);
 
@@ -1283,10 +1310,13 @@ void App::OnShowCheckingUpdates(wxThreadEvent&)
 }
 
 
-void App::OnNoUpdateFound(wxThreadEvent&)
+void App::OnNoUpdateFound(wxThreadEvent& event)
 {
     if ( m_win )
-        m_win->StateNoUpdateFound();
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->StateNoUpdateFound(payload.installAutomatically);
+    }
 }
 
 
@@ -1320,7 +1350,7 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
     InitWindow();
 
     EventPayload payload(event.GetPayload<EventPayload>());
-    m_win->StateUpdateAvailable(payload.appcast);
+    m_win->StateUpdateAvailable(payload.appcast, payload.installAutomatically);
 
     ShowWindow();
 }
@@ -1445,23 +1475,26 @@ void UI::ShutDown()
 
 
 /*static*/
-void UI::NotifyNoUpdates()
+void UI::NotifyNoUpdates(bool installAutomatically)
 {
     UIThreadAccess uit;
+    EventPayload payload;
+    payload.installAutomatically = installAutomatically;
 
     if ( !uit.IsRunning() )
         return;
 
-    uit.App().SendMsg(MSG_NO_UPDATE_FOUND);
+    uit.App().SendMsg(MSG_NO_UPDATE_FOUND, &payload);
 }
 
 
 /*static*/
-void UI::NotifyUpdateAvailable(const Appcast& info)
+void UI::NotifyUpdateAvailable(const Appcast& info, bool installAutomatically)
 {
     UIThreadAccess uit;
     EventPayload payload;
     payload.appcast = info;
+    payload.installAutomatically = installAutomatically;
     uit.App().SendMsg(MSG_UPDATE_AVAILABLE, &payload);
 }
 

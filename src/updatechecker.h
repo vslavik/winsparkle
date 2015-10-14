@@ -66,6 +66,9 @@ protected:
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 
+    /// Should we install the update or prompt the user for options first?
+    virtual bool ShouldAutomaticallyInstall() const { return false; }
+
 protected:
     virtual void Run();
     virtual bool IsJoinable() const { return false; }
@@ -85,6 +88,21 @@ protected:
     virtual int GetAppcastDownloadFlags() const;
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 };
+
+
+/**
+    Update checker used to automatically install updates when found.
+ */
+class ManualAutoInstallUpdateChecker : public ManualUpdateChecker
+{
+public:
+    /// Creates checker thread.
+    ManualAutoInstallUpdateChecker() : ManualUpdateChecker() {}
+
+protected:
+    virtual bool ShouldAutomaticallyInstall() const { return true; };
+};
+
 
 } // namespace winsparkle
 
