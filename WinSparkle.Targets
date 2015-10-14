@@ -16,7 +16,7 @@
           Inputs="@(TranslationFiles)"
           Outputs="@(TranslationFiles->'%(Filename).mo')">
     <Message Importance="High" Text="Compiling translations..." />
-    <Exec Command='$(Msgfmt) -c -o "translations\%(TranslationFiles.Filename).mo" @(TranslationFiles)' />
+    <Exec Command='$(Msgfmt) -o "translations\%(TranslationFiles.Filename).mo" @(TranslationFiles)' />
   </Target>
 
   <Target Name="CleanMOs" AfterTargets="Clean">
