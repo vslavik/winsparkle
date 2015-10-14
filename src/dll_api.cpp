@@ -325,6 +325,20 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui_and_install()
+{
+    try
+    {
+        // Initialize UI thread and show progress indicator.
+        UI::ShowCheckingUpdates();
+
+        // Then run the actual check in the background.
+        UpdateChecker *check = new ManualAutoInstallUpdateChecker();
+        check->Start();
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
 {
     try
