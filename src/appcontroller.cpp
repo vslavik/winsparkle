@@ -31,9 +31,11 @@ namespace winsparkle
 
 CriticalSection ApplicationController::ms_csVars;
 
-win_sparkle_can_shutdown_callback_t     ApplicationController::ms_cbIsReadyToShutdown = NULL;
-win_sparkle_shutdown_request_callback_t ApplicationController::ms_cbRequestShutdown = NULL;
-
+win_sparkle_error_callback_t               ApplicationController::ms_cbError = NULL;
+win_sparkle_can_shutdown_callback_t        ApplicationController::ms_cbIsReadyToShutdown = NULL;
+win_sparkle_shutdown_request_callback_t    ApplicationController::ms_cbRequestShutdown = NULL;
+win_sparkle_did_not_find_update_callback_t ApplicationController::ms_cbDidNotFindUpdate = NULL;
+win_sparkle_update_cancelled_callback_t    ApplicationController::ms_cbUpdateCancelled = NULL;
 
 bool ApplicationController::IsReadyToShutdown()
 {
@@ -62,6 +64,42 @@ void ApplicationController::RequestShutdown()
     // default implementations:
 
     // nothing yet
+}
+
+void ApplicationController::NotifyUpdateError()
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbError )
+        {
+            (*ms_cbError)();
+            return;
+        }
+    }
+}
+
+void ApplicationController::NotifyUpdateNotFound()
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbDidNotFindUpdate )
+        {
+            (*ms_cbDidNotFindUpdate)();
+            return;
+        }
+    }
+}
+
+void ApplicationController::NotifyUpdateCancelled()
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_cbUpdateCancelled )
+        {
+            (*ms_cbUpdateCancelled)();
+            return;
+        }
+    }
 }
 
 

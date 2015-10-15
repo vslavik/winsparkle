@@ -60,7 +60,7 @@ public:
         (i.e. the user is manually checking for updates), "no updates found"
         message is shown. Otherwise, does nothing.
      */
-    static void NotifyNoUpdates();
+    static void NotifyNoUpdates(bool installAutomatically);
 
     /**
         Notifies the UI that there was an error retrieving updates.
@@ -76,7 +76,7 @@ public:
 
         If the UI thread isn't running yet, it will be launched.
      */
-    static void NotifyUpdateAvailable(const Appcast& info);
+    static void NotifyUpdateAvailable(const Appcast& info, bool installAutomatically);
 
     /**
         Notifies the UI about download progress.

@@ -217,7 +217,6 @@ UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
 {
 }
 
-
 void UpdateChecker::Run()
 {
     // no initialization to do, so signal readiness immediately
@@ -243,18 +242,18 @@ void UpdateChecker::Run()
         if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
-            UI::NotifyNoUpdates();
+            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
             return;
         }
 
         // Check if the user opted to ignore this particular version.
         if ( ShouldSkipUpdate(appcast) )
         {
-            UI::NotifyNoUpdates();
+            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
             return;
         }
 
-        UI::NotifyUpdateAvailable(appcast);
+        UI::NotifyUpdateAvailable(appcast, ShouldAutomaticallyInstall());
     }
     catch ( ... )
     {
