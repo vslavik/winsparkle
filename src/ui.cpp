@@ -223,7 +223,11 @@ void CenterWindowOnHostApplication(wxTopLevelWindow *win)
     EnumWindows(EnumProcessWindowsCallback, (LPARAM) &data);
 
     if (data.biggest.IsEmpty())
-        return; // no window to center on
+    {
+        // no parent window to center on, so center on the screen
+        win->Center();
+        return;
+    }
 
     const wxRect& host(data.biggest);
 
