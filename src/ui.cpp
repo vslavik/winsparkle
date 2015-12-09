@@ -739,9 +739,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 {
     m_installAutomatically = installAutomatically;
 
-    ApplicationController::NotifyUpdateNotFound();
-
-    if ( m_installAutomatically )
+       if ( m_installAutomatically )
     {
         Close();
         return;
@@ -1485,6 +1483,7 @@ void UI::NotifyNoUpdates(bool installAutomatically)
     EventPayload payload;
     payload.installAutomatically = installAutomatically;
 
+    ApplicationController::NotifyUpdateNotFound();
     if ( !uit.IsRunning() )
         return;
 
