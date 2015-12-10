@@ -34,6 +34,7 @@ CriticalSection ApplicationController::ms_csVars;
 win_sparkle_error_callback_t               ApplicationController::ms_cbError = NULL;
 win_sparkle_can_shutdown_callback_t        ApplicationController::ms_cbIsReadyToShutdown = NULL;
 win_sparkle_shutdown_request_callback_t    ApplicationController::ms_cbRequestShutdown = NULL;
+win_sparkle_did_find_update_callback_t     ApplicationController::ms_cbDidFindUpdate = NULL;
 win_sparkle_did_not_find_update_callback_t ApplicationController::ms_cbDidNotFindUpdate = NULL;
 win_sparkle_update_cancelled_callback_t    ApplicationController::ms_cbUpdateCancelled = NULL;
 
@@ -73,6 +74,18 @@ void ApplicationController::NotifyUpdateError()
         if ( ms_cbError )
         {
             (*ms_cbError)();
+            return;
+        }
+    }
+}
+
+void ApplicationController::NotifyUpdateFound()
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if (ms_cbDidFindUpdate)
+        {
+            (*ms_cbDidFindUpdate)();
             return;
         }
     }

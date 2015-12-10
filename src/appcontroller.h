@@ -60,6 +60,9 @@ public:
     /// Notify that an error occurred.
     static void NotifyUpdateError();
 
+    /// Notify that an update has been found.
+    static void NotifyUpdateFound();
+
     /// Notify that an update has not been found.
     static void NotifyUpdateNotFound();
 
@@ -94,6 +97,13 @@ public:
         ms_cbRequestShutdown = callback;
     }
 
+    /// Set the win_sparkle_did_find_update_callback_t function
+    static void SetDidFindUpdateCallback(win_sparkle_did_find_update_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbDidFindUpdate = callback;
+    }
+
     /// Set the win_sparkle_did_not_find_update_callback_t function
     static void SetDidNotFindUpdateCallback(win_sparkle_did_not_find_update_callback_t callback)
     {
@@ -119,6 +129,7 @@ private:
     static win_sparkle_error_callback_t               ms_cbError;
     static win_sparkle_can_shutdown_callback_t        ms_cbIsReadyToShutdown;
     static win_sparkle_shutdown_request_callback_t    ms_cbRequestShutdown;
+    static win_sparkle_did_find_update_callback_t     ms_cbDidFindUpdate;
     static win_sparkle_did_not_find_update_callback_t ms_cbDidNotFindUpdate;
     static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;
 };

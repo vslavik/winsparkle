@@ -1495,6 +1495,8 @@ void UI::NotifyNoUpdates(bool installAutomatically)
 /*static*/
 void UI::NotifyUpdateAvailable(const Appcast& info, bool installAutomatically)
 {
+    ApplicationController::NotifyUpdateFound();
+
     UIThreadAccess uit;
     EventPayload payload;
     payload.appcast = info;
