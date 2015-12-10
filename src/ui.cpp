@@ -816,6 +816,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
     m_appcast = info;
     m_installAutomatically = installAutomatically;
 
+    ApplicationController::NotifyUpdateFound();
+    
     if ( installAutomatically )
     {
         wxCommandEvent nullEvent;
