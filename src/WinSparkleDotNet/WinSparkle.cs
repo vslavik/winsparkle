@@ -3,16 +3,13 @@ using System.Runtime.InteropServices;
 
 namespace WinSparkleDotNet
 {
-    sealed public class WinSparkle
+    sealed class WinSparkle
     {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   Get the last check time. </summary>
         ///
         /// <value> The last check time. </value>
         /// 
         /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         public static DateTime LastCheckTime
         {
             get
@@ -25,7 +22,6 @@ namespace WinSparkleDotNet
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   Get or set the update interval. 
         ///             The minimum update interval is 3600 seconds (1 hour). 
         /// </summary>
@@ -33,8 +29,6 @@ namespace WinSparkleDotNet
         /// <value> The update interval. </value>
         /// 
         /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         public static TimeSpan UpdateInterval
         {
             get
@@ -47,7 +41,6 @@ namespace WinSparkleDotNet
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         ///     Get or set a value indicating whether the automatic check for updates.
         /// </summary>
@@ -55,8 +48,6 @@ namespace WinSparkleDotNet
         /// <value> true if automatic check for updates, false if not. </value>
         /// 
         /// <remarks> Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         public static bool AutomaticCheckForUpdates
         {
             get
@@ -70,7 +61,6 @@ namespace WinSparkleDotNet
         }
 
 #region DLLWrapping
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Starts WinSparkle.
@@ -87,22 +77,16 @@ namespace WinSparkleDotNet
         ///          thread. </remarks>
         /// 
         /// <see cref="Cleanup"/>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_init", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Initialize();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>  Cleans up after WinSparkle.
         ///    Should be called by the app when it's shutting down. Cancels any
         ///    pending Sparkle operations and shuts down its helper threads. </summary>
         ///
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_cleanup", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Cleanup();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Sets URL for the app's appcast.
@@ -116,14 +100,11 @@ namespace WinSparkleDotNet
         /// <remarks>  Can only be called @em before the first call to <see cref="Initialize"/> </remarks>
         ///
         /// <param name="url">   URL of the appcast. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_appcast_url", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetAppcastUrl(
             [param: MarshalAs(UnmanagedType.AnsiBStr)] string url
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Sets application metadata.
@@ -149,8 +130,6 @@ namespace WinSparkleDotNet
         /// <param name="appName">   Application name. This is both shown to the user
         ///                         and used in HTTP User-Agent header. </param>
         /// <param name="appVersion">   Version of the app, as string (e.g. "1.2" or "1.2rc1"). </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_app_details", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetAppDetails(
             [param: MarshalAs(UnmanagedType.LPWStr)] string companyName,
@@ -158,7 +137,6 @@ namespace WinSparkleDotNet
             [param: MarshalAs(UnmanagedType.LPWStr)] string appVersion
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Sets application build version number.
@@ -185,14 +163,11 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <param name="buildVersion">   The version number. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_app_build_version", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetAppBuildVersion(
             [param: MarshalAs(UnmanagedType.LPWStr)] string buildVersion
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Set the registry path where settings will be stored.
@@ -218,14 +193,11 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <param name="path">   Registry path where settings will be stored. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_registry_path", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetRegistryPath(
             [param: MarshalAs(UnmanagedType.LPWStr)] string path
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Sets whether updates are checked automatically or only through a manual call.
@@ -242,14 +214,11 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <param name="enableAutomaticUpdates">   1 to have updates checked automatically, 0 otherwise. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
         private static extern void SetAutomaticCheckForUpdates(
             [param: MarshalAs(UnmanagedType.I4)] int enableAutomaticUpdates
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Gets the automatic update checking state
@@ -266,13 +235,10 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <returns> 1 if updates are set to be checked automatically, 0 otherwise </returns>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_get_automatic_check_for_updates", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I4)]
         private static extern int GetAutomaticCheckForUpdates();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Sets the automatic update interval.
@@ -287,14 +253,11 @@ namespace WinSparkleDotNet
         ///
         /// <param name="intervalSeconds">   The interval in seconds between checks for updates.
         ///                     The minimum update interval is 3600 seconds (1 hour). </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_update_check_interval", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         private static extern void SetUpdateCheckInterval(
             [param: MarshalAs(UnmanagedType.I4)] int intervalSeconds
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Gets the automatic update interval in seconds.
@@ -311,13 +274,10 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <returns>   The update check interval in seconds. </returns>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_get_update_check_interval", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I4)]
         private static extern int GetUpdateCheckInterval();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Gets the time for the last update check.
@@ -334,8 +294,6 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <returns>   The last check time internal. </returns>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_get_last_check_time", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I4)]
         private static extern int GetLastCheckTime();
@@ -343,7 +301,6 @@ namespace WinSparkleDotNet
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool CanShutdownCallback();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Set callback for querying the application if it can be closed.
@@ -368,8 +325,6 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <param name="callback"> The callback. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_can_shutdown_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetCanShutdownCallback(
             [param: MarshalAs(UnmanagedType.FunctionPtr)] CanShutdownCallback callback
@@ -378,7 +333,6 @@ namespace WinSparkleDotNet
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void ShutdownRequestCallback();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Set callback for shutting down the application.
@@ -406,14 +360,11 @@ namespace WinSparkleDotNet
         /// </remarks>
         ///
         /// <param name="callback"> The callback. </param>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_shutdown_request_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetShutdownRequestCallback(
             [param:MarshalAs(UnmanagedType.FunctionPtr)] ShutdownRequestCallback callback
             );
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Checks if an update is available, showing progress UI to the user.
@@ -443,12 +394,9 @@ namespace WinSparkleDotNet
         /// </remarks>
         /// 
         /// <see cref="CheckUpdateWithoutUI"/>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CheckUpdateWithUI();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>   
         ///     <para>
         ///         Checks if an update is available.
@@ -474,8 +422,6 @@ namespace WinSparkleDotNet
         /// </remarks>
         /// 
         /// <see cref="CheckUpdateWithUI"/>
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_check_update_without_ui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CheckUpdateWithoutUI();
 #endregion
