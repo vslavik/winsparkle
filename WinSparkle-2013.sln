@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5D6786
 		packages.config = packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSparkleDotNet", "WinSparkleDotNet-2013.csproj", "{2DF76B81-DEEC-4E73-9150-CF10519EE75B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSparkleDotNet", "WinSparkleDotNet.csproj", "{2DF76B81-DEEC-4E73-9150-CF10519EE75B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{524CCCF2-61EA-5B64-A1D9-FF5497027B5F} = {524CCCF2-61EA-5B64-A1D9-FF5497027B5F}
 	EndProjectSection

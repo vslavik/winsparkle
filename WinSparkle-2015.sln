@@ -20,6 +20,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_psdk", "examples\ex
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5D678636-E84E-405E-9899-F2AB26A9D005}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinSparkleDotNet", "WinSparkleDotNet.csproj", "{2DF76B81-DEEC-4E73-9150-CF10519EE75B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -60,6 +67,14 @@ Global
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|Win32.Build.0 = Release|Win32
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|x64.ActiveCfg = Release|x64
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|x64.Build.0 = Release|x64
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Debug|Win32.ActiveCfg = Debug|x86
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Debug|Win32.Build.0 = Debug|x86
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Debug|x64.ActiveCfg = Debug|x64
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Debug|x64.Build.0 = Debug|x64
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Release|Win32.ActiveCfg = Release|x86
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Release|Win32.Build.0 = Release|x86
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Release|x64.ActiveCfg = Release|x64
+		{2DF76B81-DEEC-4E73-9150-CF10519EE75B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
