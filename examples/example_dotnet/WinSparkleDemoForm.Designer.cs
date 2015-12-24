@@ -39,12 +39,14 @@
             this.txtb_lastChecked = new System.Windows.Forms.TextBox();
             this.lbl_lastChecked = new System.Windows.Forms.Label();
             this.btn_close = new System.Windows.Forms.Button();
+            this.btn_checkUpdateAndInstall = new System.Windows.Forms.Button();
+            this.btn_checkUpdateNoUI = new System.Windows.Forms.Button();
             this.gp_infos.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_checkUpdate
             // 
-            this.btn_checkUpdate.Location = new System.Drawing.Point(285, 190);
+            this.btn_checkUpdate.Location = new System.Drawing.Point(285, 132);
             this.btn_checkUpdate.Name = "btn_checkUpdate";
             this.btn_checkUpdate.Size = new System.Drawing.Size(128, 23);
             this.btn_checkUpdate.TabIndex = 0;
@@ -151,11 +153,33 @@
             this.btn_close.UseVisualStyleBackColor = true;
             this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
             // 
+            // btn_checkUpdateAndInstall
+            // 
+            this.btn_checkUpdateAndInstall.Location = new System.Drawing.Point(285, 161);
+            this.btn_checkUpdateAndInstall.Name = "btn_checkUpdateAndInstall";
+            this.btn_checkUpdateAndInstall.Size = new System.Drawing.Size(266, 23);
+            this.btn_checkUpdateAndInstall.TabIndex = 3;
+            this.btn_checkUpdateAndInstall.Text = "Check Update and Install";
+            this.btn_checkUpdateAndInstall.UseVisualStyleBackColor = true;
+            this.btn_checkUpdateAndInstall.Click += new System.EventHandler(this.btn_checkUpdateAndInstall_Click);
+            // 
+            // btn_checkUpdateNoUI
+            // 
+            this.btn_checkUpdateNoUI.Location = new System.Drawing.Point(419, 132);
+            this.btn_checkUpdateNoUI.Name = "btn_checkUpdateNoUI";
+            this.btn_checkUpdateNoUI.Size = new System.Drawing.Size(132, 23);
+            this.btn_checkUpdateNoUI.TabIndex = 4;
+            this.btn_checkUpdateNoUI.Text = "Check Update no UI";
+            this.btn_checkUpdateNoUI.UseVisualStyleBackColor = true;
+            this.btn_checkUpdateNoUI.Click += new System.EventHandler(this.btn_checkUpdateNoUI_Click);
+            // 
             // WinSparkleDemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 225);
+            this.Controls.Add(this.btn_checkUpdateNoUI);
+            this.Controls.Add(this.btn_checkUpdateAndInstall);
             this.Controls.Add(this.btn_close);
             this.Controls.Add(this.gp_infos);
             this.Controls.Add(this.btn_checkUpdate);
@@ -182,6 +206,8 @@
         private System.Windows.Forms.Label lbl_appCastUrl;
         private System.Windows.Forms.LinkLabel llbl_appCastUrl;
         private System.Windows.Forms.Button btn_close;
+        private System.Windows.Forms.Button btn_checkUpdateAndInstall;
+        private System.Windows.Forms.Button btn_checkUpdateNoUI;
     }
 }
 

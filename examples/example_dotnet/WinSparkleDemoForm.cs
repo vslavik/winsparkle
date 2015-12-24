@@ -8,43 +8,59 @@ namespace example_dotnet
 {
     public partial class WinSparkleDemoForm : Form
     {
-        private SynchronizationContext _context;
-        private static string _appCastURL = @"http://winsparkle.org/example/appcast.xml";
+        private readonly WinSparkleNet _sparkleNet;
 
         public WinSparkleDemoForm()
         {
-            _context = SynchronizationContext.Current;
             InitializeComponent();
+            try
+            {
+                _sparkleNet = new WinSparkleNet();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Error was : "+ex, @"Error during SparkleNet instantiation",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             
-            var assembly = Assembly.GetExecutingAssembly();
-            var company = (AssemblyCompanyAttribute)assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0];
-            var name = assembly.GetName().Name;
-            var version = assembly.GetName().Version; //Sparkle can parse basic version scheme like X.X.X.X
-
-            WinSparkle.SetAppcastUrl(_appCastURL);
-            WinSparkle.SetAppDetails(company.Company, name, version.ToString());
-            WinSparkle.SetCanShutdownCallback(CanShutDownCallback);
-            WinSparkle.SetShutdownRequestCallback(ShutDownRequestCallback);
-            WinSparkle.Initialize();
-            WinSparkle.CheckUpdateWithUI();
+            //Callback
+            _sparkleNet.SetCanShutdownCallback(this.CanShutDownCallback);
+            _sparkleNet.SetShutdownRequestCallback(this.ShutDownRequestCallback);
+            _sparkleNet.SetDidFindUpdateCallback(this.DidFindAnUpdateCallback);
+            _sparkleNet.SetDidNotFindUpdateCallback(this.DidNotFindAnUpdateCallback);
+            _sparkleNet.SetUpdateCancelledCallback(this.UpdateCancelledCallback);
+            //Init
+            _sparkleNet.Initialize();
+            _sparkleNet.CheckForUpdate();
         }
 
         private void Form_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //WinSparkle.Cleanup();
+            _sparkleNet.Cleanup();
         }
 
         private void Form_Load(object sender, System.EventArgs e)
         {
-            txtb_lastChecked.Text = WinSparkle.LastCheckTime.ToString("dd'/'MM'/'yyyy HH:mm:ss");
-            txtb_updateInterval.Text = WinSparkle.UpdateInterval.Seconds.ToString();
-            ckb_autoCheckUpdate.Checked = WinSparkle.AutomaticCheckForUpdates;
-            llbl_appCastUrl.Text = _appCastURL;
+            txtb_lastChecked.Text = _sparkleNet.LastCheckTime.ToString("dd'/'MM'/'yyyy HH:mm:ss");
+            txtb_updateInterval.Text = _sparkleNet.UpdateInterval.Seconds.ToString();
+            ckb_autoCheckUpdate.Checked = _sparkleNet.AutomaticCheckForUpdates;
+            llbl_appCastUrl.Text = _sparkleNet.AppCastUrl;
         }
 
         private void btn_checkUpdate_Click(object sender, System.EventArgs e)
         {
-            WinSparkle.CheckUpdateWithUI();
+            _sparkleNet.CheckForUpdate();
+        }
+
+        private void btn_checkUpdateNoUI_Click(object sender, EventArgs e)
+        {
+            _sparkleNet.CheckForUpdate(false);
+        }
+
+        private void btn_checkUpdateAndInstall_Click(object sender, EventArgs e)
+        {
+            _sparkleNet.CheckForUpdate(true, true);
         }
 
         private void btn_close_Click(object sender, EventArgs e)
@@ -67,11 +83,70 @@ namespace example_dotnet
             }
         }
 
+        private void DidFindAnUpdateCallback()
+        {
+            try
+            {
+                MessageBox.Show(@"Callback called if an update has been found.", @"DidFindUpdateCallback",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DidNotFindAnUpdateCallback()
+        {
+            try
+            {
+                MessageBox.Show(@"Callback called if an update hasn't been found.", @"DidNotFindUpdateCallback",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UpdateCancelledCallback()
+        {
+            try
+            {
+                MessageBox.Show(@"Callback called if an update has been cancelled/ignored by user.", @"UpdateCancelledCallback",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ErrorCallback()
+        {
+            try
+            {
+                MessageBox.Show(@"Callback called if WinSparkle get an error.", @"ErrorCallback",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void ShutDownRequestCallback()
         {
             try
             {
-                _context.Send(s => Application.Exit(), null);
+                if (System.Windows.Forms.Application.MessageLoop)
+                {
+                    System.Windows.Forms.Application.Exit();
+                }
+                else
+                {
+                    System.Environment.Exit(1);
+                }
             }
             catch (Exception ex)
             {
