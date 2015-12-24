@@ -5,19 +5,17 @@ namespace WinSparkleDotNet
 {
     public sealed class WinSparkleNet
     {
-        public string Name { get; }
-        public string Company { get; }
+        public string Name { get; private set; }
+        public string Company { get; private set; }
         private string _version;
         public string Version
         {
             get { return _version; }
             set
             {
-                if (!_initialized)
-                {
-                    _version = value;
-                    WinSparkle.SetAppBuildVersion(value);
-                }
+                if (_initialized) return;
+                _version = value;
+                WinSparkle.SetAppBuildVersion(value);
             }
         }
         private string _appCastUrl;
@@ -26,15 +24,12 @@ namespace WinSparkleDotNet
             get { return _appCastUrl; }
             set
             {
-                if (!_initialized)
-                {
-                    _appCastUrl = value;
-                    WinSparkle.SetAppcastUrl(value);
-                }
-                    
+                if (_initialized) return;
+                _appCastUrl = value;
+                WinSparkle.SetAppcastUrl(value);
             }
         }
-        public Assembly Assembly { get; }
+        public Assembly Assembly { get; private set; }
 
         private bool _initialized = false;
 
