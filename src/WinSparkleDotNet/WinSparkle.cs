@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace WinSparkleDotNet
 {
-    sealed class WinSparkle
+    public sealed class WinSparkle
     {
         /// <summary>   Get the last check time. </summary>
         ///
@@ -86,6 +86,22 @@ namespace WinSparkleDotNet
         ///
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_cleanup", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Cleanup();
+
+        /// <summary>   
+        ///     <para>
+        ///          Sets UI language from its ISO code.
+        ///     </para>
+        /// </summary>
+        ///
+        /// <remarks>  This function must be called before <see cref="Initialize"/> </remarks>
+        ///
+        /// <param name="lang">   ISO 639 language code with an optional ISO 3116 country
+        ///                       code, e.g. "fr", "pt-PT", "pt-BR" or "pt_BR"
+        ///  </param>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_lang", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetLanguage(
+            [param: MarshalAs(UnmanagedType.AnsiBStr)] string lang
+            );
 
         /// <summary>   
         ///     <para>
@@ -299,6 +315,20 @@ namespace WinSparkleDotNet
         private static extern int GetLastCheckTime();
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void ErrorCallback();
+
+        /// <summary>   
+        ///     <para>
+        ///         Set callback to be called when the updater encounters an error.
+        ///     </para>
+        /// </summary>
+        /// <param name="callback"> The callback. </param>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_error_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetErrorCallback(
+            [param: MarshalAs(UnmanagedType.FunctionPtr)] ErrorCallback callback
+            );
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool CanShutdownCallback();
 
         /// <summary>   
@@ -365,6 +395,71 @@ namespace WinSparkleDotNet
             [param:MarshalAs(UnmanagedType.FunctionPtr)] ShutdownRequestCallback callback
             );
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void DidFindUpdateCallback();
+
+        /// <summary>   
+        ///     <para>
+        ///         Set callback to be called when the updater did find an update.
+        ///     </para>
+        ///     <para>
+        ///         This is useful in combination with
+        ///         <see cref="CheckUpdateWithUIandInstall"/> as it allows you to perform
+        ///         some action after WinSparkle checks for updates.
+        ///     </para>
+        /// </summary>
+        /// <param name="callback"> The callback. </param>
+        /// 
+        /// <see cref="DidNotFindUpdateCallback"/>
+        /// <see cref="CheckUpdateWithUIandInstall"/>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_did_find_update_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetDidFindUpdateCallback(
+            [param: MarshalAs(UnmanagedType.FunctionPtr)] DidFindUpdateCallback callback
+            );
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void DidNotFindUpdateCallback();
+
+        /// <summary>   
+        ///     <para>
+        ///         Set callback to be called when the updater did not find an update.
+        ///     </para>
+        ///     <para>
+        ///         This is useful in combination with
+        ///         <see cref="CheckUpdateWithUIandInstall"/> as it allows you to perform
+        ///         some action after WinSparkle checks for updates.
+        ///     </para>
+        /// </summary>
+        /// <param name="callback"> The callback. </param>
+        /// 
+        /// <see cref="DidFindUpdateCallback"/>
+        /// <see cref="CheckUpdateWithUIandInstall"/>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_did_not_find_update_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetDidNotFindUpdateCallback(
+            [param: MarshalAs(UnmanagedType.FunctionPtr)] DidNotFindUpdateCallback callback
+            );
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void UpdateCancelledCallback();
+
+        /// <summary>   
+        ///     <para>
+        ///         Set callback to be called when the user cancels a download.
+        ///     </para>
+        ///     <para>
+        ///         This is useful in combination with
+        ///         <see cref="CheckUpdateWithUIandInstall"/> as it allows you to perform
+        ///         some action when the installation is interrupted.
+        ///     </para>
+        /// </summary>
+        /// <param name="callback"> The callback. </param>
+        /// 
+        /// <see cref="CheckUpdateWithUIandInstall"/>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_set_update_cancelled_callback", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetUpdateCancelledCallback(
+            [param: MarshalAs(UnmanagedType.FunctionPtr)] UpdateCancelledCallback callback
+            );
+
         /// <summary>   
         ///     <para>
         ///         Checks if an update is available, showing progress UI to the user.
@@ -394,8 +489,34 @@ namespace WinSparkleDotNet
         /// </remarks>
         /// 
         /// <see cref="CheckUpdateWithoutUI"/>
+        /// <see cref="CheckUpdateWithUIandInstall"/>
         [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_check_update_with_ui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CheckUpdateWithUI();
+
+        /// <summary>   
+        ///     <para>
+        ///         Checks if an update is available, showing progress UI to the user and
+        ///         immediately installing the update if one is available.
+        ///     </para>
+        ///     <para>
+        ///         This is useful for the case when users should almost always use the
+        ///         newest version of your software.When called, WinSparkle will check for
+        ///         updates showing a progress UI to the user. If an update is found the update
+        ///         prompt will be skipped and the update will be installed immediately.
+        ///     </para>
+        ///     
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         If your application expects to do something after checking for updates you
+        ///         may wish to use win_sparkle_set_did_not_find_update_callback() and
+        ///         win_sparkle_set_update_cancelled_callback().
+        ///     </para>
+        /// </remarks>
+        /// <see cref="CheckUpdateWithUI"/>
+        /// <see cref="CheckUpdateWithoutUI"/>
+        [DllImport("WinSparkle.dll", EntryPoint = "win_sparkle_check_update_with_ui_and_install", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void CheckUpdateWithUIandInstall();
 
         /// <summary>   
         ///     <para>
