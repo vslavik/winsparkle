@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="src\WinSparkleDotNet\WinSparkle.cs" />
     <Compile Include="src\WinSparkleDotNet\Properties\AssemblyInfo.cs" />
+    <Compile Include="src\WinSparkleDotNet\WinSparkleAttribute.cs" />
+    <Compile Include="src\WinSparkleDotNet\WinSparkleNet.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
