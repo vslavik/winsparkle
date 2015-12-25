@@ -21,13 +21,13 @@ namespace example_dotnet
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
             //Callback
             _sparkleNet.SetCanShutdownCallback(this.CanShutDownCallback);
             _sparkleNet.SetShutdownRequestCallback(this.ShutDownRequestCallback);
             _sparkleNet.SetDidFindUpdateCallback(this.DidFindAnUpdateCallback);
             _sparkleNet.SetDidNotFindUpdateCallback(this.DidNotFindAnUpdateCallback);
             _sparkleNet.SetUpdateCancelledCallback(this.UpdateCancelledCallback);
+            _sparkleNet.SetErrorCallback(this.ErrorCallback);
             //Init
             _sparkleNet.Initialize();
             _sparkleNet.CheckForUpdate();
