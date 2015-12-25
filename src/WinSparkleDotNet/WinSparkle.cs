@@ -3,6 +3,13 @@ using System.Runtime.InteropServices;
 
 namespace WinSparkleDotNet
 {
+    /// <summary>
+    ///     WinSparkle DLL Wrapper
+    ///     Is a 1-to-1 mapping of the WinSparkle C API with some adjustment.
+    ///     Don't use directly unless you know what you do !
+    ///     Otherwise use <see cref="WinSparkleNet"/> API. 
+    /// </summary>
+    /// <see cref="WinSparkleNet"/>
     public sealed class WinSparkle
     {
         /// <summary>   Get the last check time. </summary>
