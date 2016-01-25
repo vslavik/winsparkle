@@ -57,6 +57,7 @@
 #include <exdisp.h>
 #include <mshtml.h>
 #include <commctrl.h>
+#include <shellapi.h>
 
 
 #if !wxCHECK_VERSION(2,9,0)
@@ -695,17 +696,22 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 
 bool UpdateDialog::RunInstaller()
 {
-    if (m_installerArguments.empty()) 
+    std::wstring wArgs;
+
+    SHELLEXECUTEINFO sei;
+    ::ZeroMemory(&sei, sizeof(SHELLEXECUTEINFO));
+    sei.cbSize = sizeof(SHELLEXECUTEINFO);
+    sei.lpFile = m_updateFile.t_str();
+    sei.nShow = SW_SHOWDEFAULT;
+    sei.fMask = SEE_MASK_FLAG_NO_UI;	// We display our own dialog box on error
+
+    if (! m_installerArguments.empty())
     {
-        // keep old way of calling updater to not accidentally break any existing code
-        return wxLaunchDefaultApplication(m_updateFile);
-    } 
-    else 
-    {
-        // wxExecute() returns a process id, or zero on failure
-        long processId = wxExecute(m_updateFile + " " + m_installerArguments);
-        return processId != 0;
+        wArgs = AnsiToWide(m_installerArguments);
+        sei.lpParameters = wArgs.c_str();
     }
+
+    return ::ShellExecuteEx(&sei) ? true : false;
 }
 
 void UpdateDialog::SetMessage(const wxString& text, int width)
