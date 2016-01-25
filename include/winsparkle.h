@@ -276,6 +276,16 @@ typedef void (__cdecl *win_sparkle_error_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback);
 
+/// Callback type for win_sparkle_set_exeption_logger_callback()
+typedef void(__cdecl *win_sparkle_exeption_logger_callback_t)(const char *);
+
+/**
+Set callback to be called when exeption was caught.
+
+@since 0.5
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_exeption_logger_callback(win_sparkle_exeption_logger_callback_t callback);
+
 /// Callback type for win_sparkle_can_shutdown_callback()
 typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
 
