@@ -86,6 +86,13 @@ Win32Exception::Win32Exception(const char *extraMsg)
                                  Logging
  *--------------------------------------------------------------------------*/
 
+static win_sparkle_exeption_logger_callback_t error_logger = NULL;
+
+void set_exeption_logger_callback(win_sparkle_exeption_logger_callback_t callback)
+{
+	error_logger = callback;
+}
+
 void LogError(const char *msg)
 {
     std::string err("WinSparkle: ");
@@ -93,6 +100,11 @@ void LogError(const char *msg)
     err.append("\n");
 
     OutputDebugStringA(err.c_str());
+
+	if (error_logger)
+	{
+		(*error_logger)(err.c_str());
+	}
 }
 
 } // namespace winsparkle

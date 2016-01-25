@@ -28,6 +28,8 @@
 
 #include <stdexcept>
 
+#include "winsparkle.h"
+
 namespace winsparkle
 {
 
@@ -52,6 +54,8 @@ public:
     Logs error to, currently, debug output.
  */
 void LogError(const char *msg);
+
+void set_exeption_logger_callback(win_sparkle_exeption_logger_callback_t callback);
 
 
 /**

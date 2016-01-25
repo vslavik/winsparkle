@@ -271,6 +271,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_ca
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_exeption_logger_callback(win_sparkle_exeption_logger_callback_t callback)
+{
+	try
+	{
+		set_exeption_logger_callback(callback);
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback)
 {
     try
