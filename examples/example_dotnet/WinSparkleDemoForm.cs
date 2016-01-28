@@ -22,12 +22,8 @@ namespace example_dotnet
                 return;
             }
             //Callback
-            _sparkleNet.SetCanShutdownCallback(this.CanShutDownCallback);
-            _sparkleNet.SetShutdownRequestCallback(this.ShutDownRequestCallback);
-            _sparkleNet.SetDidFindUpdateCallback(this.DidFindAnUpdateCallback);
-            _sparkleNet.SetDidNotFindUpdateCallback(this.DidNotFindAnUpdateCallback);
-            _sparkleNet.SetUpdateCancelledCallback(this.UpdateCancelledCallback);
             _sparkleNet.SetErrorCallback(this.ErrorCallback);
+            _sparkleNet.SetShutdownRequestCallback(this.ShutDownRequestCallback);
             //Init
             _sparkleNet.Initialize();
             _sparkleNet.CheckForUpdate();
@@ -66,60 +62,6 @@ namespace example_dotnet
             this.Close();
         }
 
-        private bool CanShutDownCallback()
-        {
-            try
-            {
-                var result = MessageBox.Show(@"Here you can simulate if the application can be closed or not to proceed the update", @"CanShutDownCallback",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                return result == DialogResult.Yes;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        private void DidFindAnUpdateCallback()
-        {
-            try
-            {
-                MessageBox.Show(@"Callback called if an update has been found.", @"DidFindUpdateCallback",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void DidNotFindAnUpdateCallback()
-        {
-            try
-            {
-                MessageBox.Show(@"Callback called if an update hasn't been found.", @"DidNotFindUpdateCallback",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void UpdateCancelledCallback()
-        {
-            try
-            {
-                MessageBox.Show(@"Callback called if an update has been cancelled/ignored by user.", @"UpdateCancelledCallback",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void ErrorCallback()
         {
             try
@@ -137,14 +79,7 @@ namespace example_dotnet
         {
             try
             {
-                if (System.Windows.Forms.Application.MessageLoop)
-                {
-                    System.Windows.Forms.Application.Exit();
-                }
-                else
-                {
-                    System.Environment.Exit(1);
-                }
+                this.BeginInvoke(new MethodInvoker(this.Close));
             }
             catch (Exception ex)
             {
