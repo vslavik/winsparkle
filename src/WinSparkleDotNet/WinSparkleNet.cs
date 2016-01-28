@@ -29,7 +29,7 @@ namespace WinSparkleDotNet
             get { return _version; }
             set
             {
-                Debug.Assert(!_initialized, "Can't set Version after initialization !");
+                Debug.Assert(!_initialized, "Can't set Version after initialization!");
                 _version = value;
                 WinSparkle.SetAppBuildVersion(value);
             }
@@ -44,7 +44,7 @@ namespace WinSparkleDotNet
             get { return _appCastUrl; }
             set
             {
-                Debug.Assert(!_initialized, "Can't set AppCastUrl after initialization !");
+                Debug.Assert(!_initialized, "Can't set AppCastUrl after initialization!");
                 _appCastUrl = value;
                 WinSparkle.SetAppcastUrl(value);
             }
@@ -129,7 +129,7 @@ namespace WinSparkleDotNet
         ///  </param>
         public void SetLanguage(string language)
         {
-            Debug.Assert(!_initialized, "Can't set Language after initialization !");
+            Debug.Assert(!_initialized, "Can't set Language after initialization!");
             WinSparkle.SetLanguage(language);
         }
 
@@ -140,7 +140,7 @@ namespace WinSparkleDotNet
         /// <param name="path"></param>
         public void SetRegistryPath(string path)
         {
-            Debug.Assert(!_initialized, "Can't set RegistryPath after initialization !");
+            Debug.Assert(!_initialized, "Can't set RegistryPath after initialization!");
             WinSparkle.SetRegistryPath(path);
         }
 
@@ -163,7 +163,7 @@ namespace WinSparkleDotNet
             get { return WinSparkle.UpdateInterval; }
             set
             {
-                Debug.Assert(!_initialized, "Can't set UpdateInterval after initialization !");
+                Debug.Assert(!_initialized, "Can't set UpdateInterval after initialization!");
                 WinSparkle.UpdateInterval = value;
             }
         }
@@ -177,7 +177,7 @@ namespace WinSparkleDotNet
             get { return WinSparkle.AutomaticCheckForUpdates; }
             set
             {
-                Debug.Assert(!_initialized, "Can't set AutomaticCheckForUpdates after initialization !");
+                Debug.Assert(!_initialized, "Can't set AutomaticCheckForUpdates after initialization!");
                 WinSparkle.AutomaticCheckForUpdates = value;
             }
         }
@@ -190,7 +190,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetErrorCallback(WinSparkle.ErrorCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetErrorCallback(callback);
         }
 
@@ -201,7 +201,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetCanShutdownCallback(WinSparkle.CanShutdownCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetCanShutdownCallback(callback);
         }
 
@@ -212,7 +212,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetShutdownRequestCallback(WinSparkle.ShutdownRequestCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetShutdownRequestCallback(callback);
         }
 
@@ -223,7 +223,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetDidFindUpdateCallback(WinSparkle.DidFindUpdateCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetDidFindUpdateCallback(callback);
         }
 
@@ -234,7 +234,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetDidNotFindUpdateCallback(WinSparkle.DidNotFindUpdateCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetDidNotFindUpdateCallback(callback);
         }
 
@@ -245,7 +245,7 @@ namespace WinSparkleDotNet
         /// <param name="callback"></param>
         public void SetUpdateCancelledCallback(WinSparkle.UpdateCancelledCallback callback)
         {
-            Debug.Assert(!_initialized, "Can't set callback after initialization !");
+            Debug.Assert(!_initialized, "Can't set callback after initialization!");
             WinSparkle.SetUpdateCancelledCallback(callback);
         }
         #endregion
