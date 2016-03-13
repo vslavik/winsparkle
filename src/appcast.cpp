@@ -45,8 +45,10 @@ namespace
 #define CONCAT3(a,b,c) MVAL(a)##MVAL(b)##MVAL(c)
 
 #define NS_SPARKLE      "http://www.andymatuschak.org/xml-namespaces/sparkle"
+#define NS_XML          "http://www.w3.org/XML/1998/namespace"
 #define NS_SEP          '#'
 #define NS_SPARKLE_NAME(name) NS_SPARKLE "#" name
+#define NS_XML_NAME(name) NS_XML "#" name
 
 #define NODE_CHANNEL    "channel"
 #define NODE_ITEM       "item"
@@ -57,6 +59,7 @@ namespace
 #define NODE_ENCLOSURE  "enclosure"
 #define NODE_MIN_OS_VERSION NS_SPARKLE_NAME("minimumSystemVersion")
 #define ATTR_URL        "url"
+#define ATTR_LANG       NS_XML_NAME("lang")
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
@@ -87,6 +90,20 @@ struct ContextData
     // parsed <item>s
     std::vector<Appcast> items;
 };
+
+/**
+* Returns true if item language is exactly user set,
+* If no set, return true anyway.
+*/
+bool is_suitable_language_item(const Appcast &item, std::string lang)
+{
+    bool ret = false;
+    if (lang.empty() || item.Lang == lang)
+    {
+        ret = true;
+    }
+    return ret;
+}
 
 bool is_windows_version_acceptable(const Appcast &item)
 {
@@ -127,6 +144,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         if ( strcmp(name, NODE_RELNOTES) == 0 )
         {
             ctxt.in_relnotes++;
+            const int size = ctxt.items.size();
+            for (int i = 0; attrs[i]; i += 2)
+            {
+                const char *name = attrs[i];
+                const char *value = attrs[i + 1];
+
+                if (!strcmp(name, ATTR_LANG))
+                {
+                    ctxt.items[size - 1].Lang = value;
+                }
+            }
         }
         else if ( strcmp(name, NODE_TITLE) == 0 )
         {
@@ -135,6 +163,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         else if ( strcmp(name, NODE_DESCRIPTION) == 0 )
         {
             ctxt.in_description++;
+            const int size = ctxt.items.size();
+            for (int i = 0; attrs[i]; i += 2)
+            {
+                const char *name = attrs[i];
+                const char *value = attrs[i + 1];
+
+                if (!strcmp(name, ATTR_LANG))
+                {
+                    ctxt.items[size - 1].Lang = value;
+                }
+            }
         }
         else if ( strcmp(name, NODE_LINK) == 0 )
         {
@@ -174,7 +213,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
     }
 }
-
 
 /**
  * Returns true if item os is exactly "windows"
@@ -237,8 +275,6 @@ void XMLCALL OnEndElement(void *data, const char *name)
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
         ctxt.in_item--;
-        if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
-            XML_StopParser(ctxt.parser, XML_TRUE);
     }
     else if ( strcmp(name, NODE_CHANNEL) == 0 )
     {
@@ -278,7 +314,7 @@ void XMLCALL OnText(void *data, const char *s, int len)
                                Appcast class
  *--------------------------------------------------------------------------*/
 
-Appcast Appcast::Load(const std::string& xml)
+Appcast Appcast::Load(const std::string& xml, const std::string& lang)
 {
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
@@ -310,12 +346,24 @@ Appcast Appcast::Load(const std::string& xml)
      * or "windows-x64"/"windows-x86" based on this modules bitness and meets the minimum
      * os version, if set. If none, use the first item that meets the minimum os version, if set.
      */
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), 
+        [=](const Appcast& item)
+        {
+            bool ret = false;
+            ret = is_suitable_windows_item(item) && is_suitable_language_item(item, lang);
+            return ret;
+        });
     if (it != ctxt.items.end())
         return *it;
     else
     {
-        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_version_acceptable);
+        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), 
+            [=](const Appcast& item)
+            {
+                bool ret = false;
+                ret = is_windows_version_acceptable(item) && is_suitable_language_item(item, lang);
+                return ret;
+            });
         if (it != ctxt.items.end())
             return *it;
         else 

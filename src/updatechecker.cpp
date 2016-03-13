@@ -231,7 +231,7 @@ void UpdateChecker::Run()
         StringDownloadSink appcast_xml;
         DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
 
-        Appcast appcast = Appcast::Load(appcast_xml.data);
+        Appcast appcast = Appcast::Load(appcast_xml.data, Settings::GetLanguage().lang);
 
         Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
