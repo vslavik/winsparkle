@@ -53,6 +53,11 @@ public:
  */
 void LogError(const char *msg);
 
+inline void LogError(const std::string& msg)
+{
+    LogError(msg.c_str());
+}
+
 
 /**
     Helper macro for catching exceptions in DLL API interface.

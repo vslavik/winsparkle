@@ -157,6 +157,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url)
 {
     try
     {
+        CheckForInsecureURL(url, "appcast feed");
         Settings::SetAppcastURL(url);
     }
     CATCH_ALL_EXCEPTIONS

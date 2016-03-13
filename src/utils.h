@@ -26,6 +26,8 @@
 #ifndef _utils_h_
 #define _utils_h_
 
+#include "error.h"
+
 #include <string>
 #include <string.h>
 
@@ -104,6 +106,20 @@ inline T* LoadDynamicFunc(const char *func, const char *dll)
 
 #define LOAD_DYNAMIC_FUNC(func, dll) \
     LoadDynamicFunc<decltype(func)>(#func, #dll)
+
+
+// Check for insecure URLs
+inline bool CheckForInsecureURL(const std::string& url, const std::string& purpose)
+{
+    if (url.compare(0, 8, "https://") != 0)
+    {
+        LogError("----------------------------");
+        LogError("*** USING INSECURE URL: " + purpose + " from " + url + " ***");
+        LogError("----------------------------");
+        return false;
+    }
+    return true;
+}
 
 } // namespace winsparkle
 

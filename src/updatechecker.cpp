@@ -227,11 +227,16 @@ void UpdateChecker::Run()
         const std::string url = Settings::GetAppcastURL();
         if ( url.empty() )
             throw std::runtime_error("Appcast URL not specified.");
+        CheckForInsecureURL(url, "appcast feed");
 
         StringDownloadSink appcast_xml;
         DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
 
         Appcast appcast = Appcast::Load(appcast_xml.data);
+        if (!appcast.ReleaseNotesURL.empty())
+            CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
+        if (!appcast.DownloadURL.empty())
+            CheckForInsecureURL(appcast.DownloadURL, "update file");
 
         Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
