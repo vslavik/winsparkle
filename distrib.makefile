@@ -41,7 +41,7 @@ $(binary_arch): $(binary_files)
 
 $(sources_arch):
 	@rm -rf $(sources_base) $@
-	git archive --prefix=$(sources_base)/ -o $(sources_base).tar HEAD
+	git-archive-all --prefix=$(sources_base)/ $(sources_base).tar
 	tar xf $(sources_base).tar
 	7z a -m0=lzma -mx=9 $@  $(sources_base)
 	@rm -rf $(sources_base) $(sources_base).tar
