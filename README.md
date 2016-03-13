@@ -9,7 +9,7 @@ applications. It is heavily inspired by the Sparkle framework for OS X
 written by Andy Matuschak and others, to the point of sharing the same 
 updates format (appcasts) and having very similar user interface.
 
-See http://winsparkle.org for more information about WinSparkle.
+See https://winsparkle.org for more information about WinSparkle.
 
 Documentation: [wiki](https://github.com/vslavik/winsparkle/wiki) and
 the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/include/winsparkle.h).
@@ -58,7 +58,7 @@ Download the sources archive and have a look at the
 If you want to stay at the bleeding edge and use the latest, not yet released,
 version of WinSparkle, you can get its sources from public repository.
 WinSparkle uses git and and the sources are hosted on GitHub at
-http://github.com/vslavik/winsparkle
+https://github.com/vslavik/winsparkle
 
 WinSparkle uses submodules for some dependencies, so you have to initialize
 them after checking the tree out:

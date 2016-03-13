@@ -1,5 +1,5 @@
 /*
- *  This file is part of WinSparkle (http://winsparkle.org)
+ *  This file is part of WinSparkle (https://winsparkle.org)
  *
  *  Copyright (C) 2009-2016 Vaclav Slavik
  *  Copyright (C) 2007 Andy Matuschak

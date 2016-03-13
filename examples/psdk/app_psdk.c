@@ -1,5 +1,5 @@
 /*
- *  This file is part of WinSparkle (http://winsparkle.org)
+ *  This file is part of WinSparkle (https://winsparkle.org)
  *
  *  This example code is public domain.
  *

@@ -1,5 +1,5 @@
 /*
- *  This file is part of WinSparkle (http://winsparkle.org)
+ *  This file is part of WinSparkle (https://winsparkle.org)
  *
  *  Copyright (C) 2009-2016 Vaclav Slavik
  *
@@ -60,7 +60,7 @@ BEGIN
     BEGIN
         BLOCK "040904B0" // US English, Unicode
         BEGIN
-            VALUE "Comments", "WinSparkle updates checking library (http://winsparkle.org)."
+            VALUE "Comments", "WinSparkle updates checking library (https://winsparkle.org)."
             VALUE "CompanyName", "winsparkle.org\0"
             VALUE "FileDescription", "WinSparkle updater\0"
             VALUE "FileVersion", VER_STR "\0"
