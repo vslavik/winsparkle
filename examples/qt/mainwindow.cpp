@@ -36,7 +36,7 @@ void MainWindow::initWinSparkle()
     // could be also, often more conveniently, done using a VERSIONINFO Windows
     // resource. See the "psdk" example and its .rc file for an example of that
     // (these calls wouldn't be needed then).
-    win_sparkle_set_appcast_url("http://winsparkle.org/example/appcast.xml");
+    win_sparkle_set_appcast_url("https://winsparkle.org/example/appcast.xml");
     win_sparkle_set_app_details(L"winsparkle.org", L"WinSparkle Qt Example", L"1.0");
 
     // Initialize the updater and possibly show some UI

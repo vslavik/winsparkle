@@ -10,7 +10,7 @@ appicon ICON "appicon.ico"
 #include <winver.h>
 
 // Get updates from this appcast feed:
-FeedURL     APPCAST     {"http://winsparkle.org/example/appcast.xml"}
+FeedURL     APPCAST     {"https://winsparkle.org/example/appcast.xml"}
 
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO

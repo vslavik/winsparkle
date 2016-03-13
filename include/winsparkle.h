@@ -149,6 +149,13 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_langid(unsigned short lang);
     Windows resource named "FeedURL" of type "APPCAST".
 
     @param url  URL of the appcast.
+
+    @note Always use HTTPS feeds, do not use unencrypted HTTP! This is
+          necessary to prevent both leaking user information and preventing
+          various MITM attacks.
+
+    @note See https://github.com/vslavik/winsparkle/wiki/Appcast-Feeds for
+          more information about appcast feeds.
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 
