@@ -101,7 +101,7 @@ bool is_windows_version_acceptable(const Appcast &item)
         VER_MINORVERSION, VER_GREATER_EQUAL),
         VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
 
-    sscanf(item.MinOSVersion.c_str(), "%d.%d.%d", &osvi.dwMajorVersion,
+    sscanf(item.MinOSVersion.c_str(), "%lu.%lu.%hu", &osvi.dwMajorVersion,
         &osvi.dwMinorVersion, &osvi.wServicePackMajor);
 
     return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
