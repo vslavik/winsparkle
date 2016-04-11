@@ -9,6 +9,7 @@ files:
     translation: /%locale_with_underscore%.po
     languages_mapping:
       locale_with_underscore:
+        ar: ar
         bg: bg
         bs: bs
         co: co
@@ -19,6 +20,7 @@ files:
         es-ES: es
         eu: eu
         fr: fr
+        he: he
         hy-AM: hy
         hr: hr
         hu: hu
