@@ -4,6 +4,8 @@
 *.suo
 *.sdf
 *.opensdf
+*.VC.opendb
+*.VC.db
 *.tss
 *.vcproj.*.user
 *.vcxproj.user
