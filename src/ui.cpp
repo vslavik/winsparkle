@@ -1171,6 +1171,7 @@ public:
     App();
 
     virtual bool OnInit();
+    virtual wxLayoutDirection GetLayoutDirection() const;
 
     // Sends a message with ID @a msg to the app.
     void SendMsg(int msg, EventPayload *data = NULL);
@@ -1258,6 +1259,14 @@ bool App::OnInit()
     trans->AddCatalog("winsparkle");
 
     return true;
+}
+
+
+wxLayoutDirection App::GetLayoutDirection() const
+{
+    wxString lang = wxTranslations::Get()->GetBestTranslation("winsparkle");
+    const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
+    return info ? info->LayoutDirection : wxLayout_Default;
 }
 
 
