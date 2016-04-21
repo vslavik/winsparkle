@@ -3,7 +3,7 @@
          ToolsVersion="4.0">
 
   <PropertyGroup>
-    <GettextBinDir>"$(SolutionDir)\packages\Gettext.Tools.0.19.7.001\tools\bin\"</GettextBinDir>
+    <GettextBinDir>"$(SolutionDir)\packages\Gettext.Tools.0.19.7.002\tools\bin\"</GettextBinDir>
     <Msgfmt>$(GettextBinDir)msgfmt.exe -c</Msgfmt>
   </PropertyGroup>
 
