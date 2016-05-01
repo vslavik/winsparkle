@@ -321,7 +321,7 @@ namespace WinSparkleDotNet
         [return: MarshalAs(UnmanagedType.I4)]
         private static extern int GetLastCheckTime();
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void ErrorCallback();
 
         /// <summary>   
@@ -335,7 +335,7 @@ namespace WinSparkleDotNet
             [param: MarshalAs(UnmanagedType.FunctionPtr)] ErrorCallback callback
             );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate bool CanShutdownCallback();
 
         /// <summary>   
@@ -367,7 +367,7 @@ namespace WinSparkleDotNet
             [param: MarshalAs(UnmanagedType.FunctionPtr)] CanShutdownCallback callback
             );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void ShutdownRequestCallback();
 
         /// <summary>   
@@ -402,7 +402,7 @@ namespace WinSparkleDotNet
             [param:MarshalAs(UnmanagedType.FunctionPtr)] ShutdownRequestCallback callback
             );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void DidFindUpdateCallback();
 
         /// <summary>   
@@ -424,7 +424,7 @@ namespace WinSparkleDotNet
             [param: MarshalAs(UnmanagedType.FunctionPtr)] DidFindUpdateCallback callback
             );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void DidNotFindUpdateCallback();
 
         /// <summary>   
@@ -446,7 +446,7 @@ namespace WinSparkleDotNet
             [param: MarshalAs(UnmanagedType.FunctionPtr)] DidNotFindUpdateCallback callback
             );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void UpdateCancelledCallback();
 
         /// <summary>   
