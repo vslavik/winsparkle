@@ -40,9 +40,11 @@ Check the sources out and initialize the submodules:
 To compile the library, just open `WinSparkle.sln` (or the one corresponding to
 your compiler version) solution and build it.
 
-At the moment, projects for Visual C++ 2008, 2010 and 2012 are provided, so
-you'll need that (Express edition suffices). In principle, there's nothing in
-the code preventing it from being compiled by other compilers.
+At the moment, projects for Visual C++ (2008 and up) are provided, so you'll
+need that (Express/Community edition suffices). In principle, there's nothing
+in the code preventing it from being compiled by other compilers.
+
+There are also unsupported CMake build files in the cmake directory.
 
 
  Where can I get some examples?
