@@ -17,3 +17,5 @@ translations/*.mo
 3rdparty/expat/win32/bin
 3rdparty/expat/win32/tmp
 packages
+pascal/lib/
+pascal/backup/
