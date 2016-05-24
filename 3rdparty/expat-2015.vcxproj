@@ -145,26 +145,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="expat\lib\xmlparse.c" />
-    <ClCompile Include="expat\lib\xmlrole.c" />
-    <ClCompile Include="expat\lib\xmltok.c" />
-    <ClCompile Include="expat\lib\xmltok_impl.c" />
-    <ClCompile Include="expat\lib\xmltok_ns.c" />
+    <ClCompile Include="expat\expat\lib\xmlparse.c" />
+    <ClCompile Include="expat\expat\lib\xmlrole.c" />
+    <ClCompile Include="expat\expat\lib\xmltok.c" />
+    <ClCompile Include="expat\expat\lib\xmltok_impl.c" />
+    <ClCompile Include="expat\expat\lib\xmltok_ns.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="expat\lib\ascii.h" />
-    <ClInclude Include="expat\lib\asciitab.h" />
-    <ClInclude Include="expat\lib\expat.h" />
-    <ClInclude Include="expat\lib\expat_external.h" />
-    <ClInclude Include="expat\lib\iasciitab.h" />
-    <ClInclude Include="expat\lib\internal.h" />
-    <ClInclude Include="expat\lib\latin1tab.h" />
-    <ClInclude Include="expat\lib\nametab.h" />
-    <ClInclude Include="expat\lib\utf8tab.h" />
-    <ClInclude Include="expat\lib\winconfig.h" />
-    <ClInclude Include="expat\lib\xmlrole.h" />
-    <ClInclude Include="expat\lib\xmltok.h" />
-    <ClInclude Include="expat\lib\xmltok_impl.h" />
+    <ClInclude Include="expat\expat\lib\ascii.h" />
+    <ClInclude Include="expat\expat\lib\asciitab.h" />
+    <ClInclude Include="expat\expat\lib\expat.h" />
+    <ClInclude Include="expat\expat\lib\expat_external.h" />
+    <ClInclude Include="expat\expat\lib\iasciitab.h" />
+    <ClInclude Include="expat\expat\lib\internal.h" />
+    <ClInclude Include="expat\expat\lib\latin1tab.h" />
+    <ClInclude Include="expat\expat\lib\nametab.h" />
+    <ClInclude Include="expat\expat\lib\utf8tab.h" />
+    <ClInclude Include="expat\expat\lib\winconfig.h" />
+    <ClInclude Include="expat\expat\lib\xmlrole.h" />
+    <ClInclude Include="expat\expat\lib\xmltok.h" />
+    <ClInclude Include="expat\expat\lib\xmltok_impl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

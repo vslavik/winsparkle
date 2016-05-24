@@ -1,5 +1,5 @@
 
-srcdir expat/lib;
+srcdir expat/expat/lib;
 
 vs2008.generate-solution = false;
 vs2010.generate-solution = false;
@@ -8,11 +8,11 @@ vs2013.generate-solution = false;
 vs2015.generate-solution = false;
 
 library WinSparkle_expat {
-    vs2008.projectfile = ../../expat$(SUFFIX).vcproj;
-    vs2010.projectfile = ../../expat$(SUFFIX).vcxproj;
-    vs2012.projectfile = ../../expat$(SUFFIX).vcxproj;
-    vs2013.projectfile = ../../expat$(SUFFIX).vcxproj;
-    vs2015.projectfile = ../../expat$(SUFFIX).vcxproj;
+    vs2008.projectfile = ../../../expat$(SUFFIX).vcproj;
+    vs2010.projectfile = ../../../expat$(SUFFIX).vcxproj;
+    vs2012.projectfile = ../../../expat$(SUFFIX).vcxproj;
+    vs2013.projectfile = ../../../expat$(SUFFIX).vcxproj;
+    vs2015.projectfile = ../../../expat$(SUFFIX).vcxproj;
 
     defines += COMPILED_FROM_DSP;
 

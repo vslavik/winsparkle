@@ -96,7 +96,7 @@ shared-library WinSparkle {
     vs2015.projectfile = $(id)$(SUFFIX).vcxproj;
 
     defines += XML_STATIC;
-    includedirs += 3rdparty/expat/lib;
+    includedirs += 3rdparty/expat/expat/lib;
     deps += WinSparkle_expat;
 
     includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;

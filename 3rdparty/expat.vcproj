@@ -296,23 +296,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="expat\lib\xmlparse.c"
+				RelativePath="expat\expat\lib\xmlparse.c"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmlrole.c"
+				RelativePath="expat\expat\lib\xmlrole.c"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmltok.c"
+				RelativePath="expat\expat\lib\xmltok.c"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmltok_impl.c"
+				RelativePath="expat\expat\lib\xmltok_impl.c"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmltok_ns.c"
+				RelativePath="expat\expat\lib\xmltok_ns.c"
 				>
 			</File>
 		</Filter>
@@ -322,55 +322,55 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="expat\lib\ascii.h"
+				RelativePath="expat\expat\lib\ascii.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\asciitab.h"
+				RelativePath="expat\expat\lib\asciitab.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\expat.h"
+				RelativePath="expat\expat\lib\expat.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\expat_external.h"
+				RelativePath="expat\expat\lib\expat_external.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\iasciitab.h"
+				RelativePath="expat\expat\lib\iasciitab.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\internal.h"
+				RelativePath="expat\expat\lib\internal.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\latin1tab.h"
+				RelativePath="expat\expat\lib\latin1tab.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\nametab.h"
+				RelativePath="expat\expat\lib\nametab.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\utf8tab.h"
+				RelativePath="expat\expat\lib\utf8tab.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\winconfig.h"
+				RelativePath="expat\expat\lib\winconfig.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmlrole.h"
+				RelativePath="expat\expat\lib\xmlrole.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmltok.h"
+				RelativePath="expat\expat\lib\xmltok.h"
 				>
 			</File>
 			<File
-				RelativePath="expat\lib\xmltok_impl.h"
+				RelativePath="expat\expat\lib\xmltok_impl.h"
 				>
 			</File>
 		</Filter>
