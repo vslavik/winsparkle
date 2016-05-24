@@ -1,5 +1,5 @@
 
-toolsets = vs2008 vs2010 vs2012 vs2013;
+toolsets = vs2008 vs2010 vs2012 vs2013 vs2015;
 
 if ( $toolset == vs2008 )
     SUFFIX = "";
@@ -9,11 +9,14 @@ if ( $toolset == vs2012 )
     SUFFIX = "-2012";
 if ( $toolset == vs2013 )
     SUFFIX = "-2013";
+if ( $toolset == vs2015 )
+    SUFFIX = "-2015";
 
 vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2013.solutionfile = WinSparkle$(SUFFIX).sln;
+vs2015.solutionfile = WinSparkle$(SUFFIX).sln;
 
 // Common settings:
 win32-crt-linkage = static;
@@ -25,6 +28,7 @@ defines += _CRT_SECURE_NO_WARNINGS;
 // installer stuff like WinSparkle.dll
 vs2012.option.Configuration.PlatformToolset = v110_xp;
 vs2013.option.Configuration.PlatformToolset = v120_xp;
+vs2015.option.Configuration.PlatformToolset = v140_xp;
 
 // For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
 if ( $(arch) == x86 ) {
@@ -68,6 +72,16 @@ if ( $(config) == Release ) {
     vs2013.option.Link.OptimizeReferences = true;
     vs2013.option.Link.EnableCOMDATFolding = true;
     vs2013.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+
+    vs2015.option.Configuration.WholeProgramOptimization = true;
+    vs2015.option.ClCompile.Optimization = MinSpace;
+    vs2015.option.ClCompile.FavorSizeOrSpeed = Size;
+    vs2015.option.ClCompile.WholeProgramOptimization = true;
+    vs2015.option.ClCompile.StringPooling = true;
+    vs2015.option.ClCompile.FunctionLevelLinking = true;
+    vs2015.option.Link.OptimizeReferences = true;
+    vs2015.option.Link.EnableCOMDATFolding = true;
+    vs2015.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
 }
 
 // 3rd party library dependencies:
@@ -79,6 +93,7 @@ shared-library WinSparkle {
     vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2013.projectfile = $(id)$(SUFFIX).vcxproj;
+    vs2015.projectfile = $(id)$(SUFFIX).vcxproj;
 
     defines += XML_STATIC;
     includedirs += 3rdparty/expat/lib;

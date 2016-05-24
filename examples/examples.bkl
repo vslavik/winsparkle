@@ -3,6 +3,7 @@ vs2008.solutionfile = examples$(SUFFIX).sln;
 vs2010.solutionfile = examples$(SUFFIX).sln;
 vs2012.solutionfile = examples$(SUFFIX).sln;
 vs2013.solutionfile = examples$(SUFFIX).sln;
+vs2015.solutionfile = examples$(SUFFIX).sln;
 
 includedirs += ../include;
 
@@ -13,6 +14,7 @@ program example_psdk {
     vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2013.projectfile = $(id)$(SUFFIX).vcxproj;
+    vs2015.projectfile = $(id)$(SUFFIX).vcxproj;
 
     win32-subsystem = windows;
 

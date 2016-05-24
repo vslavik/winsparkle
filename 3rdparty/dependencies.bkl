@@ -6,3 +6,4 @@ vs2008.generate-solution = false;
 vs2010.generate-solution = false;
 vs2012.generate-solution = false;
 vs2013.generate-solution = false;
+vs2015.generate-solution = false;
