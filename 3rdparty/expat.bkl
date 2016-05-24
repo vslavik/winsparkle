@@ -14,7 +14,7 @@ library WinSparkle_expat {
     vs2013.projectfile = ../../../expat$(SUFFIX).vcxproj;
     vs2015.projectfile = ../../../expat$(SUFFIX).vcxproj;
 
-    defines += COMPILED_FROM_DSP;
+    defines += COMPILING_FOR_WINDOWS;
 
     headers {
         ascii.h
