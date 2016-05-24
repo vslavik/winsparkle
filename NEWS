@@ -1,4 +1,12 @@
 
+Version 0.5.1
+-------------
+
+- Includes fix for the CVE-2016-0718 vulnerability in Expat XML parser.
+- Added Pascal bindings.
+- Fixes for RTL languages, added Arabic and Hebrew translations.
+
+
 Version 0.5
 -----------
 
