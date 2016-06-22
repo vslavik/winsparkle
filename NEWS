@@ -1,4 +1,10 @@
 
+Version 0.5.2
+-------------
+
+- Includes security fixes for Expat XML parser.
+
+
 Version 0.5.1
 -------------
 
