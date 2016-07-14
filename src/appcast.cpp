@@ -154,7 +154,7 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
-            const int size = ctxt.items.size();
+            const size_t size = ctxt.items.size();
             for ( int i = 0; attrs[i]; i += 2 )
             {
                 const char *name = attrs[i];
@@ -253,7 +253,7 @@ void XMLCALL OnEndElement(void *data, const char *name)
 void XMLCALL OnText(void *data, const char *s, int len)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
-    const int size = ctxt.items.size();
+    const size_t size = ctxt.items.size();
 
     if ( ctxt.in_relnotes )
         ctxt.items[size-1].ReleaseNotesURL.append(s, len);
@@ -290,7 +290,7 @@ Appcast Appcast::Load(const std::string& xml)
     XML_SetElementHandler(p, OnStartElement, OnEndElement);
     XML_SetCharacterDataHandler(p, OnText);
 
-    XML_Status st = XML_Parse(p, xml.c_str(), xml.size(), XML_TRUE);
+    XML_Status st = XML_Parse(p, xml.c_str(), (int)xml.size(), XML_TRUE);
 
     if ( st == XML_STATUS_ERROR )
     {

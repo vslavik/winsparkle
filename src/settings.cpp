@@ -206,7 +206,7 @@ void RegistryWrite(const char *name, const wchar_t *value)
                  0,
                  REG_SZ,
                  (const BYTE*)value,
-                 (wcslen(value) + 1) * sizeof(wchar_t)
+                 (DWORD)((wcslen(value) + 1) * sizeof(wchar_t))
              );
 
     RegCloseKey(key);
@@ -261,7 +261,7 @@ int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
         throw Win32Exception("Cannot read settings from registry");
     }
 
-    DWORD buflen = len;
+    DWORD buflen = (DWORD)len;
     DWORD type;
     result = RegQueryValueEx
              (
