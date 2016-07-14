@@ -115,7 +115,7 @@ std::wstring GetURLFileName(const char *url)
 
 void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 {
-    char url_path[512];
+    char url_path[2048];
     URL_COMPONENTSA urlc;
     memset(&urlc, 0, sizeof(urlc));
     urlc.dwStructSize = sizeof(urlc);
