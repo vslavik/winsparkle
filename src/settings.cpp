@@ -106,7 +106,7 @@ std::wstring Settings::DoGetVerInfoField(const wchar_t *field, bool fatal)
     if ( fiSize == 0 )
         throw Win32Exception("Executable doesn't have the required VERSIONINFO resource");
 
-    DataBuffer fi(fiSize);
+    DataBuffer<unsigned char> fi(fiSize);
 
     if ( !GetFileVersionInfo(exeFilename, unusedHandle, fiSize, fi.data) )
         throw Win32Exception();

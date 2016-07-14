@@ -35,17 +35,21 @@ namespace winsparkle
 {
 
 /// Helper class for RIIA handling of allocated buffers
+template<typename T>
 struct DataBuffer
 {
     DataBuffer(size_t size)
     {
-        data = new unsigned char[size];
-        memset(data, 0, size);
+        data = new T[size];
+        memset(data, 0, size * sizeof(T));
     }
 
     ~DataBuffer() { delete[] data; }
 
-    unsigned char *data;
+    operator T*() { return data; }
+    operator const T*() const { return data; }
+
+    T *data;
 };
 
 

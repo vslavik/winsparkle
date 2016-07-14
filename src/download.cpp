@@ -210,13 +210,11 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
         InternetQueryOptionA(conn, INTERNET_OPTION_URL, NULL, &ousize);
         if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
         {
-            char *optionurl = new char[ousize];
+            DataBuffer<char> optionurl(ousize);
             if ( InternetQueryOptionA(conn, INTERNET_OPTION_URL, optionurl, &ousize) )
                 sink->SetFilename(GetURLFileName(optionurl));
             else
                 sink->SetFilename(GetURLFileName(urlc.lpszUrlPath));
-            
-            delete[] optionurl;
         }
         else
         {
