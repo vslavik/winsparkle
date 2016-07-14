@@ -168,7 +168,7 @@ void UpdateDownloader::Run()
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
 
       UpdateDownloadSink sink(*this, tmpdir);
-      DownloadFile(m_appcast.DownloadURL, &sink);
+      DownloadFile(m_appcast.DownloadURL, &sink, this);
       sink.Close();
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
     }

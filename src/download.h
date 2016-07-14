@@ -31,6 +31,8 @@
 namespace winsparkle
 {
 
+class Thread;
+
 /**
     Abstraction for storing downloaded data.
  */
@@ -83,13 +85,14 @@ enum DownloadFlag
 
     Throws on error.
 
-    @param url   URL of the resource to download.
-    @param sink  Where to put downloaded data.
-    @param flags Or-combination of DownloadFlag values.
+    @param url       URL of the resource to download.
+    @param sink      Where to put downloaded data.
+    @param onThread  Thread the request runs on.
+    @param flags     Or-combination of DownloadFlag values.
 
     @see CheckConnection()
  */
-void DownloadFile(const std::string& url, IDownloadSink *sink, int flags = 0);
+void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread, int flags = 0);
 
 } // namespace winsparkle
 

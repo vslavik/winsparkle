@@ -230,7 +230,7 @@ void UpdateChecker::Run()
         CheckForInsecureURL(url, "appcast feed");
 
         StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
+        DownloadFile(url, &appcast_xml, this, GetAppcastDownloadFlags());
 
         Appcast appcast = Appcast::Load(appcast_xml.data);
         if (!appcast.ReleaseNotesURL.empty())
