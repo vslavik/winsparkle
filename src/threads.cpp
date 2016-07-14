@@ -24,7 +24,6 @@
  */
 
 #include "threads.h"
-#include "error.h"
 
 #include <windows.h>
 #include <process.h>
@@ -88,8 +87,7 @@ void SetThreadName(DWORD threadId, const char *name)
                               Thread class
  *--------------------------------------------------------------------------*/
 
-Thread::Thread(const char *name)
-    : m_handle(NULL), m_id(0), m_signalEvent(NULL), m_terminateEvent(NULL)
+Thread::Thread(const char *name) : m_handle(NULL), m_id(0)
 {
     m_handle = (HANDLE)_beginthreadex
                        (
@@ -110,10 +108,6 @@ Thread::Thread(const char *name)
 
 Thread::~Thread()
 {
-    if ( m_signalEvent )
-        CloseHandle(m_signalEvent);
-    if ( m_terminateEvent )
-        CloseHandle(m_terminateEvent);
     if ( m_handle )
         CloseHandle(m_handle);
 }
@@ -144,38 +138,12 @@ void Thread::Start()
     if ( !m_handle )
         throw Win32Exception();
 
-    m_signalEvent = CreateEvent
-                    (
-                        NULL,  // default security attributes
-                        FALSE, // auto-reset
-                        FALSE, // initially non-signaled
-                        NULL   // anonymous
-                    );
-    if ( !m_signalEvent )
-        throw Win32Exception();
-
-    m_terminateEvent = CreateEvent
-                    (
-                        NULL,  // default security attributes
-                        FALSE, // auto-reset
-                        FALSE, // initially non-signaled
-                        NULL   // anonymous
-                    );
-    if ( !m_terminateEvent )
-        throw Win32Exception();
-
     if ( ResumeThread(m_handle) == (DWORD)-1 )
-    {
-        CloseHandle(m_signalEvent);
-        m_signalEvent = NULL;
-        CloseHandle(m_terminateEvent);
-        m_terminateEvent = NULL;
         throw Win32Exception();
-    }
 
     // Wait until Run() signals that it is fully initialized.
     // Note that this must be the last manipulation of 'this' in this function!
-    WaitForSingleObject(m_signalEvent, INFINITE);
+    m_signalEvent.WaitUntilSignaled();
 }
 
 
@@ -191,21 +159,21 @@ void Thread::Join()
 
 void Thread::TerminateAndJoin()
 {
-    SetEvent(m_terminateEvent);
+    m_terminateEvent.Signal();
     Join();
 }
 
 
 void Thread::CheckShouldTerminate()
 {
-    if ( WaitForSingleObject(m_terminateEvent, 0) == WAIT_OBJECT_0 )
+    if (m_terminateEvent.CheckIfSignaled())
         throw TerminateThreadException();
 }
 
 
 void Thread::SignalReady()
 {
-    SetEvent(m_signalEvent);
+    m_signalEvent.Signal();
 }
 
 } // namespace winsparkle
