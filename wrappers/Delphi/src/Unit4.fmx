@@ -1,0 +1,335 @@
+object Form4: TForm4
+  Left = 0
+  Top = 0
+  Caption = 'Form4'
+  ClientHeight = 674
+  ClientWidth = 434
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object GroupBox2: TGroupBox
+    Align = Client
+    Margins.Top = 60.000000000000000000
+    Size.Width = 434.000000000000000000
+    Size.Height = 614.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 11
+    object Edit5: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 0
+      Text = '0'
+      Position.X = 176.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Button1: TButton
+      Position.X = 32.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 145.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Read Auto Check Status'
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Position.X = 16.000000000000000000
+      Position.Y = 496.000000000000000000
+      Size.Width = 401.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Check Manually for Updates'
+      OnClick = Button2Click
+    end
+    object Button3: TButton
+      Position.X = 216.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 129.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Get Last Check Time'
+      OnClick = Button3Click
+    end
+    object Button4: TButton
+      Position.X = 104.000000000000000000
+      Position.Y = 112.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Set Appcast URL'
+      OnClick = Button4Click
+    end
+    object Button5: TButton
+      Position.X = 288.000000000000000000
+      Position.Y = 184.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Set App Build Version'
+      OnClick = Button5Click
+    end
+    object Button6: TButton
+      Position.X = 104.000000000000000000
+      Position.Y = 184.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      Text = 'Set App Version'
+      OnClick = Button6Click
+    end
+    object Button7: TButton
+      Position.X = 104.000000000000000000
+      Position.Y = 256.000000000000000000
+      Size.Width = 120.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 7
+      Text = 'Set Registry Path'
+      OnClick = Button7Click
+    end
+    object Button8: TButton
+      Position.X = 264.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 145.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      Text = 'Set Update Check Interval'
+      OnClick = Button8Click
+    end
+    object Button9: TButton
+      Position.X = 216.000000000000000000
+      Position.Y = 336.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 9
+      Text = 'Set Language'
+      OnClick = Button9Click
+    end
+    object CheckBox1: TCheckBox
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 169.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 10
+      Text = 'Auto Check For Updates'
+      OnChange = CheckBox1Change
+    end
+    object CheckBox2: TCheckBox
+      Position.X = 264.000000000000000000
+      Position.Y = 392.000000000000000000
+      TabOrder = 11
+      Text = 'Update Found'
+    end
+    object CheckBox3: TCheckBox
+      Position.X = 264.000000000000000000
+      Position.Y = 416.000000000000000000
+      TabOrder = 12
+      Text = 'Error Found'
+    end
+    object CheckBox4: TCheckBox
+      Position.X = 264.000000000000000000
+      Position.Y = 440.000000000000000000
+      TabOrder = 13
+      Text = 'Shutdown'
+    end
+    object CheckBox5: TCheckBox
+      Position.X = 264.000000000000000000
+      Position.Y = 464.000000000000000000
+      TabOrder = 14
+      Text = 'Update Not Found'
+    end
+    object Edit1: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 15
+      Text = 'https://winsparkle.org/example/appcast.xml'
+      Position.X = 104.000000000000000000
+      Position.Y = 80.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Edit2: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 16
+      Text = '0'
+      Position.X = 352.000000000000000000
+      Position.Y = 152.000000000000000000
+      Size.Width = 57.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Edit3: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 17
+      Text = '0'
+      Position.X = 104.000000000000000000
+      Position.Y = 152.000000000000000000
+      Size.Width = 57.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Edit4: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 18
+      Position.X = 104.000000000000000000
+      Position.Y = 224.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object GroupBox1: TGroupBox
+      Position.X = 16.000000000000000000
+      Position.Y = 376.000000000000000000
+      Size.Width = 225.000000000000000000
+      Size.Height = 105.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Type of Update'
+      TabOrder = 19
+      object RadioButton1: TRadioButton
+        GroupName = 'Type'
+        Position.X = 24.000000000000000000
+        Position.Y = 24.000000000000000000
+        TabOrder = 2
+        Text = 'Check With UI'
+      end
+      object RadioButton2: TRadioButton
+        GroupName = 'Type'
+        Position.X = 24.000000000000000000
+        Position.Y = 47.000000000000000000
+        Size.Width = 177.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Check With UI and Install'
+      end
+      object RadioButton3: TRadioButton
+        GroupName = 'Type'
+        Position.X = 24.000000000000000000
+        Position.Y = 70.000000000000000000
+        TabOrder = 0
+        Text = 'Check Without UI'
+      end
+    end
+    object Label3: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 80.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Appcast URL:'
+    end
+    object Label4: TLabel
+      Position.X = 248.000000000000000000
+      Position.Y = 152.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Build Version:'
+    end
+    object Label5: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 152.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'App Version:'
+    end
+    object Label6: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 224.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Registry Path:'
+    end
+    object Label7: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 296.000000000000000000
+      Size.Width = 161.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Update Check Interval (sec):'
+    end
+    object Label8: TLabel
+      Position.X = 16.000000000000000000
+      Position.Y = 336.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Translations:'
+    end
+    object Label9: TLabel
+      Position.X = 264.000000000000000000
+      Position.Y = 368.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Update Status:'
+    end
+    object PopupBox1: TPopupBox
+      Position.X = 104.000000000000000000
+      Position.Y = 336.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 27
+    end
+    object Rectangle1: TRectangle
+      Fill.Color = claCrimson
+      Position.X = 16.000000000000000000
+      Position.Y = 542.000000000000000000
+      Size.Width = 401.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      object Label10: TLabel
+        Align = Client
+        StyledSettings = [Family]
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Size.Width = 391.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 22.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = claAqua
+        TextSettings.HorzAlign = Center
+        Text = 'Update Cancelled'
+      end
+    end
+    object Label2: TLabel
+      Position.X = 216.000000000000000000
+      Position.Y = 16.000000000000000000
+      Text = 'Last Update:'
+    end
+  end
+  object Circle1: TCircle
+    Position.X = 16.000000000000000000
+    Position.Y = 24.000000000000000000
+    Size.Width = 26.000000000000000000
+    Size.Height = 26.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Label1: TLabel
+    Position.X = 56.000000000000000000
+    Position.Y = 24.000000000000000000
+    Size.Width = 209.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Checking DLL...'
+  end
+end
