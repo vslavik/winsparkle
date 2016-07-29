@@ -62,7 +62,6 @@ const
 // Version History
 //
 //
-//
 // 1.0.0 - 29/07/2016 - (Win32, Win64)
 //
 // ** Initial Release
