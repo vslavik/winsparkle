@@ -1,0 +1,134 @@
+body {
+	overflow: hidden;
+}
+
+#tabs .ui-widget-header
+{
+	/*background-color: #EFEFEF;*/
+}
+
+.ui-tabs {
+	position: static;
+}
+
+#toc_header {
+	padding-bottom: 0;
+}
+
+#tabs .ui-tabs-nav {
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	padding-top: 19px;
+	padding-left: 4px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+
+#tabs .ui-widget-header{
+	background-color: #fff;
+	/*background: #fff url(../images/header-bg.png) left bottom repeat-x;*/
+}
+
+#tabs .ui-tabs-panel {
+	overflow: auto;
+	position: absolute;
+	padding-top: 8px;
+	padding-left: 10px;
+	top: 46px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#tabs > ul li a
+ {
+	font-family: 'Segoe UI',Verdana,Arial !important;
+	font-size:      10pt !important;
+	padding:        4px 1.5ex 3px !important;
+}
+
+#tabs { 
+    background: transparent; 
+    border: none; 
+} 
+#tabs .ui-widget-header { 
+	background-color: #fff !important;
+    background: transparent; 
+} 
+#tabs .ui-tabs-nav .ui-state-default { 
+    background: transparent; 
+	-moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+	border-radius: 0px;
+    /* border: none;  */
+} 
+#tabs .ui-tabs-nav .ui-state-active { 
+	background: #ffffff url(../images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x;
+	-moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+    border-radius: 0px;
+} 
+
+#tabs .ui-tabs-nav .ui-state-default a { 
+    color: #000; 
+} 
+#tabs .ui-tabs-nav .ui-state-active a { 
+	/* font-weight: bold; */
+    color: #000; 
+}
+
+/* Tree */
+
+ul.dynatree-container {
+	border: 0;
+	line-height: 1.5em;
+	overflow: visible;
+	padding: 0;
+	font-family: 'Segoe UI',Verdana,Arial !important;
+}
+
+ul.dynatree-container li
+{
+	background-image: none;
+}
+
+.dynatree-has-children span.dynatree-icon
+{
+	background-position: 0 0;
+}
+
+ul.dynatree-container a:hover {
+	background-color: #fff;
+}
+
+span.dynatree-icon {
+	display: none;
+}
+
+span.dynatree-connector {
+	background-position: -32px -64px;
+}
+
+span.dynatree-has-children span.dynatree-connector {
+	display: none;
+}
+
+span.dynatree-title a {
+	/*color: #1364c4 !important;*/
+	font-weight: normal !important;
+}
+
+span.dynatree-folder a {
+	/*color: #1364c4 !important;*/
+	font-weight: normal;
+}
+
+span.dynatree-active a {
+	background-color: #fff !important;
+	color: #000 !important;
+	/*color: #1364c4 !important;*/
+	font-weight: bold !important;
+}

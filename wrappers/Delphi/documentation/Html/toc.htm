@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Table of Contents</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Documentation Insight">
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/smoothness/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/dynatree/ui.dynatree.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="css/toc.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		body {
+			overflow: hidden;
+		}
+		#tabs .ui-widget-header
+		{
+			background-color: #EFEFEF;
+		}
+		#searchLayout 
+		{
+			display: none;
+			position: absolute;
+			font-size: 12px;
+			top: 46px;
+			width: 93%;
+			margin: 8px 4px 6px 10px;
+		}
+		#searchBox
+		{
+			margin-top: 5px;
+			width: 95%;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/jquery.dynatree.min.js"></script>
+    <script type="text/javascript" src="js/jquery.textchange.min.js"></script>
+	<script type="text/javascript" src="js/di.toc.js"></script>
+</head>
+
+<body>
+	<div id="tabs">
+		<ul>
+			<li><a href="#tab-toc">Contents</a></li>
+			<li><a href="#tab-index">Index</a></li>
+		</ul>
+		<div id="tab-toc">
+			<ul id="toc">
+			</ul>
+		</div>
+		
+		<div id="tab-index">
+			<ul id="index">
+			</ul>
+		</div>	
+		
+		<div id="searchLayout">
+			<div class="searchLabel">Look for:</div>
+			<input id="searchBox" type="text" tabindex="1" />
+		</div>			
+	</div>    
+</body>
+
+</html>
