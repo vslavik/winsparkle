@@ -25,6 +25,7 @@
 
 #include "appcast.h"
 #include "error.h"
+#include "settings.h"
 
 #include <expat.h>
 #include <vector>
@@ -47,6 +48,9 @@ namespace
 #define NS_SPARKLE      "http://www.andymatuschak.org/xml-namespaces/sparkle"
 #define NS_SEP          '#'
 #define NS_SPARKLE_NAME(name) NS_SPARKLE "#" name
+
+#define NS_XML          "http://www.w3.org/XML/1998/namespace"
+#define NS_XML_NAME(name) NS_XML "#" name
 
 #define NODE_CHANNEL    "channel"
 #define NODE_ITEM       "item"
@@ -126,7 +130,23 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     {
         if ( strcmp(name, NODE_RELNOTES) == 0 )
         {
-            ctxt.in_relnotes++;
+            if ( attrs[0] )
+            {
+                const char *name = attrs[0];
+                const char *value = attrs[1];
+
+                if ( strcmp(name, NS_XML_NAME("lang")) == 0 &&
+                        strcmp(value, Settings::GetLanguage().lang.c_str()) == 0 )
+                {
+                    ctxt.in_relnotes++;
+                }
+            }
+            else
+            {
+                const size_t size = ctxt.items.size();
+                if ( !ctxt.items[size-1].ReleaseNotesURL.size() )
+                    ctxt.in_relnotes++;
+            }
         }
         else if ( strcmp(name, NODE_TITLE) == 0 )
         {
@@ -208,7 +228,7 @@ void XMLCALL OnEndElement(void *data, const char *name)
 
     if ( ctxt.in_item && strcmp(name, NODE_RELNOTES) == 0 )
     {
-        ctxt.in_relnotes--;
+        ctxt.in_relnotes && ctxt.in_relnotes--;
     }
     else if ( ctxt.in_item && strcmp(name, NODE_TITLE) == 0 )
     {
@@ -256,7 +276,7 @@ void XMLCALL OnText(void *data, const char *s, int len)
     const size_t size = ctxt.items.size();
 
     if ( ctxt.in_relnotes )
-        ctxt.items[size-1].ReleaseNotesURL.append(s, len);
+        ctxt.items[size-1].ReleaseNotesURL.assign(s, len);
     else if ( ctxt.in_title )
         ctxt.items[size-1].Title.append(s, len);
     else if ( ctxt.in_description )
