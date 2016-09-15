@@ -51,18 +51,24 @@ struct InetHandle
 
     ~InetHandle()
     {
-        if (m_handle)
-        {
-            if (m_callback)
-                InternetSetStatusCallback(m_handle, NULL);
-            InternetCloseHandle(m_handle);
-        }
+        Close();
     }
 
     void SetStatusCallback(INTERNET_STATUS_CALLBACK callback)
     {
         m_callback = callback;
         InternetSetStatusCallback(m_handle, m_callback);
+    }
+
+    void Close()
+    {
+        if (m_handle)
+        {
+            if (m_callback)
+                InternetSetStatusCallback(m_handle, NULL);
+            InternetCloseHandle(m_handle);
+            m_handle = NULL;
+        }
     }
 
     operator HINTERNET() const { return m_handle; }
@@ -141,6 +147,10 @@ void CALLBACK DownloadInternetStatusCallback(_In_ HINTERNET hInternet,
 
         case INTERNET_STATUS_REQUEST_COMPLETE:
             context->eventRequestComplete.Signal();
+            break;
+
+        case INTERNET_STATUS_CONNECTION_CLOSED:
+            context->conn->Close();
             break;
     }
 }
@@ -297,7 +307,14 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
         }
 
         if (ibuf.dwBufferLength == 0)
-            break; // all of the file was downloaded
+        {
+            // This check is required in case the INTERNET_STATUS_CONNECTION_CLOSED event was 
+            // received (and the handle was closed) during the call to InternetReadFileEx()
+            if (!conn)
+                throw Win32Exception();
+            else
+                break; // all of the file was downloaded
+        }
 
         sink->Add(ibuf.lpvBuffer, ibuf.dwBufferLength);
     }
