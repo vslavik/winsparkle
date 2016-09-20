@@ -70,7 +70,8 @@ protected:
     virtual bool ShouldAutomaticallyInstall() const { return false; }
 
 protected:
-    virtual void Run();
+	void Run();
+	virtual void UpdateCheckWorker();
     virtual bool IsJoinable() const { return false; }
 };
 
@@ -87,6 +88,7 @@ public:
 protected:
     virtual int GetAppcastDownloadFlags() const;
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
+	void Run();
 };
 
 
