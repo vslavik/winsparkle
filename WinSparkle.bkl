@@ -30,6 +30,12 @@ vs2012.option.Configuration.PlatformToolset = v110_xp;
 vs2013.option.Configuration.PlatformToolset = v120_xp;
 vs2015.option.Configuration.PlatformToolset = v140_xp;
 
+// VS2015 generates thread-safe statics by default, but it's incompatible with
+// Windows XP when used in DLLs
+if ( $toolset == vs2015 ) {
+    compiler-options += "/Zc:threadSafeInit-";
+}
+
 // For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
 if ( $(arch) == x86 ) {
     vs2012.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
