@@ -47,11 +47,18 @@ namespace
 
 struct InetHandle
 {
-    InetHandle(HINTERNET handle) : m_handle(handle), m_callback(NULL) {}
+    InetHandle(HINTERNET handle = 0) : m_handle(handle), m_callback(NULL) {}
 
     ~InetHandle()
     {
         Close();
+    }
+
+    InetHandle& operator=(HINTERNET handle)
+    {
+        Close();
+        m_handle = handle;
+        return *this;
     }
 
     void SetStatusCallback(INTERNET_STATUS_CALLBACK callback)
@@ -126,6 +133,7 @@ std::wstring GetURLFileName(const char *url)
 
 struct DownloadCallbackContext
 {
+    DownloadCallbackContext(InetHandle *conn_) : conn(conn_) {}
     InetHandle *conn;
     Event eventRequestComplete;
 };
@@ -195,7 +203,6 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
                       );
     if ( !inet )
         throw Win32Exception();
-    inet.SetStatusCallback(&DownloadInternetStatusCallback);
 
     DWORD dwFlags = 0;
     if ( flags & Download_NoCached )
@@ -203,18 +210,28 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
     if ( urlc.nScheme == INTERNET_SCHEME_HTTPS )
         dwFlags |= INTERNET_FLAG_SECURE;
 
-    DownloadCallbackContext context = { 0 };
-    InetHandle conn = InternetOpenUrlA
-                      (
-                          inet,
-                          url.c_str(),
-                          NULL, // lpszHeaders
-                          -1,   // dwHeadersLength
-                          dwFlags,
-                          (DWORD_PTR)&context  // dwContext
-                      );
-    context.conn = &conn;
-    if (!conn)
+    InetHandle conn;
+
+    DownloadCallbackContext context(&conn);
+    inet.SetStatusCallback(&DownloadInternetStatusCallback);
+
+    HINTERNET conn_raw = InternetOpenUrlA
+                         (
+                             inet,
+                             url.c_str(),
+                             NULL, // lpszHeaders
+                             -1,   // dwHeadersLength
+                             dwFlags,
+                             (DWORD_PTR)&context  // dwContext
+                         );
+    // InternetOpenUrl() may return NULL handle and then fill it in asynchronously from 
+    // DownloadInternetStatusCallback. We must make sure we don't overwrite the handle
+    // in that case, or throw an error.
+    if (conn_raw)
+    {
+        conn = conn_raw;
+    }
+    else
     {
         if (GetLastError() != ERROR_IO_PENDING)
             throw Win32Exception();
