@@ -1457,7 +1457,11 @@ void UI::Run()
     // HINSTANCE of this DLL, not of the main .exe.
 
     if ( !ms_hInstance )
-        return; // DllMain() not called? -- FIXME: throw
+    {
+        // If DllMain() was not called, assume we're statically linked
+        // and use the hInstance of the containing program.
+        ms_hInstance = GetModuleHandle(NULL);
+    }
 
     // IMPLEMENT_WXWIN_MAIN does this as the first thing
     wxDISABLE_DEBUG_SUPPORT();
