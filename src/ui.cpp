@@ -1473,7 +1473,9 @@ void UI::Run()
     SignalReady();
 
     // Run the app:
+#if wxCHECK_VERSION(3, 0, 3) && !wxCHECK_VERSION(3, 1, 0)
     wxMSWDisableSettingHighDPIAware();
+#endif
     wxEntry(ms_hInstance);
 }
 
