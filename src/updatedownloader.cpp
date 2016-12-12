@@ -45,6 +45,17 @@ namespace winsparkle
 namespace
 {
 
+std::wstring GetUniqueTempDirectoryPrefix()
+{
+    wchar_t tmpdir[MAX_PATH + 1];
+    if (GetTempPath(MAX_PATH + 1, tmpdir) == 0)
+        throw Win32Exception("Cannot create temporary directory");
+
+    std::wstring dir(tmpdir);
+    dir += L"Update-";
+    return dir;
+}
+
 std::wstring CreateUniqueTempDirectory()
 {
     // We need to put downloaded updates into a directory of their own, because
@@ -53,15 +64,11 @@ std::wstring CreateUniqueTempDirectory()
     //
     // This code creates a new randomized directory name and tries to create it;
     // this process is repeated if the directory already exists.
-    wchar_t tmpdir[MAX_PATH+1];
-    if ( GetTempPath(MAX_PATH+1, tmpdir) == 0 )
-        throw Win32Exception("Cannot create temporary directory");
+    const std::wstring tmpdir = GetUniqueTempDirectoryPrefix();
 
     for ( ;; )
     {
         std::wstring dir(tmpdir);
-        dir += L"Update-";
-
         UUID uuid;
         UuidCreate(&uuid);
         RPC_WSTR uuidStr;
@@ -191,6 +198,21 @@ void UpdateDownloader::CleanLeftovers()
     std::wstring tmpdir;
     if ( !Settings::ReadConfigValue("UpdateTempDir", tmpdir) )
         return;
+
+    // Check that the directory actually is a valid update temp dir, to prevent
+    // malicious users from forcing us into deleting arbitrary directories:
+    try
+    {
+        if (tmpdir.find(GetUniqueTempDirectoryPrefix()) != 0)
+        {
+            Settings::DeleteConfigValue("UpdateTempDir");
+            return;
+        }
+    }
+    catch (Win32Exception&) // cannot determine temp directory
+    {
+        return;
+    }
 
     tmpdir.append(1, '\0'); // double NULL-terminate for SHFileOperation
 
