@@ -1,4 +1,12 @@
 
+Version 0.5.3
+-------------
+
+- Downloads are now cancellable.
+- Fixed an issue with parsing some appcasts (#123).
+- Verify UpdateTempDir's validity before deleting it.
+
+
 Version 0.5.2
 -------------
 
