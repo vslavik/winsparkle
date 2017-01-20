@@ -71,6 +71,7 @@ protected:
 
 protected:
     virtual void Run();
+    virtual void PerformUpdateCheck();
     virtual bool IsJoinable() const { return false; }
 };
 
@@ -87,6 +88,7 @@ public:
 protected:
     virtual int GetAppcastDownloadFlags() const;
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
+    void Run();
 };
 
 

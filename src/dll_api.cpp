@@ -75,21 +75,8 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
         {
             if ( checkUpdates )
             {
-                static const time_t ONE_DAY = 60*60*24;
-
-                time_t lastCheck = 0;
-                Settings::ReadConfigValue("LastCheckTime", lastCheck);
-                const time_t currentTime = time(NULL);
-
-                // Only check for updates in reasonable intervals:
-                const int interval = win_sparkle_get_update_check_interval();
-                if ( currentTime - lastCheck >= interval )
-                {
-                    // Run the check in background. Only show UI if updates
-                    // are available.
-                    UpdateChecker *check = new UpdateChecker();
-                    check->Start();
-                }
+                UpdateChecker *check = new UpdateChecker();
+                check->Start();
             }
         }
         else // not yet configured
