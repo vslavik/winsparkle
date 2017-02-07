@@ -3,4 +3,4 @@
 	url = git://github.com/wxWidgets/wxWidgets.git
 [submodule "3rdparty/expat"]
 	path = 3rdparty/expat
-	url = git://git.code.sf.net/p/expat/code_git
+	url = https://github.com/libexpat/libexpat.git
