@@ -36,6 +36,7 @@ $(binary_arch): $(binary_files)
 	@mkdir -p $(binary_base)/Release
 	@mkdir -p $(binary_base)/x64/Release
 	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
+	cp -a 3rdparty/expat/expat/COPYING $(binary_base)/COPYING.expat
 	zip -9 -r  $@ $(binary_base)
 	@rm -rf $(binary_base) $(binary_base).tar
 
