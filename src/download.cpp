@@ -128,7 +128,7 @@ std::wstring GetURLFileName(const char *url)
 {
     const char *lastSlash = strrchr(url, '/');
     const std::string fn(lastSlash ? lastSlash + 1 : url);
-    return AnsiToWide(fn);
+    return AnsiToWide(fn.find_first_of('?') != std::string::npos ? fn.substr(0, fn.find_first_of('?')) : fn);
 }
 
 struct DownloadCallbackContext
