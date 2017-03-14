@@ -127,8 +127,10 @@ bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
 std::wstring GetURLFileName(const char *url)
 {
     const char *lastSlash = strrchr(url, '/');
-    const std::string fn(lastSlash ? lastSlash + 1 : url);
-    return AnsiToWide(fn.find_first_of('?') != std::string::npos ? fn.substr(0, fn.find_first_of('?')) : fn);
+    std::string fn(lastSlash ? lastSlash + 1 : url);
+    if (fn.find_first_of('?') != std::string::npos)
+        fn = fn.substr(0, fn.find_first_of('?'));
+    return AnsiToWide(fn);
 }
 
 struct DownloadCallbackContext
