@@ -19,3 +19,4 @@ translations/*.mo
 packages
 pascal/lib/
 pascal/backup/
+.vs
