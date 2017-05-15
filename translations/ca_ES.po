@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-06-03 12:57-0400\n"
+"PO-Revision-Date: 2017-03-24 07:37-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: src/ui.cpp:259 src/ui.cpp:585
 msgid "Software Update"
-msgstr "Actualització de programari"
+msgstr "Actualització del Programa"
 
 #: src/ui.cpp:436
 msgid "Release notes:"
@@ -37,7 +37,7 @@ msgstr "Recorda-m’ho més tard"
 
 #: src/ui.cpp:473 src/ui.cpp:486
 msgid "Install update"
-msgstr "Instal·la l’actualització"
+msgstr "Instal·la actualització"
 
 #: src/ui.cpp:584
 #, c-format
@@ -58,7 +58,7 @@ msgstr "No s’ha pogut obrir l’instal·lador."
 
 #: src/ui.cpp:621
 msgid "Checking for updates..."
-msgstr "S’està comprovant si hi ha actualitzacions…"
+msgstr "Comprovant actualitzacions..."
 
 #: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
 msgid "Cancel"
@@ -66,7 +66,7 @@ msgstr "Cancel·la"
 
 #: src/ui.cpp:641
 msgid "You're up to date!"
-msgstr "Ja teniu la versió més recent."
+msgstr "Estàs actualitzat!"
 
 #: src/ui.cpp:648
 #, c-format
@@ -75,11 +75,11 @@ msgstr "%s %s és la versió més nova disponible ara."
 
 #: src/ui.cpp:661
 msgid "Close"
-msgstr "Tanca"
+msgstr "Tancar"
 
 #: src/ui.cpp:680
 msgid "Update Error!"
-msgstr "S’ha produït un error d’actualització."
+msgstr "Error d'actualització!"
 
 #: src/ui.cpp:682
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
@@ -88,11 +88,11 @@ msgstr "No s’ha pogut recuperar la informació d’actualitzacions. Comproveu 
 #: src/ui.cpp:723
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Hi ha una versió actualitzada de l’aplicació %s."
+msgstr "Una nova versió de %s està disponible!"
 
 #: src/ui.cpp:726
 msgid "Get update"
-msgstr "Aconsegueix l’actualització"
+msgstr "Aconseguir actualització"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
 #: src/ui.cpp:732
@@ -107,15 +107,15 @@ msgstr "S’està baixant l’actualització…"
 #: src/ui.cpp:791
 #, c-format
 msgid "%s of %s"
-msgstr "%s/%s"
+msgstr "%s de %s"
 
 #: src/ui.cpp:820
 msgid "Ready to install."
-msgstr "La instal·lació és a punt."
+msgstr "Preparat per instal·lar."
 
 #: src/ui.cpp:960
 msgid "Check for updates automatically?"
-msgstr "Voleu comprovar si hi ha actualitzacions automàticament?"
+msgstr "Buscar actualitzacions automàticament?"
 
 #: src/ui.cpp:970
 #, c-format
@@ -124,9 +124,9 @@ msgstr "Voleu que %s comprovi si hi ha actualitzacions automàticament? Sempre p
 
 #: src/ui.cpp:984
 msgid "Check automatically"
-msgstr "Comprova automàticament"
+msgstr "Comprovar automàticament"
 
 #: src/ui.cpp:989
 msgid "Don't check"
-msgstr "No comprovis res"
+msgstr "No comprovar"
 

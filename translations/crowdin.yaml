@@ -10,6 +10,7 @@ files:
     languages_mapping:
       locale_with_underscore:
         ar: ar
+        be: be
         bg: bg
         bs: bs
         co: co
@@ -20,6 +21,7 @@ files:
         es-ES: es
         eu: eu
         fr: fr
+        ga-IE: ga
         he: he
         hy-AM: hy
         hr: hr
