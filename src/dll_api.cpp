@@ -46,70 +46,35 @@ extern "C"
 
 WIN_SPARKLE_API void __cdecl win_sparkle_init()
 {
-    try
-    {
-        // finish initialization
-        if (!Settings::GetLanguage().IsOk())
-        {
-            LANGID lang = 0;
-            if (IsWindowsVistaOrGreater())
-            {
-                auto f_GetThreadUILanguage = LOAD_DYNAMIC_FUNC(GetThreadUILanguage, kernel32);
-                if (f_GetThreadUILanguage)
-                    lang = f_GetThreadUILanguage();
-            }
-            if (PRIMARYLANGID(lang) == 0)
-            {
-                lang = LANGIDFROMLCID(GetThreadLocale());
-            }
-            if (PRIMARYLANGID(lang) != 0)
-                Settings::SetLanguage(lang);
-        }
+	try
+	{
+		// finish initialization
+		if (!Settings::GetLanguage().IsOk())
+		{
+			LANGID lang = 0;
+			if (IsWindowsVistaOrGreater())
+			{
+				auto f_GetThreadUILanguage = LOAD_DYNAMIC_FUNC(GetThreadUILanguage, kernel32);
+				if (f_GetThreadUILanguage)
+					lang = f_GetThreadUILanguage();
+			}
+			if (PRIMARYLANGID(lang) == 0)
+			{
+				lang = LANGIDFROMLCID(GetThreadLocale());
+			}
+			if (PRIMARYLANGID(lang) != 0)
+				Settings::SetLanguage(lang);
+		}
 
-        // first things first
-        UpdateDownloader::CleanLeftovers();
+		// first things first
+		UpdateDownloader::CleanLeftovers();
 
-        // check for updates
-        bool checkUpdates;
-        if ( Settings::ReadConfigValue("CheckForUpdates", checkUpdates) )
-        {
-            if ( checkUpdates )
-            {
-                static const time_t ONE_DAY = 60*60*24;
-
-                time_t lastCheck = 0;
-                Settings::ReadConfigValue("LastCheckTime", lastCheck);
-                const time_t currentTime = time(NULL);
-
-                // Only check for updates in reasonable intervals:
-                const int interval = win_sparkle_get_update_check_interval();
-                if ( currentTime - lastCheck >= interval )
-                {
-                    // Run the check in background. Only show UI if updates
-                    // are available.
-                    UpdateChecker *check = new UpdateChecker();
-                    check->Start();
-                }
-            }
-        }
-        else // not yet configured
-        {
-            bool didRunOnce;
-            Settings::ReadConfigValue("DidRunOnce", didRunOnce, false);
-            if ( !didRunOnce )
-            {
-                // Do nothing on the first execution of the app, for better
-                // first-time impression.
-                Settings::WriteConfigValue("DidRunOnce", true);
-            }
-            else
-            {
-                // Only when the app is launched for the second time, ask the
-                // user for their permission to check for updates.
-                UI::AskForPermission();
-            }
-        }
-    }
+		// Run the check in background. Only show UI if updates
+		// are available.
+		UpdateChecker *check = new UpdateChecker();
+		check->Start();
+	}
+	
     CATCH_ALL_EXCEPTIONS
 }
 

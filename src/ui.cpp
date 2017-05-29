@@ -320,12 +320,10 @@ protected:
 WinSparkleDialog::WinSparkleDialog()
     : wxDialog(NULL, wxID_ANY, _("Software Update"),
                wxDefaultPosition, wxDefaultSize,
-               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxDIALOG_NO_PARENT)
+		       wxDEFAULT_DIALOG_STYLE | wxDIALOG_NO_PARENT)
 {
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
-
-    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
 
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -388,7 +386,6 @@ void WinSparkleDialog::SetHeadingFont(wxWindow *win)
         // 9pt is base font, 12pt is for "Main instructions". See
         // http://msdn.microsoft.com/en-us/library/aa511282%28v=MSDN.10%29.aspx
         f.SetPointSize(f.GetPointSize() + 3);
-        win->SetForegroundColour(wxColour(0x00, 0x33, 0x99));
     }
     else // Windows XP/2000
     {
@@ -543,7 +540,7 @@ UpdateDialog::UpdateDialog()
                           );
     m_updateButtonsSizer->Add
                           (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_INSTALL, _("Download")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -1003,10 +1000,14 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 
     if( !info.ReleaseNotesURL.empty() )
     {
-        m_webBrowser->Navigate
+		VARIANT varFlags;
+		varFlags.vt = VT_I4;
+		varFlags.llVal = (navNoHistory | navNoReadFromCache | navNoWriteToCache);
+
+		m_webBrowser->Navigate
                       (
                           wxBasicString(info.ReleaseNotesURL),
-                          NULL,  // Flags
+						  &varFlags,  // Flags
                           NULL,  // TargetFrameName
                           NULL,  // PostData
                           NULL   // Headers
@@ -1071,7 +1072,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         }
     }
 
-    SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+	SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE);
 }
 
 

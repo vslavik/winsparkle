@@ -36,6 +36,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <winsparkle.h>
 
 using namespace std;
 
@@ -219,52 +220,80 @@ UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
 
 void UpdateChecker::Run()
 {
-    // no initialization to do, so signal readiness immediately
-    SignalReady();
+	while (1)
+	{
+		// no initialization to do, so signal readiness immediately
+ 		SignalReady();
 
-    try
-    {
-        const std::string url = Settings::GetAppcastURL();
-        if ( url.empty() )
-            throw std::runtime_error("Appcast URL not specified.");
-        CheckForInsecureURL(url, "appcast feed");
+		bool checkUpdates;
+		if (Settings::ReadConfigValue("CheckForUpdates", checkUpdates))
+		{
+			if (checkUpdates)
+			{
+				static const time_t ONE_DAY = 60 * 60 * 24;
 
-        StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml, this, GetAppcastDownloadFlags());
+				time_t lastCheck = 0;
+				Settings::ReadConfigValue("LastCheckTime", lastCheck);
+				const time_t currentTime = time(NULL);
 
-        Appcast appcast = Appcast::Load(appcast_xml.data);
-        if (!appcast.ReleaseNotesURL.empty())
-            CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
-        if (!appcast.DownloadURL.empty())
-            CheckForInsecureURL(appcast.DownloadURL, "update file");
+				// Only check for updates in reasonable intervals:
+				const int interval = win_sparkle_get_update_check_interval();
+				if (currentTime - lastCheck >= interval)
+				{
+					UpdateCheckWorker();
+				}
+			}
+		}
+		// Check every 5 minutes
+		Sleep(300000);
+	}
+}
 
-        Settings::WriteConfigValue("LastCheckTime", time(NULL));
+void UpdateChecker::UpdateCheckWorker()
+{
+	try
+	{
+		const std::string url = Settings::GetAppcastURL();
+		if (url.empty())
+			throw std::runtime_error("Appcast URL not specified.");
+		CheckForInsecureURL(url, "appcast feed");
 
-        const std::string currentVersion =
-                WideToAnsi(Settings::GetAppBuildVersion());
+		StringDownloadSink appcast_xml;
+		DownloadFile(url, &appcast_xml, this, GetAppcastDownloadFlags());
 
-        // Check if our version is out of date.
-        if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
-        {
-            // The same or newer version is already installed.
-            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
-            return;
-        }
+		Appcast appcast = Appcast::Load(appcast_xml.data);
+		if (!appcast.ReleaseNotesURL.empty())
+			CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
+		if (!appcast.DownloadURL.empty())
+			CheckForInsecureURL(appcast.DownloadURL, "update file");
 
-        // Check if the user opted to ignore this particular version.
-        if ( ShouldSkipUpdate(appcast) )
-        {
-            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
-            return;
-        }
+		Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
-        UI::NotifyUpdateAvailable(appcast, ShouldAutomaticallyInstall());
-    }
-    catch ( ... )
-    {
-        UI::NotifyUpdateError();
-        throw;
-    }
+		const std::string currentVersion =
+			WideToAnsi(Settings::GetAppBuildVersion());
+
+		// Check if our version is out of date.
+		if (!appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0)
+		{
+			// The same or newer version is already installed.
+			UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+			return;
+		}
+
+		// Check if the user opted to ignore this particular version.
+		if (ShouldSkipUpdate(appcast))
+		{
+			UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+			return;
+		}
+
+		UI::NotifyUpdateAvailable(appcast, ShouldAutomaticallyInstall());
+	}
+	catch (...)
+	{
+		UI::NotifyUpdateError();
+		throw;
+	}
 }
 
 bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
@@ -302,4 +331,11 @@ bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
     return false;
 }
 
+void ManualUpdateChecker::Run()
+{
+	// no initialization to do, so signal readiness immediately
+	SignalReady();
+
+	UpdateCheckWorker();
+}
 } // namespace winsparkle
