@@ -61,7 +61,7 @@ public:
 
 protected:
     /// Returns flags to be used when checking the appcast
-    virtual int GetAppcastDownloadFlags() const { return 0; }
+    virtual int GetAppcastDownloadFlags() const;
 
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
@@ -85,7 +85,6 @@ public:
     ManualUpdateChecker() : UpdateChecker() {}
 
 protected:
-    virtual int GetAppcastDownloadFlags() const;
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 };
 
