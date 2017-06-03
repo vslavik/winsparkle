@@ -206,9 +206,14 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
     if ( !inet )
         throw Win32Exception();
 
-    DWORD dwFlags = 0;
-    if ( flags & Download_NoCached )
-        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+    // Never allow local caching, always contact the server for both
+    // appcast feeds and downloads. This is useful in case of
+    // misconfigured servers.
+    DWORD dwFlags = INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_RELOAD;
+    // For some requests (appcast feeds), don't even allow proxies to cache,
+    // as we need the most up-to-date information.
+    if ( flags & Download_BypassProxies )
+        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE;
     if ( urlc.nScheme == INTERNET_SCHEME_HTTPS )
         dwFlags |= INTERNET_FLAG_SECURE;
 

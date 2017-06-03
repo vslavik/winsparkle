@@ -266,7 +266,7 @@ void UpdateChecker::PerformUpdateCheck()
         CheckForInsecureURL(url, "appcast feed");
 
         StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml, this, GetAppcastDownloadFlags());
+        DownloadFile(url, &appcast_xml, this, Download_BypassProxies);
 
         Appcast appcast = Appcast::Load(appcast_xml.data);
         if (!appcast.ReleaseNotesURL.empty())
@@ -320,14 +320,6 @@ bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
 /*--------------------------------------------------------------------------*
                             ManualUpdateChecker
  *--------------------------------------------------------------------------*/
-
-int ManualUpdateChecker::GetAppcastDownloadFlags() const
-{
-    // Manual check should always connect to the server and bypass any caching.
-    // This is good for finding updates that are too new to propagate through
-    // caches yet.
-    return Download_NoCached;
-}
 
 bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
 {

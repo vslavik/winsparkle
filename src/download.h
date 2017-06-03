@@ -76,8 +76,8 @@ struct StringDownloadSink : public IDownloadSink
 /// Flags for DownloadFile().
 enum DownloadFlag
 {
-    /// Don't get resources from cache, always contact the origin server
-    Download_NoCached = 1
+    /// Instruct proxies to pass the request upstream
+    Download_BypassProxies = 1
 };
 
 /**
