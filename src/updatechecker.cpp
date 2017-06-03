@@ -36,6 +36,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <winsparkle.h>
 
 using namespace std;
 
@@ -222,6 +223,41 @@ void UpdateChecker::Run()
     // no initialization to do, so signal readiness immediately
     SignalReady();
 
+    while (true)
+    {
+        // time to wait for next iteration: either a reasonable default or
+        // time to next scheduled update check if checks are enabled
+        unsigned sleepTime = 60 * 60 * 1000; // 60mins
+
+        bool checkUpdates;
+        Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
+
+        if (checkUpdates)
+        {
+            const time_t currentTime = time(NULL);
+            time_t lastCheck = currentTime;
+            Settings::ReadConfigValue("LastCheckTime", lastCheck);
+
+            // Only check for updates in reasonable intervals:
+            const int interval = win_sparkle_get_update_check_interval();
+            time_t nextCheck = lastCheck + interval;
+            if (currentTime >= nextCheck)
+            {
+                PerformUpdateCheck();
+                sleepTime = interval;
+            }
+            else
+            {
+                sleepTime = unsigned(nextCheck - currentTime);
+            }
+        }
+
+        m_terminateEvent.WaitUntilSignaled(sleepTime);
+    }
+}
+
+void UpdateChecker::PerformUpdateCheck()
+{
     try
     {
         const std::string url = Settings::GetAppcastURL();
@@ -302,4 +338,11 @@ bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
     return false;
 }
 
+void ManualUpdateChecker::Run()
+{
+    // no initialization to do, so signal readiness immediately
+    SignalReady();
+
+    PerformUpdateCheck();
+}
 } // namespace winsparkle
