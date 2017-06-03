@@ -223,24 +223,36 @@ void UpdateChecker::Run()
     // no initialization to do, so signal readiness immediately
     SignalReady();
 
-    while (1)
+    while (true)
     {
+        // time to wait for next iteration: either a reasonable default or
+        // time to next scheduled update check if checks are enabled
+        unsigned sleepTime = 60 * 60 * 1000; // 60mins
+
         bool checkUpdates;
         Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
+
         if (checkUpdates)
         {
-            time_t lastCheck = 0;
-            Settings::ReadConfigValue("LastCheckTime", lastCheck);
             const time_t currentTime = time(NULL);
+            time_t lastCheck = currentTime;
+            Settings::ReadConfigValue("LastCheckTime", lastCheck);
 
             // Only check for updates in reasonable intervals:
             const int interval = win_sparkle_get_update_check_interval();
-            if (currentTime - lastCheck >= interval)
+            time_t nextCheck = lastCheck + interval;
+            if (currentTime >= nextCheck)
             {
                 PerformUpdateCheck();
+                sleepTime = interval;
+            }
+            else
+            {
+                sleepTime = unsigned(nextCheck - currentTime);
             }
         }
-        m_terminateEvent.WaitUntilSignaled(win_sparkle_get_update_check_interval());
+
+        m_terminateEvent.WaitUntilSignaled(sleepTime);
     }
 }
 
