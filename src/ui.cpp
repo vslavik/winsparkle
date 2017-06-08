@@ -218,34 +218,9 @@ wxPoint GetWindowOriginSoThatItFits(int display, const wxRect& windowRect)
 
 void CenterWindowOnHostApplication(wxTopLevelWindow *win)
 {
-    // find application's biggest window:
-    EnumProcessWindowsData data;
-    data.process_id = GetCurrentProcessId();
-    EnumWindows(EnumProcessWindowsCallback, (LPARAM) &data);
-
-    if (data.biggest.IsEmpty())
-    {
-        // no parent window to center on, so center on the screen
-        win->Center();
-        return;
-    }
-
-    const wxRect& host(data.biggest);
-
-    // and center WinSparkle on it:
-    wxSize winsz = win->GetClientSize();
-    wxPoint pos(host.x + (host.width - winsz.x) / 2,
-                host.y + (host.height - winsz.y) / 2);
-
-    // make sure the window is fully visible:
-    int display = wxDisplay::GetFromPoint(wxPoint(host.x + host.width / 2,
-                                                  host.y + host.height / 2));
-    if (display != wxNOT_FOUND)
-    {
-        pos = GetWindowOriginSoThatItFits(display, wxRect(pos, winsz));
-    }
-
-    win->Move(pos);
+    // Since our app is full screen, just center the window in the screen
+    win->Center();
+    return;
 }
 
 void EnsureWindowIsFullyVisible(wxTopLevelWindow *win)
