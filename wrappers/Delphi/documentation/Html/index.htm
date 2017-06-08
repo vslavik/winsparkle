@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Delphi Wrapper for WinSparkle</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="generator" content="Documentation Insight">
+  <link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+  <link type="text/css" rel="stylesheet" media="all" href="css/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/splitter.js"></script>
+
+  <style type="text/css">
+    html, body { 
+		margin:0;
+		padding:0;
+		height:100%;
+		overflow:hidden;
+    }
+
+    #navigationLayout {
+		min-width: 200px;
+		height: 100%;
+    }
+
+    #contentLayout {
+		min-width: 300px;
+		height: 100%;
+		background-color: #eee;
+    }
+
+    #navigationFrame, #contentFrame {
+      height:100%; width:100%; border:none;
+    }
+	
+	#main {
+		height: 100%;
+		width: 100%;
+		border: none;
+	}
+	#main div {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+	.vsplitbar {
+		height: 100%;
+		width: 1px;
+		background: #b6b6b6;
+		background-image: url(images/vgrabber.gif);
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+    .cover {
+		position:absolute;
+		width:100%;
+		height:100%;
+		top:0;
+		left:0;
+		z-index:99;
+		background-color:#fff;
+		filter:alpha(opacity=30);
+		opacity:0.01;
+		display:none;
+	}
+
+  </style>
+
+  <script type="text/javascript">
+	var resizeTimer;
+	
+	function realignWindow() {
+		if (! $(".vsplitbar").hasClass("active"))
+			$("#main").trigger("resize");
+	}
+	
+	$(function() {
+		$("#main").splitter({
+			splitVertical: true,
+			// outline: true,
+            sizeLeft: 300
+        });
+		$(window).resize(
+			function () {
+				clearTimeout(resizeTimer);
+				resizeTimer = setTimeout(realignWindow, 10);
+			}
+		);			
+	});
+
+  </script>  
+</head>
+<body>
+
+
+<div id="main">
+
+	<div id="navigationLayout">
+		<iframe name="navigationFrame" id="navigationFrame" src="toc.htm" seamless="seamless" title="Navigation Frame" frameborder="0">
+		</iframe>
+		<!--
+		-->
+	</div>
+
+	<div id="contentLayout">
+	  <script type="text/javascript">
+		var defaultTopic = "Project3.htm";
+		if (location.href.lastIndexOf("?") > 0) 
+			defaultTopic = location.href.substring(location.href.lastIndexOf("?")+1,location.href.length).replace(/:/g,"");
+		document.write('<iframe name="contentFrame" id="contentFrame" src="' + defaultTopic + '" seamless="seamless" title="Content Frame" frameborder="0">');
+	  </script>
+	  <noscript>
+		<iframe name="contentFrame" id="contentFrame" src="Project3.htm" seamless="seamless" title="Content Frame" frameborder="0">
+		</iframe>
+	  </noscript>
+	</div>
+</div>
+<div class="cover" id="cover"></div>
+
+</body>
+</html>
+

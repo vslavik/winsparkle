@@ -1,0 +1,591 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD>
+<BODY>
+<OBJECT type="text/site properties">
+<param name="Window Styles" value="0x800227">
+<param name="ImageType" value="Folder">
+<param name="SiteType" value="index">
+</OBJECT>
+<UL>
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="BugVersion">
+ <param name="Local" value="WinSparkle.BugVersion.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="callbackFuncs">
+ <param name="Local" value="WinSparkle.callbackFuncs.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="callbackProcs">
+ <param name="Local" value="WinSparkle.callbackProcs.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnCanShutdown">
+ <param name="Local" value="WinSparkle.DoOnCanShutdown.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnError">
+ <param name="Local" value="WinSparkle.DoOnError.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnShutDown">
+ <param name="Local" value="WinSparkle.DoOnShutDown.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnUpdateCancelled">
+ <param name="Local" value="WinSparkle.DoOnUpdateCancelled.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnUpdateFound">
+ <param name="Local" value="WinSparkle.DoOnUpdateFound.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="DoOnUpdateNotFound">
+ <param name="Local" value="WinSparkle.DoOnUpdateNotFound.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="Form4">
+ <param name="Local" value="Unit4.Form4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="MajorVersion">
+ <param name="Local" value="WinSparkle.MajorVersion.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="MinorVersion">
+ <param name="Local" value="WinSparkle.MinorVersion.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="Project3">
+ <param name="Local" value="Project3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackArray">
+ <param name="Local" value="WinSparkle.TCallbackArray.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackArrayFunctions">
+ <param name="Local" value="WinSparkle.TCallbackArrayFunctions.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType.cbDidFindUpdate">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType.cbDidNotFindUpdate">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType.cbError">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType.cbShutdown">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackType.cbUpdateCancelled">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackTypeFunc">
+ <param name="Local" value="WinSparkle.TCallbackTypeFunc.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TCallbackTypeFunc.cbCanShutdown">
+ <param name="Local" value="WinSparkle.TCallbackTypeFunc.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4">
+ <param name="Local" value="Unit4.TForm4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button1">
+ <param name="Local" value="Unit4.TForm4.Button1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button1Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button1Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button2">
+ <param name="Local" value="Unit4.TForm4.Button2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button2Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button2Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button3">
+ <param name="Local" value="Unit4.TForm4.Button3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button3Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button3Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button4">
+ <param name="Local" value="Unit4.TForm4.Button4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button4Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button4Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button5">
+ <param name="Local" value="Unit4.TForm4.Button5.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button5Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button5Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button6">
+ <param name="Local" value="Unit4.TForm4.Button6.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button6Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button6Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button7">
+ <param name="Local" value="Unit4.TForm4.Button7.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button7Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button7Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button8">
+ <param name="Local" value="Unit4.TForm4.Button8.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button8Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button8Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button9">
+ <param name="Local" value="Unit4.TForm4.Button9.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Button9Click(TObject)">
+ <param name="Local" value="Unit4.TForm4.Button9Click.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox1">
+ <param name="Local" value="Unit4.TForm4.CheckBox1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox1Change(TObject)">
+ <param name="Local" value="Unit4.TForm4.CheckBox1Change.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox2">
+ <param name="Local" value="Unit4.TForm4.CheckBox2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox3">
+ <param name="Local" value="Unit4.TForm4.CheckBox3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox4">
+ <param name="Local" value="Unit4.TForm4.CheckBox4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.CheckBox5">
+ <param name="Local" value="Unit4.TForm4.CheckBox5.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Circle1">
+ <param name="Local" value="Unit4.TForm4.Circle1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Edit1">
+ <param name="Local" value="Unit4.TForm4.Edit1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Edit2">
+ <param name="Local" value="Unit4.TForm4.Edit2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Edit3">
+ <param name="Local" value="Unit4.TForm4.Edit3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Edit4">
+ <param name="Local" value="Unit4.TForm4.Edit4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Edit5">
+ <param name="Local" value="Unit4.TForm4.Edit5.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.FormCreate(TObject)">
+ <param name="Local" value="Unit4.TForm4.FormCreate.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.FormDestroy(TObject)">
+ <param name="Local" value="Unit4.TForm4.FormDestroy.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.GroupBox1">
+ <param name="Local" value="Unit4.TForm4.GroupBox1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.GroupBox2">
+ <param name="Local" value="Unit4.TForm4.GroupBox2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label1">
+ <param name="Local" value="Unit4.TForm4.Label1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label10">
+ <param name="Local" value="Unit4.TForm4.Label10.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label2">
+ <param name="Local" value="Unit4.TForm4.Label2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label3">
+ <param name="Local" value="Unit4.TForm4.Label3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label4">
+ <param name="Local" value="Unit4.TForm4.Label4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label5">
+ <param name="Local" value="Unit4.TForm4.Label5.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label6">
+ <param name="Local" value="Unit4.TForm4.Label6.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label7">
+ <param name="Local" value="Unit4.TForm4.Label7.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label8">
+ <param name="Local" value="Unit4.TForm4.Label8.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Label9">
+ <param name="Local" value="Unit4.TForm4.Label9.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.PopupBox1">
+ <param name="Local" value="Unit4.TForm4.PopupBox1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.RadioButton1">
+ <param name="Local" value="Unit4.TForm4.RadioButton1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.RadioButton2">
+ <param name="Local" value="Unit4.TForm4.RadioButton2.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.RadioButton3">
+ <param name="Local" value="Unit4.TForm4.RadioButton3.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TForm4.Rectangle1">
+ <param name="Local" value="Unit4.TForm4.Rectangle1.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TUpdateType">
+ <param name="Local" value="WinSparkle.TUpdateType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TUpdateType.utWithoutUI">
+ <param name="Local" value="WinSparkle.TUpdateType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TUpdateType.utWithUI">
+ <param name="Local" value="WinSparkle.TUpdateType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TUpdateType.utWithUIAndInstall">
+ <param name="Local" value="WinSparkle.TUpdateType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle">
+ <param name="Local" value="WinSparkle.TWinSparkle.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.AppBuildVersion">
+ <param name="Local" value="WinSparkle.TWinSparkle.AppBuildVersion.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.AppcastURL">
+ <param name="Local" value="WinSparkle.TWinSparkle.AppcastURL.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.AutoCheckForUpdates">
+ <param name="Local" value="WinSparkle.TWinSparkle.AutoCheckForUpdates.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.CheckUpdate(TUpdateType)">
+ <param name="Local" value="WinSparkle.TWinSparkle.CheckUpdate.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.CheckUpdateWithoutUI">
+ <param name="Local" value="WinSparkle.TWinSparkle.CheckUpdateWithoutUI.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.CheckUpdateWithUI">
+ <param name="Local" value="WinSparkle.TWinSparkle.CheckUpdateWithUI.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.CheckUpdateWithUIandInstall">
+ <param name="Local" value="WinSparkle.TWinSparkle.CheckUpdateWithUIandInstall.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.Cleanup">
+ <param name="Local" value="WinSparkle.TWinSparkle.Cleanup.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.Create">
+ <param name="Local" value="WinSparkle.TWinSparkle.Create.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.Create(string)">
+ <param name="Local" value="WinSparkle.TWinSparkle.Create(string).htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.Destroy">
+ <param name="Local" value="WinSparkle.TWinSparkle.Destroy.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.DLLLoaded">
+ <param name="Local" value="WinSparkle.TWinSparkle.DLLLoaded.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.DLLPath">
+ <param name="Local" value="WinSparkle.TWinSparkle.DLLPath.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.Init">
+ <param name="Local" value="WinSparkle.TWinSparkle.Init.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.LastCheckTime">
+ <param name="Local" value="WinSparkle.TWinSparkle.LastCheckTime.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnCanShutDown">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnCanShutDown.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnDidFindUpdate">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnDidFindUpdate.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnDidNotFindUpdate">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnDidNotFindUpdate.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnError">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnError.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnShutDown">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnShutDown.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.OnUpdateCancelled">
+ <param name="Local" value="WinSparkle.TWinSparkle.OnUpdateCancelled.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.RegistryPath">
+ <param name="Local" value="WinSparkle.TWinSparkle.RegistryPath.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.ResetUpdateCheckInterval">
+ <param name="Local" value="WinSparkle.TWinSparkle.ResetUpdateCheckInterval.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.SetAppDetails(string,string,string)">
+ <param name="Local" value="WinSparkle.TWinSparkle.SetAppDetails.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.SetLang(string)">
+ <param name="Local" value="WinSparkle.TWinSparkle.SetLang.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.SetLangID(ShortInt)">
+ <param name="Local" value="WinSparkle.TWinSparkle.SetLangID.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="TWinSparkle.UpdateCheckInterval">
+ <param name="Local" value="WinSparkle.TWinSparkle.UpdateCheckInterval.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="Unit4">
+ <param name="Local" value="Unit4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="Unit4.TForm4">
+ <param name="Local" value="Unit4.TForm4.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle">
+ <param name="Local" value="WinSparkle.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TCallbackArray">
+ <param name="Local" value="WinSparkle.TCallbackArray.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TCallbackArrayFunctions">
+ <param name="Local" value="WinSparkle.TCallbackArrayFunctions.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TCallbackType">
+ <param name="Local" value="WinSparkle.TCallbackType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TCallbackTypeFunc">
+ <param name="Local" value="WinSparkle.TCallbackTypeFunc.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TUpdateType">
+ <param name="Local" value="WinSparkle.TUpdateType.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkle.TWinSparkle">
+ <param name="Local" value="WinSparkle.TWinSparkle.htm">
+</OBJECT>
+
+<LI><OBJECT type="text/sitemap">
+ <param name="Name" value="WinSparkleLib">
+ <param name="Local" value="WinSparkle.WinSparkleLib.htm">
+</OBJECT>
+
+  </UL>
+</BODY>
+</HTML>

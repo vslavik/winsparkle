@@ -1,0 +1,84 @@
+div#content
+{
+    padding-top: 0px;
+	padding-left: 0px;
+    clear: both;
+}
+
+h1.title {
+  margin-top: 5px !important;
+  font-size: 24px !important;
+}
+
+h4.subHeading {
+  margin-top: 8px;
+  margin-bottom: 5px;
+}
+
+/* IE7+ */
+div[contentEditable="true"]:hover
+{
+  border: #ccc dotted 1px;
+  background-color: lightyellow;
+  /*margin: 1px;*/
+}
+
+div[contentEditable="true"]:focus
+{
+  outline:none;
+  border: 1px dotted #f1ca7f;
+  margin: 1px;
+  background-color: lightyellow;
+}
+
+/*@@@*/
+div[contentEditable="true"]
+{
+    border: 1px dotted #ddd;
+    margin: 1px;
+    min-height: 15px;
+    padding: 3px;
+}
+
+div[contentEditable="true"].sectionContent
+{
+	min-height:40px;
+}
+
+/*
+div[contentEditable="false"].sectionContent p
+{
+	padding-bottom: 0px;
+}
+
+div[contentEditable="true"] h4 {
+	margin-bottom: 6px;
+}
+
+.sectionHeader {
+	margin-top: 6px;
+	margin-bottom: 12px;
+}
+
+.sectionContent
+{
+	padding-bottom: 8px;
+	padding-left: 15px;
+}
+*/
+
+th.nameColumn
+{
+	width: 30%;
+}
+
+img
+{
+	max-width:100%;
+	border: none;
+}
+
+#footer
+{
+    border-top: none;
+}
