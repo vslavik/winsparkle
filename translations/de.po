@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-08-19 07:33-0400\n"
+"PO-Revision-Date: 2017-07-02 09:52-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -54,11 +54,11 @@ msgstr "Installationsprogramm wird gestartet …"
 
 #: src/ui.cpp:599
 msgid "Failed to launch the installer."
-msgstr "Starten des Installers fehlgeschlagen."
+msgstr "Starten des Installationsprogramms fehlgeschlagen."
 
 #: src/ui.cpp:621
 msgid "Checking for updates..."
-msgstr "Es wird auf Aktualisierungen geprüft …"
+msgstr "Es wird auf Aktualisierungen geprüft…"
 
 #: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
 msgid "Cancel"
@@ -102,7 +102,7 @@ msgstr "%s %s ist jetzt verfügbar (Sie haben %s). Möchten Sie die neue Version
 
 #: src/ui.cpp:763
 msgid "Downloading update..."
-msgstr "Update wird heruntergeladen …"
+msgstr "Update wird heruntergeladen..."
 
 #: src/ui.cpp:791
 #, c-format
