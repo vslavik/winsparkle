@@ -227,7 +227,7 @@ void UpdateChecker::Run()
     {
         // time to wait for next iteration: either a reasonable default or
         // time to next scheduled update check if checks are enabled
-        unsigned sleepTime = 60 * 60 * 1000; // 60mins
+        unsigned sleepTimeInSeconds = 60 * 60; // 1 hour
 
         bool checkUpdates;
         Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
@@ -244,15 +244,15 @@ void UpdateChecker::Run()
             if (currentTime >= nextCheck)
             {
                 PerformUpdateCheck();
-                sleepTime = interval;
+                sleepTimeInSeconds = interval;
             }
             else
             {
-                sleepTime = unsigned(nextCheck - currentTime);
+                sleepTimeInSeconds = unsigned(nextCheck - currentTime);
             }
         }
 
-        m_terminateEvent.WaitUntilSignaled(sleepTime);
+        m_terminateEvent.WaitUntilSignaled(sleepTimeInSeconds * 1000);
     }
 }
 
