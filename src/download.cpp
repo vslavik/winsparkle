@@ -158,10 +158,6 @@ void CALLBACK DownloadInternetStatusCallback(_In_ HINTERNET hInternet,
         case INTERNET_STATUS_REQUEST_COMPLETE:
             context->eventRequestComplete.Signal();
             break;
-
-        case INTERNET_STATUS_CONNECTION_CLOSED:
-            context->conn->Close();
-            break;
     }
 }
 
