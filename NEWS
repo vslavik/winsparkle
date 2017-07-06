@@ -1,4 +1,14 @@
 
+Version 0.5.4
+-------------
+
+- Updates are now checked in background periodically even in applications that
+  are running for a long time.
+- HTTP caching is now disabled more aggressively.
+- Fixed handling of downloads from URLs with query parameters.
+- Includes security fixes for Expat XML parser.
+
+
 Version 0.5.3
 -------------
 
