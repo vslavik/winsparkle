@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-06-24 13:58-0400\n"
+"PO-Revision-Date: 2017-07-23 08:50-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Greek\n"
 "Language: el_GR\n"
@@ -29,7 +29,7 @@ msgstr "Σημειώσεις έκδοσης:"
 
 #: src/ui.cpp:462
 msgid "Skip this version"
-msgstr "Παραλείψτε αυτήν την έκδοση"
+msgstr "Προβολή αναθεώρησης"
 
 #: src/ui.cpp:468
 msgid "Remind me later"
