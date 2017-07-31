@@ -235,7 +235,7 @@ void UpdateChecker::Run()
         if (checkUpdates)
         {
             const time_t currentTime = time(NULL);
-            time_t lastCheck = currentTime;
+            time_t lastCheck = 0;
             Settings::ReadConfigValue("LastCheckTime", lastCheck);
 
             // Only check for updates in reasonable intervals:
