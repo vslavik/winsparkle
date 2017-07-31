@@ -1,4 +1,10 @@
 
+Version 0.5.5
+-------------
+
+- Fixed regression in initial update checking introduced in 0.5.4.
+
+
 Version 0.5.4
 -------------
 
