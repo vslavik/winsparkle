@@ -33,6 +33,7 @@ library WinSparkle_expat : t_3rdparty {
     }
 
     sources {
+        loadlibrary.c
         xmlparse.c
         xmlrole.c
         xmltok.c

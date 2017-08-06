@@ -296,6 +296,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="expat\expat\lib\loadlibrary.c"
+				>
+			</File>
+			<File
 				RelativePath="expat\expat\lib\xmlparse.c"
 				>
 			</File>
