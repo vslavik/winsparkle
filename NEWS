@@ -1,4 +1,10 @@
 
+Version 0.5.6
+-------------
+
+- Includes security fixes for Expat XML parser (CVE-2017-11742).
+
+
 Version 0.5.5
 -------------
 
