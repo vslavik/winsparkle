@@ -135,9 +135,9 @@ std::wstring GetURLFileName(const char *url)
 
 struct DownloadCallbackContext
 {
-    DownloadCallbackContext(InetHandle *conn_) : conn(conn_), wasClosed(false) {}
+    DownloadCallbackContext(InetHandle *conn_) : conn(conn_), lastError(ERROR_SUCCESS) {}
     InetHandle *conn;
-    bool wasClosed;
+    DWORD lastError;
     Event eventRequestComplete;
 };
 
@@ -157,27 +157,8 @@ void CALLBACK DownloadInternetStatusCallback(_In_ HINTERNET hInternet,
             break;
 
         case INTERNET_STATUS_REQUEST_COMPLETE:
+            context->lastError = res->dwError;
             context->eventRequestComplete.Signal();
-            break;
-
-        case INTERNET_STATUS_CONNECTION_CLOSED:
-            // Mark the connection as closed, but don't close the handle yet.
-            // This is because this may happen in at least two different
-            // situations:
-            // 1. Connection prematurely closed, we need to report an error.
-            // 2. Redirect to another site (WinInet closes connection, starts
-            //    another one), in which case we DON'T want to error out.
-            context->wasClosed = true;
-            break;
-
-        case INTERNET_STATUS_REDIRECT:
-            // Activity like this following INTERNET_STATUS_CONNECTION_CLOSED
-            // implies that the handle is still doing useful work, so unflag
-            // it. Otherwise we'd get an error at the very end of download.
-            //
-            // See https://github.com/vslavik/winsparkle/pull/139 for what this
-            // mess is about.
-            context->wasClosed = false;
             break;
     }
 }
@@ -349,9 +330,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
 
         if (ibuf.dwBufferLength == 0)
         {
-            // This check is required in case the INTERNET_STATUS_CONNECTION_CLOSED event was 
-            // received (and the handle was closed) during the call to InternetReadFileEx()
-            if (context.wasClosed)
+            if (context.lastError != ERROR_SUCCESS)
                 throw Win32Exception();
             else
                 break; // all of the file was downloaded
