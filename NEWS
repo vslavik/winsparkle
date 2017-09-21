@@ -1,4 +1,10 @@
 
+Version 0.5.7
+-------------
+
+- Fixed issue with downloads from servers without keep-alive support.
+
+
 Version 0.5.6
 -------------
 
