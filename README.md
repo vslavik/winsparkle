@@ -37,8 +37,14 @@ Check the sources out and initialize the submodules:
     $ git submodule init
     $ git submodule update
 
-To compile the library, just open `WinSparkle.sln` (or the one corresponding to
-your compiler version) solution and build it.
+If you haven't got [nuget command line tools](https://www.nuget.org/downloads)
+installed on your machine, [install them now.](https://www.nuget.org/downloads) 
+Once nuget is installed, type:
+
+    $ nuget packages.xml
+
+Then, to compile the library, just open `WinSparkle.sln` (or the one
+corresponding to your compiler version) solution and build it.
 
 At the moment, projects for Visual C++ (2008 and up) are provided, so you'll
 need that (Express/Community edition suffices). In principle, there's nothing
@@ -69,5 +75,6 @@ them after checking the tree out:
     $ cd winsparkle
     $ git submodule init
     $ git submodule update
+    $ nuget packages.xml
 
 Then compile WinSparkle as described above; no extra steps are required.
