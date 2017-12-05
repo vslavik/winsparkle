@@ -53,6 +53,9 @@
     <ClInclude Include="src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\signatureverifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
@@ -86,6 +89,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\updatedownloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\signatureverifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

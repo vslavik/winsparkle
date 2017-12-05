@@ -28,6 +28,7 @@
 #include "error.h"
 #include "utils.h"
 #include "threads.h"
+#include "signatureverifier.h"
 
 
 namespace winsparkle
@@ -41,6 +42,7 @@ std::wstring Settings::ms_companyName;
 std::wstring Settings::ms_appName;
 std::wstring Settings::ms_appVersion;
 std::wstring Settings::ms_appBuildVersion;
+std::string Settings::ms_DSAPubKey;
 
 
 /*--------------------------------------------------------------------------*
@@ -338,6 +340,13 @@ void Settings::DeleteConfigValue(const char *name)
     CriticalSectionLocker lock(g_csConfigValues);
 
     RegistryDelete(name);
+}
+
+void Settings::SetDSAPubKeyPem(const std::string &pem)
+{
+    CriticalSectionLocker lock(ms_csVars);
+    SignatureVerifier::SetDSAPubKeyPem(pem);
+    ms_DSAPubKey = pem;
 }
 
 } // namespace winsparkle

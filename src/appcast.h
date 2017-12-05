@@ -43,6 +43,9 @@ struct Appcast
     /// URL of the update
     std::string DownloadURL;
 
+    /// Signing signature of the update
+    std::string DsaSignature;
+
     /// URL of the release notes page
     std::string ReleaseNotesURL;
 

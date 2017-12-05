@@ -362,6 +362,10 @@
 				>
 			</File>
 			<File
+				RelativePath="src\signatureverifier.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\threads.cpp"
 				>
 			</File>
@@ -413,6 +417,10 @@
 			</File>
 			<File
 				RelativePath="src\threads.h"
+				>
+			</File>
+			<File
+				RelativePath="src\signatureverifier.h"
 				>
 			</File>
 			<File

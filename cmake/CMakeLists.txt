@@ -67,6 +67,7 @@ set(SOURCES
   ${SOURCE_DIR}/download.cpp
   ${SOURCE_DIR}/error.cpp
   ${SOURCE_DIR}/settings.cpp
+  ${SOURCE_DIR}/signatureverifier.cpp
   ${SOURCE_DIR}/threads.cpp
   ${SOURCE_DIR}/ui.cpp
   ${SOURCE_DIR}/updatechecker.cpp

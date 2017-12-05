@@ -132,6 +132,7 @@ shared-library WinSparkle {
         src/updatechecker.h
         src/updatedownloader.h
         src/utils.h
+        src/signatureverifier.h
     }
 
     sources {
@@ -146,6 +147,7 @@ shared-library WinSparkle {
         src/ui.cpp
         src/updatechecker.cpp
         src/updatedownloader.cpp
+        src/signatureverifier.cpp
 
         src/winsparkle.rc
         translations/translations.rc

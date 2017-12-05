@@ -23,11 +23,13 @@
  *
  */
 
+#include "appcontroller.h"
 #include "updatedownloader.h"
 #include "download.h"
 #include "settings.h"
 #include "ui.h"
 #include "error.h"
+#include "signatureverifier.h"
 
 #include <wx/string.h>
 
@@ -177,6 +179,14 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink, this);
       sink.Close();
+
+      if (!SignatureVerifier::DSASHA1SignatureValid(sink.GetFilePath(), m_appcast.DsaSignature))
+      {
+          // remove potentially corrupted file
+          _wremove(sink.GetFilePath().c_str());
+          throw std::runtime_error("Update file signature not verified!");
+      }
+
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
     }
     catch ( ... )
