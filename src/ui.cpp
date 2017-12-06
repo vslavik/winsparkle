@@ -182,6 +182,9 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
 
     RECT rwin;
     GetWindowRect(handle, &rwin);
+    if (MonitorFromRect(&rwin, MONITOR_DEFAULTTONULL) == NULL)
+        return TRUE; // window is offscreen 
+
     wxRect r(rwin.left, rwin.top, rwin.right - rwin.left, rwin.bottom - rwin.top);
     if (r.width * r.height > data.biggest.width * data.biggest.height)
         data.biggest = r;
