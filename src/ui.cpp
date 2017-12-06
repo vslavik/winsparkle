@@ -183,7 +183,7 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
     RECT rwin;
     GetWindowRect(handle, &rwin);
     wxRect r(rwin.left, rwin.top, rwin.right - rwin.left, rwin.bottom - rwin.top);
-    if (r.width * r.height > data.biggest.width * data.biggest.height)
+    if (wxDisplay::GetFromPoint(wxPoint(r.x, r.y)) != wxNOT_FOUND && r.width * r.height > data.biggest.width * data.biggest.height)
         data.biggest = r;
 
     return TRUE;
