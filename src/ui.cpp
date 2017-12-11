@@ -879,7 +879,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
     if ( showRelnotes )
         ShowReleaseNotes(info);
 
-	m_webBrowser->Free();
+	m_webBrowser.Free();
 }
 
 
