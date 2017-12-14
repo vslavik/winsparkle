@@ -169,7 +169,7 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
 {
     EnumProcessWindowsData& data = *reinterpret_cast<EnumProcessWindowsData*>(lParam);
 
-    if (!IsWindowVisible(handle))
+    if (!IsWindowVisible(handle) || IsIconic(handle))
         return TRUE;
 
     DWORD process_id = 0;
