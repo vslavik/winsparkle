@@ -75,7 +75,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
         {
             if ( checkUpdates )
             {
-                UpdateChecker *check = new UpdateChecker();
+                UpdateChecker *check = new PeriodicUpdateChecker();
                 check->Start();
             }
         }
@@ -342,7 +342,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
     {
         // Run the check in background. Only show UI if updates
         // are available.
-        UpdateChecker *check = new UpdateChecker();
+        UpdateChecker *check = new OneShotUpdateChecker();
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS

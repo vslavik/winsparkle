@@ -1390,7 +1390,8 @@ void App::OnAskForPermission(wxThreadEvent& event)
 
     if ( shouldCheck )
     {
-        UpdateChecker *check = new UpdateChecker();
+        // same as in win_sparkle_init()
+        UpdateChecker *check = new PeriodicUpdateChecker();
         check->Start();
     }
 }

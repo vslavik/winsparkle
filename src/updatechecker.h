@@ -67,24 +67,38 @@ protected:
     virtual bool ShouldAutomaticallyInstall() const { return false; }
 
 protected:
-    virtual void Run();
     virtual void PerformUpdateCheck();
     virtual bool IsJoinable() const { return false; }
+};
+
+
+/// Runs in the background and performs periodic update checks
+class PeriodicUpdateChecker : public UpdateChecker
+{
+protected:
+    virtual void Run();
+};
+
+
+/// Single-use checker: checks for updates and terminates itself
+class OneShotUpdateChecker : public UpdateChecker
+{
+protected:
+    virtual void Run();
 };
 
 
 /**
     Update checker used for manual checking.
  */
-class ManualUpdateChecker : public UpdateChecker
+class ManualUpdateChecker : public OneShotUpdateChecker
 {
 public:
     /// Creates checker thread.
-    ManualUpdateChecker() : UpdateChecker() {}
+    ManualUpdateChecker() : OneShotUpdateChecker() {}
 
 protected:
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
-    void Run();
 };
 
 
