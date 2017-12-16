@@ -999,6 +999,20 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         m_webBrowser = browser;
 
         new wxActiveXContainer(m_browserParent, IID_IWebBrowser2, browser);
+
+        // Poke the browser to initialize it. This is needed when using
+        // info.Description and does no harm with ReleaseNotesURL. To
+        // complicate things, it must be done exactly once, which is why it's
+        // here and not below.
+        // See https://github.com/vslavik/winsparkle/issues/155
+        m_webBrowser->Navigate
+        (
+            wxBasicString("about:blank"),
+            NULL,  // Flags
+            NULL,  // TargetFrameName
+            NULL,  // PostData
+            NULL   // Headers
+        );
     }
 
     if( !info.ReleaseNotesURL.empty() )
@@ -1014,15 +1028,6 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
     }
     else if ( !info.Description.empty() )
     {
-        m_webBrowser->Navigate
-                      (
-                          wxBasicString("about:blank"),
-                          NULL,  // Flags
-                          NULL,  // TargetFrameName
-                          NULL,  // PostData
-                          NULL   // Headers
-                      );
-
         HRESULT hr = E_FAIL;
         IHTMLDocument2 *doc;
         hr = m_webBrowser->get_Document((IDispatch **)&doc);
