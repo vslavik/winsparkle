@@ -878,6 +878,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
     // take some time to load the MSIE control:
     if ( showRelnotes )
         ShowReleaseNotes(info);
+
+	m_webBrowser.Free();
 }
 
 
