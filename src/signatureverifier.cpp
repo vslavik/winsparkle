@@ -52,10 +52,6 @@ struct SHA_CTX
 typedef struct bio_st BIO;
 typedef struct dsa_st DSA;
 
-typedef int (*PSHA1_Init)(SHA_CTX *c);
-typedef int (*PSHA1_Update)(SHA_CTX *c, const void *data, size_t len);
-typedef int (*PSHA1_Final)(unsigned char *md, SHA_CTX *c);
-
 typedef int (*PDSA_verify)(int type, const unsigned char *dgst, int dgst_len,
                            const unsigned char *sigbuf, int siglen, DSA *dsa);
 
@@ -76,6 +72,109 @@ namespace winsparkle
 namespace
 {
 
+class CFile
+{
+    FILE *f;
+    CFile(const CFile &);
+    CFile &operator=(const CFile &);
+public:
+    CFile(FILE *file): f(file) {}
+
+    operator FILE*()
+    {
+        return f;
+    }
+
+    ~CFile()
+    {
+        if (f)
+            fclose(f);
+    }
+};
+
+class WinCryptRSAContext
+{
+    HCRYPTPROV handle;
+
+    WinCryptRSAContext(const WinCryptRSAContext &);
+    WinCryptRSAContext &operator=(const WinCryptRSAContext &);
+public:
+    WinCryptRSAContext()
+    {
+        if (!CryptAcquireContextW(&handle, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+            throw Win32Exception("Failed to create crypto context");
+    }
+
+    ~WinCryptRSAContext()
+    {
+        if (!CryptReleaseContext(handle, 0))
+            LogError("Failed to release crypto context");
+    }
+
+    operator HCRYPTPROV()
+    {
+        return handle;
+    }
+};
+
+class WinCryptSHA1Hash
+{
+    HCRYPTHASH handle;
+    friend class WinCryptRSAContext;
+
+    WinCryptSHA1Hash(const WinCryptSHA1Hash&);
+    WinCryptSHA1Hash& operator=(const WinCryptSHA1Hash &);
+public:
+    WinCryptSHA1Hash(WinCryptRSAContext &context)
+    {
+        if (!CryptCreateHash(HCRYPTPROV(context), CALG_SHA1, 0, 0, &handle))
+            throw Win32Exception("Failed to create crypto hash");
+    }
+
+    ~WinCryptSHA1Hash()
+    {
+        if (handle)
+        {
+            if (!CryptDestroyHash(handle))
+            {
+                LogError("Failed to destroy crypto hash");
+            }
+        }
+    }
+
+    void hashData(const void *buffer, size_t buffer_len)
+    {
+        if (!CryptHashData(handle, (CONST BYTE  *)buffer, buffer_len, 0))
+            throw Win32Exception("Failed to hash data");
+    }
+
+    void hashFile(const std::wstring &filename)
+    {
+        CFile f (_wfopen(filename.c_str(), L"rb"));
+        if (!f)
+            throw std::runtime_error(WideToAnsi(L"Failed to open file " + filename));
+
+        const int BUF_SIZE = 8192;
+        unsigned char buf[BUF_SIZE];
+
+        while (size_t read_bytes = fread(buf, 1, BUF_SIZE, f))
+        {
+            hashData(buf, read_bytes);
+        }
+
+        if (ferror(f))
+            throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
+    }
+
+    void sha1Val(unsigned char(&sha1)[SHA_DIGEST_LENGTH])
+    {
+        DWORD hash_len = SHA_DIGEST_LENGTH;
+        if (!CryptGetHashParam(handle, HP_HASHVAL, sha1, &hash_len, 0))
+            throw Win32Exception("Failed to get SHA1 val");
+    }
+
+};
+
 /**
     Light-weight dynamic loader of OpenSSL library.
     Loads only minimum required symbols, just enough to verify DSA SHA1 signature of the file.
@@ -92,9 +191,6 @@ public:
             if (!ms_libeay32)
                 throw std::runtime_error("Failed to load libeay32.dll");
 
-            SHA1_Init = (PSHA1_Init)::GetProcAddress(ms_libeay32, "SHA1_Init");
-            SHA1_Update = (PSHA1_Update)::GetProcAddress(ms_libeay32, "SHA1_Update");
-            SHA1_Final = (PSHA1_Final)::GetProcAddress(ms_libeay32, "SHA1_Final");
             DSA_verify = (PDSA_verify)::GetProcAddress(ms_libeay32, "DSA_verify");
             BIO_new_mem_buf = (PBIO_new_mem_buf)::GetProcAddress(ms_libeay32, "BIO_new_mem_buf");
             BIO_free = (PBIO_free)::GetProcAddress(ms_libeay32, "BIO_free");
@@ -103,10 +199,7 @@ public:
             ERR_get_error = (PERR_get_error)::GetProcAddress(ms_libeay32, "ERR_get_error");
             ERR_error_string = (PERR_error_string)::GetProcAddress(ms_libeay32, "ERR_error_string");
 
-            if (! (SHA1_Init &&
-              SHA1_Update &&
-              SHA1_Final &&
-              DSA_verify &&
+            if (! (DSA_verify &&
               BIO_new_mem_buf &&
               BIO_free &&
               PEM_read_bio_DSA_PUBKEY &&
@@ -137,39 +230,6 @@ public:
         CloseLib();
     }
 
-    void FileSHA1(const std::wstring &filename, unsigned char(&sha1)[SHA_DIGEST_LENGTH])
-    {
-        FILE *f = _wfopen(filename.c_str(), L"rb");
-        if (!f)
-            throw std::runtime_error(WideToAnsi(L"Failed to open file " + filename));
-
-        SHA1Context sc;
-
-        const int BUF_SIZE = 8192;
-        unsigned char buf[BUF_SIZE];
-
-        while (size_t read_bytes = fread(buf, 1, BUF_SIZE, f))
-        {
-            sc.Update(buf, read_bytes);
-        }
-
-        if (ferror(f))
-        {
-            fclose(f);
-            throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-        }
-
-        fclose(f);
-        sc.Final(sha1);
-    }
-
-    void BufferSHA1(const void *buffer, size_t buffer_len, unsigned char(&sha1)[SHA_DIGEST_LENGTH])
-    {
-        SHA1Context sc;
-        sc.Update(buffer, buffer_len);
-        sc.Final(sha1);
-    }
-
     void SetDSAPubKey(const std::string &pem)
     {
         m_dsaPub.ReadFromPem(pem);
@@ -179,13 +239,25 @@ public:
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
 
-        FileSHA1(filename, sha1);
-        // SHA1 of SHA1 of file
-        BufferSHA1(sha1, SHA_DIGEST_LENGTH, sha1);
+        {
+            WinCryptRSAContext ctx;
+            // SHA1 of file
+            {
+                WinCryptSHA1Hash hash(ctx);
+                hash.hashFile(filename);
+                hash.sha1Val(sha1);
+            }
+            // SHA1 of SHA1 of file
+            {
+                WinCryptSHA1Hash hash(ctx);
+                hash.hashData(sha1, ARRAYSIZE(sha1));
+                hash.sha1Val(sha1);
+            }
+        }
 
         DSAPub &pubKey(PubKey());
 
-        const int code = DSA_verify(0, sha1, SHA_DIGEST_LENGTH, (const unsigned char*)signature.c_str(), signature.size(), pubKey);
+        const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), signature.size(), pubKey);
 
         if (code == -1) // OpenSSL error
             throw std::runtime_error(ERR_error_string(ERR_get_error(), nullptr));
@@ -197,9 +269,6 @@ public:
 private:
     static HMODULE ms_libeay32;
 
-    static PSHA1_Init SHA1_Init;
-    static PSHA1_Update SHA1_Update;
-    static PSHA1_Final SHA1_Final;
     static PDSA_verify DSA_verify;
     static PBIO_new_mem_buf BIO_new_mem_buf;
     static PBIO_free BIO_free;
@@ -263,39 +332,6 @@ private:
 
     }; // DSAWrap
 
-    class SHA1Context
-    {
-        SHA_CTX sc;
-        bool was_read;
-    public:
-        SHA1Context()
-        {
-            SHA1_Init(&sc);
-            was_read = false;
-        }
-
-        int Update(const void *data, size_t len)
-        {
-            return SHA1_Update(&sc, data, len);
-        }
-
-        int Final(unsigned char (&sha1)[SHA_DIGEST_LENGTH])
-        {
-            was_read = true;
-            return SHA1_Final(sha1, &sc);
-        }
-
-        ~SHA1Context()
-        {
-            if (!was_read)
-            {
-                unsigned char void_data[SHA_DIGEST_LENGTH];
-                SHA1_Final(void_data, &sc);
-            }
-        }
-
-    }; // SHA1Context
-
     DSAPub m_dsaPub;
     DSAPub &PubKey()
     {
@@ -314,9 +350,6 @@ private:
 
 HMODULE TinySSL::ms_libeay32 = NULL;
 
-PSHA1_Init TinySSL::SHA1_Init = NULL;
-PSHA1_Update TinySSL::SHA1_Update = NULL;
-PSHA1_Final TinySSL::SHA1_Final = NULL;
 PDSA_verify TinySSL::DSA_verify = NULL;
 PBIO_new_mem_buf TinySSL::BIO_new_mem_buf = NULL;
 PBIO_free TinySSL::BIO_free = NULL;
@@ -327,7 +360,7 @@ PERR_error_string TinySSL::ERR_error_string = NULL;
 
 std::string Base64ToBin(const std::string &base64)
 {
-    DWORD nDestinationSize;
+    DWORD nDestinationSize = 0;
     std::string bin;
 
     bool ok = false;
