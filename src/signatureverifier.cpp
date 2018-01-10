@@ -32,7 +32,9 @@
 #include <Windows.h>
 #include <Wincrypt.h>
 
+#ifdef _MSC_VER
 #pragma comment(lib, "crypt32.lib")
+#endif
 
 #include "error.h"
 #include "settings.h"
@@ -44,11 +46,6 @@
 extern "C"
 {
 
-struct SHA_CTX
-{
-    // Fields are not relevant. Only struct size.
-    unsigned char data[96];
-};
 typedef struct bio_st BIO;
 typedef struct dsa_st DSA;
 
@@ -120,7 +117,6 @@ public:
 class WinCryptSHA1Hash
 {
     HCRYPTHASH handle;
-    friend class WinCryptRSAContext;
 
     WinCryptSHA1Hash(const WinCryptSHA1Hash&);
     WinCryptSHA1Hash& operator=(const WinCryptSHA1Hash &);

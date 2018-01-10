@@ -88,7 +88,7 @@ endforeach()
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat>)
 
-target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32)
+target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${LIB_MAJOR_VERSION}.${LIB_MINOR_VERSION}.${LIB_PATCH_VERSION}

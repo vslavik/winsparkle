@@ -102,7 +102,7 @@ procedure win_sparkle_cleanup; cdecl; external WinSparkleLib;
 procedure win_sparkle_set_lang(lang: PChar); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_langid(lang: cushort); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_appcast_url(url: PChar); cdecl; external WinSparkleLib;
-procedure win_sparkle_set_dsa_pub_pem(url: PChar); cdecl; external WinSparkleLib;
+procedure win_sparkle_set_dsa_pub_pem(pem: PChar); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_app_details(company_name, app_name, app_version: PWideChar);
   cdecl; external WinSparkleLib;
 procedure win_sparkle_set_app_build_version(build: PWideChar);
