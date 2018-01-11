@@ -1,0 +1,7 @@
+/*
+MinGW can't compile multiple .rc files. Only single.
+*/
+
+#include "../translations/translations.rc"
+#include "../src/winsparkle.rc"
+
