@@ -1,8 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2017 Vaclav Slavik
- *  Copyright (C) 2017 Ihor Dutchak
+ *  Copyright (C) 2017-2018 Ihor Dutchak
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -53,10 +52,10 @@ typedef int (*PDSA_verify)(int type, const unsigned char *dgst, int dgst_len,
                            const unsigned char *sigbuf, int siglen, DSA *dsa);
 
 typedef BIO * (*PBIO_new_mem_buf)(const void *buf, int len);
-typedef int (*PBIO_free)(BIO *a);
+typedef int (*PBIO_free)(BIO *);
 
 typedef DSA * (*PPEM_read_bio_DSA_PUBKEY)(BIO *bp, DSA **x, /*pem_password_cb*/void *cb, void *u);
-typedef void (*PDSA_free)(DSA *r);
+typedef void (*PDSA_free)(DSA *);
 
 typedef unsigned long (*PERR_get_error)(void);
 typedef char * (*PERR_error_string)(unsigned long e, char *buf);
@@ -226,11 +225,6 @@ public:
         CloseLib();
     }
 
-    void SetDSAPubKey(const std::string &pem)
-    {
-        m_dsaPub.ReadFromPem(pem);
-    }
-
     void VerifyDSASHA1Signature(const std::wstring &filename, const std::string &signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
@@ -251,7 +245,7 @@ public:
             }
         }
 
-        DSAPub &pubKey(PubKey());
+        DSAPub pubKey(Settings::GetDSAPubKeyPem());
 
         const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), signature.size(), pubKey);
 
@@ -259,7 +253,7 @@ public:
             throw std::runtime_error(ERR_error_string(ERR_get_error(), nullptr));
 
         if (code != 1)
-            throw std::runtime_error("DSA Signature not match!");
+            throw std::runtime_error("Invalid signature");
     }
 
 private:
@@ -276,6 +270,9 @@ private:
     class BIOWrap
     {
         BIO* bio = NULL;
+
+        BIOWrap(const BIOWrap &);
+        BIOWrap &operator=(const BIOWrap &);
 
     public:
         BIOWrap(const std::string &mem_buf)
@@ -297,16 +294,16 @@ private:
 
     }; // BIOWrap
 
+public:
     class DSAPub
     {
         DSA *dsa = NULL;
 
-    public:
-        DSAPub()
-        {
-        }
+        DSAPub(const DSAPub &);
+        DSAPub &operator=(const DSAPub &);
 
-        void ReadFromPem(const std::string &pem_key)
+    public:
+        DSAPub(const std::string &pem_key)
         {
             BIOWrap bio(pem_key);
             if (!PEM_read_bio_DSA_PUBKEY(bio, &dsa, NULL, NULL))
@@ -327,20 +324,6 @@ private:
         }
 
     }; // DSAWrap
-
-    DSAPub m_dsaPub;
-    DSAPub &PubKey()
-    {
-        if (static_cast<DSA*>(m_dsaPub) == NULL)
-        {
-            std::string pem = Settings::GetDSAPubKeyPem(); // side effect - it will call SignatureVerifier::SetDSAPubKeyPem
-            if (static_cast<DSA*>(m_dsaPub) == NULL) // usualy should not happen, but double check
-            {
-                m_dsaPub.ReadFromPem(pem);
-            }
-        }
-        return m_dsaPub;
-    }
 
 }; // TinySSL
 
@@ -378,9 +361,11 @@ std::string Base64ToBin(const std::string &base64)
 
 } // anonynous
 
-void SignatureVerifier::SetDSAPubKeyPem(const std::string &pem)
+void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
 {
-    TinySSL::inst().SetDSAPubKey(pem);
+    // DSAPub::DSAPub() throw if not valid
+    TinySSL::DSAPub dsa_pub(pem);
+    (void)dsa_pub;
 }
 
 bool SignatureVerifier::DSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)

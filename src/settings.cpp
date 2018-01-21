@@ -345,7 +345,7 @@ void Settings::DeleteConfigValue(const char *name)
 void Settings::SetDSAPubKeyPem(const std::string &pem)
 {
     CriticalSectionLocker lock(ms_csVars);
-    SignatureVerifier::SetDSAPubKeyPem(pem);
+    SignatureVerifier::VerifyDSAPubKeyPem(pem);
     ms_DSAPubKey = pem;
 }
 

@@ -84,7 +84,7 @@ using [tools provided by Sparkle project](https://github.com/sparkle-project/Spa
 
 #### Sign your update
 
-When your update is ready (i.e. `Updater.exe`), sign it and include signature
+When your update is ready (e.g. `Updater.exe`), sign it and include signature
 to your appcast file:
 
  - Sign: `bin\sign_update.bat Updater.exe dsa_priv.pem`

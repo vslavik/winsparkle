@@ -112,12 +112,23 @@ public:
     }
 
     /// Return DSA public key to verify update file signature
-    static std::string GetDSAPubKeyPem()
+    static const std::string &GetDSAPubKeyPem()
     {
         CriticalSectionLocker lock(ms_csVars);
-        if (ms_DSAPubKey.empty())
-            SetDSAPubKeyPem(GetCustomResource("DSAPub", "DSAPEM"));
+        if ( ms_DSAPubKey.empty() )
+            ms_DSAPubKey = GetCustomResource("DSAPub", "DSAPEM");
         return ms_DSAPubKey;
+    }
+
+    /// Return true if DSA public key is available
+    static bool HasDSAPubKeyPem()
+    {
+        try
+        {
+            return !GetDSAPubKeyPem().empty();
+        }
+        CATCH_ALL_EXCEPTIONS
+        return false;
     }
 
     //@}

@@ -174,7 +174,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 
     @return  1 if valid DSA public key provided, 0 otherwise.
 
-    @since 0.5.8
+    @since 0.6.0
  */
 WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem);
 
