@@ -25,42 +25,23 @@
 
 #include "signatureverifier.h"
 
-#include <stdexcept>
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <Wincrypt.h>
-
-#ifdef _MSC_VER
-#pragma comment(lib, "crypt32.lib")
-#endif
-
 #include "error.h"
 #include "settings.h"
 #include "utils.h"
 
-#define SHA_DIGEST_LENGTH 20
+#include <openssl/dsa.h>
+#include <openssl/err.h>
+#include <openssl/pem.h>
+#include <openssl/sha.h>
 
-// Some declarations from OpenSSL
-extern "C"
-{
+#include <stdexcept>
 
-typedef struct bio_st BIO;
-typedef struct dsa_st DSA;
+#include <windows.h>
+#include <wincrypt.h>
 
-typedef int (*PDSA_verify)(int type, const unsigned char *dgst, int dgst_len,
-                           const unsigned char *sigbuf, int siglen, DSA *dsa);
-
-typedef BIO * (*PBIO_new_mem_buf)(const void *buf, int len);
-typedef int (*PBIO_free)(BIO *);
-
-typedef DSA * (*PPEM_read_bio_DSA_PUBKEY)(BIO *bp, DSA **x, /*pem_password_cb*/void *cb, void *u);
-typedef void (*PDSA_free)(DSA *);
-
-typedef unsigned long (*PERR_get_error)(void);
-typedef char * (*PERR_error_string)(unsigned long e, char *buf);
-
-}
+#ifdef _MSC_VER
+#pragma comment(lib, "crypt32.lib")
+#endif
 
 namespace winsparkle
 {
@@ -180,49 +161,12 @@ class TinySSL
 public:
     static TinySSL &inst()
     {
-        if (!ms_libeay32)
-        {
-            ms_libeay32 = ::LoadLibraryW(L"libeay32.dll");
-            if (!ms_libeay32)
-                throw std::runtime_error("Failed to load libeay32.dll");
-
-            DSA_verify = (PDSA_verify)::GetProcAddress(ms_libeay32, "DSA_verify");
-            BIO_new_mem_buf = (PBIO_new_mem_buf)::GetProcAddress(ms_libeay32, "BIO_new_mem_buf");
-            BIO_free = (PBIO_free)::GetProcAddress(ms_libeay32, "BIO_free");
-            PEM_read_bio_DSA_PUBKEY = (PPEM_read_bio_DSA_PUBKEY)::GetProcAddress(ms_libeay32, "PEM_read_bio_DSA_PUBKEY");
-            DSA_free = (PDSA_free)::GetProcAddress(ms_libeay32, "DSA_free");
-            ERR_get_error = (PERR_get_error)::GetProcAddress(ms_libeay32, "ERR_get_error");
-            ERR_error_string = (PERR_error_string)::GetProcAddress(ms_libeay32, "ERR_error_string");
-
-            if (! (DSA_verify &&
-              BIO_new_mem_buf &&
-              BIO_free &&
-              PEM_read_bio_DSA_PUBKEY &&
-              DSA_free &&
-              ERR_get_error &&
-              ERR_error_string) )
-            {
-                CloseLib();
-                throw std::runtime_error("Failed to load libeay32.dll symbols");
-            }
-
-        }
         static TinySSL instance;
         return instance;
     }
 
-    static void CloseLib()
-    {
-        if (ms_libeay32)
-        {
-            ::FreeLibrary(ms_libeay32);
-            ms_libeay32 = NULL;
-        }
-    }
-
     ~TinySSL()
     {
-        CloseLib();
     }
 
     void VerifyDSASHA1Signature(const std::wstring &filename, const std::string &signature)
@@ -257,16 +201,6 @@ public:
     }
 
 private:
-    static HMODULE ms_libeay32;
-
-    static PDSA_verify DSA_verify;
-    static PBIO_new_mem_buf BIO_new_mem_buf;
-    static PBIO_free BIO_free;
-    static PPEM_read_bio_DSA_PUBKEY PEM_read_bio_DSA_PUBKEY;
-    static PDSA_free DSA_free;
-    static PERR_get_error ERR_get_error;
-    static PERR_error_string ERR_error_string;
-
     class BIOWrap
     {
         BIO* bio = NULL;
@@ -326,16 +260,6 @@ public:
     }; // DSAWrap
 
 }; // TinySSL
-
-HMODULE TinySSL::ms_libeay32 = NULL;
-
-PDSA_verify TinySSL::DSA_verify = NULL;
-PBIO_new_mem_buf TinySSL::BIO_new_mem_buf = NULL;
-PBIO_free TinySSL::BIO_free = NULL;
-PPEM_read_bio_DSA_PUBKEY TinySSL::PEM_read_bio_DSA_PUBKEY = NULL;
-PDSA_free TinySSL::DSA_free = NULL;
-PERR_get_error TinySSL::ERR_get_error = NULL;
-PERR_error_string TinySSL::ERR_error_string = NULL;
 
 std::string Base64ToBin(const std::string &base64)
 {
