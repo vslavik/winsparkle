@@ -15,6 +15,7 @@ template t_3rdparty {
 }
 
 submodule expat.bkl;
+submodule libcrypto.bkl;
 submodule wxWidgets.bkl;
 
 vs2008.generate-solution = false;

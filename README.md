@@ -19,13 +19,7 @@ the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/incl
 -------------------------
 
 The easiest way to use WinSparkle is to download the prebuilt `WinSparkle.dll`
-binary. It is compatible with all Windows compilers, and have only one (runtime)
-external dependency: `libeay32.dll`.
-NOTE: This OpenSSL library is not provided by WinSparkle project.
-
-You may build OpenSSL from sources (see [OpenSSL Project page][OpenSSL source])
-or use one of the [Precompiled OpenSSL binaries][OpenSSL binaries], which
-suits your project better.
+binary.
 
  Building from sources
 -----------------------
@@ -49,9 +43,6 @@ need that (Express/Community edition suffices). In principle, there's nothing
 in the code preventing it from being compiled by other compilers.
 
 There are also unsupported CMake build files in the cmake directory.
-
-If you want to build OpenSSL from sources too, check its [official website][1]
-and this [wiki page](https://wiki.openssl.org/index.php/Compilation_and_Installation).
 
  DSA signatures
 ---------------
