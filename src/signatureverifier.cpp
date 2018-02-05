@@ -194,10 +194,10 @@ public:
         const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), signature.size(), pubKey);
 
         if (code == -1) // OpenSSL error
-            throw std::runtime_error(ERR_error_string(ERR_get_error(), nullptr));
+            throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
 
         if (code != 1)
-            throw std::runtime_error("Invalid signature");
+            throw BadSignatureException("Invalid signature");
     }
 
 private:
@@ -292,17 +292,22 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
     (void)dsa_pub;
 }
 
-bool SignatureVerifier::DSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
+void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
 {
     try
     {
         if (signature_base64.size() == 0)
-            throw std::runtime_error("Missing DSA signature!");
+            throw BadSignatureException("Missing DSA signature!");
         TinySSL::inst().VerifyDSASHA1Signature(filename, Base64ToBin(signature_base64));
-        return true;
     }
-    CATCH_ALL_EXCEPTIONS
-    return false;
+    catch (BadSignatureException&)
+    {
+        throw;
+    }
+    catch (...)
+    {
+        throw BadSignatureException();
+    }
 }
 
 } // namespace winsparkle

@@ -26,10 +26,17 @@
 #ifndef _signatureverifier_h_
 #define _signatureverifier_h_
 
+#include <exception>
 #include <string>
 
 namespace winsparkle
 {
+
+class BadSignatureException : public std::runtime_error
+{
+public:
+    BadSignatureException(const char *msg = "") : std::runtime_error(msg) {}
+};
 
 class SignatureVerifier
 {
@@ -39,7 +46,8 @@ public:
 
     // Verify DSA signature of SHA1 hash of the file. Equivalent to:
     // openssl dgst -sha1 -binary < filename | openssl dgst -sha1 -verify dsa_pub.pem -signature signature.bin
-    static bool DSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64);
+    // Throws BadSignatureException on failure.
+    static void VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64);
 };
 
 } // namespace winsparkle

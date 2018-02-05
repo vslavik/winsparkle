@@ -182,19 +182,21 @@ void UpdateDownloader::Run()
 
       if (Settings::HasDSAPubKeyPem())
       {
-          if (!SignatureVerifier::DSASHA1SignatureValid(sink.GetFilePath(), m_appcast.DsaSignature))
-          {
-              // remove potentially corrupted file
-              CleanLeftovers();
-              throw std::runtime_error("Update file signature not verified!");
-          }
+          SignatureVerifier::VerifyDSASHA1SignatureValid(sink.GetFilePath(), m_appcast.DsaSignature);
       }
       else
       {
-          // Backward compatibility - accept as is
+          // backward compatibility - accept as is, but complain about it
+          LogError("Using unsigned updates!");
       }
 
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
+    }
+    catch (BadSignatureException&)
+    {
+        CleanLeftovers();  // remove potentially corrupted file
+        UI::NotifyUpdateError(Err_BadSignature);
+        throw;
     }
     catch ( ... )
     {
