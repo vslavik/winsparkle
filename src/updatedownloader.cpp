@@ -23,11 +23,13 @@
  *
  */
 
+#include "appcontroller.h"
 #include "updatedownloader.h"
 #include "download.h"
 #include "settings.h"
 #include "ui.h"
 #include "error.h"
+#include "signatureverifier.h"
 
 #include <wx/string.h>
 
@@ -177,7 +179,24 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink, this);
       sink.Close();
+
+      if (Settings::HasDSAPubKeyPem())
+      {
+          SignatureVerifier::VerifyDSASHA1SignatureValid(sink.GetFilePath(), m_appcast.DsaSignature);
+      }
+      else
+      {
+          // backward compatibility - accept as is, but complain about it
+          LogError("Using unsigned updates!");
+      }
+
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
+    }
+    catch (BadSignatureException&)
+    {
+        CleanLeftovers();  // remove potentially corrupted file
+        UI::NotifyUpdateError(Err_BadSignature);
+        throw;
     }
     catch ( ... )
     {

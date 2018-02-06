@@ -111,6 +111,26 @@ public:
         return ms_registryPath;
     }
 
+    /// Return DSA public key to verify update file signature
+    static const std::string &GetDSAPubKeyPem()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if ( ms_DSAPubKey.empty() )
+            ms_DSAPubKey = GetCustomResource("DSAPub", "DSAPEM");
+        return ms_DSAPubKey;
+    }
+
+    /// Return true if DSA public key is available
+    static bool HasDSAPubKeyPem()
+    {
+        try
+        {
+            return !GetDSAPubKeyPem().empty();
+        }
+        CATCH_ALL_EXCEPTIONS
+        return false;
+    }
+
     //@}
 
     /**
@@ -196,6 +216,9 @@ public:
         CriticalSectionLocker lock(ms_csVars);
         ms_registryPath = path;
     }
+
+    /// Set PEM data and verify in contains valid DSA public key
+    static void SetDSAPubKeyPem(const std::string &pem);
     //@}
 
 
@@ -299,6 +322,7 @@ private:
     static std::wstring ms_appName;
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
+    static std::string  ms_DSAPubKey;
 };
 
 } // namespace winsparkle

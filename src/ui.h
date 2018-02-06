@@ -32,6 +32,12 @@
 namespace winsparkle
 {
 
+enum ErrorCode
+{
+    Err_Generic,
+    Err_BadSignature
+};
+
 /**
     The main UI thread.
 
@@ -69,7 +75,7 @@ public:
         (i.e. the user is manually checking for updates), "update error"
         message is shown. Otherwise, does nothing.
      */
-    static void NotifyUpdateError();
+    static void NotifyUpdateError(ErrorCode err = Err_Generic);
 
     /**
         Notifies the UI that a new version is available.

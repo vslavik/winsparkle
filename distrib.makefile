@@ -14,6 +14,8 @@ binary_base  := WinSparkle-$(VERSION)
 sources_arch := $(sources_base).7z
 binary_arch  := $(binary_base).zip
 binary_files := \
+	bin/sign_update.bat \
+	bin/generate_keys.bat \
 	include/winsparkle.h \
 	include/winsparkle-version.h \
 	Release/WinSparkle.dll \

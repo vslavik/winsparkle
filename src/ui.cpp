@@ -156,6 +156,7 @@ struct EventPayload
     size_t       sizeDownloaded, sizeTotal;
     std::wstring updateFile;
     bool         installAutomatically;
+    ErrorCode    error;
 };
 
 
@@ -422,7 +423,7 @@ public:
     // change state into "no updates found"
     void StateNoUpdateFound(bool installAutomatically);
     // change state into "update error"
-    void StateUpdateError();
+    void StateUpdateError(ErrorCode err);
     // change state into "a new version is available"
     void StateUpdateAvailable(const Appcast& info, bool installAutomatically);
     // change state into "downloading update"
@@ -791,7 +792,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 }
 
 
-void UpdateDialog::StateUpdateError()
+void UpdateDialog::StateUpdateError(ErrorCode err)
 {
     m_errorOccurred = true;
 
@@ -799,7 +800,16 @@ void UpdateDialog::StateUpdateError()
 
     m_heading->SetLabel(_("Update Error!"));
 
-    wxString msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+    wxString msg;
+    switch (err)
+    {
+        case Err_Generic:
+            msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+            break;
+        case Err_BadSignature:
+            msg = _("The update is improperly signed.");
+            break;
+    }
     SetMessage(msg);
 
     m_closeButton->SetLabel(_("Cancel"));
@@ -1345,10 +1355,13 @@ void App::OnNoUpdateFound(wxThreadEvent& event)
 }
 
 
-void App::OnUpdateError(wxThreadEvent&)
+void App::OnUpdateError(wxThreadEvent& event)
 {
     if ( m_win )
-        m_win->StateUpdateError();
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->StateUpdateError(payload.error);
+    }
 }
 
 void App::OnDownloadProgress(wxThreadEvent& event)
@@ -1558,14 +1571,16 @@ void UI::NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &a
 
 
 /*static*/
-void UI::NotifyUpdateError()
+void UI::NotifyUpdateError(ErrorCode err)
 {
     UIThreadAccess uit;
 
     if ( !uit.IsRunning() )
         return;
 
-    uit.App().SendMsg(MSG_UPDATE_ERROR);
+    EventPayload payload;
+    payload.error = err;
+    uit.App().SendMsg(MSG_UPDATE_ERROR, &payload);
 }
 
 

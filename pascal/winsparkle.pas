@@ -54,6 +54,7 @@ type
     class function GetAutoCheckIntereval: cint; static;
     class function GetLastCheckTime: TDateTime; static;
     class procedure SetAppcast(AValue: string); static;
+    class procedure SetDSAPubPem(AValue: string); static;
     class procedure SetAutoCheck(AValue: boolean); static;
     class procedure SetAutoCheckIntereval(AValue: cint); static;
     class procedure SetBuildVersion(AValue: UnicodeString); static;
@@ -64,6 +65,7 @@ type
     class procedure Init;
     class procedure Cleanup;
     class property Appcast: string write SetAppcast;
+    class property DSAPubPem: string write SetDSAPubPem;
     class property Language: string write SetLanguage;
     class property LangID: cushort write SetLangID;
     class procedure SetAppDetails(const CompanyName, AppName, AppVersion: UnicodeString);
@@ -100,6 +102,7 @@ procedure win_sparkle_cleanup; cdecl; external WinSparkleLib;
 procedure win_sparkle_set_lang(lang: PChar); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_langid(lang: cushort); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_appcast_url(url: PChar); cdecl; external WinSparkleLib;
+procedure win_sparkle_set_dsa_pub_pem(pem: PChar); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_app_details(company_name, app_name, app_version: PWideChar);
   cdecl; external WinSparkleLib;
 procedure win_sparkle_set_app_build_version(build: PWideChar);
@@ -191,6 +194,11 @@ end;
 class procedure TWinSparkle.SetAppcast(AValue: string); static;
 begin
   win_sparkle_set_appcast_url(PChar(Utf8ToAnsi(AValue)));
+end;
+
+class procedure TWinSparkle.SetDSAPubPem(AValue: string); static;
+begin
+  win_sparkle_set_dsa_pub_pem(PChar(Utf8ToAnsi(AValue)));
 end;
 
 class procedure TWinSparkle.SetAutoCheck(AValue: boolean); static;

@@ -150,6 +150,17 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
+{
+    try
+    {
+        Settings::SetDSAPubKeyPem(dsa_pub_pem);
+        return 1;
+    }
+    CATCH_ALL_EXCEPTIONS
+    return 0;
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_name,
                                                          const wchar_t *app_name,
                                                          const wchar_t *app_version)
