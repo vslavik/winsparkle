@@ -35,7 +35,8 @@ namespace winsparkle
 class BadSignatureException : public std::runtime_error
 {
 public:
-    BadSignatureException(const char *msg = "") : std::runtime_error(msg) {}
+    BadSignatureException() : std::runtime_error("Invalid update signature") {}
+    BadSignatureException(const std::string& msg) : std::runtime_error("Invalid update signature: " + msg) {}
 };
 
 class SignatureVerifier

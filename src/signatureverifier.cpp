@@ -197,7 +197,7 @@ public:
             throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
 
         if (code != 1)
-            throw BadSignatureException("Invalid signature");
+            throw BadSignatureException();
     }
 
 private:
@@ -303,6 +303,10 @@ void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename
     catch (BadSignatureException&)
     {
         throw;
+    }
+    catch (const std::exception &e)
+    {
+        throw BadSignatureException(e.what());
     }
     catch (...)
     {
