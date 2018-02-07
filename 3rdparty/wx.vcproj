@@ -604,6 +604,10 @@
 				>
 			</File>
 			<File
+				RelativePath="wxWidgets\src\common\stringops.cpp"
+				>
+			</File>
+			<File
 				RelativePath="wxWidgets\src\common\strvararg.cpp"
 				>
 			</File>
@@ -852,10 +856,6 @@
 				>
 			</File>
 			<File
-				RelativePath="wxWidgets\src\msw\mslu.cpp"
-				>
-			</File>
-			<File
 				RelativePath="wxWidgets\src\msw\nativdlg.cpp"
 				>
 			</File>
@@ -885,10 +885,6 @@
 			</File>
 			<File
 				RelativePath="wxWidgets\src\msw\ole\uuid.cpp"
-				>
-			</File>
-			<File
-				RelativePath="wxWidgets\src\msw\panel.cpp"
 				>
 			</File>
 			<File

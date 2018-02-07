@@ -244,6 +244,9 @@
     <ClCompile Include="wxWidgets\src\common\stringimpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\stringops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\strvararg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -430,9 +433,6 @@
     <ClCompile Include="wxWidgets\src\msw\msgdlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wxWidgets\src\msw\mslu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\nativdlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -455,9 +455,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\ole\uuid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wxWidgets\src\msw\panel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\pen.cpp">

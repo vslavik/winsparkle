@@ -111,7 +111,7 @@ shared-library WinSparkle {
     includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;
     deps += WinSparkle_wx;
 
-    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet;
+    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet shlwapi;
 
     defines += BUILDING_WIN_SPARKLE;
 

@@ -228,6 +228,7 @@
     <ClCompile Include="wxWidgets\src\common\strconv.cpp" />
     <ClCompile Include="wxWidgets\src\common\string.cpp" />
     <ClCompile Include="wxWidgets\src\common\stringimpl.cpp" />
+    <ClCompile Include="wxWidgets\src\common\stringops.cpp" />
     <ClCompile Include="wxWidgets\src\common\strvararg.cpp" />
     <ClCompile Include="wxWidgets\src\common\sysopt.cpp" />
     <ClCompile Include="wxWidgets\src\common\textbuf.cpp" />
@@ -290,7 +291,6 @@
     <ClCompile Include="wxWidgets\src\msw\menu.cpp" />
     <ClCompile Include="wxWidgets\src\msw\menuitem.cpp" />
     <ClCompile Include="wxWidgets\src\msw\msgdlg.cpp" />
-    <ClCompile Include="wxWidgets\src\msw\mslu.cpp" />
     <ClCompile Include="wxWidgets\src\msw\nativdlg.cpp" />
     <ClCompile Include="wxWidgets\src\msw\nativewin.cpp" />
     <ClCompile Include="wxWidgets\src\msw\nonownedwnd.cpp" />
@@ -299,7 +299,6 @@
     <ClCompile Include="wxWidgets\src\msw\ole\oleutils.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\safearray.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\uuid.cpp" />
-    <ClCompile Include="wxWidgets\src\msw\panel.cpp" />
     <ClCompile Include="wxWidgets\src\msw\pen.cpp" />
     <ClCompile Include="wxWidgets\src\msw\power.cpp" />
     <ClCompile Include="wxWidgets\src\msw\region.cpp" />
