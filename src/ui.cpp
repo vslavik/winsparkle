@@ -1089,7 +1089,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         }
     }
 
-    SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+    SetWindowStyleFlag(GetWindowStyleFlag() | wxRESIZE_BORDER);
 }
 
 
