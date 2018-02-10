@@ -1,4 +1,13 @@
 
+Version 0.6.0
+-------------
+
+- Added support for validating DSA signatures.
+- Fixes to window placement.
+- Fixed regression in win_sparkle_check_update_without_ui() not checking
+  immediately.
+
+
 Version 0.5.7
 -------------
 
