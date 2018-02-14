@@ -60,7 +60,7 @@ WinSparkle provides tools to generate keys and sign the update using OpenSSL.
 You need `openssl.exe` available on Windows to use those tools (available as
 [precompiled binary][OpenSSL binaries]).
 
-Alternatively, you can generate keys and sing your updates even on macOS or Linux,
+Alternatively, you can generate keys and sign your updates even on macOS or Linux,
 using [tools provided by Sparkle project](https://github.com/sparkle-project/Sparkle/tree/master/bin).
 
 #### Prepare signing with DSA signatures:
