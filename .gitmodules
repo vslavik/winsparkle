@@ -1,6 +1,6 @@
 [submodule "3rdparty/wxWidgets"]
 	path = 3rdparty/wxWidgets
-	url = git://github.com/wxWidgets/wxWidgets.git
+	url = https://github.com/wxWidgets/wxWidgets.git
 [submodule "3rdparty/expat"]
 	path = 3rdparty/expat
 	url = https://github.com/libexpat/libexpat.git
