@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-06-03 12:57-0400\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2018-02-24 11:57-0500\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: French\n"
-"Language: fr_FR\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,114 +19,118 @@ msgstr ""
 "X-Crowdin-Language: fr\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
-#: src/ui.cpp:259 src/ui.cpp:585
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
 msgstr "Mise à jour du Logiciel"
 
-#: src/ui.cpp:436
+#: src/ui.cpp:513
 msgid "Release notes:"
 msgstr "Notes de version :"
 
-#: src/ui.cpp:462
+#: src/ui.cpp:539
 msgid "Skip this version"
 msgstr "Ignorer cette version"
 
-#: src/ui.cpp:468
+#: src/ui.cpp:545
 msgid "Remind me later"
 msgstr "Me le rappeler ultérieurement"
 
-#: src/ui.cpp:473 src/ui.cpp:486
+#: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
 msgstr "Installer la mise à jour"
 
-#: src/ui.cpp:584
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s ne peut être redémarré."
 
-#: src/ui.cpp:587
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Assurez-vous que vos documents soient enregistrés et réessayez."
 
-#: src/ui.cpp:594
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "Démarrage du programme d'installation ... "
 
-#: src/ui.cpp:599
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
 msgstr "Impossible de démarrer le programme d'installation."
 
-#: src/ui.cpp:621
+#: src/ui.cpp:732
 msgid "Checking for updates..."
 msgstr "Recherche de mises à jour..."
 
-#: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/ui.cpp:641
+#: src/ui.cpp:760
 msgid "You're up to date!"
 msgstr "Le programme est à jour !"
 
-#: src/ui.cpp:648
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s est actuellement la version la plus récente disponible."
 
-#: src/ui.cpp:661
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "Fermer"
 
-#: src/ui.cpp:680
+#: src/ui.cpp:801
 msgid "Update Error!"
 msgstr "Erreur lors de la mise à jour !"
 
-#: src/ui.cpp:682
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
 msgstr "Une erreur est survenue lors de la récupération des données de mise à jour. Êtes-vous connecté à internet ? Veuillez réessayer ultérieurement."
 
-#: src/ui.cpp:723
+#: src/ui.cpp:810
+msgid "The update is improperly signed."
+msgstr ""
+
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "Une nouvelle version de %s est disponible !"
 
-#: src/ui.cpp:726
+#: src/ui.cpp:864
 msgid "Get update"
 msgstr "Mettre à jour"
 
-#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:732
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
 msgstr "%s %s est disponible (vous possédez actuellement %s). Souhaitez-vous la télécharger maintenant ?"
 
-#: src/ui.cpp:763
+#: src/ui.cpp:901
 msgid "Downloading update..."
 msgstr "Téléchargement de la mise à jour..."
 
-#: src/ui.cpp:791
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%s de %s"
 
-#: src/ui.cpp:820
+#: src/ui.cpp:966
 msgid "Ready to install."
 msgstr "Prête à être installée."
 
-#: src/ui.cpp:960
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
 msgstr "Vérification automatique des mises à jour ?"
 
-#: src/ui.cpp:970
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
 msgstr "Souhaitez-vous que %s recherche automatiquement les mises à jours ? Vous pouvez le faire manuellement à partir du menu."
 
-#: src/ui.cpp:984
+#: src/ui.cpp:1135
 msgid "Check automatically"
 msgstr "Vérifier automatiquement"
 
-#: src/ui.cpp:989
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "Ne pas vérifier"
 
