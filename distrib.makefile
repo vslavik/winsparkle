@@ -34,6 +34,7 @@ sources: $(sources_arch)
 $(binary_arch): $(binary_files)
 	@rm -rf $(binary_base) $@
 	@mkdir $(binary_base)
+	@mkdir -p $(binary_base)/bin
 	@mkdir -p $(binary_base)/include
 	@mkdir -p $(binary_base)/Release
 	@mkdir -p $(binary_base)/x64/Release
