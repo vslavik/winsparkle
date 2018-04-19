@@ -66,7 +66,8 @@ void OnCheckForUpdates(HWND hwnd,
            always shows visible UI. You only need to call it if you have
            a "Check for updates" menu item, otherwise win_sparkle_init()
            checks for updates automatically. */
-        win_sparkle_check_update_with_ui();
+       win_sparkle_set_appcast_url("https://raw.githubusercontent.com/mpleis/winsparkle/master/fails_appcast.xml"); 
+       win_sparkle_check_update_with_ui();
     }
 }
 
