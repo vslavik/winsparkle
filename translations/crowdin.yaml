@@ -8,6 +8,7 @@
     "translation" : "/%locale_with_underscore%.po",
     "languages_mapping" : {
       "locale_with_underscore" : {
+        "af": "af",
         "ar": "ar",
         "be": "be",
         "bg": "bg",
@@ -18,6 +19,7 @@
         "de": "de",
         "el": "el",
         "es-ES": "es",
+        "et": "et",
         "eu": "eu",
         "fr": "fr",
         "ga-IE": "ga",

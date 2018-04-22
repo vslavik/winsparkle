@@ -4,8 +4,8 @@ msgstr ""
 "POT-Creation-Date: 2018-02-05 20:00+0100\n"
 "PO-Revision-Date: 2018-04-22 05:07-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
-"Language-Team: Icelandic\n"
-"Language: is\n"
+"Language-Team: Afrikaans\n"
+"Language: af\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,121 +16,121 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
-"X-Crowdin-Language: is\n"
+"X-Crowdin-Language: af\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
 #: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
-msgstr "Hugbúnaðaruppfærsla"
+msgstr "Programmatuurbywerking"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Útgáfuupplýsingar:"
+msgstr "Vrystellingsnotas:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
-msgstr "Sleppa þessari útgáfu"
+msgstr "Slaan hierdie weergawe oor"
 
 #: src/ui.cpp:545
 msgid "Remind me later"
-msgstr "Minna mig á síðar"
+msgstr "Herinner my later"
 
 #: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
-msgstr "Setja inn uppfærslu"
+msgstr "Installeer bywerking"
 
 #: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "Ekki er hægt að endurræsa %s."
+msgstr "%s kan nie herbegin word nie."
 
 #: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Gakktu úr skugga um að þú sért ekki með nein óvistuð skjöl og reyndu svo aftur."
+msgstr "Maak seker daar is geen onbewaarde dokumente is nie en probeer weer."
 
 #: src/ui.cpp:683
 msgid "Launching the installer..."
-msgstr "Keyri uppsetningarforritið..."
+msgstr "Lanseer tans die installeerder…"
 
 #: src/ui.cpp:689
 msgid "Failed to launch the installer."
-msgstr "Gat ekki gangsett uppsetningarforritið."
+msgstr "Installeerder kon nie gelanseer word nie."
 
 #: src/ui.cpp:732
 msgid "Checking for updates..."
-msgstr "Athuga með uppfærslur..."
+msgstr "Soek tans na bywerkings…"
 
 #: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
-msgstr "Hætta við"
+msgstr "Kanselleer"
 
 #: src/ui.cpp:760
 msgid "You're up to date!"
-msgstr "Kerfið er uppfært!"
+msgstr "U is bygewerk!"
 
 #: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s er nýjasta útgáfan sem tiltæk er í augnablikinu."
+msgstr "%s %s is tans die nuutste beskikbare weergawe."
 
 #: src/ui.cpp:780
 msgid "Close"
-msgstr "Loka"
+msgstr "Maak toe"
 
 #: src/ui.cpp:801
 msgid "Update Error!"
-msgstr "Villa í uppfærslu!"
+msgstr "Bywerkfout!"
 
 #: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Villa kom upp við að ná í uppfærsluupplýsingar; ertu tengdur við internetið? Reyndu aftur síðar."
+msgstr "’n Fout het voorgekom tydens die ophalen van bywerkinligting; is u verbind aan die internet? Probeer later weer."
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr "Uppfærslan er ekki með rétta stafræna undirritun."
+msgstr "Die bywerking se digitale ondertekening is ongeldig."
 
 #: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Ný útgáfa af %s er tiltæk!"
+msgstr "’n Nuwe weergawe van %s is beskikbaar!"
 
 #: src/ui.cpp:864
 msgid "Get update"
-msgstr "Ná í uppfærslu"
+msgstr "Kry bywerking"
 
 #: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s er núna tiltækt (þú ert með %s). Viltu sækja það núna?"
+msgstr "%s %s is nou beskikbaar (u het %s). Wil u dit nou aflaai?"
 
 #: src/ui.cpp:901
 msgid "Downloading update..."
-msgstr "Sæki uppfærslu..."
+msgstr "Laai tans bywerking af…"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
 #: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
-msgstr "%s af %s"
+msgstr "%s van %s"
 
 #: src/ui.cpp:966
 msgid "Ready to install."
-msgstr "Tilbúið fyrir uppsetningu."
+msgstr "Gereed om te installeer."
 
 #: src/ui.cpp:1111
 msgid "Check for updates automatically?"
-msgstr "Leita sjálfkrafa að uppfærslum?"
+msgstr "Soek outomaties na bywerkings?"
 
 #: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Ætti %s að athuga sjálfkrafa með uppfærslur? Þú getur alltaf athugað handvirkt með uppfærslur úr valmyndvalmyndinni."
+msgstr "Moet %s outomaties na bywerkings soek? U kan altyd self vanuit die kieslys na bywerkings soek."
 
 #: src/ui.cpp:1135
 msgid "Check automatically"
-msgstr "Leita sjálfvirkt"
+msgstr "Soek outomaties"
 
 #: src/ui.cpp:1140
 msgid "Don't check"
-msgstr "Ekki athuga"
+msgstr "Moenie soek nie"
 

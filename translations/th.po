@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-02-24 11:58-0500\n"
+"PO-Revision-Date: 2018-04-22 05:07-0400\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Thai\n"
 "Language: th\n"
@@ -87,7 +87,7 @@ msgstr "เกิดข้อผิดพลาดในการดึงข้
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "การอัปเดตไม่ได้ถูกลงชื่ออย่างถูกต้อง"
 
 #: src/ui.cpp:861
 #, c-format
