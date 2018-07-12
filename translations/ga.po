@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-02-24 11:58-0500\n"
+"PO-Revision-Date: 2018-07-12 15:46\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Irish\n"
 "Language: ga\n"
@@ -87,7 +87,7 @@ msgstr "Tharla earráid agus faisnéis nuashonraithe á fáil; an bhfuil tú cea
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "Síniú mícheart ar an nuashonrú seo."
 
 #: src/ui.cpp:861
 #, c-format

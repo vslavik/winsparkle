@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-02-24 11:57-0500\n"
+"PO-Revision-Date: 2018-07-12 15:46\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -87,7 +87,7 @@ msgstr "Se produjo un error al recuperar información de la actualización. Revi
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "La actualización no está firmada adecuadamente."
 
 #: src/ui.cpp:861
 #, c-format
@@ -101,7 +101,7 @@ msgstr "Obtener actualización"
 #: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s ya está disponible (tu versión es %s). ¿Te gustaría descargarla ahora?"
+msgstr "%s %s ya está disponible (su versión es %s). ¿Le gustaría descargarla ahora?"
 
 #: src/ui.cpp:901
 msgid "Downloading update..."
