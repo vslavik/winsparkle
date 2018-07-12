@@ -34,6 +34,13 @@
 #include <windows.h>
 #include <wininet.h>
 
+#ifndef INTERNET_OPTION_ENABLE_HTTP_PROTOCOL
+    #define INTERNET_OPTION_ENABLE_HTTP_PROTOCOL 148
+#endif
+#ifndef HTTP_PROTOCOL_FLAG_HTTP2
+    #define HTTP_PROTOCOL_FLAG_HTTP2 0x2
+#endif
+
 
 namespace winsparkle
 {
@@ -203,6 +210,9 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
                       );
     if ( !inet )
         throw Win32Exception();
+
+    DWORD dwOption = HTTP_PROTOCOL_FLAG_HTTP2;
+    InternetSetOptionW(inet, INTERNET_OPTION_ENABLE_HTTP_PROTOCOL, &dwOption, sizeof(dwOption));
 
     // Never allow local caching, always contact the server for both
     // appcast feeds and downloads. This is useful in case of
