@@ -96,6 +96,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/strconv.cpp
         src/common/string.cpp
         src/common/stringimpl.cpp
+        src/common/stringops.cpp
         src/common/strvararg.cpp
         src/common/sysopt.cpp
         src/common/textbuf.cpp
@@ -158,7 +159,6 @@ library WinSparkle_wx : t_3rdparty {
         src/msw/menu.cpp
         src/msw/menuitem.cpp
         src/msw/msgdlg.cpp
-        src/msw/mslu.cpp
         src/msw/nativdlg.cpp
         src/msw/nativewin.cpp
         src/msw/nonownedwnd.cpp
@@ -167,7 +167,6 @@ library WinSparkle_wx : t_3rdparty {
         src/msw/ole/oleutils.cpp
         src/msw/ole/safearray.cpp
         src/msw/ole/uuid.cpp
-        src/msw/panel.cpp
         src/msw/pen.cpp
         src/msw/power.cpp
         src/msw/region.cpp

@@ -58,6 +58,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="expat\expat\lib\loadlibrary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="expat\expat\lib\xmlparse.c">
       <Filter>Source Files</Filter>
     </ClCompile>

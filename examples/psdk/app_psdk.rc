@@ -12,6 +12,9 @@ appicon ICON "appicon.ico"
 // Get updates from this appcast feed:
 FeedURL     APPCAST     {"https://winsparkle.org/example/appcast.xml"}
 
+// And verify signature using DSA public key:
+DSAPub      DSAPEM      "dsa_pub.pem"
+
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO
  FILEVERSION     1,0,0,0

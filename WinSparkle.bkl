@@ -105,10 +105,13 @@ shared-library WinSparkle {
     includedirs += 3rdparty/expat/expat/lib;
     deps += WinSparkle_expat;
 
+    includedirs += 3rdparty/openssl-win32;
+    deps += WinSparkle_libcrypto;
+
     includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;
     deps += WinSparkle_wx;
 
-    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet;
+    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet shlwapi;
 
     defines += BUILDING_WIN_SPARKLE;
 
@@ -132,6 +135,7 @@ shared-library WinSparkle {
         src/updatechecker.h
         src/updatedownloader.h
         src/utils.h
+        src/signatureverifier.h
     }
 
     sources {
@@ -146,6 +150,7 @@ shared-library WinSparkle {
         src/ui.cpp
         src/updatechecker.cpp
         src/updatedownloader.cpp
+        src/signatureverifier.cpp
 
         src/winsparkle.rc
         translations/translations.rc

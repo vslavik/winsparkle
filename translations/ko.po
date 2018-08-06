@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-08-19 07:33-0400\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2018-02-24 11:58-0500\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Korean\n"
 "Language: ko\n"
@@ -19,114 +19,118 @@ msgstr ""
 "X-Crowdin-Language: ko\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
-#: src/ui.cpp:259 src/ui.cpp:585
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
 msgstr "소프트웨어 업데이트"
 
-#: src/ui.cpp:436
+#: src/ui.cpp:513
 msgid "Release notes:"
 msgstr "릴리즈 정보:"
 
-#: src/ui.cpp:462
+#: src/ui.cpp:539
 msgid "Skip this version"
 msgstr "이 버전 건너뛰기"
 
-#: src/ui.cpp:468
+#: src/ui.cpp:545
 msgid "Remind me later"
 msgstr "나중에 알림"
 
-#: src/ui.cpp:473 src/ui.cpp:486
+#: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
 msgstr "업데이트 설치"
 
-#: src/ui.cpp:584
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s을(를) 다시 시작할 수 없습니다."
 
-#: src/ui.cpp:587
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "저장하지 않은 문서가 있는지 확인하시고 다시 시도하십시오."
 
-#: src/ui.cpp:594
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "설치 프로그램 시작 중..."
 
-#: src/ui.cpp:599
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
 msgstr "설치 프로그램 실행에 실패했습니다."
 
-#: src/ui.cpp:621
+#: src/ui.cpp:732
 msgid "Checking for updates..."
 msgstr "업데이트 확인 중..."
 
-#: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
 msgstr "취소"
 
-#: src/ui.cpp:641
+#: src/ui.cpp:760
 msgid "You're up to date!"
 msgstr "최신 버전을 사용 중입니다!"
 
-#: src/ui.cpp:648
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s은(는) 이미 사용중인 최신 버전입니다."
 
-#: src/ui.cpp:661
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "닫기"
 
-#: src/ui.cpp:680
+#: src/ui.cpp:801
 msgid "Update Error!"
 msgstr "업데이트 오류!"
 
-#: src/ui.cpp:682
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
 msgstr "업데이트 정보를 가져오는 동안 오류가 발생했습니다. 인터넷에 연결하셨습니까? 나중에 다시 시도하십시오."
 
-#: src/ui.cpp:723
+#: src/ui.cpp:810
+msgid "The update is improperly signed."
+msgstr ""
+
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "%s 새 버전이 있습니다!"
 
-#: src/ui.cpp:726
+#: src/ui.cpp:864
 msgid "Get update"
 msgstr "업데이트 받기"
 
-#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:732
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
 msgstr "%s %s을(를) 사용할 수 있습니다(%s를 사용중). 지금 다운로드하시겠습니까?"
 
-#: src/ui.cpp:763
+#: src/ui.cpp:901
 msgid "Downloading update..."
 msgstr "업데이트 다운로드 중..."
 
-#: src/ui.cpp:791
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%2$s중 %1$s"
 
-#: src/ui.cpp:820
+#: src/ui.cpp:966
 msgid "Ready to install."
 msgstr "설치 준비가 끝났습니다."
 
-#: src/ui.cpp:960
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
 msgstr "업데이트를 자동으로 확인할까요?"
 
-#: src/ui.cpp:970
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
 msgstr "%s에서 자동으로 업데이트를 확인할까요? 메뉴에서 언제든지 직접 업데이트를 확인할 수 있습니다."
 
-#: src/ui.cpp:984
+#: src/ui.cpp:1135
 msgid "Check automatically"
 msgstr "자동으로 확인"
 
-#: src/ui.cpp:989
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "확인하지 않음"
 

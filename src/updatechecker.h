@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2017 Vaclav Slavik
+ *  Copyright (C) 2009-2018 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -60,9 +60,6 @@ public:
     static int CompareVersions(const std::string& a, const std::string& b);
 
 protected:
-    /// Returns flags to be used when checking the appcast
-    virtual int GetAppcastDownloadFlags() const { return 0; }
-
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 
@@ -70,22 +67,37 @@ protected:
     virtual bool ShouldAutomaticallyInstall() const { return false; }
 
 protected:
-    virtual void Run();
+    virtual void PerformUpdateCheck();
     virtual bool IsJoinable() const { return false; }
+};
+
+
+/// Runs in the background and performs periodic update checks
+class PeriodicUpdateChecker : public UpdateChecker
+{
+protected:
+    virtual void Run();
+};
+
+
+/// Single-use checker: checks for updates and terminates itself
+class OneShotUpdateChecker : public UpdateChecker
+{
+protected:
+    virtual void Run();
 };
 
 
 /**
     Update checker used for manual checking.
  */
-class ManualUpdateChecker : public UpdateChecker
+class ManualUpdateChecker : public OneShotUpdateChecker
 {
 public:
     /// Creates checker thread.
-    ManualUpdateChecker() : UpdateChecker() {}
+    ManualUpdateChecker() : OneShotUpdateChecker() {}
 
 protected:
-    virtual int GetAppcastDownloadFlags() const;
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 };
 

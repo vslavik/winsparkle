@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/pem">
+        <file>dsa_pub.pem</file>
+    </qresource>
+</RCC>

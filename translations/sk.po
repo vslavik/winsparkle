@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-10-11 13:24-0400\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2018-02-24 11:58-0500\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Slovak\n"
 "Language: sk\n"
@@ -12,121 +12,125 @@ msgstr ""
 "X-Generator: crowdin.com\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Language: sk\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
-#: src/ui.cpp:259 src/ui.cpp:585
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
-msgstr "Aktualizácia softvéru"
+msgstr "Aktualizácia programu"
 
-#: src/ui.cpp:436
+#: src/ui.cpp:513
 msgid "Release notes:"
 msgstr "Poznámky k verzii:"
 
-#: src/ui.cpp:462
+#: src/ui.cpp:539
 msgid "Skip this version"
 msgstr "Preskočiť túto verziu"
 
-#: src/ui.cpp:468
+#: src/ui.cpp:545
 msgid "Remind me later"
 msgstr "Pripomenúť neskôr"
 
-#: src/ui.cpp:473 src/ui.cpp:486
+#: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
 msgstr "Inštalovať aktualizáciu"
 
-#: src/ui.cpp:584
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s nie je možné reštartovať."
 
-#: src/ui.cpp:587
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Uistite sa, že nemáte žiadne neuložené dokumenty a skúste to znova."
 
-#: src/ui.cpp:594
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "Spúšťanie inštalátora..."
 
-#: src/ui.cpp:599
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
 msgstr "Nepodarilo sa spustiť inštalátor."
 
-#: src/ui.cpp:621
+#: src/ui.cpp:732
 msgid "Checking for updates..."
 msgstr "Kontrolujú sa aktualizácie..."
 
-#: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: src/ui.cpp:641
+#: src/ui.cpp:760
 msgid "You're up to date!"
-msgstr "Softvér je aktuálny!"
+msgstr "Program je aktuálny!"
 
-#: src/ui.cpp:648
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s je v súčasnej dobe najnovšia dostupná verzia."
+msgstr "%s %s je aktuálne najnovšia dostupná verzia."
 
-#: src/ui.cpp:661
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "Zatvoriť"
 
-#: src/ui.cpp:680
+#: src/ui.cpp:801
 msgid "Update Error!"
 msgstr "Chyba aktualizácie!"
 
-#: src/ui.cpp:682
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Pri získavaní informácií o aktualizácii nastala chyba. Je počítač pripojený k internetu? Skúste znova neskôr."
+msgstr "Pri získavaní informácií o aktualizácii nastala chyba. Je váš počítač pripojený k internetu? Skúste znova neskôr."
 
-#: src/ui.cpp:723
+#: src/ui.cpp:810
+msgid "The update is improperly signed."
+msgstr "Aktualizácia nemá platný podpis."
+
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "Je dostupná nová verzia programu %s!"
 
-#: src/ui.cpp:726
+#: src/ui.cpp:864
 msgid "Get update"
 msgstr "Stiahnuť aktualizáciu"
 
-#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:732
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "Je k dispozícii %s verzia %s (máte nainštalovanú %s). Chcete ju prevziať?"
+msgstr "Je k dispozícii %s %s (máte verziu %s). Chcete ju stiahnuť teraz?"
 
-#: src/ui.cpp:763
+#: src/ui.cpp:901
 msgid "Downloading update..."
-msgstr "Preberá sa aktualizácia..."
+msgstr "Sťahovanie aktualizácie..."
 
-#: src/ui.cpp:791
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%s z %s"
 
-#: src/ui.cpp:820
+#: src/ui.cpp:966
 msgid "Ready to install."
 msgstr "Pripravené na inštaláciu."
 
-#: src/ui.cpp:960
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
-msgstr "Overovať dostupnosť aktualizácií automaticky?"
+msgstr "Automaticky kontrolovať dostupnosť aktualizácií?"
 
-#: src/ui.cpp:970
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Želáte si, aby %s automaticky kontroloval dostupnosť aktualizácií? Aktualizácie môžete kedykoľvek vyhľadať ručne z ponuky."
+msgstr "Chcete, aby program %s automaticky kontroloval dostupnosť aktualizácií? Aktualizácie môžete kedykoľvek vyhľadať ručne z príslušného menu programu."
 
-#: src/ui.cpp:984
+#: src/ui.cpp:1135
 msgid "Check automatically"
-msgstr "Automaticky kontrolovať"
+msgstr "Kontrolovať automaticky"
 
-#: src/ui.cpp:989
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "Nekontrolovať"
 

@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2017 Vaclav Slavik
+ *  Copyright (C) 2009-2018 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -59,10 +59,12 @@ namespace
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
+#define ATTR_DSASIGNATURE NS_SPARKLE_NAME("dsaSignature")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
 #define ATTR_ARGUMENTS  NS_SPARKLE_NAME("installerArguments")
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
 #define NODE_SHORTVERSION ATTR_SHORTVERSION   // attributes.
+#define NODE_DSASIGNATURE ATTR_DSASIGNATURE
 #define OS_MARKER       "windows"
 #define OS_MARKER_LEN   7
 
@@ -72,7 +74,7 @@ struct ContextData
     ContextData(XML_Parser& p)
         : parser(p),
         in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0),
-        in_version(0), in_shortversion(0), in_min_os_version(0)
+        in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0)
     {}
 
     // the parser we're using
@@ -82,7 +84,7 @@ struct ContextData
     int in_channel, in_item, in_relnotes, in_title, in_description, in_link;
 
     // is inside <sparkle:version> or <sparkle:shortVersionString> node?
-    int in_version, in_shortversion, in_min_os_version;
+    int in_version, in_shortversion, in_dsasignature, in_min_os_version;
 
     // parsed <item>s
     std::vector<Appcast> items;
@@ -148,6 +150,10 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         {
             ctxt.in_shortversion++;
         }
+        else if (strcmp(name, NODE_DSASIGNATURE) == 0)
+        {
+            ctxt.in_dsasignature++;
+        }
         else if (strcmp(name, NODE_MIN_OS_VERSION) == 0)
         {
             ctxt.in_min_os_version++;
@@ -166,6 +172,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                     ctxt.items[size-1].Version = value;
                 else if ( strcmp(name, ATTR_SHORTVERSION) == 0 )
                     ctxt.items[size-1].ShortVersionString = value;
+                else if ( strcmp(name, ATTR_DSASIGNATURE) == 0 )
+                    ctxt.items[size-1].DsaSignature = value;
                 else if ( strcmp(name, ATTR_OS) == 0 )
                     ctxt.items[size-1].Os = value;
                 else if ( strcmp(name, ATTR_ARGUMENTS) == 0 )
@@ -236,6 +244,10 @@ void XMLCALL OnEndElement(void *data, const char *name)
         {
             ctxt.in_shortversion--;
         }
+        else if (strcmp(name, NODE_DSASIGNATURE) == 0)
+        {
+            ctxt.in_dsasignature--;
+        }
     }
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
@@ -269,9 +281,11 @@ void XMLCALL OnText(void *data, const char *s, int len)
     else if ( ctxt.in_version )
         ctxt.items[size-1].Version.append(s, len);
     else if ( ctxt.in_shortversion )
-        ctxt.items[size - 1].ShortVersionString.append(s, len);
+        ctxt.items[size-1].ShortVersionString.append(s, len);
+    else if (ctxt.in_dsasignature)
+        ctxt.items[size-1].DsaSignature.append(s, len);
     else if ( ctxt.in_min_os_version )
-        ctxt.items[size - 1].MinOSVersion.append(s, len);
+        ctxt.items[size-1].MinOSVersion.append(s, len);
 }
 
 } // anonymous namespace

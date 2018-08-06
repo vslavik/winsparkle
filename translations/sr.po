@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-08-19 07:33-0400\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2018-02-24 11:58-0500\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr\n"
@@ -12,121 +12,125 @@ msgstr ""
 "X-Generator: crowdin.com\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Language: sr\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
-#: src/ui.cpp:259 src/ui.cpp:585
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
 msgstr "Ажурирање софтвера"
 
-#: src/ui.cpp:436
+#: src/ui.cpp:513
 msgid "Release notes:"
 msgstr "Белешке о издању:"
 
-#: src/ui.cpp:462
+#: src/ui.cpp:539
 msgid "Skip this version"
 msgstr "Прескочи ову верзију"
 
-#: src/ui.cpp:468
+#: src/ui.cpp:545
 msgid "Remind me later"
 msgstr "Подсети ме касније"
 
-#: src/ui.cpp:473 src/ui.cpp:486
+#: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
 msgstr "Инсталирај"
 
-#: src/ui.cpp:584
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "Не могу да поново покренем %s."
 
-#: src/ui.cpp:587
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Проверите да ли сте сачували све документе па покушајте поново."
 
-#: src/ui.cpp:594
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "Покрећем инсталацију…"
 
-#: src/ui.cpp:599
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
 msgstr "Не могу да покренем инсталацију."
 
-#: src/ui.cpp:621
+#: src/ui.cpp:732
 msgid "Checking for updates..."
 msgstr "Тражим ажурирања…"
 
-#: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
 msgstr "Откажи"
 
-#: src/ui.cpp:641
+#: src/ui.cpp:760
 msgid "You're up to date!"
 msgstr "Програм је ажуран!"
 
-#: src/ui.cpp:648
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s је тренутно најновија верзија."
 
-#: src/ui.cpp:661
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "Затвори"
 
-#: src/ui.cpp:680
+#: src/ui.cpp:801
 msgid "Update Error!"
 msgstr "Грешка при ажурирању"
 
-#: src/ui.cpp:682
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
 msgstr "Дошло је до грешке при преузимању информација о ажурирању. Проверите да ли сте повезани на интернет па покушајте поново."
 
-#: src/ui.cpp:723
+#: src/ui.cpp:810
+msgid "The update is improperly signed."
+msgstr ""
+
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "Доступна је нова верзија програма %s!"
 
-#: src/ui.cpp:726
+#: src/ui.cpp:864
 msgid "Get update"
 msgstr "Преузми"
 
-#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:732
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
 msgstr "Изашао је %s %s (ви имате в. %s). Желите ли да преузмете ажурирање?"
 
-#: src/ui.cpp:763
+#: src/ui.cpp:901
 msgid "Downloading update..."
 msgstr "Преузимам ажурирање…"
 
-#: src/ui.cpp:791
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%s од %s"
 
-#: src/ui.cpp:820
+#: src/ui.cpp:966
 msgid "Ready to install."
 msgstr "Спремно за инсталацију."
 
-#: src/ui.cpp:960
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
 msgstr "Тражити ажурирања аутоматски?"
 
-#: src/ui.cpp:970
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
 msgstr "Желите ли да %s аутоматски тражи ажурирања? Ажурирања можете потражити и ручно из менија."
 
-#: src/ui.cpp:984
+#: src/ui.cpp:1135
 msgid "Check automatically"
 msgstr "Тражи аутоматски"
 
-#: src/ui.cpp:989
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "Не тражи"
 

@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2017 Vaclav Slavik
+ *  Copyright (C) 2009-2018 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -42,6 +42,9 @@ struct Appcast
 
     /// URL of the update
     std::string DownloadURL;
+
+    /// Signing signature of the update
+    std::string DsaSignature;
 
     /// URL of the release notes page
     std::string ReleaseNotesURL;

@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2017 Vaclav Slavik
+ *  Copyright (C) 2009-2018 Vaclav Slavik
  *  Copyright (C) 2007 Andy Matuschak
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,6 +36,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <winsparkle.h>
 
 using namespace std;
 
@@ -217,11 +218,8 @@ UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
 {
 }
 
-void UpdateChecker::Run()
+void UpdateChecker::PerformUpdateCheck()
 {
-    // no initialization to do, so signal readiness immediately
-    SignalReady();
-
     try
     {
         const std::string url = Settings::GetAppcastURL();
@@ -230,7 +228,7 @@ void UpdateChecker::Run()
         CheckForInsecureURL(url, "appcast feed");
 
         StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml, this, GetAppcastDownloadFlags());
+        DownloadFile(url, &appcast_xml, this, Download_BypassProxies);
 
         Appcast appcast = Appcast::Load(appcast_xml.data);
         if (!appcast.ReleaseNotesURL.empty())
@@ -281,17 +279,57 @@ bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const
 }
 
 
+void PeriodicUpdateChecker::Run()
+{
+    // no initialization to do, so signal readiness immediately
+    SignalReady();
+
+    while (true)
+    {
+        // time to wait for next iteration: either a reasonable default or
+        // time to next scheduled update check if checks are enabled
+        unsigned sleepTimeInSeconds = 60 * 60; // 1 hour
+
+        bool checkUpdates;
+        Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
+
+        if (checkUpdates)
+        {
+            const time_t currentTime = time(NULL);
+            time_t lastCheck = 0;
+            Settings::ReadConfigValue("LastCheckTime", lastCheck);
+
+            // Only check for updates in reasonable intervals:
+            const int interval = win_sparkle_get_update_check_interval();
+            time_t nextCheck = lastCheck + interval;
+            if (currentTime >= nextCheck)
+            {
+                PerformUpdateCheck();
+                sleepTimeInSeconds = interval;
+            }
+            else
+            {
+                sleepTimeInSeconds = unsigned(nextCheck - currentTime);
+            }
+        }
+
+        m_terminateEvent.WaitUntilSignaled(sleepTimeInSeconds * 1000);
+    }
+}
+
+
+void OneShotUpdateChecker::Run()
+{
+    // no initialization to do, so signal readiness immediately
+    SignalReady();
+
+    PerformUpdateCheck();
+}
+
+
 /*--------------------------------------------------------------------------*
                             ManualUpdateChecker
  *--------------------------------------------------------------------------*/
-
-int ManualUpdateChecker::GetAppcastDownloadFlags() const
-{
-    // Manual check should always connect to the server and bypass any caching.
-    // This is good for finding updates that are too new to propagate through
-    // caches yet.
-    return Download_NoCached;
-}
 
 bool ManualUpdateChecker::ShouldSkipUpdate(const Appcast&) const
 {

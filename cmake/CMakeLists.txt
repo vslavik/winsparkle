@@ -67,6 +67,7 @@ set(SOURCES
   ${SOURCE_DIR}/download.cpp
   ${SOURCE_DIR}/error.cpp
   ${SOURCE_DIR}/settings.cpp
+  ${SOURCE_DIR}/signatureverifier.cpp
   ${SOURCE_DIR}/threads.cpp
   ${SOURCE_DIR}/ui.cpp
   ${SOURCE_DIR}/updatechecker.cpp
@@ -87,7 +88,7 @@ endforeach()
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat>)
 
-target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32)
+target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${LIB_MAJOR_VERSION}.${LIB_MINOR_VERSION}.${LIB_PATCH_VERSION}
