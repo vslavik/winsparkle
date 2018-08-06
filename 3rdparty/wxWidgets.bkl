@@ -6,6 +6,7 @@ vs2010.generate-solution = false;
 vs2012.generate-solution = false;
 vs2013.generate-solution = false;
 vs2015.generate-solution = false;
+vs2017.generate-solution = false;
 
 library WinSparkle_wx : t_3rdparty {
     vs2008.projectfile = ../wx$(SUFFIX).vcproj;
@@ -13,6 +14,7 @@ library WinSparkle_wx : t_3rdparty {
     vs2012.projectfile = ../wx$(SUFFIX).vcxproj;
     vs2013.projectfile = ../wx$(SUFFIX).vcxproj;
     vs2015.projectfile = ../wx$(SUFFIX).vcxproj;
+    vs2017.projectfile = ../wx$(SUFFIX).vcxproj;
 
     defines += WXBUILDING;
     includedirs += ../wxWidgets_setup_h include;

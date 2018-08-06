@@ -5,12 +5,14 @@ template t_3rdparty {
         vs2012.option.IntDir = "..\\\$(Platform)\\\$(Configuration)\\$(id)\\";
         vs2013.option.IntDir = "..\\\$(Platform)\\\$(Configuration)\\$(id)\\";
         vs2015.option.IntDir = "..\\\$(Platform)\\\$(Configuration)\\$(id)\\";
+        vs2017.option.IntDir = "..\\\$(Platform)\\\$(Configuration)\\$(id)\\";
     }
     if ($arch != x86_64) {
         vs2010.option.IntDir = "..\\\$(Configuration)\\$(id)\\";
         vs2012.option.IntDir = "..\\\$(Configuration)\\$(id)\\";
         vs2013.option.IntDir = "..\\\$(Configuration)\\$(id)\\";
         vs2015.option.IntDir = "..\\\$(Configuration)\\$(id)\\";
+        vs2017.option.IntDir = "..\\\$(Configuration)\\$(id)\\";
     }
 }
 
@@ -23,3 +25,4 @@ vs2010.generate-solution = false;
 vs2012.generate-solution = false;
 vs2013.generate-solution = false;
 vs2015.generate-solution = false;
+vs2017.generate-solution = false;

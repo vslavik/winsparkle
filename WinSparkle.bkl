@@ -1,5 +1,5 @@
 
-toolsets = vs2008 vs2010 vs2012 vs2013 vs2015;
+toolsets = vs2008 vs2010 vs2012 vs2013 vs2015 vs2017;
 
 if ( $toolset == vs2008 )
     SUFFIX = "";
@@ -11,12 +11,15 @@ if ( $toolset == vs2013 )
     SUFFIX = "-2013";
 if ( $toolset == vs2015 )
     SUFFIX = "-2015";
+if ( $toolset == vs2017 )
+    SUFFIX = "-2017";
 
 vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2013.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2015.solutionfile = WinSparkle$(SUFFIX).sln;
+vs2017.solutionfile = WinSparkle$(SUFFIX).sln;
 
 // Common settings:
 win32-crt-linkage = static;
@@ -29,12 +32,14 @@ defines += _CRT_SECURE_NO_WARNINGS;
 vs2012.option.Configuration.PlatformToolset = v110_xp;
 vs2013.option.Configuration.PlatformToolset = v120_xp;
 vs2015.option.Configuration.PlatformToolset = v140_xp;
+vs2017.option.Configuration.PlatformToolset = v141_xp;
 
 // VS2015 generates thread-safe statics by default, but it's incompatible with
 // Windows XP when used in DLLs
-if ( $toolset == vs2015 ) {
+if ( $toolset == vs2015 )
     compiler-options += "/Zc:threadSafeInit-";
-}
+if ( $toolset == vs2017 )
+    compiler-options += "/Zc:threadSafeInit-";
 
 // For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
 if ( $(arch) == x86 ) {
@@ -88,6 +93,16 @@ if ( $(config) == Release ) {
     vs2015.option.Link.OptimizeReferences = true;
     vs2015.option.Link.EnableCOMDATFolding = true;
     vs2015.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+
+    vs2017.option.Configuration.WholeProgramOptimization = true;
+    vs2017.option.ClCompile.Optimization = MinSpace;
+    vs2017.option.ClCompile.FavorSizeOrSpeed = Size;
+    vs2017.option.ClCompile.WholeProgramOptimization = true;
+    vs2017.option.ClCompile.StringPooling = true;
+    vs2017.option.ClCompile.FunctionLevelLinking = true;
+    vs2017.option.Link.OptimizeReferences = true;
+    vs2017.option.Link.EnableCOMDATFolding = true;
+    vs2017.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
 }
 
 // 3rd party library dependencies:
@@ -100,6 +115,7 @@ shared-library WinSparkle {
     vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2013.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2015.projectfile = $(id)$(SUFFIX).vcxproj;
+    vs2017.projectfile = $(id)$(SUFFIX).vcxproj;
 
     defines += XML_STATIC;
     includedirs += 3rdparty/expat/expat/lib;
