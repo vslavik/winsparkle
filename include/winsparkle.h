@@ -243,7 +243,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *bu
 WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path);
 
 /// Type used to override WinSparkle's config read function
-typedef int(__cdecl *win_sparkle_config_read_t)(void *custom_data, const char *name, wchar_t *buf, size_t bytes);
+typedef int(__cdecl *win_sparkle_config_read_t)(void *custom_data, const char *name, wchar_t *buf, size_t len);
 /// Type used to override WinSparkle's config write function
 typedef int(__cdecl *win_sparkle_config_write_t)(void *custom_data, const char *name, const wchar_t *value);
 /// Type used to override WinSparkle's config delete function
@@ -265,8 +265,8 @@ typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char 
     @param custom_data  arbitrary data which will be passed to your config manipulating 
                         functions, WinSparkle will not read or alter it.
 
-    @note The forth parameter *bytes* of function config_read is the size of *buf* in *bytes*, 
-          not array length!
+    @note There's no guarantee about the thread from which these functions are called,
+          Make sure your functions are thread-safe.
 
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(void *custom_data, 

@@ -225,10 +225,26 @@ public:
                                 win_sparkle_config_delete_t customConfigDelete)
     {
         CriticalSectionLocker lock(ms_csVars);
+        
+        ms_currentConfigRead = DefaultConfigRead;
+        ms_currentConfigWrite = DefaultConfigWrite;
+        ms_currentConfigDelete = DefaultConfigDelete;
+
         ms_customConfigData = customConfigData;
-        ms_customConfigRead = customConfigRead;
-        ms_customConfigWrite = customConfigWrite;
-        ms_customConfigDelete = customConfigDelete;
+
+        if (customConfigWrite)
+        {
+            ms_currentConfigRead = customConfigRead;
+        }
+        if (customConfigWrite)
+        {
+            ms_currentConfigWrite = customConfigWrite;
+        }
+        if (customConfigDelete)
+        {
+            ms_currentConfigDelete = customConfigDelete;
+        }
+        
     }
 
     /// Set PEM data and verify in contains valid DSA public key
@@ -325,6 +341,12 @@ private:
     static void DoWriteConfigValue(const char *name, const wchar_t *value);
     static std::wstring DoReadConfigValue(const char *name);
 
+    //Wrapper for RegistryRead
+    static int __cdecl DefaultConfigRead(void *, const char *name, wchar_t *buf, size_t len);
+    //Wrapper for RegistryWrite
+    static int __cdecl DefaultConfigWrite(void *, const char *name, const wchar_t *value);
+    //Wrapper for RegistryDelete
+    static int __cdecl DefaultConfigDelete(void *, const char *name);
 private:
     // guards the variables below:
     static CriticalSection ms_csVars;
@@ -339,9 +361,9 @@ private:
     static std::string  ms_DSAPubKey;
     
     static void *ms_customConfigData;
-    static win_sparkle_config_read_t ms_customConfigRead;
-    static win_sparkle_config_write_t ms_customConfigWrite;
-    static win_sparkle_config_delete_t ms_customConfigDelete;
+    static win_sparkle_config_read_t ms_currentConfigRead;
+    static win_sparkle_config_write_t ms_currentConfigWrite;
+    static win_sparkle_config_delete_t ms_currentConfigDelete;
 };
 
 } // namespace winsparkle

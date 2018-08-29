@@ -45,9 +45,9 @@ std::wstring Settings::ms_appBuildVersion;
 std::string Settings::ms_DSAPubKey;
 
 void *Settings::ms_customConfigData = nullptr;
-win_sparkle_config_read_t Settings::ms_customConfigRead = nullptr;
-win_sparkle_config_write_t Settings::ms_customConfigWrite = nullptr;
-win_sparkle_config_delete_t Settings::ms_customConfigDelete = nullptr;
+win_sparkle_config_read_t Settings::ms_currentConfigRead = Settings::DefaultConfigRead;
+win_sparkle_config_write_t Settings::ms_currentConfigWrite = Settings::DefaultConfigWrite;
+win_sparkle_config_delete_t Settings::ms_currentConfigDelete = Settings::DefaultConfigDelete;
 
 /*--------------------------------------------------------------------------*
                              resources access
@@ -320,23 +320,33 @@ CriticalSection g_csConfigValues;
 } // anonymous namespace
 
 
+int __cdecl Settings::DefaultConfigRead(void *, const char *name, wchar_t* buf, size_t len)
+{
+    //RegistryRead requires array size in bytes
+    return RegistryRead(name, buf, len * sizeof(wchar_t));
+}
+
+int __cdecl Settings::DefaultConfigWrite(void *, const char *name, const wchar_t* value)
+{
+    RegistryWrite(name, value);
+    return 1; //On failure, instead of returning 0, Exceptions will be thrown from RegistryWrite
+}
+
+int __cdecl Settings::DefaultConfigDelete(void *, const char *name)
+{
+    RegistryDelete(name);
+    return 1; //On failure, instead of returning 0, Exceptions will be thrown from RegistryDelete
+}
+
 void Settings::DoWriteConfigValue(const char *name, const wchar_t *value)
 {
     CriticalSectionLocker lock(g_csConfigValues);
     
-    //CriticalSectionLocker for custom config functions
-    CriticalSectionLocker classMemberLock(ms_csVars);
-    if (ms_customConfigWrite)
+    if (0 == ms_currentConfigWrite(ms_customConfigData, name, value))
     {
-        int result = ms_customConfigWrite(ms_customConfigData, name, value);
-        if (result == 0)
-        {
-            throw std::runtime_error("User provided config write function failed");
-        }
-    }
-    else
-    {
-        RegistryWrite(name, value);
+        //Only custom write function will return 0, 
+        //default function would already have thrown an exception.
+        throw std::runtime_error("User provided config write function failed");
     }
 }
 
@@ -348,19 +358,10 @@ std::wstring Settings::DoReadConfigValue(const char *name)
     //CriticalSectionLocker for custom config functions
     CriticalSectionLocker classMemberLock(ms_csVars);
 
-    wchar_t buf[512];
-    int result = 0;
+    static const int bufferLength = 512;
+    wchar_t buf[bufferLength];
 
-    if (ms_customConfigRead)
-    {
-        result = ms_customConfigRead(ms_customConfigData, name, buf, sizeof(buf));
-    }
-    else
-    {
-        result = RegistryRead(name, buf, sizeof(buf));
-    }
-
-    if (result)
+    if (ms_currentConfigRead(ms_customConfigData, name, buf, bufferLength))
         return buf;
     else
         return std::wstring();
@@ -370,19 +371,11 @@ void Settings::DeleteConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    //CriticalSectionLocker for custom config functions
-    CriticalSectionLocker classMemberLock(ms_csVars);
-    if (ms_customConfigDelete)
+    if (0 == ms_currentConfigDelete(ms_customConfigData, name))
     {
-        int result = ms_customConfigDelete(ms_customConfigData, name);
-        if (result == 0)
-        {
-            throw std::runtime_error("User provided config delete function failed");
-        }
-    }
-    else
-    {
-        RegistryDelete(name);
+        //Only custom delete function will return 0, 
+        //default function would already have thrown an exception.
+        throw std::runtime_error("User provided config delete function failed");
     }
 }
 
