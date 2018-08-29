@@ -26,6 +26,7 @@
 #ifndef _settings_h_
 #define _settings_h_
 
+#include "winsparkle.h"
 #include "threads.h"
 #include "utils.h"
 
@@ -217,6 +218,19 @@ public:
         ms_registryPath = path;
     }
 
+    /// Set custom configuration read, write and delete functions
+    static void SetConfigMethods(void *customConfigData, 
+                                win_sparkle_config_read_t customConfigRead,
+                                win_sparkle_config_write_t customConfigWrite, 
+                                win_sparkle_config_delete_t customConfigDelete)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_customConfigData = customConfigData;
+        ms_customConfigRead = customConfigRead;
+        ms_customConfigWrite = customConfigWrite;
+        ms_customConfigDelete = customConfigDelete;
+    }
+
     /// Set PEM data and verify in contains valid DSA public key
     static void SetDSAPubKeyPem(const std::string &pem);
     //@}
@@ -323,6 +337,11 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
+    
+    static void *ms_customConfigData;
+    static win_sparkle_config_read_t ms_customConfigRead;
+    static win_sparkle_config_write_t ms_customConfigWrite;
+    static win_sparkle_config_delete_t ms_customConfigDelete;
 };
 
 } // namespace winsparkle

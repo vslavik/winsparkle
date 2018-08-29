@@ -192,6 +192,18 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(void *custom_data,
+                                                            win_sparkle_config_read_t   config_read,
+                                                            win_sparkle_config_write_t  config_write,
+                                                            win_sparkle_config_delete_t config_delete)
+{
+    try
+    {
+        Settings::SetConfigMethods(custom_data, config_read, config_write, config_delete);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_automatic_check_for_updates(int state)
 {
     try

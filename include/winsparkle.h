@@ -242,6 +242,38 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *bu
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path);
 
+/// Type used to override WinSparkle's config read function
+typedef int(__cdecl *win_sparkle_config_read_t)(void *custom_data, const char *name, wchar_t *buf, size_t bytes);
+/// Type used to override WinSparkle's config write function
+typedef int(__cdecl *win_sparkle_config_write_t)(void *custom_data, const char *name, const wchar_t *value);
+/// Type used to override WinSparkle's config delete function
+typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char *name);
+
+/**
+    Override WinSparkle's configuration read, write and delete functions.
+
+    By default, WinSparkle will read, write and delete configuration values by
+    interacting directly with Windows Registry.
+    If you want to manage configuration by yourself or you don't want let WinSparkle 
+    write settings directly to the Windows Registry, you can provide your own functions 
+    to read, write and delete configuration.
+
+    These functions needs to return TRUE on success, FALSE on failure.
+    If you passed NULL as a configuration action (read, write or delete)'s function pointer, 
+    WinSparkle will use the default function for that action.
+
+    @param custom_data  arbitrary data which will be passed to your config manipulating 
+                        functions, WinSparkle will not read or alter it.
+
+    @note The forth parameter *bytes* of function config_read is the size of *buf* in *bytes*, 
+          not array length!
+
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(void *custom_data, 
+                                                            win_sparkle_config_read_t   config_read,
+                                                            win_sparkle_config_write_t  config_write,
+                                                            win_sparkle_config_delete_t config_delete);
+
 /**
     Sets whether updates are checked automatically or only through a manual call.
 

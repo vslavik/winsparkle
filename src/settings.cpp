@@ -44,6 +44,10 @@ std::wstring Settings::ms_appVersion;
 std::wstring Settings::ms_appBuildVersion;
 std::string Settings::ms_DSAPubKey;
 
+void *Settings::ms_customConfigData = nullptr;
+win_sparkle_config_read_t Settings::ms_customConfigRead = nullptr;
+win_sparkle_config_write_t Settings::ms_customConfigWrite = nullptr;
+win_sparkle_config_delete_t Settings::ms_customConfigDelete = nullptr;
 
 /*--------------------------------------------------------------------------*
                              resources access
@@ -319,8 +323,21 @@ CriticalSection g_csConfigValues;
 void Settings::DoWriteConfigValue(const char *name, const wchar_t *value)
 {
     CriticalSectionLocker lock(g_csConfigValues);
-
-    RegistryWrite(name, value);
+    
+    //CriticalSectionLocker for custom config functions
+    CriticalSectionLocker classMemberLock(ms_csVars);
+    if (ms_customConfigWrite)
+    {
+        int result = ms_customConfigWrite(ms_customConfigData, name, value);
+        if (result == 0)
+        {
+            throw std::runtime_error("User provided config write function failed");
+        }
+    }
+    else
+    {
+        RegistryWrite(name, value);
+    }
 }
 
 
@@ -328,8 +345,22 @@ std::wstring Settings::DoReadConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
+    //CriticalSectionLocker for custom config functions
+    CriticalSectionLocker classMemberLock(ms_csVars);
+
     wchar_t buf[512];
-    if ( RegistryRead(name, buf, sizeof(buf)) )
+    int result = 0;
+
+    if (ms_customConfigRead)
+    {
+        result = ms_customConfigRead(ms_customConfigData, name, buf, sizeof(buf));
+    }
+    else
+    {
+        result = RegistryRead(name, buf, sizeof(buf));
+    }
+
+    if (result)
         return buf;
     else
         return std::wstring();
@@ -339,7 +370,20 @@ void Settings::DeleteConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    RegistryDelete(name);
+    //CriticalSectionLocker for custom config functions
+    CriticalSectionLocker classMemberLock(ms_csVars);
+    if (ms_customConfigDelete)
+    {
+        int result = ms_customConfigDelete(ms_customConfigData, name);
+        if (result == 0)
+        {
+            throw std::runtime_error("User provided config delete function failed");
+        }
+    }
+    else
+    {
+        RegistryDelete(name);
+    }
 }
 
 void Settings::SetDSAPubKeyPem(const std::string &pem)
