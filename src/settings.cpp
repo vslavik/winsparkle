@@ -355,9 +355,6 @@ std::wstring Settings::DoReadConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    //CriticalSectionLocker for custom config functions
-    CriticalSectionLocker classMemberLock(ms_csVars);
-
     static const int bufferLength = 512;
     wchar_t buf[bufferLength];
 
