@@ -254,7 +254,7 @@ typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char 
 
     By default, WinSparkle will read, write and delete configuration values by
     interacting directly with Windows Registry.
-    If you want to manage configuration by yourself or you don't want let WinSparkle 
+    If you want to manage configuration by yourself, or if you don't want let WinSparkle 
     write settings directly to the Windows Registry, you can provide your own functions 
     to read, write and delete configuration.
 
@@ -268,6 +268,7 @@ typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char 
     @note There's no guarantee about the thread from which these functions are called,
           Make sure your functions are thread-safe.
 
+    @since 0.7
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(void *custom_data, 
                                                             win_sparkle_config_read_t   config_read,
