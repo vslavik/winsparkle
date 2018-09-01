@@ -242,12 +242,18 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *bu
  */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_registry_path(const char *path);
 
-/// Type used to override WinSparkle's config read function
-typedef int(__cdecl *win_sparkle_config_read_t)(void *custom_data, const char *name, wchar_t *buf, size_t len);
-/// Type used to override WinSparkle's config write function
-typedef int(__cdecl *win_sparkle_config_write_t)(void *custom_data, const char *name, const wchar_t *value);
-/// Type used to override WinSparkle's config delete function
-typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char *name);
+/// Type used to override WinSparkle configuration's read, write and delete functions
+typedef struct win_sparkle_config_methods_tag {
+    /// Copy config value named @a name to the buffer pointed by @a buf, returns TRUE on success, FALSE on failure
+    int(__cdecl *config_read)(const char *name, wchar_t *buf, size_t len, void *user_data);
+    /// Write @a value as config value @a name 's new value
+    void(__cdecl *config_write)(const char *name, const wchar_t *value, void *user_data);
+    /// Delete config value named @ name
+    void(__cdecl *config_delete)(const char *name, void *user_data);
+    /// Arbitrary data which will be passed to the above functions, WinSparkle will not read or alter it.
+    void *user_data;
+} win_sparkle_config_methods_t;
+
 
 /**
     Override WinSparkle's configuration read, write and delete functions.
@@ -262,18 +268,15 @@ typedef int(__cdecl *win_sparkle_config_delete_t)(void *custom_data, const char 
     If you passed NULL as a configuration action (read, write or delete)'s function pointer, 
     WinSparkle will use the default function for that action.
 
-    @param custom_data  arbitrary data which will be passed to your config manipulating 
-                        functions, WinSparkle will not read or alter it.
+    @param config_methods  Your own configuration read, write and delete functions.
+                           Pass NULL to let WinSparkle continue to use its default functions.
 
     @note There's no guarantee about the thread from which these functions are called,
           Make sure your functions are thread-safe.
 
     @since 0.7
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(void *custom_data, 
-                                                            win_sparkle_config_read_t   config_read,
-                                                            win_sparkle_config_write_t  config_write,
-                                                            win_sparkle_config_delete_t config_delete);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(win_sparkle_config_methods_t *config_methods);
 
 /**
     Sets whether updates are checked automatically or only through a manual call.

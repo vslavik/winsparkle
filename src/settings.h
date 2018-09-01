@@ -218,33 +218,28 @@ public:
         ms_registryPath = path;
     }
 
+    /// Return WinSparkle's default configuration read, write and delete functions
+    static win_sparkle_config_methods_t GetDefaultConfigMethods()
+    {
+        win_sparkle_config_methods_t defaultConfigMethods;
+        defaultConfigMethods.config_read = &RegistryRead;
+        defaultConfigMethods.config_write = &RegistryWrite;
+        defaultConfigMethods.config_delete = &RegistryDelete;
+        defaultConfigMethods.user_data = nullptr;
+        return defaultConfigMethods;
+    }
+
     /// Set custom configuration read, write and delete functions
-    static void SetConfigMethods(void *customConfigData, 
-                                win_sparkle_config_read_t customConfigRead,
-                                win_sparkle_config_write_t customConfigWrite, 
-                                win_sparkle_config_delete_t customConfigDelete)
+    static void SetConfigMethods(win_sparkle_config_methods_t *customConfigMethods)
     {
         CriticalSectionLocker lock(ms_csVars);
-        
-        ms_currentConfigRead = DefaultConfigRead;
-        ms_currentConfigWrite = DefaultConfigWrite;
-        ms_currentConfigDelete = DefaultConfigDelete;
 
-        ms_customConfigData = customConfigData;
+        ms_configMethods = GetDefaultConfigMethods();
 
-        if (customConfigWrite)
+        if (customConfigMethods)
         {
-            ms_currentConfigRead = customConfigRead;
+            ms_configMethods = *customConfigMethods;
         }
-        if (customConfigWrite)
-        {
-            ms_currentConfigWrite = customConfigWrite;
-        }
-        if (customConfigDelete)
-        {
-            ms_currentConfigDelete = customConfigDelete;
-        }
-        
     }
 
     /// Set PEM data and verify in contains valid DSA public key
@@ -341,12 +336,9 @@ private:
     static void DoWriteConfigValue(const char *name, const wchar_t *value);
     static std::wstring DoReadConfigValue(const char *name);
 
-    //Wrapper for RegistryRead
-    static int __cdecl DefaultConfigRead(void *, const char *name, wchar_t *buf, size_t len);
-    //Wrapper for RegistryWrite
-    static int __cdecl DefaultConfigWrite(void *, const char *name, const wchar_t *value);
-    //Wrapper for RegistryDelete
-    static int __cdecl DefaultConfigDelete(void *, const char *name);
+    static int __cdecl RegistryRead(const char *name, wchar_t *buf, size_t len, void *);
+    static void __cdecl RegistryWrite(const char *name, const wchar_t *value, void *);
+    static void __cdecl RegistryDelete(const char *name, void *);
 private:
     // guards the variables below:
     static CriticalSection ms_csVars;
@@ -360,10 +352,7 @@ private:
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
     
-    static void *ms_customConfigData;
-    static win_sparkle_config_read_t ms_currentConfigRead;
-    static win_sparkle_config_write_t ms_currentConfigWrite;
-    static win_sparkle_config_delete_t ms_currentConfigDelete;
+    static win_sparkle_config_methods_t ms_configMethods;
 };
 
 } // namespace winsparkle

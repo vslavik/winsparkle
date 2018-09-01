@@ -44,10 +44,7 @@ std::wstring Settings::ms_appVersion;
 std::wstring Settings::ms_appBuildVersion;
 std::string Settings::ms_DSAPubKey;
 
-void *Settings::ms_customConfigData = nullptr;
-win_sparkle_config_read_t Settings::ms_currentConfigRead = Settings::DefaultConfigRead;
-win_sparkle_config_write_t Settings::ms_currentConfigWrite = Settings::DefaultConfigWrite;
-win_sparkle_config_delete_t Settings::ms_currentConfigDelete = Settings::DefaultConfigDelete;
+win_sparkle_config_methods_t Settings::ms_configMethods = GetDefaultConfigMethods();
 
 /*--------------------------------------------------------------------------*
                              resources access
@@ -185,68 +182,6 @@ std::string Settings::GetDefaultRegistryPath()
 namespace
 {
 
-void RegistryWrite(const char *name, const wchar_t *value)
-{
-    const std::string subkey = Settings::GetRegistryPath();
-
-    HKEY key;
-    LONG result = RegCreateKeyExA
-                  (
-                      HKEY_CURRENT_USER,
-                      subkey.c_str(),
-                      0,
-                      NULL,
-                      REG_OPTION_NON_VOLATILE,
-                      KEY_SET_VALUE,
-                      NULL,
-                      &key,
-                      NULL
-                  );
-    if ( result != ERROR_SUCCESS )
-        throw Win32Exception("Cannot write settings to registry");
-
-    result = RegSetValueEx
-             (
-                 key,
-                 AnsiToWide(name).c_str(),
-                 0,
-                 REG_SZ,
-                 (const BYTE*)value,
-                 (DWORD)((wcslen(value) + 1) * sizeof(wchar_t))
-             );
-
-    RegCloseKey(key);
-
-    if ( result != ERROR_SUCCESS )
-        throw Win32Exception("Cannot write settings to registry");
-}
-
-
-void RegistryDelete(const char *name)
-{
-    const std::string subkey = Settings::GetRegistryPath();
-
-    HKEY key;
-    LONG result = RegOpenKeyExA
-                  (
-                      HKEY_CURRENT_USER,
-                      subkey.c_str(),
-                      0,
-                      KEY_SET_VALUE,
-                      &key
-                  );
-    if ( result != ERROR_SUCCESS )
-        throw Win32Exception("Cannot delete settings from registry");
-
-    result = RegDeleteValueA(key, name);
-
-    RegCloseKey(key);
-
-    if ( result != ERROR_SUCCESS )
-        throw Win32Exception("Cannot delete settings from registry");
-}
-
-
 int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
 {
     const std::string subkey = Settings::GetRegistryPath();
@@ -298,58 +233,94 @@ int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
     return 1;
 }
 
-
-int RegistryRead(const char *name, wchar_t *buf, size_t len)
-{
-    // Try reading from HKCU first. If that fails, look at HKLM too, in case
-    // some settings have globally set values (either by the installer or the
-    // administrator).
-    if ( DoRegistryRead(HKEY_CURRENT_USER, name, buf, len) )
-    {
-        return 1;
-    }
-    else
-    {
-        return DoRegistryRead(HKEY_LOCAL_MACHINE, name, buf, len);
-    }
-}
-
 // Critical section to guard DoWriteConfigValue/DoReadConfigValue.
 CriticalSection g_csConfigValues;
 
 } // anonymous namespace
 
 
-int __cdecl Settings::DefaultConfigRead(void *, const char *name, wchar_t* buf, size_t len)
+int __cdecl Settings::RegistryRead(const char *name, wchar_t *buf, size_t len, void *)
 {
-    //RegistryRead requires array size in bytes
-    return RegistryRead(name, buf, len * sizeof(wchar_t));
+    size_t bytes = len * sizeof(wchar_t);
+    // Try reading from HKCU first. If that fails, look at HKLM too, in case
+    // some settings have globally set values (either by the installer or the
+    // administrator).
+    if (DoRegistryRead(HKEY_CURRENT_USER, name, buf, bytes))
+    {
+        return 1;
+    }
+    else
+    {
+        return DoRegistryRead(HKEY_LOCAL_MACHINE, name, buf, bytes);
+    }
 }
 
-int __cdecl Settings::DefaultConfigWrite(void *, const char *name, const wchar_t* value)
+void __cdecl Settings::RegistryWrite(const char *name, const wchar_t *value, void *)
 {
-    RegistryWrite(name, value);
-    return 1; //On failure, instead of returning 0, Exceptions will be thrown from RegistryWrite
+    const std::string subkey = Settings::GetRegistryPath();
+
+    HKEY key;
+    LONG result = RegCreateKeyExA
+    (
+        HKEY_CURRENT_USER,
+        subkey.c_str(),
+        0,
+        NULL,
+        REG_OPTION_NON_VOLATILE,
+        KEY_SET_VALUE,
+        NULL,
+        &key,
+        NULL
+    );
+    if (result != ERROR_SUCCESS)
+        throw Win32Exception("Cannot write settings to registry");
+
+    result = RegSetValueEx
+    (
+        key,
+        AnsiToWide(name).c_str(),
+        0,
+        REG_SZ,
+        (const BYTE*)value,
+        (DWORD)((wcslen(value) + 1) * sizeof(wchar_t))
+    );
+
+    RegCloseKey(key);
+
+    if (result != ERROR_SUCCESS)
+        throw Win32Exception("Cannot write settings to registry");
 }
 
-int __cdecl Settings::DefaultConfigDelete(void *, const char *name)
+void __cdecl Settings::RegistryDelete(const char *name, void *)
 {
-    RegistryDelete(name);
-    return 1; //On failure, instead of returning 0, Exceptions will be thrown from RegistryDelete
+    const std::string subkey = Settings::GetRegistryPath();
+
+    HKEY key;
+    LONG result = RegOpenKeyExA
+    (
+        HKEY_CURRENT_USER,
+        subkey.c_str(),
+        0,
+        KEY_SET_VALUE,
+        &key
+    );
+    if (result != ERROR_SUCCESS)
+        throw Win32Exception("Cannot delete settings from registry");
+
+    result = RegDeleteValueA(key, name);
+
+    RegCloseKey(key);
+
+    if (result != ERROR_SUCCESS)
+        throw Win32Exception("Cannot delete settings from registry");
 }
 
 void Settings::DoWriteConfigValue(const char *name, const wchar_t *value)
 {
     CriticalSectionLocker lock(g_csConfigValues);
     
-    if (0 == ms_currentConfigWrite(ms_customConfigData, name, value))
-    {
-        //Only custom write function will return 0, 
-        //default function would already have thrown an exception.
-        throw std::runtime_error("User provided config write function failed");
-    }
+    ms_configMethods.config_write(name, value, ms_configMethods.user_data);
 }
-
 
 std::wstring Settings::DoReadConfigValue(const char *name)
 {
@@ -358,7 +329,7 @@ std::wstring Settings::DoReadConfigValue(const char *name)
     static const int bufferLength = 512;
     wchar_t buf[bufferLength];
 
-    if (ms_currentConfigRead(ms_customConfigData, name, buf, bufferLength))
+    if (ms_configMethods.config_read(name, buf, bufferLength, ms_configMethods.user_data))
         return buf;
     else
         return std::wstring();
@@ -368,12 +339,7 @@ void Settings::DeleteConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    if (0 == ms_currentConfigDelete(ms_customConfigData, name))
-    {
-        //Only custom delete function will return 0, 
-        //default function would already have thrown an exception.
-        throw std::runtime_error("User provided config delete function failed");
-    }
+    ms_configMethods.config_delete(name, ms_configMethods.user_data);
 }
 
 void Settings::SetDSAPubKeyPem(const std::string &pem)
