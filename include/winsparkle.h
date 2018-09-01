@@ -248,7 +248,7 @@ typedef struct win_sparkle_config_methods_tag {
     int(__cdecl *config_read)(const char *name, wchar_t *buf, size_t len, void *user_data);
     /// Write @a value as config value @a name 's new value
     void(__cdecl *config_write)(const char *name, const wchar_t *value, void *user_data);
-    /// Delete config value named @ name
+    /// Delete config value named @a name
     void(__cdecl *config_delete)(const char *name, void *user_data);
     /// Arbitrary data which will be passed to the above functions, WinSparkle will not read or alter it.
     void *user_data;
