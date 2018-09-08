@@ -223,6 +223,25 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build);
 
 /**
+    Set custom HTTP header for appcast checks.
+
+    @since 0.7
+
+    @see win_sparkle_clear_http_headers()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const char *name, const char *value);
+
+/**
+    Clears all custom HTTP headers previously added using
+    win_sparkle_set_http_header().
+
+    @since 0.7
+
+    @see win_sparkle_add_http_header()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_clear_http_headers();
+
+/**
     Set the registry path where settings will be stored.
 
     Normally, these are stored in

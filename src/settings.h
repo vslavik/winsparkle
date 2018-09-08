@@ -196,6 +196,27 @@ public:
         ms_appVersion = version;
     }
 
+    /// Add a custom HTT header to requests
+    static void AddHttpHeader(const char *name, const char *value)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_httpHeaders += std::string(name) + ": " + value + "\r\n";
+    }
+
+    /// Get a string containing all custom HTTP headers
+    static std::string GetHttpHeaderString()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        return ms_httpHeaders;
+    }
+
+    /// Clear previously set HTTP headers
+    static void ClearHttpHeaders()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_httpHeaders = "";
+    }
+
     /// Set application's build version number
     static void SetAppBuildVersion(const wchar_t *version)
     {
@@ -323,6 +344,7 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
+    static std::string  ms_httpHeaders;
 };
 
 } // namespace winsparkle
