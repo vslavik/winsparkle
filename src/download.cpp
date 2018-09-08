@@ -234,7 +234,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
                          (
                              inet,
                              url.c_str(),
-							 headers.c_str(), // lpszHeaders
+                             headers.c_str(),           // lpszHeaders
                              (DWORD)headers.length(),   // dwHeadersLength
                              dwFlags,
                              (DWORD_PTR)&context  // dwContext

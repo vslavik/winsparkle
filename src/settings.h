@@ -198,14 +198,14 @@ public:
     }
 
 	/// Adds an additional header parameter.
-	static void AddHttpHeader(const wchar_t *name, const wchar_t *value)
+	static void AddHttpHeader(const char *name, const char *value)
 	{
 		CriticalSectionLocker lock(ms_csVars);
-		ms_httpHeaders += std::wstring(name) + std::wstring(L": ") + std::wstring(value) + std::wstring(L"\r\n");
+		ms_httpHeaders += std::string(name) + std::string(": ") + std::string(value) + std::string("\r\n");
 	}
 
 	/// Gets a string containing http header.
-	static std::wstring GetHttpHeaderString()
+	static std::string GetHttpHeaderString()
 	{
 		CriticalSectionLocker lock(ms_csVars);
 		return ms_httpHeaders;
@@ -215,7 +215,7 @@ public:
 	static void ClearHttpHeaders()
 	{
 		CriticalSectionLocker lock(ms_csVars);
-		ms_httpHeaders = L"";
+		ms_httpHeaders = "";
 	}
 
     /// Set application's build version number
@@ -345,7 +345,7 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
-	static std::wstring ms_httpHeaders;
+	static std::string  ms_httpHeaders;
 };
 
 } // namespace winsparkle

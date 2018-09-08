@@ -232,7 +232,7 @@ Adds new header parameter to existed parameters.
 
 @see win_sparkle_clear_http_headers()
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const wchar_t *name, const wchar_t *value);
+WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const char *name, const char *value);
 
 /**
 Clears all added early header parameters.
