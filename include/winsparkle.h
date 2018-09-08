@@ -223,6 +223,27 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build);
 
 /**
+Adds new header parameter to existed parameters.
+
+@param name		  Name of header's parameter.
+@param value      Value of header's parameter.
+
+@since 0.7
+
+@see win_sparkle_clear_http_headers()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const wchar_t *name, const wchar_t *value);
+
+/**
+Clears all added early header parameters.
+
+@since 0.7
+
+@see win_sparkle_add_http_header()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_clear_http_headers();
+
+/**
     Set the registry path where settings will be stored.
 
     Normally, these are stored in

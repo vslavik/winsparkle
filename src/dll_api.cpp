@@ -174,6 +174,24 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const wchar_t *name, const wchar_t *value)
+{
+	try
+	{
+		Settings::AddHttpHeader(name, value);
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_clear_http_headers()
+{
+	try
+	{
+		Settings::ClearHttpHeaders();
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build)
 {
     try

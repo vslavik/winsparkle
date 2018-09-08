@@ -177,7 +177,7 @@ void UpdateDownloader::Run()
       Settings::WriteConfigValue("UpdateTempDir", tmpdir);
 
       UpdateDownloadSink sink(*this, tmpdir);
-      DownloadFile(m_appcast.DownloadURL, &sink, this);
+      DownloadFile(m_appcast.DownloadURL, &sink, this, "");
       sink.Close();
 
       if (Settings::HasDSAPubKeyPem())
