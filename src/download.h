@@ -92,7 +92,7 @@ enum DownloadFlag
 
     @see CheckConnection()
  */
-void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread, const std::string &headers, int flags = 0);
+void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread, const std::string &headers = "", int flags = 0);
 
 } // namespace winsparkle
 
