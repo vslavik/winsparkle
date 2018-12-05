@@ -315,6 +315,28 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_spark
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_allow_downgrades(int allowDowngrades)
+{
+	try
+	{
+		Settings::WriteConfigValue("AllowDowngrades", allowDowngrades != 0);
+	}
+	CATCH_ALL_EXCEPTIONS
+}
+
+WIN_SPARKLE_API int __cdecl win_sparkle_get_allow_downgrades()
+{
+	try
+	{
+		bool allowDowngrades;
+		if (Settings::ReadConfigValue("AllowDowngrades", allowDowngrades, false))
+			return allowDowngrades ? 1 : 0;
+	}
+	CATCH_ALL_EXCEPTIONS
+
+		return 0;
+}
+
 /*--------------------------------------------------------------------------*
                               Manual usage
  *--------------------------------------------------------------------------*/

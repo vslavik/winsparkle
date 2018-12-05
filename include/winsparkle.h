@@ -397,6 +397,26 @@ typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
+/**
+Gets the allow downgrade state
+
+@return  1 if downgrades are allowed, 0 otherwise
+
+@note Defaults to 0 when not yet configured (as happens on first start).
+
+@since 0.6.1
+*/
+WIN_SPARKLE_API int __cdecl win_sparkle_get_allow_downgrades();
+
+/**
+Sets the allow downgrade state.
+
+@param  allowDowngrade 1 to allow downgrades, 0 otherwise
+
+@since 0.6.1
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_allow_downgrades(int allowDowngrade);
+
 //@}
 
 

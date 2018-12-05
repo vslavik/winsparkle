@@ -241,13 +241,30 @@ void UpdateChecker::PerformUpdateCheck()
         const std::string currentVersion =
                 WideToAnsi(Settings::GetAppBuildVersion());
 
-        // Check if our version is out of date.
-        if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
+        // Check if our appcast is valid
+		if ( !appcast.IsValid())
         {
-            // The same or newer version is already installed.
-            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+			UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
             return;
         }
+
+		bool allowDowngrades;
+		Settings::ReadConfigValue("AllowDowngrades", allowDowngrades, false);
+
+		// If downgrades are allowed, make sure versions are different
+		if (allowDowngrades && CompareVersions(currentVersion, appcast.Version) == 0)
+		{
+			UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+			return;
+		}
+
+		// If downgrades are not allowed, make sure appcast version is
+		// newer than the current versions
+		if (!allowDowngrades && CompareVersions(currentVersion, appcast.Version) >= 0)
+		{
+			UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+			return;
+		}
 
         // Check if the user opted to ignore this particular version.
         if ( ShouldSkipUpdate(appcast) )
