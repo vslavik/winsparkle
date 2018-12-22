@@ -575,6 +575,9 @@
     <ClCompile Include="openssl\crypto\ex_data.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="openssl\crypto\getenv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="openssl\crypto\mem.c">
       <Filter>Source Files</Filter>
     </ClCompile>

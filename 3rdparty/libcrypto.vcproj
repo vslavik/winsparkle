@@ -1052,6 +1052,10 @@
 				>
 			</File>
 			<File
+				RelativePath="openssl\crypto\getenv.c"
+				>
+			</File>
+			<File
 				RelativePath="openssl\crypto\mem.c"
 				>
 			</File>

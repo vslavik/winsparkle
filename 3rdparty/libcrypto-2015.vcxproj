@@ -348,6 +348,7 @@
     <ClCompile Include="openssl\crypto\cversion.c" />
     <ClCompile Include="openssl\crypto\ebcdic.c" />
     <ClCompile Include="openssl\crypto\ex_data.c" />
+    <ClCompile Include="openssl\crypto\getenv.c" />
     <ClCompile Include="openssl\crypto\mem.c" />
     <ClCompile Include="openssl\crypto\mem_clr.c" />
     <ClCompile Include="openssl\crypto\mem_dbg.c" />

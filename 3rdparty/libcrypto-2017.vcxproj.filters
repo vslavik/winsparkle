@@ -1679,5 +1679,8 @@
     <ClCompile Include="openssl\crypto\x509v3\v3err.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="openssl\crypto\getenv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -236,6 +236,7 @@ library WinSparkle_libcrypto : t_3rdparty {
      cversion.c
      ebcdic.c
      ex_data.c
+     getenv.c
      mem.c
      mem_clr.c
      mem_dbg.c
