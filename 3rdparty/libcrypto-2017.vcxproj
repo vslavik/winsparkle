@@ -272,7 +272,6 @@
     <ClCompile Include="openssl\crypto\bio\bss_dgram.c" />
     <ClCompile Include="openssl\crypto\bio\bss_fd.c" />
     <ClCompile Include="openssl\crypto\bio\bss_file.c" />
-    <ClCompile Include="openssl\crypto\bio\bss_log.c" />
     <ClCompile Include="openssl\crypto\bio\bss_mem.c" />
     <ClCompile Include="openssl\crypto\bio\bss_null.c" />
     <ClCompile Include="openssl\crypto\bio\bss_sock.c" />
@@ -324,7 +323,6 @@
     <ClCompile Include="openssl\crypto\cmac\cmac.c" />
     <ClCompile Include="openssl\crypto\cms\cms_asn1.c" />
     <ClCompile Include="openssl\crypto\cms\cms_att.c" />
-    <ClCompile Include="openssl\crypto\cms\cms_cd.c" />
     <ClCompile Include="openssl\crypto\cms\cms_dd.c" />
     <ClCompile Include="openssl\crypto\cms\cms_enc.c" />
     <ClCompile Include="openssl\crypto\cms\cms_env.c" />
@@ -478,7 +476,6 @@
     <ClCompile Include="openssl\crypto\evp\e_rc2.c" />
     <ClCompile Include="openssl\crypto\evp\e_rc4.c" />
     <ClCompile Include="openssl\crypto\evp\e_rc4_hmac_md5.c" />
-    <ClCompile Include="openssl\crypto\evp\e_rc5.c" />
     <ClCompile Include="openssl\crypto\evp\e_seed.c" />
     <ClCompile Include="openssl\crypto\evp\e_xcbc_d.c" />
     <ClCompile Include="openssl\crypto\evp\encode.c" />
@@ -493,7 +490,6 @@
     <ClCompile Include="openssl\crypto\evp\m_dss.c" />
     <ClCompile Include="openssl\crypto\evp\m_dss1.c" />
     <ClCompile Include="openssl\crypto\evp\m_ecdsa.c" />
-    <ClCompile Include="openssl\crypto\evp\m_md2.c" />
     <ClCompile Include="openssl\crypto\evp\m_md4.c" />
     <ClCompile Include="openssl\crypto\evp\m_md5.c" />
     <ClCompile Include="openssl\crypto\evp\m_mdc2.c" />
@@ -585,7 +581,6 @@
     <ClCompile Include="openssl\crypto\pkcs7\bio_pk7.c" />
     <ClCompile Include="openssl\crypto\pkcs7\pk7_asn1.c" />
     <ClCompile Include="openssl\crypto\pkcs7\pk7_attr.c" />
-    <ClCompile Include="openssl\crypto\pkcs7\pk7_dgst.c" />
     <ClCompile Include="openssl\crypto\pkcs7\pk7_doit.c" />
     <ClCompile Include="openssl\crypto\pkcs7\pk7_lib.c" />
     <ClCompile Include="openssl\crypto\pkcs7\pk7_mime.c" />
@@ -690,11 +685,9 @@
     <ClCompile Include="openssl\crypto\x509v3\pcy_map.c" />
     <ClCompile Include="openssl\crypto\x509v3\pcy_node.c" />
     <ClCompile Include="openssl\crypto\x509v3\pcy_tree.c" />
-    <ClCompile Include="openssl\crypto\x509v3\v3_addr.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_akey.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_akeya.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_alt.c" />
-    <ClCompile Include="openssl\crypto\x509v3\v3_asid.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_bcons.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_bitst.c" />
     <ClCompile Include="openssl\crypto\x509v3\v3_conf.c" />

@@ -106,9 +106,6 @@
     <ClCompile Include="wxWidgets\src\common\evtloopcmn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wxWidgets\src\common\extended.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

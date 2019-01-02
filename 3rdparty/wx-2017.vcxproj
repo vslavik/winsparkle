@@ -198,7 +198,6 @@
     <ClCompile Include="wxWidgets\src\common\encconv.cpp" />
     <ClCompile Include="wxWidgets\src\common\event.cpp" />
     <ClCompile Include="wxWidgets\src\common\evtloopcmn.cpp" />
-    <ClCompile Include="wxWidgets\src\common\extended.c" />
     <ClCompile Include="wxWidgets\src\common\file.cpp" />
     <ClCompile Include="wxWidgets\src\common\filefn.cpp" />
     <ClCompile Include="wxWidgets\src\common\filename.cpp" />

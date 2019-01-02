@@ -335,9 +335,6 @@
     <ClCompile Include="openssl\crypto\bio\bss_file.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="openssl\crypto\bio\bss_log.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="openssl\crypto\bio\bss_mem.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -489,9 +486,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\cms\cms_att.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="openssl\crypto\cms\cms_cd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\cms\cms_dd.c">
@@ -950,9 +944,6 @@
     <ClCompile Include="openssl\crypto\evp\e_rc4_hmac_md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="openssl\crypto\evp\e_rc5.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="openssl\crypto\evp\e_seed.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -993,9 +984,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\evp\m_ecdsa.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="openssl\crypto\evp\m_md2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\evp\m_md4.c">
@@ -1269,9 +1257,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\pkcs7\pk7_attr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="openssl\crypto\pkcs7\pk7_dgst.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\pkcs7\pk7_doit.c">
@@ -1586,9 +1571,6 @@
     <ClCompile Include="openssl\crypto\x509v3\pcy_tree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="openssl\crypto\x509v3\v3_addr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="openssl\crypto\x509v3\v3_akey.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1596,9 +1578,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\x509v3\v3_alt.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="openssl\crypto\x509v3\v3_asid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openssl\crypto\x509v3\v3_bcons.c">
