@@ -14,6 +14,8 @@ binary_base  := WinSparkle-$(VERSION)
 sources_arch := $(sources_base).7z
 binary_arch  := $(binary_base).zip
 binary_files := \
+	bin/sign_update.bat \
+	bin/generate_keys.bat \
 	include/winsparkle.h \
 	include/winsparkle-version.h \
 	Release/WinSparkle.dll \
@@ -32,10 +34,12 @@ sources: $(sources_arch)
 $(binary_arch): $(binary_files)
 	@rm -rf $(binary_base) $@
 	@mkdir $(binary_base)
+	@mkdir -p $(binary_base)/bin
 	@mkdir -p $(binary_base)/include
 	@mkdir -p $(binary_base)/Release
 	@mkdir -p $(binary_base)/x64/Release
 	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
+	cp -a 3rdparty/expat/expat/COPYING $(binary_base)/COPYING.expat
 	zip -9 -r  $@ $(binary_base)
 	@rm -rf $(binary_base) $(binary_base).tar
 

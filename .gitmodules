@@ -1,6 +1,9 @@
 [submodule "3rdparty/wxWidgets"]
 	path = 3rdparty/wxWidgets
-	url = git://github.com/wxWidgets/wxWidgets.git
+	url = https://github.com/wxWidgets/wxWidgets.git
 [submodule "3rdparty/expat"]
 	path = 3rdparty/expat
-	url = git://git.code.sf.net/p/expat/code_git
+	url = https://github.com/libexpat/libexpat.git
+[submodule "3rdparty/openssl"]
+	path = 3rdparty/openssl
+	url = https://github.com/openssl/openssl.git

@@ -1,4 +1,49 @@
 
+Version 0.6.0
+-------------
+
+- Added support for validating DSA signatures.
+- Fixes to window placement.
+- Fixed regression in win_sparkle_check_update_without_ui() not checking
+  immediately.
+
+
+Version 0.5.7
+-------------
+
+- Fixed issue with downloads from servers without keep-alive support.
+
+
+Version 0.5.6
+-------------
+
+- Includes security fixes for Expat XML parser (CVE-2017-11742).
+
+
+Version 0.5.5
+-------------
+
+- Fixed regression in initial update checking introduced in 0.5.4.
+
+
+Version 0.5.4
+-------------
+
+- Updates are now checked in background periodically even in applications that
+  are running for a long time.
+- HTTP caching is now disabled more aggressively.
+- Fixed handling of downloads from URLs with query parameters.
+- Includes security fixes for Expat XML parser.
+
+
+Version 0.5.3
+-------------
+
+- Downloads are now cancellable.
+- Fixed an issue with parsing some appcasts (#123).
+- Verify UpdateTempDir's validity before deleting it.
+
+
 Version 0.5.2
 -------------
 

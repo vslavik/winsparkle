@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2012-2016 Vaclav Slavik
+ *  Copyright (C) 2012-2019 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,13 @@
  *
  */
 
+#include "appcontroller.h"
 #include "updatedownloader.h"
 #include "download.h"
 #include "settings.h"
 #include "ui.h"
 #include "error.h"
+#include "signatureverifier.h"
 
 #include <wx/string.h>
 
@@ -45,6 +47,17 @@ namespace winsparkle
 namespace
 {
 
+std::wstring GetUniqueTempDirectoryPrefix()
+{
+    wchar_t tmpdir[MAX_PATH + 1];
+    if (GetTempPath(MAX_PATH + 1, tmpdir) == 0)
+        throw Win32Exception("Cannot create temporary directory");
+
+    std::wstring dir(tmpdir);
+    dir += L"Update-";
+    return dir;
+}
+
 std::wstring CreateUniqueTempDirectory()
 {
     // We need to put downloaded updates into a directory of their own, because
@@ -53,15 +66,11 @@ std::wstring CreateUniqueTempDirectory()
     //
     // This code creates a new randomized directory name and tries to create it;
     // this process is repeated if the directory already exists.
-    wchar_t tmpdir[MAX_PATH+1];
-    if ( GetTempPath(MAX_PATH+1, tmpdir) == 0 )
-        throw Win32Exception("Cannot create temporary directory");
+    const std::wstring tmpdir = GetUniqueTempDirectoryPrefix();
 
     for ( ;; )
     {
         std::wstring dir(tmpdir);
-        dir += L"Update-";
-
         UUID uuid;
         UuidCreate(&uuid);
         RPC_WSTR uuidStr;
@@ -170,7 +179,24 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink, this);
       sink.Close();
+
+      if (Settings::HasDSAPubKeyPem())
+      {
+          SignatureVerifier::VerifyDSASHA1SignatureValid(sink.GetFilePath(), m_appcast.DsaSignature);
+      }
+      else
+      {
+          // backward compatibility - accept as is, but complain about it
+          LogError("Using unsigned updates!");
+      }
+
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
+    }
+    catch (BadSignatureException&)
+    {
+        CleanLeftovers();  // remove potentially corrupted file
+        UI::NotifyUpdateError(Err_BadSignature);
+        throw;
     }
     catch ( ... )
     {
@@ -191,6 +217,21 @@ void UpdateDownloader::CleanLeftovers()
     std::wstring tmpdir;
     if ( !Settings::ReadConfigValue("UpdateTempDir", tmpdir) )
         return;
+
+    // Check that the directory actually is a valid update temp dir, to prevent
+    // malicious users from forcing us into deleting arbitrary directories:
+    try
+    {
+        if (tmpdir.find(GetUniqueTempDirectoryPrefix()) != 0)
+        {
+            Settings::DeleteConfigValue("UpdateTempDir");
+            return;
+        }
+    }
+    catch (Win32Exception&) // cannot determine temp directory
+    {
+        return;
+    }
 
     tmpdir.append(1, '\0'); // double NULL-terminate for SHFileOperation
 

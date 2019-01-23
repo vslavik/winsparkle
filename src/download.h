@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2016 Vaclav Slavik
+ *  Copyright (C) 2009-2019 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -76,8 +76,8 @@ struct StringDownloadSink : public IDownloadSink
 /// Flags for DownloadFile().
 enum DownloadFlag
 {
-    /// Don't get resources from cache, always contact the origin server
-    Download_NoCached = 1
+    /// Instruct proxies to pass the request upstream
+    Download_BypassProxies = 1
 };
 
 /**

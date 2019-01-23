@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2016 Vaclav Slavik
+ *  Copyright (C) 2009-2019 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -31,6 +31,12 @@
 
 namespace winsparkle
 {
+
+enum ErrorCode
+{
+    Err_Generic,
+    Err_BadSignature
+};
 
 /**
     The main UI thread.
@@ -69,7 +75,7 @@ public:
         (i.e. the user is manually checking for updates), "update error"
         message is shown. Otherwise, does nothing.
      */
-    static void NotifyUpdateError();
+    static void NotifyUpdateError(ErrorCode err = Err_Generic);
 
     /**
         Notifies the UI that a new version is available.

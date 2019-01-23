@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2016 Vaclav Slavik
+ *  Copyright (C) 2009-2019 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,6 +34,13 @@
 #include <windows.h>
 #include <wininet.h>
 
+#ifndef INTERNET_OPTION_ENABLE_HTTP_PROTOCOL
+    #define INTERNET_OPTION_ENABLE_HTTP_PROTOCOL 148
+#endif
+#ifndef HTTP_PROTOCOL_FLAG_HTTP2
+    #define HTTP_PROTOCOL_FLAG_HTTP2 0x2
+#endif
+
 
 namespace winsparkle
 {
@@ -47,22 +54,35 @@ namespace
 
 struct InetHandle
 {
-    InetHandle(HINTERNET handle) : m_handle(handle), m_callback(NULL) {}
+    InetHandle(HINTERNET handle = 0) : m_handle(handle), m_callback(NULL) {}
 
     ~InetHandle()
     {
-        if (m_handle)
-        {
-            if (m_callback)
-                InternetSetStatusCallback(m_handle, NULL);
-            InternetCloseHandle(m_handle);
-        }
+        Close();
+    }
+
+    InetHandle& operator=(HINTERNET handle)
+    {
+        Close();
+        m_handle = handle;
+        return *this;
     }
 
     void SetStatusCallback(INTERNET_STATUS_CALLBACK callback)
     {
         m_callback = callback;
         InternetSetStatusCallback(m_handle, m_callback);
+    }
+
+    void Close()
+    {
+        if (m_handle)
+        {
+            if (m_callback)
+                InternetSetStatusCallback(m_handle, NULL);
+            InternetCloseHandle(m_handle);
+            m_handle = NULL;
+        }
     }
 
     operator HINTERNET() const { return m_handle; }
@@ -114,13 +134,17 @@ bool GetHttpHeader(HINTERNET handle, DWORD whatToGet, DWORD& output)
 std::wstring GetURLFileName(const char *url)
 {
     const char *lastSlash = strrchr(url, '/');
-    const std::string fn(lastSlash ? lastSlash + 1 : url);
+    std::string fn(lastSlash ? lastSlash + 1 : url);
+    if (fn.find_first_of('?') != std::string::npos)
+        fn = fn.substr(0, fn.find_first_of('?'));
     return AnsiToWide(fn);
 }
 
 struct DownloadCallbackContext
 {
+    DownloadCallbackContext(InetHandle *conn_) : conn(conn_), lastError(ERROR_SUCCESS) {}
     InetHandle *conn;
+    DWORD lastError;
     Event eventRequestComplete;
 };
 
@@ -140,6 +164,7 @@ void CALLBACK DownloadInternetStatusCallback(_In_ HINTERNET hInternet,
             break;
 
         case INTERNET_STATUS_REQUEST_COMPLETE:
+            context->lastError = res->dwError;
             context->eventRequestComplete.Signal();
             break;
     }
@@ -185,26 +210,43 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
                       );
     if ( !inet )
         throw Win32Exception();
-    inet.SetStatusCallback(&DownloadInternetStatusCallback);
 
-    DWORD dwFlags = 0;
-    if ( flags & Download_NoCached )
-        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE | INTERNET_FLAG_RELOAD;
+    DWORD dwOption = HTTP_PROTOCOL_FLAG_HTTP2;
+    InternetSetOptionW(inet, INTERNET_OPTION_ENABLE_HTTP_PROTOCOL, &dwOption, sizeof(dwOption));
+
+    // Never allow local caching, always contact the server for both
+    // appcast feeds and downloads. This is useful in case of
+    // misconfigured servers.
+    DWORD dwFlags = INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_RELOAD;
+    // For some requests (appcast feeds), don't even allow proxies to cache,
+    // as we need the most up-to-date information.
+    if ( flags & Download_BypassProxies )
+        dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE;
     if ( urlc.nScheme == INTERNET_SCHEME_HTTPS )
         dwFlags |= INTERNET_FLAG_SECURE;
 
-    DownloadCallbackContext context = { 0 };
-    InetHandle conn = InternetOpenUrlA
-                      (
-                          inet,
-                          url.c_str(),
-                          NULL, // lpszHeaders
-                          -1,   // dwHeadersLength
-                          dwFlags,
-                          (DWORD_PTR)&context  // dwContext
-                      );
-    context.conn = &conn;
-    if (!conn)
+    InetHandle conn;
+
+    DownloadCallbackContext context(&conn);
+    inet.SetStatusCallback(&DownloadInternetStatusCallback);
+
+    HINTERNET conn_raw = InternetOpenUrlA
+                         (
+                             inet,
+                             url.c_str(),
+                             NULL, // lpszHeaders
+                             -1,   // dwHeadersLength
+                             dwFlags,
+                             (DWORD_PTR)&context  // dwContext
+                         );
+    // InternetOpenUrl() may return NULL handle and then fill it in asynchronously from 
+    // DownloadInternetStatusCallback. We must make sure we don't overwrite the handle
+    // in that case, or throw an error.
+    if (conn_raw)
+    {
+        conn = conn_raw;
+    }
+    else
     {
         if (GetLastError() != ERROR_IO_PENDING)
             throw Win32Exception();
@@ -297,7 +339,12 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
         }
 
         if (ibuf.dwBufferLength == 0)
-            break; // all of the file was downloaded
+        {
+            if (context.lastError != ERROR_SUCCESS)
+                throw Win32Exception();
+            else
+                break; // all of the file was downloaded
+        }
 
         sink->Add(ibuf.lpvBuffer, ibuf.dwBufferLength);
     }

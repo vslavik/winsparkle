@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2015-01-14 18:51+0100\n"
-"PO-Revision-Date: 2015-02-06 06:42-0500\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2018-02-24 11:57-0500\n"
 "Last-Translator: vslavik <vaclav@slavik.io>\n"
 "Language-Team: Bulgarian\n"
-"Language: bg_BG\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,116 +16,121 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
+"X-Crowdin-Language: bg\n"
 "X-Crowdin-File: winsparkle.pot\n"
 
-#: src/ui.cpp:259 src/ui.cpp:585
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
-msgstr "Актуализиране"
+msgstr "Обновяване"
 
-#: src/ui.cpp:436
+#: src/ui.cpp:513
 msgid "Release notes:"
 msgstr "Бележки по изданието:"
 
-#: src/ui.cpp:462
+#: src/ui.cpp:539
 msgid "Skip this version"
-msgstr "Прескачане на тази версия"
+msgstr "Пропускане на изданието"
 
-#: src/ui.cpp:468
+#: src/ui.cpp:545
 msgid "Remind me later"
-msgstr "Напомняне по-късно"
+msgstr "По-късно"
 
-#: src/ui.cpp:473 src/ui.cpp:486
+#: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
 msgstr "Инсталиране"
 
-#: src/ui.cpp:584
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s не може да бъде рестартиран."
 
-#: src/ui.cpp:587
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Уверете се, че нямате незапазени документи и опитайте отново."
 
-#: src/ui.cpp:594
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "Пускане на инсталационната програма"
 
-#: src/ui.cpp:599
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
-msgstr "Неуспешно пускане на инсталационната програма."
+msgstr "Отварянето на инсталатора е неуспешно."
 
-#: src/ui.cpp:621
+#: src/ui.cpp:732
 msgid "Checking for updates..."
-msgstr "Проверка за актуализация"
+msgstr "Проверяване за обновяване…"
 
-#: src/ui.cpp:623 src/ui.cpp:685 src/ui.cpp:765
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
 msgstr "Отказ"
 
-#: src/ui.cpp:641
+#: src/ui.cpp:760
 msgid "You're up to date!"
 msgstr "Програмата е актуална!"
 
-#: src/ui.cpp:648
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s е последната налична версия."
+msgstr "%s %s е последното налично издание."
 
-#: src/ui.cpp:661
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "Затваряне"
 
-#: src/ui.cpp:680
+#: src/ui.cpp:801
 msgid "Update Error!"
-msgstr "Грешка при актуализиране!"
+msgstr "Грешка при обновяване!"
 
-#: src/ui.cpp:682
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Грешка при получаване на данните за актуализация. Имате ли интернет връзка? Моля, опитайте отново."
+msgstr "Грешка при получаване на данните на обновяването. Имате ли връзка с интернет? Моля, опитайте отново."
 
-#: src/ui.cpp:723
+#: src/ui.cpp:810
+msgid "The update is improperly signed."
+msgstr ""
+
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Налична е нова версия на %s!"
+msgstr "Налично е ново издание на %s!"
 
-#: src/ui.cpp:726
+#: src/ui.cpp:864
 msgid "Get update"
-msgstr "Актуализиране"
+msgstr "Обновяване"
 
-#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:732
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s версия %s е налична (вашата е %s). Искате ли да я изтеглите сега?"
+msgstr "Налично е издание %2$s на %1$s (инсталирано е %3$s). Желаете ли да бъде изтеглено сега?"
 
-#: src/ui.cpp:763
+#: src/ui.cpp:901
 msgid "Downloading update..."
-msgstr "Изтегляне на актуализацията"
+msgstr "Изтегляне на обновяването"
 
-#: src/ui.cpp:791
+#. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%s от %s"
 
-#: src/ui.cpp:820
+#: src/ui.cpp:966
 msgid "Ready to install."
-msgstr "Готови за актуализиране."
+msgstr "Готови за обновяване."
 
-#: src/ui.cpp:960
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
-msgstr "Check for updates automatically?"
+msgstr "Автоматична проверка за обновяване?"
 
-#: src/ui.cpp:970
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "%s автоматично ли да прави проверка за актуализация? Винаги може ръчно да направите проверка от менюто."
+msgstr "Проверката за обновяване на %s автоматично ли да бъде извършвана? Винаги ръчно може да направите проверка от менюто."
 
-#: src/ui.cpp:984
+#: src/ui.cpp:1135
 msgid "Check automatically"
 msgstr "Автоматична проверка"
 
-#: src/ui.cpp:989
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "Без проверка"
 

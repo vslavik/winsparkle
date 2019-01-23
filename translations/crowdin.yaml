@@ -1,41 +1,51 @@
-project_identifier: winsparkle
-base_url: http://api.crowdin.net
-base_path: .
-preserve_hierarchy: false
+"project_identifier" : "winsparkle"
+"base_path" : "."
+"preserve_hierarchy" : false
 
-files:
-  -
-    source: /winsparkle.pot
-    translation: /%locale_with_underscore%.po
-    languages_mapping:
-      locale_with_underscore:
-        ar: ar
-        bg: bg
-        bs: bs
-        co: co
-        cs: cs
-        da: da
-        de: de
-        el: el
-        es-ES: es
-        eu: eu
-        fr: fr
-        he: he
-        hy-AM: hy
-        hr: hr
-        hu: hu
-        id: id
-        it: it
-        ja: ja
-        ko: ko
-        nb: nb
-        nl: nl
-        pl: pl
-        ru: ru
-        sk: sk
-        sr: sr
-        sv-SE: sv
-        tr: tr
-        uk: uk
-        zh-CN: zh_CN
-        zh-TW: zh_TW
+"files" : [
+  {
+    "source" : "/winsparkle.pot",
+    "translation" : "/%locale_with_underscore%.po",
+    "languages_mapping" : {
+      "locale_with_underscore" : {
+        "af": "af",
+        "ar": "ar",
+        "be": "be",
+        "bg": "bg",
+        "bs": "bs",
+        "co": "co",
+        "cs": "cs",
+        "da": "da",
+        "de": "de",
+        "el": "el",
+        "es-ES": "es",
+        "et": "et",
+        "eu": "eu",
+        "fr": "fr",
+        "ga-IE": "ga",
+        "he": "he",
+        "hy-AM": "hy",
+        "hr": "hr",
+        "hu": "hu",
+        "id": "id",
+        "is": "is",
+        "it": "it",
+        "ja": "ja",
+        "ko": "ko",
+        "kk": "kk",
+        "nb": "nb",
+        "nl": "nl",
+        "pl": "pl",
+        "ru": "ru",
+        "sk": "sk",
+        "sr": "sr",
+        "sv-SE": "sv",
+        "th": "th",
+        "tr": "tr",
+        "uk": "uk",
+        "zh-CN": "zh_CN",
+        "zh-TW": "zh_TW"
+      }
+    }
+  }
+]

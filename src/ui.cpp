@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2016 Vaclav Slavik
+ *  Copyright (C) 2009-2019 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -156,6 +156,7 @@ struct EventPayload
     size_t       sizeDownloaded, sizeTotal;
     std::wstring updateFile;
     bool         installAutomatically;
+    ErrorCode    error;
 };
 
 
@@ -169,7 +170,7 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
 {
     EnumProcessWindowsData& data = *reinterpret_cast<EnumProcessWindowsData*>(lParam);
 
-    if (!IsWindowVisible(handle))
+    if (!IsWindowVisible(handle) || IsIconic(handle))
         return TRUE;
 
     DWORD process_id = 0;
@@ -182,6 +183,9 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
 
     RECT rwin;
     GetWindowRect(handle, &rwin);
+    if (MonitorFromRect(&rwin, MONITOR_DEFAULTTONULL) == NULL)
+        return TRUE; // window is offscreen 
+
     wxRect r(rwin.left, rwin.top, rwin.right - rwin.left, rwin.bottom - rwin.top);
     if (r.width * r.height > data.biggest.width * data.biggest.height)
         data.biggest = r;
@@ -419,7 +423,7 @@ public:
     // change state into "no updates found"
     void StateNoUpdateFound(bool installAutomatically);
     // change state into "update error"
-    void StateUpdateError();
+    void StateUpdateError(ErrorCode err);
     // change state into "a new version is available"
     void StateUpdateAvailable(const Appcast& info, bool installAutomatically);
     // change state into "downloading update"
@@ -788,7 +792,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 }
 
 
-void UpdateDialog::StateUpdateError()
+void UpdateDialog::StateUpdateError(ErrorCode err)
 {
     m_errorOccurred = true;
 
@@ -796,7 +800,16 @@ void UpdateDialog::StateUpdateError()
 
     m_heading->SetLabel(_("Update Error!"));
 
-    wxString msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+    wxString msg;
+    switch (err)
+    {
+        case Err_Generic:
+            msg = _("An error occurred in retrieving update information; are you connected to the internet? Please try again later.");
+            break;
+        case Err_BadSignature:
+            msg = _("The update is improperly signed.");
+            break;
+    }
     SetMessage(msg);
 
     m_closeButton->SetLabel(_("Cancel"));
@@ -999,6 +1012,20 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         m_webBrowser = browser;
 
         new wxActiveXContainer(m_browserParent, IID_IWebBrowser2, browser);
+
+        // Poke the browser to initialize it. This is needed when using
+        // info.Description and does no harm with ReleaseNotesURL. To
+        // complicate things, it must be done exactly once, which is why it's
+        // here and not below.
+        // See https://github.com/vslavik/winsparkle/issues/155
+        m_webBrowser->Navigate
+        (
+            wxBasicString("about:blank"),
+            NULL,  // Flags
+            NULL,  // TargetFrameName
+            NULL,  // PostData
+            NULL   // Headers
+        );
     }
 
     if( !info.ReleaseNotesURL.empty() )
@@ -1014,15 +1041,6 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
     }
     else if ( !info.Description.empty() )
     {
-        m_webBrowser->Navigate
-                      (
-                          wxBasicString("about:blank"),
-                          NULL,  // Flags
-                          NULL,  // TargetFrameName
-                          NULL,  // PostData
-                          NULL   // Headers
-                      );
-
         HRESULT hr = E_FAIL;
         IHTMLDocument2 *doc;
         hr = m_webBrowser->get_Document((IDispatch **)&doc);
@@ -1058,7 +1076,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
                 VARIANT *param;
                 SafeArrayAccessData(psaStrings, (LPVOID*) &param);
                 param->vt = VT_BSTR;
-                param->bstrVal = wxBasicString(wxString::FromUTF8(info.Description.c_str()));
+                param->bstrVal = wxBasicString(wxString::FromUTF8(info.Description.c_str())).Detach();
                 SafeArrayUnaccessData(psaStrings);
 
                 doc->write(psaStrings);
@@ -1071,7 +1089,7 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         }
     }
 
-    SetWindowStyleFlag(wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+    SetWindowStyleFlag(GetWindowStyleFlag() | wxRESIZE_BORDER);
 }
 
 
@@ -1337,10 +1355,13 @@ void App::OnNoUpdateFound(wxThreadEvent& event)
 }
 
 
-void App::OnUpdateError(wxThreadEvent&)
+void App::OnUpdateError(wxThreadEvent& event)
 {
     if ( m_win )
-        m_win->StateUpdateError();
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->StateUpdateError(payload.error);
+    }
 }
 
 void App::OnDownloadProgress(wxThreadEvent& event)
@@ -1382,7 +1403,8 @@ void App::OnAskForPermission(wxThreadEvent& event)
 
     if ( shouldCheck )
     {
-        UpdateChecker *check = new UpdateChecker();
+        // same as in win_sparkle_init()
+        UpdateChecker *check = new PeriodicUpdateChecker();
         check->Start();
     }
 }
@@ -1457,7 +1479,11 @@ void UI::Run()
     // HINSTANCE of this DLL, not of the main .exe.
 
     if ( !ms_hInstance )
-        return; // DllMain() not called? -- FIXME: throw
+    {
+        // If DllMain() was not called, assume we're statically linked
+        // and use the hInstance of the containing program.
+        ms_hInstance = GetModuleHandle(NULL);
+    }
 
     // IMPLEMENT_WXWIN_MAIN does this as the first thing
     wxDISABLE_DEBUG_SUPPORT();
@@ -1473,7 +1499,9 @@ void UI::Run()
     SignalReady();
 
     // Run the app:
+#if wxCHECK_VERSION(3, 0, 3) && !wxCHECK_VERSION(3, 1, 0)
     wxMSWDisableSettingHighDPIAware();
+#endif
     wxEntry(ms_hInstance);
 }
 
@@ -1543,14 +1571,16 @@ void UI::NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &a
 
 
 /*static*/
-void UI::NotifyUpdateError()
+void UI::NotifyUpdateError(ErrorCode err)
 {
     UIThreadAccess uit;
 
     if ( !uit.IsRunning() )
         return;
 
-    uit.App().SendMsg(MSG_UPDATE_ERROR);
+    EventPayload payload;
+    payload.error = err;
+    uit.App().SendMsg(MSG_UPDATE_ERROR, &payload);
 }
 
 
