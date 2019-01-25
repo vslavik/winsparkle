@@ -78,7 +78,8 @@ struct ContextData
     ContextData(XML_Parser& p)
         : parser(p),
         in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0),
-        in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0)
+        in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0),
+        skip_el(false)
     {}
 
     // the parser we're using
@@ -89,6 +90,9 @@ struct ContextData
 
     // is inside <sparkle:version> or <sparkle:shortVersionString> node?
     int in_version, in_shortversion, in_dsasignature, in_min_os_version;
+
+    // to skip unsuitable node
+    bool skip_el;
 
     // parsed <item>s
     std::vector<Appcast> items;
@@ -132,23 +136,29 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     {
         if ( strcmp(name, NODE_RELNOTES) == 0 )
         {
-            if ( attrs[0] )
+            if ( *attrs != nullptr )
             {
-                const char *name = attrs[0];
-                const char *value = attrs[1];
-
-                if ( strcmp(name, NS_XML_NAME("lang")) == 0 &&
-                        strcmp(value, Settings::GetLanguage().lang.c_str()) == 0 )
+                for (int i = 0; attrs[i]; i += 2)
                 {
-                    ctxt.in_relnotes++;
+                    const char * name = attrs[i];
+                    const char * value = attrs[i + 1];
+
+                    if (strcmp(name, NS_XML_NAME("lang")) == 0)
+                    {
+                        if (strcmp(value, Settings::GetLanguage().lang.c_str()) == 0)
+                            ctxt.items.back().ReleaseNotesURL.clear();
+                        else ctxt.skip_el = true;
+
+                        break;
+                    }
                 }
             }
-            else
+            else if (!ctxt.items.back().ReleaseNotesURL.empty())
             {
-                const size_t size = ctxt.items.size();
-                if ( !ctxt.items[size-1].ReleaseNotesURL.size() )
-                    ctxt.in_relnotes++;
+                ctxt.skip_el = true;
             }
+
+            ctxt.in_relnotes++;
         }
         else if ( strcmp(name, NODE_TITLE) == 0 )
         {
@@ -238,7 +248,8 @@ void XMLCALL OnEndElement(void *data, const char *name)
     {
         if (strcmp(name, NODE_RELNOTES) == 0)
         {
-            ctxt.in_relnotes && ctxt.in_relnotes--;
+            ctxt.in_relnotes--;
+            ctxt.skip_el = false;
         }
         else if (strcmp(name, NODE_TITLE) == 0)
         {
@@ -291,7 +302,8 @@ void XMLCALL OnText(void *data, const char *s, int len)
     const size_t size = ctxt.items.size();
 
     if ( ctxt.in_relnotes )
-        ctxt.items[size-1].ReleaseNotesURL.assign(s, len);
+        if ( !ctxt.skip_el )
+            ctxt.items[size - 1].ReleaseNotesURL.append(s, len);
     else if ( ctxt.in_title )
         ctxt.items[size-1].Title.append(s, len);
     else if ( ctxt.in_description )
