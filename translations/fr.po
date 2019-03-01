@@ -87,7 +87,7 @@ msgstr "Une erreur est survenue lors de la récupération des données de mise �
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "La mise à jour n'est pas correctement signée."
 
 #: src/ui.cpp:861
 #, c-format
