@@ -112,7 +112,7 @@ private:
     It's a base class; derived class must implement at least Run().
 
     Create the thread on heap, then call Start() on it. If the thread is joinable
-    (see IsJoinable()), then you must call JoinAndDelete() on it to destroy it.
+    (see IsJoinable()), then you must call TerminateAndJoin() on it to destroy it.
     Otherwise, it self-destructs.
  */
 class Thread
