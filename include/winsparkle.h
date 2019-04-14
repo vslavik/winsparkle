@@ -229,7 +229,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *bu
 
     @see win_sparkle_clear_http_headers()
 */
-WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const char *name, const char *value);
+WIN_SPARKLE_API void __cdecl win_sparkle_set_http_header(const char *name, const char *value);
 
 /**
     Clears all custom HTTP headers previously added using
@@ -237,7 +237,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const char *name, const
 
     @since 0.7
 
-    @see win_sparkle_add_http_header()
+    @see win_sparkle_set_http_header()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_clear_http_headers();
 

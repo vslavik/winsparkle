@@ -174,11 +174,11 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
     CATCH_ALL_EXCEPTIONS
 }
 
-WIN_SPARKLE_API void __cdecl win_sparkle_add_http_header(const char *name, const char *value)
+WIN_SPARKLE_API void __cdecl win_sparkle_set_http_header(const char *name, const char *value)
 {
     try
     {
-        Settings::AddHttpHeader(name, value);
+        Settings::SetHttpHeader(name, value);
     }
     CATCH_ALL_EXCEPTIONS
 }

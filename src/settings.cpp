@@ -43,7 +43,7 @@ std::wstring Settings::ms_appName;
 std::wstring Settings::ms_appVersion;
 std::wstring Settings::ms_appBuildVersion;
 std::string  Settings::ms_DSAPubKey;
-std::string  Settings::ms_httpHeaders;
+std::map<std::string, std::string> Settings::ms_httpHeaders;
 
 
 /*--------------------------------------------------------------------------*
