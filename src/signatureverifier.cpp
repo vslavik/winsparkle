@@ -120,7 +120,7 @@ public:
 
     void hashData(const void *buffer, size_t buffer_len)
     {
-        if (!CryptHashData(handle, (CONST BYTE  *)buffer, buffer_len, 0))
+        if (!CryptHashData(handle, (CONST BYTE  *)buffer, (DWORD)buffer_len, 0))
             throw Win32Exception("Failed to hash data");
     }
 
@@ -191,7 +191,7 @@ public:
 
         DSAPub pubKey(Settings::GetDSAPubKeyPem());
 
-        const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), signature.size(), pubKey);
+        const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size(), pubKey);
 
         if (code == -1) // OpenSSL error
             throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
@@ -268,10 +268,10 @@ std::string Base64ToBin(const std::string &base64)
 
     bool ok = false;
 
-    if (CryptStringToBinaryA(&base64[0], base64.size(), CRYPT_STRING_BASE64, NULL, &nDestinationSize, NULL, NULL))
+    if (CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, NULL, &nDestinationSize, NULL, NULL))
     {
         bin.resize(nDestinationSize);
-        if (CryptStringToBinaryA(&base64[0], base64.size(), CRYPT_STRING_BASE64, (BYTE *)&bin[0], &nDestinationSize, NULL, NULL))
+        if (CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, (BYTE *)&bin[0], &nDestinationSize, NULL, NULL))
         {
             ok = true;
         }
