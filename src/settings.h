@@ -29,6 +29,7 @@
 #include "threads.h"
 #include "utils.h"
 
+#include <map>
 #include <string>
 #include <sstream>
 
@@ -196,6 +197,30 @@ public:
         ms_appVersion = version;
     }
 
+    /// Add a custom HTT header to requests
+    static void SetHttpHeader(const char *name, const char *value)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_httpHeaders[name] = value;
+    }
+
+    /// Get a string containing all custom HTTP headers
+    static std::string GetHttpHeadersString()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        std::string out;
+        for (auto i = ms_httpHeaders.begin(); i != ms_httpHeaders.end(); ++i)
+            out += i->first + ": " + i->second + "\r\n";
+        return out;
+    }
+
+    /// Clear previously set HTTP headers
+    static void ClearHttpHeaders()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_httpHeaders.clear();
+    }
+
     /// Set application's build version number
     static void SetAppBuildVersion(const wchar_t *version)
     {
@@ -323,6 +348,7 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
+    static std::map<std::string, std::string> ms_httpHeaders;
 };
 
 } // namespace winsparkle
