@@ -168,6 +168,16 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
     ShowWindow(g_hwndMain, nCmdShow);
 
+    /* 
+       Configure WinSparkle using win_sparkle_set_* functions *before*
+       calling win_sparkle_init(). This is optional and the following example
+       of doing that is just that, an example.
+
+       See e.g. https://github.com/vslavik/poedit/blob/master/src/edapp.cpp
+       for another, real-life example of use.
+    */
+    win_sparkle_set_http_header("X-Product-License", "Pro");
+
     /* Initialize WinSparkle as soon as the app itself is initialized, right
        before entering the event loop. This also checks for updates and
        shows update UI if there any. */
