@@ -31,7 +31,7 @@
  *--------------------------------------------------------------------------*/
 
 #define WIN_SPARKLE_VERSION_MAJOR   0
-#define WIN_SPARKLE_VERSION_MINOR   6
+#define WIN_SPARKLE_VERSION_MINOR   7
 #define WIN_SPARKLE_VERSION_MICRO   0
 
 /**
