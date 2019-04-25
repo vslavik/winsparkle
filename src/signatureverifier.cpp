@@ -203,15 +203,15 @@ public:
 private:
     class BIOWrap
     {
-        BIO* bio = NULL;
+        BIO* bio;
 
         BIOWrap(const BIOWrap &);
         BIOWrap &operator=(const BIOWrap &);
 
     public:
         BIOWrap(const std::string &mem_buf)
+            : bio(BIO_new_mem_buf(mem_buf.c_str(), int(mem_buf.size())))
         {
-            bio = BIO_new_mem_buf(mem_buf.c_str(), int(mem_buf.size()));
             if (!bio)
                 throw std::invalid_argument("Cannot set PEM key mem buffer");
         }
@@ -231,13 +231,14 @@ private:
 public:
     class DSAPub
     {
-        DSA *dsa = NULL;
+        DSA *dsa;
 
         DSAPub(const DSAPub &);
         DSAPub &operator=(const DSAPub &);
 
     public:
         DSAPub(const std::string &pem_key)
+            : dsa(NULL)
         {
             BIOWrap bio(pem_key);
             if (!PEM_read_bio_DSA_PUBKEY(bio, &dsa, NULL, NULL))
