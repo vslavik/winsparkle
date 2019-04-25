@@ -203,7 +203,7 @@ public:
 private:
     class BIOWrap
     {
-        BIO* bio = NULL;
+        BIO* bio;
 
         BIOWrap(const BIOWrap &);
         BIOWrap &operator=(const BIOWrap &);
@@ -231,7 +231,7 @@ private:
 public:
     class DSAPub
     {
-        DSA *dsa = NULL;
+        DSA *dsa;
 
         DSAPub(const DSAPub &);
         DSAPub &operator=(const DSAPub &);
