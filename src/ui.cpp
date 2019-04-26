@@ -622,14 +622,8 @@ void UpdateDialog::OnClose(wxCloseEvent&)
     // If the update was not downloaded and the appcast is empty and we're closing,
     // it means that we're about to restart or there was an error, and that the
     // window-close event wasn't initiated by the user.
-    if ( m_errorOccurred )
-    {
-        ApplicationController::NotifyUpdateError();
-    }
-    else if ( m_appcast.IsValid() && m_updateFile.IsEmpty() )
-    {
+    if ( m_appcast.IsValid() && m_updateFile.IsEmpty() && !m_errorOccurred )
         ApplicationController::NotifyUpdateCancelled();
-    }
 }
 
 
@@ -1525,12 +1519,12 @@ void UI::NotifyNoUpdates(bool installAutomatically)
     ApplicationController::NotifyUpdateNotFound();
 
     UIThreadAccess uit;
-    EventPayload payload;
-    payload.installAutomatically = installAutomatically;
 
     if ( !uit.IsRunning() )
         return;
 
+    EventPayload payload;
+    payload.installAutomatically = installAutomatically;
     uit.App().SendMsg(MSG_NO_UPDATE_FOUND, &payload);
 }
 
@@ -1573,6 +1567,8 @@ void UI::NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &a
 /*static*/
 void UI::NotifyUpdateError(ErrorCode err)
 {
+    ApplicationController::NotifyUpdateError();
+
     UIThreadAccess uit;
 
     if ( !uit.IsRunning() )
