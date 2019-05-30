@@ -26,6 +26,7 @@
 #ifndef _settings_h_
 #define _settings_h_
 
+#include "winsparkle.h"
 #include "threads.h"
 #include "utils.h"
 
@@ -242,6 +243,24 @@ public:
         ms_registryPath = path;
     }
 
+    /// Return WinSparkle's default configuration read, write and delete functions
+    static win_sparkle_config_methods_t GetDefaultConfigMethods()
+    {
+        win_sparkle_config_methods_t defaultConfigMethods;
+        defaultConfigMethods.config_read = &RegistryRead;
+        defaultConfigMethods.config_write = &RegistryWrite;
+        defaultConfigMethods.config_delete = &RegistryDelete;
+        defaultConfigMethods.user_data = NULL;
+        return defaultConfigMethods;
+    }
+
+    /// Set custom configuration read, write and delete functions
+    static void SetConfigMethods(win_sparkle_config_methods_t *customConfigMethods)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_configMethods = customConfigMethods ? *customConfigMethods : GetDefaultConfigMethods();
+    }
+
     /// Set PEM data and verify in contains valid DSA public key
     static void SetDSAPubKeyPem(const std::string &pem);
     //@}
@@ -336,6 +355,10 @@ private:
     static void DoWriteConfigValue(const char *name, const wchar_t *value);
     static std::wstring DoReadConfigValue(const char *name);
 
+    static int __cdecl RegistryRead(const char *name, wchar_t *buf, size_t len, void *);
+    static void __cdecl RegistryWrite(const char *name, const wchar_t *value, void *);
+    static void __cdecl RegistryDelete(const char *name, void *);
+
 private:
     // guards the variables below:
     static CriticalSection ms_csVars;
@@ -349,6 +372,7 @@ private:
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
     static std::map<std::string, std::string> ms_httpHeaders;
+    static win_sparkle_config_methods_t ms_configMethods;
 };
 
 } // namespace winsparkle

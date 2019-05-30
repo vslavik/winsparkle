@@ -45,6 +45,7 @@ std::wstring Settings::ms_appBuildVersion;
 std::string  Settings::ms_DSAPubKey;
 std::map<std::string, std::string> Settings::ms_httpHeaders;
 
+win_sparkle_config_methods_t Settings::ms_configMethods = GetDefaultConfigMethods();
 
 /*--------------------------------------------------------------------------*
                              resources access
@@ -179,10 +180,7 @@ std::string Settings::GetDefaultRegistryPath()
     return s;
 }
 
-namespace
-{
-
-void RegistryWrite(const char *name, const wchar_t *value)
+void __cdecl Settings::RegistryWrite(const char *name, const wchar_t *value, void *)
 {
     const std::string subkey = Settings::GetRegistryPath();
 
@@ -199,7 +197,7 @@ void RegistryWrite(const char *name, const wchar_t *value)
                       &key,
                       NULL
                   );
-    if ( result != ERROR_SUCCESS )
+    if (result != ERROR_SUCCESS)
         throw Win32Exception("Cannot write settings to registry");
 
     result = RegSetValueEx
@@ -214,12 +212,11 @@ void RegistryWrite(const char *name, const wchar_t *value)
 
     RegCloseKey(key);
 
-    if ( result != ERROR_SUCCESS )
+    if (result != ERROR_SUCCESS)
         throw Win32Exception("Cannot write settings to registry");
 }
 
-
-void RegistryDelete(const char *name)
+void __cdecl Settings::RegistryDelete(const char *name, void *)
 {
     const std::string subkey = Settings::GetRegistryPath();
 
@@ -232,19 +229,19 @@ void RegistryDelete(const char *name)
                       KEY_SET_VALUE,
                       &key
                   );
-    if ( result != ERROR_SUCCESS )
+    if (result != ERROR_SUCCESS)
         throw Win32Exception("Cannot delete settings from registry");
 
     result = RegDeleteValueA(key, name);
 
     RegCloseKey(key);
 
-    if ( result != ERROR_SUCCESS )
+    if (result != ERROR_SUCCESS)
         throw Win32Exception("Cannot delete settings from registry");
 }
 
 
-int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
+static int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
 {
     const std::string subkey = Settings::GetRegistryPath();
 
@@ -295,21 +292,24 @@ int DoRegistryRead(HKEY root, const char *name, wchar_t *buf, size_t len)
     return 1;
 }
 
-
-int RegistryRead(const char *name, wchar_t *buf, size_t len)
+int __cdecl Settings::RegistryRead(const char *name, wchar_t *buf, size_t len, void *)
 {
+    size_t bytes = len * sizeof(wchar_t);
     // Try reading from HKCU first. If that fails, look at HKLM too, in case
     // some settings have globally set values (either by the installer or the
     // administrator).
-    if ( DoRegistryRead(HKEY_CURRENT_USER, name, buf, len) )
+    if (DoRegistryRead(HKEY_CURRENT_USER, name, buf, bytes))
     {
         return 1;
     }
     else
     {
-        return DoRegistryRead(HKEY_LOCAL_MACHINE, name, buf, len);
+        return DoRegistryRead(HKEY_LOCAL_MACHINE, name, buf, bytes);
     }
 }
+
+namespace
+{
 
 // Critical section to guard DoWriteConfigValue/DoReadConfigValue.
 CriticalSection g_csConfigValues;
@@ -320,17 +320,18 @@ CriticalSection g_csConfigValues;
 void Settings::DoWriteConfigValue(const char *name, const wchar_t *value)
 {
     CriticalSectionLocker lock(g_csConfigValues);
-
-    RegistryWrite(name, value);
+    
+    ms_configMethods.config_write(name, value, ms_configMethods.user_data);
 }
-
 
 std::wstring Settings::DoReadConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    wchar_t buf[512];
-    if ( RegistryRead(name, buf, sizeof(buf)) )
+    static const int bufferLength = 512;
+    wchar_t buf[bufferLength];
+
+    if (ms_configMethods.config_read(name, buf, bufferLength, ms_configMethods.user_data))
         return buf;
     else
         return std::wstring();
@@ -340,7 +341,7 @@ void Settings::DeleteConfigValue(const char *name)
 {
     CriticalSectionLocker lock(g_csConfigValues);
 
-    RegistryDelete(name);
+    ms_configMethods.config_delete(name, ms_configMethods.user_data);
 }
 
 void Settings::SetDSAPubKeyPem(const std::string &pem)
