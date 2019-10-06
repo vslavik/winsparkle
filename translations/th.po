@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-04-22 05:07-0400\n"
-"Last-Translator: vslavik <vaclav@slavik.io>\n"
+"POT-Creation-Date: 2015-01-18 16:10+0100\n"
+"PO-Revision-Date: 2019-10-06 12:15\n"
+"Last-Translator: Václav Slavík (vslavik)\n"
 "Language-Team: Thai\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -17,120 +17,116 @@ msgstr ""
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Language: th\n"
-"X-Crowdin-File: winsparkle.pot\n"
+"X-Crowdin-File: /master/winsparkle.pot\n"
 
-#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
+#: src/ui.cpp:260 src/ui.cpp:586 src/ui.cpp:602
 msgid "Software Update"
-msgstr "การอัปเดตซอฟต์แวร์"
+msgstr "การอัพเดตซอฟต์แวร์"
 
-#: src/ui.cpp:513
+#: src/ui.cpp:437
 msgid "Release notes:"
-msgstr "บันทึกประจำเวอร์ชั่น"
+msgstr "บันทึกประจำเวอร์ชั่น:"
 
-#: src/ui.cpp:539
+#: src/ui.cpp:463
 msgid "Skip this version"
 msgstr "ข้ามเวอร์ชั่นนี้"
 
-#: src/ui.cpp:545
+#: src/ui.cpp:469
 msgid "Remind me later"
 msgstr "เตือนฉันในภายหลัง"
 
-#: src/ui.cpp:550 src/ui.cpp:563
+#: src/ui.cpp:474 src/ui.cpp:487
 msgid "Install update"
-msgstr "ติดตั้งการอัปเดต"
+msgstr "ติดตั้งการอัพเดต"
 
-#: src/ui.cpp:673
+#: src/ui.cpp:585
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "ไม่สามารถเริ่มต้น %s ใหม่ได้"
 
-#: src/ui.cpp:676
+#: src/ui.cpp:588
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "ตรวจสอบให้แน่ใจว่าคุณไม่มีเอกสารใดๆ ที่ไม่ได้บันทึกไว้ และลองอีกครั้ง"
 
-#: src/ui.cpp:683
+#: src/ui.cpp:595
 msgid "Launching the installer..."
 msgstr "กำลังเรียกใช้โปรแกรมติดตั้ง..."
 
-#: src/ui.cpp:689
+#: src/ui.cpp:601
 msgid "Failed to launch the installer."
 msgstr "การเรียกใช้โปรแกรมติดตั้งล้มเหลว"
 
-#: src/ui.cpp:732
+#: src/ui.cpp:625
 msgid "Checking for updates..."
-msgstr "กำลังตรวจสอบการอัปเดต..."
+msgstr "กำลังตรวจสอบการอัพเดต..."
 
-#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
+#: src/ui.cpp:627 src/ui.cpp:689 src/ui.cpp:769
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: src/ui.cpp:760
+#: src/ui.cpp:645
 msgid "You're up to date!"
-msgstr "คุณอัปเดตเป็นเวอร์ชั่นล่าสุดแล้ว"
+msgstr "ซอฟต์แวร์ของคุณเป็นเวอร์ชั่นล่าสุดแล้ว!"
 
-#: src/ui.cpp:767
+#: src/ui.cpp:652
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s คือเวอร์ชั่นล่าสุดที่มีให้ใช้ในขณะนี้"
 
-#: src/ui.cpp:780
+#: src/ui.cpp:665
 msgid "Close"
 msgstr "ปิด"
 
-#: src/ui.cpp:801
+#: src/ui.cpp:684
 msgid "Update Error!"
-msgstr "เกิดข้อผิดพลาดในการอัปเดต"
+msgstr "เกิดข้อผิดพลาดในการอัพเดต!"
 
-#: src/ui.cpp:807
+#: src/ui.cpp:686
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "เกิดข้อผิดพลาดในการดึงข้อมูลการอัปเดต โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองอีกครั้ง"
+msgstr "เกิดข้อผิดพลาดในการดึงข้อมูลการอัพเดต โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองอีกครั้ง"
 
-#: src/ui.cpp:810
-msgid "The update is improperly signed."
-msgstr "การอัปเดตไม่ได้ถูกลงชื่ออย่างถูกต้อง"
-
-#: src/ui.cpp:861
+#: src/ui.cpp:727
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "%s มีเวอร์ชั่นใหม่พร้อมให้ใช้แล้ว"
+msgstr "%s มีเวอร์ชั่นใหม่พร้อมให้ดาวน์โหลดแล้ว"
 
-#: src/ui.cpp:864
+#: src/ui.cpp:730
 msgid "Get update"
-msgstr "ติดตั้งการอัปเดต"
+msgstr "ดาวน์โหลดการอัพเดต"
 
-#: src/ui.cpp:870
+#: src/ui.cpp:736
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s พร้อมให้ใช้แล้ว (คุณมี %s) คุณต้องการดาวน์โหลดเดี๋ยวนี้หรือไม่"
+msgstr "%s %s พร้อมให้ดาวน์โหลดแล้ว (คุณกำลังใช้เวอร์ชั่น %s) คุณต้องการดาวน์โหลดเดี๋ยวนี้หรือไม่?"
 
-#: src/ui.cpp:901
+#: src/ui.cpp:767
 msgid "Downloading update..."
-msgstr "กำลังดาวน์โหลดการอัปเดต..."
+msgstr "กำลังดาวน์โหลดการอัพเดต..."
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:929
+#: src/ui.cpp:795
 #, c-format
 msgid "%s of %s"
 msgstr "%s จาก %s"
 
-#: src/ui.cpp:966
+#: src/ui.cpp:824
 msgid "Ready to install."
 msgstr "พร้อมติดตั้งแล้ว"
 
-#: src/ui.cpp:1111
+#: src/ui.cpp:964
 msgid "Check for updates automatically?"
-msgstr "ตรวจหาการอัปเดตโดยอัตโนมัติหรือไม่"
+msgstr "ตรวจหาการอัพเดตโดยอัตโนมัติหรือไม่?"
 
-#: src/ui.cpp:1121
+#: src/ui.cpp:974
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "คุณต้องการตรวจหาการอัปเดตของ %s โดยอัตโนมัติหรือไม่ คุณสามารถตรวจหาการอัปเดตเองได้จากในเมนู"
+msgstr "คุณต้องการตรวจหาการอัพเดตของ %s โดยอัตโนมัติหรือไม่ คุณสามารถตรวจหาการอัพเดตด้วยตัวคุณเองได้จากในเมนู"
 
-#: src/ui.cpp:1135
+#: src/ui.cpp:988
 msgid "Check automatically"
 msgstr "ตรวจหาโดยอัตโนมัติ"
 
-#: src/ui.cpp:1140
+#: src/ui.cpp:993
 msgid "Don't check"
 msgstr "ไม่ต้องตรวจหา"
 
