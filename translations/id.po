@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-02-24 11:58-0500\n"
-"Last-Translator: vslavik <vaclav@slavik.io>\n"
+"POT-Creation-Date: 2015-01-18 16:10+0100\n"
+"PO-Revision-Date: 2019-10-06 12:14\n"
+"Last-Translator: Václav Slavík (vslavik)\n"
 "Language-Team: Indonesian\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -17,120 +17,116 @@ msgstr ""
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Language: id\n"
-"X-Crowdin-File: winsparkle.pot\n"
+"X-Crowdin-File: /master/winsparkle.pot\n"
 
-#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
+#: src/ui.cpp:260 src/ui.cpp:586 src/ui.cpp:602
 msgid "Software Update"
 msgstr "Pembaharuan Perangkat Lunak"
 
-#: src/ui.cpp:513
+#: src/ui.cpp:437
 msgid "Release notes:"
 msgstr "Catatan rilis:"
 
-#: src/ui.cpp:539
+#: src/ui.cpp:463
 msgid "Skip this version"
 msgstr "Lewati versi ini"
 
-#: src/ui.cpp:545
+#: src/ui.cpp:469
 msgid "Remind me later"
 msgstr "Ingatkan saya nanti"
 
-#: src/ui.cpp:550 src/ui.cpp:563
+#: src/ui.cpp:474 src/ui.cpp:487
 msgid "Install update"
 msgstr "Pasang Pembaharuan"
 
-#: src/ui.cpp:673
+#: src/ui.cpp:585
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s tak dapat dimulai ulang."
 
-#: src/ui.cpp:676
+#: src/ui.cpp:588
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Pastikan bahwa Anda tidak memiliki dokumen yang belum disimpan dan coba lagi."
 
-#: src/ui.cpp:683
+#: src/ui.cpp:595
 msgid "Launching the installer..."
 msgstr "Meluncurkan pemasang..."
 
-#: src/ui.cpp:689
+#: src/ui.cpp:601
 msgid "Failed to launch the installer."
 msgstr "Gagal meluncurkan pemasang."
 
-#: src/ui.cpp:732
+#: src/ui.cpp:625
 msgid "Checking for updates..."
 msgstr "Memeriksa pemutakhiran..."
 
-#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
+#: src/ui.cpp:627 src/ui.cpp:689 src/ui.cpp:769
 msgid "Cancel"
 msgstr "Batalkan"
 
-#: src/ui.cpp:760
+#: src/ui.cpp:645
 msgid "You're up to date!"
 msgstr "Anda mutakhir!"
 
-#: src/ui.cpp:767
+#: src/ui.cpp:652
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s saat ini adalah versi terbaru yang tersedia."
 
-#: src/ui.cpp:780
+#: src/ui.cpp:665
 msgid "Close"
 msgstr "Tutup"
 
-#: src/ui.cpp:801
+#: src/ui.cpp:684
 msgid "Update Error!"
 msgstr "Pembaharuan Eror!"
 
-#: src/ui.cpp:807
+#: src/ui.cpp:686
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
 msgstr "Terjadi galat dalam pengambilan informasi pemutakhiran; apakah Anda tersambung ke internet? Harap coba lagi nanti."
 
-#: src/ui.cpp:810
-msgid "The update is improperly signed."
-msgstr "Pemutakhiran ditandatangani tidak secara benar."
-
-#: src/ui.cpp:861
+#: src/ui.cpp:727
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "Tersedia versi baru %s!"
 
-#: src/ui.cpp:864
+#: src/ui.cpp:730
 msgid "Get update"
 msgstr "Dapatkan pembaharuan"
 
-#: src/ui.cpp:870
+#: src/ui.cpp:736
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
 msgstr "%s %s kini tersedia (Anda punya %s). Apakah Anda hendak mengunduhnya sekarang?"
 
-#: src/ui.cpp:901
+#: src/ui.cpp:767
 msgid "Downloading update..."
 msgstr "Sedang mengunduh pemutakhiran…"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:929
+#: src/ui.cpp:795
 #, c-format
 msgid "%s of %s"
 msgstr "%s dari %s"
 
-#: src/ui.cpp:966
+#: src/ui.cpp:824
 msgid "Ready to install."
 msgstr "Siap untuk memasang."
 
-#: src/ui.cpp:1111
+#: src/ui.cpp:964
 msgid "Check for updates automatically?"
 msgstr "Periksa pemutakhiran secara otomatis?"
 
-#: src/ui.cpp:1121
+#: src/ui.cpp:974
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
 msgstr "Mestikah %s secara otomatis memeriksa pemutakhiran? Anda selalu dapat memeriksa pemutakhiran secara manual dari menu."
 
-#: src/ui.cpp:1135
+#: src/ui.cpp:988
 msgid "Check automatically"
 msgstr "Periksa secara otomatis"
 
-#: src/ui.cpp:1140
+#: src/ui.cpp:993
 msgid "Don't check"
 msgstr "Jangan periksa"
 
