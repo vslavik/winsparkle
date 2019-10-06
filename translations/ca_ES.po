@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2018-02-24 11:57-0500\n"
-"Last-Translator: vslavik <vaclav@slavik.io>\n"
+"POT-Creation-Date: 2015-01-18 16:10+0100\n"
+"PO-Revision-Date: 2019-10-06 12:15\n"
+"Last-Translator: Václav Slavík (vslavik)\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -17,120 +17,116 @@ msgstr ""
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Language: ca\n"
-"X-Crowdin-File: winsparkle.pot\n"
+"X-Crowdin-File: /master/winsparkle.pot\n"
 
-#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
+#: src/ui.cpp:260 src/ui.cpp:586 src/ui.cpp:602
 msgid "Software Update"
-msgstr "Actualització del Programa"
+msgstr "Actualització de programari"
 
-#: src/ui.cpp:513
+#: src/ui.cpp:437
 msgid "Release notes:"
 msgstr "Notes de la versió:"
 
-#: src/ui.cpp:539
+#: src/ui.cpp:463
 msgid "Skip this version"
 msgstr "Omet aquesta versió"
 
-#: src/ui.cpp:545
+#: src/ui.cpp:469
 msgid "Remind me later"
 msgstr "Recorda-m’ho més tard"
 
-#: src/ui.cpp:550 src/ui.cpp:563
+#: src/ui.cpp:474 src/ui.cpp:487
 msgid "Install update"
-msgstr "Instal·la actualització"
+msgstr "Instal·la l’actualització"
 
-#: src/ui.cpp:673
+#: src/ui.cpp:585
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "No s’ha pogut reiniciar %s."
 
-#: src/ui.cpp:676
+#: src/ui.cpp:588
 msgid "Make sure that you don't have any unsaved documents and try again."
 msgstr "Assegureu-vos que no teniu cap document sense desar i torneu a provar-ho."
 
-#: src/ui.cpp:683
+#: src/ui.cpp:595
 msgid "Launching the installer..."
 msgstr "S’està obrint l’instal·lador…"
 
-#: src/ui.cpp:689
+#: src/ui.cpp:601
 msgid "Failed to launch the installer."
 msgstr "No s’ha pogut obrir l’instal·lador."
 
-#: src/ui.cpp:732
+#: src/ui.cpp:625
 msgid "Checking for updates..."
-msgstr "Comprovant actualitzacions..."
+msgstr "S’està comprovant si hi ha actualitzacions…"
 
-#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
+#: src/ui.cpp:627 src/ui.cpp:689 src/ui.cpp:769
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: src/ui.cpp:760
+#: src/ui.cpp:645
 msgid "You're up to date!"
-msgstr "Estàs actualitzat!"
+msgstr "Ja teniu la versió més recent."
 
-#: src/ui.cpp:767
+#: src/ui.cpp:652
 #, c-format
 msgid "%s %s is currently the newest version available."
 msgstr "%s %s és la versió més nova disponible ara."
 
-#: src/ui.cpp:780
+#: src/ui.cpp:665
 msgid "Close"
-msgstr "Tancar"
+msgstr "Tanca"
 
-#: src/ui.cpp:801
+#: src/ui.cpp:684
 msgid "Update Error!"
 msgstr "Error d'actualització!"
 
-#: src/ui.cpp:807
+#: src/ui.cpp:686
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
 msgstr "No s’ha pogut recuperar la informació d’actualitzacions. Comproveu que la vostra connexió d’Internet estigui activa i proveu un altre cop més tard."
 
-#: src/ui.cpp:810
-msgid "The update is improperly signed."
-msgstr ""
-
-#: src/ui.cpp:861
+#: src/ui.cpp:727
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "Una nova versió de %s està disponible!"
 
-#: src/ui.cpp:864
+#: src/ui.cpp:730
 msgid "Get update"
 msgstr "Aconseguir actualització"
 
-#: src/ui.cpp:870
+#: src/ui.cpp:736
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
 msgstr "%s %s està disponible (teniu la versió %s). Voleu baixar-la ara?"
 
-#: src/ui.cpp:901
+#: src/ui.cpp:767
 msgid "Downloading update..."
 msgstr "S’està baixant l’actualització…"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:929
+#: src/ui.cpp:795
 #, c-format
 msgid "%s of %s"
 msgstr "%s de %s"
 
-#: src/ui.cpp:966
+#: src/ui.cpp:824
 msgid "Ready to install."
-msgstr "Preparat per instal·lar."
+msgstr "La instal·lació és a punt."
 
-#: src/ui.cpp:1111
+#: src/ui.cpp:964
 msgid "Check for updates automatically?"
-msgstr "Buscar actualitzacions automàticament?"
+msgstr "Voleu comprovar si hi ha actualitzacions automàticament?"
 
-#: src/ui.cpp:1121
+#: src/ui.cpp:974
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
 msgstr "Voleu que %s comprovi si hi ha actualitzacions automàticament? Sempre podreu fer-ho manualment des del menú."
 
-#: src/ui.cpp:1135
+#: src/ui.cpp:988
 msgid "Check automatically"
-msgstr "Comprovar automàticament"
+msgstr "Comprova automàticament"
 
-#: src/ui.cpp:1140
+#: src/ui.cpp:993
 msgid "Don't check"
-msgstr "No comprovar"
+msgstr "No comprovis res"
 
