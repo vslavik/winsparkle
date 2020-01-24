@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2019-10-06 12:25\n"
-"Last-Translator: Václav Slavík (vslavik)\n"
+"PO-Revision-Date: 2020-01-24 06:20\n"
+"Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Arabic\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: crowdin.com\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
@@ -87,7 +87,7 @@ msgstr "حصل خطأ في جلب معلومات التّحديث، أأنت م�
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "تم توقيع التحديث بشكل غير صحيح."
 
 #: src/ui.cpp:855
 #, c-format
