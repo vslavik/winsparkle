@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2019 Vaclav Slavik
+ *  Copyright (C) 2009-2020 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -66,7 +66,7 @@ BEGIN
             VALUE "FileVersion", VER_STR "\0"
             VALUE "InternalName", "WinSparkle\0"
             VALUE "OriginalFilename", "WinSparkle.dll\0"
-            VALUE "LegalCopyright", "Copyright (C) 2009-2019 Vaclav Slavik\0"
+            VALUE "LegalCopyright", "Copyright (C) 2009-2020 Vaclav Slavik\0"
             VALUE "ProductName", "WinSparkle\0"
             VALUE "ProductVersion", VER_STR "\0"
         END
