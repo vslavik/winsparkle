@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2019-10-06 12:25\n"
-"Last-Translator: Václav Slavík (vslavik)\n"
+"PO-Revision-Date: 2020-05-09 17:00\n"
+"Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Croatian\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: crowdin.com\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -21,11 +21,11 @@ msgstr ""
 
 #: src/ui.cpp:325 src/ui.cpp:668 src/ui.cpp:684
 msgid "Software Update"
-msgstr "Nadogradnja softvera"
+msgstr "Aktualiziranje softvera"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Napomene o izdanju:"
+msgstr "Napomene uz izdanje:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
@@ -42,7 +42,7 @@ msgstr "Instaliraj nadogradnju"
 #: src/ui.cpp:667
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s nije moguće ponovo pokrenuti."
+msgstr "Nije moguće ponovo pokrenuti %s."
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
@@ -58,7 +58,7 @@ msgstr "Pokretanje instalacije nije uspjelo."
 
 #: src/ui.cpp:726
 msgid "Checking for updates..."
-msgstr "Provjera nadogradnje …"
+msgstr "Traženje nadogradnji …"
 
 #: src/ui.cpp:728 src/ui.cpp:809 src/ui.cpp:897
 msgid "Cancel"
@@ -79,29 +79,29 @@ msgstr "Zatvori"
 
 #: src/ui.cpp:795
 msgid "Update Error!"
-msgstr "Pogreška pri ažuriranju!"
+msgstr "Greška pri aktualiziranju!"
 
 #: src/ui.cpp:801
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Pojavila se greška prilikom dohvaćanja informacija o nadogradnji. Jesi li spojen na internet? Pokušaj kasnije ponovo."
+msgstr "Pojavila se greška tijekom dohvaćanja podataka. Provjeri vezu s internetom i pokušaj ponovo."
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
-msgstr "Nadogradnja ima neispravnu signaturu."
+msgstr "Nadogradnja je neispravno potpisana."
 
 #: src/ui.cpp:855
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Dostupna je nova verzija za %s!"
+msgstr "Postoji nova verzija za %s!"
 
 #: src/ui.cpp:858
 msgid "Get update"
-msgstr "Preuzmi ažuriranje"
+msgstr "Preuzmi"
 
 #: src/ui.cpp:864
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s sada je dostupna (ti imaš %s). Želiš li je sada preuzeti?"
+msgstr "%s %s je najnovija verzija (ti imaš %s). Želiš li je preuzeti?"
 
 #: src/ui.cpp:895
 msgid "Downloading update..."
@@ -119,18 +119,18 @@ msgstr "Spremno za instaliranje."
 
 #: src/ui.cpp:1105
 msgid "Check for updates automatically?"
-msgstr "Automatska provjera nadogradnje?"
+msgstr "Automatski tražiti nadogradnje?"
 
 #: src/ui.cpp:1115
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Da li želiš, da %s automatski provjerava nadogradnje? Nadogradnje možeš i ručno provjeriti u izborniku."
+msgstr "Želiš li, da %s automatski traži nadogradnje? Nadogradnje možeš i ručno tražiti iz izbornika."
 
 #: src/ui.cpp:1129
 msgid "Check automatically"
-msgstr "Provjeri automatski"
+msgstr "Traži automatski"
 
 #: src/ui.cpp:1134
 msgid "Don't check"
-msgstr "Ne provjeravaj"
+msgstr "Ne traži"
 
