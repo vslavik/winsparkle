@@ -1,3 +1,62 @@
+
+/* Disable unused portions of OpenSSL.
+   Big part of this is configuration settings as used by BoringSSL. */
+
+#define OPENSSL_NO_X509
+#define OPENSSL_NO_AES
+#define OPENSSL_NO_RSA
+#define OPENSSL_NO_DH
+#define OPENSSL_NO_EC
+#define OPENSSL_NO_ECDH
+#define OPENSSL_NO_ECDSA
+#define OPENSSL_NO_TLSEXT
+#define OPENSSL_NO_DES
+
+#define OPENSSL_NO_ASYNC
+#define OPENSSL_NO_BF
+#define OPENSSL_NO_BLAKE2
+#define OPENSSL_NO_BUF_FREELISTS
+#define OPENSSL_NO_CAMELLIA
+#define OPENSSL_NO_CAPIENG
+#define OPENSSL_NO_CAST
+#define OPENSSL_NO_CMS
+#define OPENSSL_NO_COMP
+#define OPENSSL_NO_CT
+#define OPENSSL_NO_DANE
+#define OPENSSL_NO_DEPRECATED
+#define OPENSSL_NO_DGRAM
+#define OPENSSL_NO_DYNAMIC_ENGINE
+#define OPENSSL_NO_EC_NISTP_64_GCC_128
+#define OPENSSL_NO_EC2M
+#define OPENSSL_NO_EGD
+#define OPENSSL_NO_ENGINE
+#define OPENSSL_NO_GMP
+#define OPENSSL_NO_GOST
+#define OPENSSL_NO_HEARTBEATS
+#define OPENSSL_NO_HW
+#define OPENSSL_NO_IDEA
+#define OPENSSL_NO_JPAKE
+#define OPENSSL_NO_KRB5
+#define OPENSSL_NO_MD2
+#define OPENSSL_NO_MDC2
+#define OPENSSL_NO_OCB
+#define OPENSSL_NO_OCSP
+#define OPENSSL_NO_RC2
+#define OPENSSL_NO_RC5
+#define OPENSSL_NO_RFC3779
+#define OPENSSL_NO_RIPEMD
+#define OPENSSL_NO_RMD160
+#define OPENSSL_NO_SCTP
+#define OPENSSL_NO_SEED
+#define OPENSSL_NO_SRP
+#define OPENSSL_NO_SSL2
+#define OPENSSL_NO_SSL3
+#define OPENSSL_NO_SSL3_METHOD
+#define OPENSSL_NO_STATIC_ENGINE
+#define OPENSSL_NO_STORE
+#define OPENSSL_NO_WHIRLPOOL
+
+
 /* opensslconf.h */
 /* WARNING: Generated automatically from opensslconf.h.in by Configure. */
 
