@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2020-05-09 17:00\n"
+"PO-Revision-Date: 2020-06-03 11:40\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Kazakh\n"
 "Language: kk\n"
@@ -87,7 +87,7 @@ msgstr "Жаңарта ақпаратын алу кезінде қате оры�
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "Бұл жаңартудың цифрлық қолтаңбасы жарамсыз."
 
 #: src/ui.cpp:855
 #, c-format
