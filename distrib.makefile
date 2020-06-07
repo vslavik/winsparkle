@@ -11,7 +11,7 @@ VERSION := $(shell git describe | sed -e 's/^v//g')
 
 sources_base := WinSparkle-$(VERSION)-src
 binary_base  := WinSparkle-$(VERSION)
-sources_arch := $(sources_base).7z
+sources_arch := $(sources_base).zip
 binary_arch  := $(binary_base).zip
 binary_files := \
 	bin/sign_update.bat \
@@ -47,7 +47,7 @@ $(sources_arch):
 	@rm -rf $(sources_base) $@
 	git-archive-all --prefix=$(sources_base)/ $(sources_base).tar
 	tar xf $(sources_base).tar
-	7z a -m0=lzma -mx=9 $@  $(sources_base)
+	zip -9 -r  $@ $(sources_base)
 	@rm -rf $(sources_base) $(sources_base).tar
 
 
