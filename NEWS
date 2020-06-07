@@ -1,4 +1,12 @@
 
+Version 0.7.0
+-------------
+
+- Added support for providing custom HTTP headers when fetch appcast feeds.
+- Added support for overriding WinSparkle config functions.
+- Reduced size of WinSparkle.dll.
+
+
 Version 0.6.0
 -------------
 
