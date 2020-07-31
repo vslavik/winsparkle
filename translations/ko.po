@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2020-05-09 17:01\n"
+"PO-Revision-Date: 2020-07-31 12:40\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Korean\n"
 "Language: ko\n"
@@ -16,8 +16,10 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
+"X-Crowdin-Project-ID: 82678\n"
 "X-Crowdin-Language: ko\n"
 "X-Crowdin-File: /master/winsparkle.pot\n"
+"X-Crowdin-File-ID: 76\n"
 
 #: src/ui.cpp:325 src/ui.cpp:668 src/ui.cpp:684
 msgid "Software Update"
@@ -87,7 +89,7 @@ msgstr "업데이트 정보를 가져오는 동안 오류가 발생했습니다.
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "업데이트 서명이 올바르지 않습니다."
 
 #: src/ui.cpp:855
 #, c-format
