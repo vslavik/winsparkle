@@ -21,6 +21,17 @@ the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/incl
 The easiest way to use WinSparkle is to download the prebuilt `WinSparkle.dll`
 binary.
 
+ Bindings
+----------
+
+WinSparkle has a C API that makes it easy to use from many modern languages in addition to C/C++. In addition to that, several bindings for popular languages exist:
+
+* [How to use with C#/.NET](https://github.com/vslavik/winsparkle/wiki/Basic-Setup#managed-code--net--c-applications)
+* [Python](https://pypi.org/project/pywinsparkle/)
+* [Go](https://github.com/abemedia/go-winsparkle)
+* [Pascal](https://github.com/vslavik/winsparkle/tree/master/pascal) binding bundled with WinSparkle
+
+
  Building from sources
 -----------------------
 
