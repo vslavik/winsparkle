@@ -483,6 +483,22 @@ typedef void(__cdecl* win_sparkle_update_postponed_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_postponed_callback(win_sparkle_update_postponed_callback_t callback);
 
+/// Callback type for win_sparkle_update_dismissed_callback()
+typedef void(__cdecl* win_sparkle_update_dismissed_callback_t)();
+
+/**
+    Set callback to be called when the user dismisses
+    (closes) update dialog.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui() or similar as it
+    allows you to perform some action when the update
+    dialog is closed.
+
+    @see win_sparkle_check_update_with_ui()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_dismissed_callback(win_sparkle_update_dismissed_callback_t callback);
+
 //@}
 
 

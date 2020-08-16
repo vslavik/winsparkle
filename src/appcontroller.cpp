@@ -39,6 +39,7 @@ win_sparkle_did_not_find_update_callback_t ApplicationController::ms_cbDidNotFin
 win_sparkle_update_cancelled_callback_t    ApplicationController::ms_cbUpdateCancelled = NULL;
 win_sparkle_update_skipped_callback_t      ApplicationController::ms_cbUpdateSkipped = NULL;
 win_sparkle_update_postponed_callback_t    ApplicationController::ms_cbUpdatePostponed = NULL;
+win_sparkle_update_dismissed_callback_t    ApplicationController::ms_cbUpdateDismissed = NULL;
 
 bool ApplicationController::IsReadyToShutdown()
 {
@@ -136,6 +137,18 @@ void ApplicationController::NotifyUpdatePostponed()
         if (ms_cbUpdatePostponed)
         {
             (*ms_cbUpdatePostponed)();
+            return;
+        }
+    }
+}
+
+void ApplicationController::NotifyUpdateDismissed()
+{
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if (ms_cbUpdateDismissed)
+        {
+            (*ms_cbUpdateDismissed)();
             return;
         }
     }

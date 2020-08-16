@@ -600,6 +600,7 @@ void UpdateDialog::OnTimer(wxTimerEvent&)
 
 void UpdateDialog::OnCloseButton(wxCommandEvent&)
 {
+    ApplicationController::NotifyUpdateDismissed();
     Close();
 }
 
@@ -614,6 +615,7 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 
         UpdateDownloader::CleanLeftovers();
     }
+
 
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().

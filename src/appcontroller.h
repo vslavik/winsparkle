@@ -75,6 +75,9 @@ public:
     /// Notify that an update was skipped
     static void NotifyUpdatePostponed();
 
+    /// Notify that update dialog was dismissed (closed)
+    static void NotifyUpdateDismissed();
+
     //@}
 
     /**
@@ -138,6 +141,13 @@ public:
         ms_cbUpdatePostponed = callback;
     }
 
+    /// Set the win_sparkle_update_dismissed_callback_t function
+    static void SetUpdateDismissedCallback(win_sparkle_update_dismissed_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbUpdateDismissed = callback;
+    }
+
     //@}
 
 private:
@@ -154,6 +164,7 @@ private:
     static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;
     static win_sparkle_update_skipped_callback_t      ms_cbUpdateSkipped;
     static win_sparkle_update_postponed_callback_t    ms_cbUpdatePostponed;
+    static win_sparkle_update_dismissed_callback_t    ms_cbUpdateDismissed;
 };
 
 } // namespace winsparkle
