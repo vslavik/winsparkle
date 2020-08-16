@@ -452,6 +452,20 @@ typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
+/// Callback type for win_sparkle_update_skipped_callback()
+typedef void(__cdecl* win_sparkle_update_skipped_callback_t)();
+
+/**
+    Set callback to be called when the user skips a download.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action when the installation is skipped.
+
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_skipped_callback(win_sparkle_update_skipped_callback_t callback);
+
 //@}
 
 

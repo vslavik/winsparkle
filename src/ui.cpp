@@ -630,6 +630,7 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 void UpdateDialog::OnSkipVersion(wxCommandEvent&)
 {
     Settings::WriteConfigValue("SkipThisVersion", m_appcast.Version);
+    ApplicationController::NotifyUpdateSkipped();
     Close();
 }
 
