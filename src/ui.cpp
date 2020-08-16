@@ -639,6 +639,7 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 {
     // Just abort the update. Next time it's scheduled to run,
     // the user will be prompted.
+    ApplicationController::NotifyUpdatePostponed();
     Close();
 }
 

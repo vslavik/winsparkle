@@ -456,15 +456,32 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_spark
 typedef void(__cdecl* win_sparkle_update_skipped_callback_t)();
 
 /**
-    Set callback to be called when the user skips a download.
+    Set callback to be called when the user skips an update.
 
     This is useful in combination with
-    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
-    some action when the installation is skipped.
+    win_sparkle_check_update_with_ui() or similar as it 
+    allows you to perform some action when the update 
+    is skipped.
 
     @see win_sparkle_check_update_with_ui_and_install()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_skipped_callback(win_sparkle_update_skipped_callback_t callback);
+
+/// Callback type for win_sparkle_update_postponed_callback()
+typedef void(__cdecl* win_sparkle_update_postponed_callback_t)();
+
+/**
+    Set callback to be called when the user postpones an update 
+    ( presses 'remind me later' button).
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui() or similar as it 
+    allows you to perform some action when the download 
+    is postponed.
+
+    @see win_sparkle_check_update_with_ui()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_postponed_callback(win_sparkle_update_postponed_callback_t callback);
 
 //@}
 

@@ -72,6 +72,9 @@ public:
     /// Notify that an update was skipped
     static void NotifyUpdateSkipped();
 
+    /// Notify that an update was skipped
+    static void NotifyUpdatePostponed();
+
     //@}
 
     /**
@@ -121,11 +124,18 @@ public:
         ms_cbUpdateCancelled = callback;
     }
 
-    /// Set the win_sparkle_update_cancelled_callback_t function
+    /// Set the win_sparkle_update_skipped_callback_t function
     static void SetUpdateSkippedCallback(win_sparkle_update_skipped_callback_t callback)
     {
         CriticalSectionLocker lock(ms_csVars);
         ms_cbUpdateSkipped = callback;
+    }
+
+    /// Set the win_sparkle_update_postponed_callback_t function
+    static void SetUpdatePostponedCallback(win_sparkle_update_postponed_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbUpdatePostponed = callback;
     }
 
     //@}
@@ -143,6 +153,7 @@ private:
     static win_sparkle_did_not_find_update_callback_t ms_cbDidNotFindUpdate;
     static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;
     static win_sparkle_update_skipped_callback_t      ms_cbUpdateSkipped;
+    static win_sparkle_update_postponed_callback_t    ms_cbUpdatePostponed;
 };
 
 } // namespace winsparkle

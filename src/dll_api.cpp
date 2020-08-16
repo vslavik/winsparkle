@@ -351,6 +351,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_skipped_callback(win_sparkle
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_postponed_callback(win_sparkle_update_postponed_callback_t callback)
+{
+    try
+    {
+        ApplicationController::SetUpdatePostponedCallback(callback);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 /*--------------------------------------------------------------------------*
                               Manual usage
  *--------------------------------------------------------------------------*/
