@@ -600,6 +600,7 @@ void UpdateDialog::OnTimer(wxTimerEvent&)
 
 void UpdateDialog::OnCloseButton(wxCommandEvent&)
 {
+    ApplicationController::NotifyUpdateDismissed();
     Close();
 }
 
@@ -614,6 +615,7 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 
         UpdateDownloader::CleanLeftovers();
     }
+
 
     // We need to override this, because by default, wxDialog doesn't
     // destroy itself in Close().
@@ -630,6 +632,7 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 void UpdateDialog::OnSkipVersion(wxCommandEvent&)
 {
     Settings::WriteConfigValue("SkipThisVersion", m_appcast.Version);
+    ApplicationController::NotifyUpdateSkipped();
     Close();
 }
 
@@ -638,6 +641,7 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
 {
     // Just abort the update. Next time it's scheduled to run,
     // the user will be prompted.
+    ApplicationController::NotifyUpdatePostponed();
     Close();
 }
 
