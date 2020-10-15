@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>WinSparkle</id>
+        <version>0.8-beta2</version>
+        <title>WinSparkle</title>
+        <authors>Vaclav Slavik</authors>
+        <license type="expression">MIT</license>
+        <projectUrl>https://github.com/vslavik/winsparkle</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>App update framework for Windows, inspired by Sparkle for macOS</description>
+        <copyright>Copyright (C) Vaclav Slavik</copyright>
+        <language>en-US</language>
+        <tags>native update sparkle appcast</tags>
+    </metadata>
+
+    <files>
+        <file src="..\include\*.h" target="build\native\include\" />
+        <file src="..\Release\WinSparkle.dll" target="build\native\Win32\" />
+        <file src="..\Release\WinSparkle.lib" target="build\native\Win32\" />
+        <file src="..\x64\Release\WinSparkle.dll" target="build\native\x64\" />
+        <file src="..\x64\Release\WinSparkle.lib" target="build\native\x64\" />
+        <file src="WinSparkle.targets" target="build\native\" />
+        <file src="..\*.md" target="" />
+        <file src="..\COPYING" target="COPYING" />
+    </files>
+</package>
