@@ -227,15 +227,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="3rdparty\expat-2019.vcxproj">
+    <ProjectReference Include="3rdparty\expat.vcxproj">
       <Project>{47b228cb-24fe-5250-b1fc-dfc81d3e69df}</Project>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
-    <ProjectReference Include="3rdparty\libcrypto-2019.vcxproj">
+    <ProjectReference Include="3rdparty\libcrypto.vcxproj">
       <Project>{a0326e8b-57a0-548e-ab4a-2db2b6704d70}</Project>
     </ProjectReference>
-    <ProjectReference Include="3rdparty\wx-2019.vcxproj">
+    <ProjectReference Include="3rdparty\wx.vcxproj">
       <Project>{499a5238-5aac-5fd3-8902-819d787108a5}</Project>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

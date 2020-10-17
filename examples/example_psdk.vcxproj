@@ -183,7 +183,7 @@
     <ResourceCompile Include="psdk\app_psdk.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WinSparkle-2017.vcxproj">
+    <ProjectReference Include="..\WinSparkle.vcxproj">
       <Project>{524cccf2-61ea-5b64-a1d9-ff5497027b5f}</Project>
     </ProjectReference>
   </ItemGroup>
