@@ -1,16 +1,10 @@
 
 srcdir openssl/crypto;
 
-vs2010.generate-solution = false;
-vs2012.generate-solution = false;
-vs2013.generate-solution = false;
-vs2015.generate-solution = false;
+msvs.generate-solution = false;
 
 library WinSparkle_libcrypto : t_3rdparty {
-    vs2010.projectfile = ../../libcrypto$(SUFFIX).vcxproj;
-    vs2012.projectfile = ../../libcrypto$(SUFFIX).vcxproj;
-    vs2013.projectfile = ../../libcrypto$(SUFFIX).vcxproj;
-    vs2015.projectfile = ../../libcrypto$(SUFFIX).vcxproj;
+  msvs.projectfile = ../../libcrypto.vcxproj;
 
   includedirs += ../../openssl-win32 ../../openssl-win32/openssl;
 
