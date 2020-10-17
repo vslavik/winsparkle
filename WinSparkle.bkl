@@ -1,8 +1,6 @@
 
-toolsets = vs2008 vs2010 vs2012 vs2013 vs2015;
+toolsets = vs2010 vs2012 vs2013 vs2015;
 
-if ( $toolset == vs2008 )
-    SUFFIX = "";
 if ( $toolset == vs2010 )
     SUFFIX = "-2010";
 if ( $toolset == vs2012 )
@@ -12,7 +10,6 @@ if ( $toolset == vs2013 )
 if ( $toolset == vs2015 )
     SUFFIX = "-2015";
 
-vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
 vs2013.solutionfile = WinSparkle$(SUFFIX).sln;
@@ -43,12 +40,6 @@ if ( $(arch) == x86 ) {
 }
 
 if ( $(config) == Release ) {
-    vs2008.option.VCCLCompilerTool.Optimization = 1;
-    vs2008.option.VCCLCompilerTool.FavorSizeOrSpeed = 2;
-    vs2008.option.VCCLCompilerTool.WholeProgramOptimization = true;
-    vs2008.option.VCCLCompilerTool.StringPooling = true;
-    vs2008.option.VCLinkerTool.LinkTimeCodeGeneration = 1;
-
     vs2010.option.Configuration.WholeProgramOptimization = true;
     vs2010.option.ClCompile.Optimization = MinSpace;
     vs2010.option.ClCompile.FavorSizeOrSpeed = Size;
@@ -95,7 +86,6 @@ submodule 3rdparty/dependencies.bkl;
 
 shared-library WinSparkle {
 
-    vs2008.projectfile = $(id)$(SUFFIX).vcproj;
     vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
     vs2013.projectfile = $(id)$(SUFFIX).vcxproj;

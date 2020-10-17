@@ -18,7 +18,6 @@ submodule expat.bkl;
 submodule libcrypto.bkl;
 submodule wxWidgets.bkl;
 
-vs2008.generate-solution = false;
 vs2010.generate-solution = false;
 vs2012.generate-solution = false;
 vs2013.generate-solution = false;
