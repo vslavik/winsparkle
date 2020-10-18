@@ -1,22 +1,5 @@
 
-toolsets = vs2008 vs2010 vs2012 vs2013 vs2015;
-
-if ( $toolset == vs2008 )
-    SUFFIX = "";
-if ( $toolset == vs2010 )
-    SUFFIX = "-2010";
-if ( $toolset == vs2012 )
-    SUFFIX = "-2012";
-if ( $toolset == vs2013 )
-    SUFFIX = "-2013";
-if ( $toolset == vs2015 )
-    SUFFIX = "-2015";
-
-vs2008.solutionfile = WinSparkle$(SUFFIX).sln;
-vs2010.solutionfile = WinSparkle$(SUFFIX).sln;
-vs2012.solutionfile = WinSparkle$(SUFFIX).sln;
-vs2013.solutionfile = WinSparkle$(SUFFIX).sln;
-vs2015.solutionfile = WinSparkle$(SUFFIX).sln;
+toolsets = msvs;
 
 // Common settings:
 win32-crt-linkage = static;
@@ -26,80 +9,34 @@ defines += _CRT_SECURE_NO_WARNINGS;
 
 // Build binaries compatible with Windows XP (SP3) -- it's still useful for
 // installer stuff like WinSparkle.dll
-vs2012.option.Configuration.PlatformToolset = v110_xp;
-vs2013.option.Configuration.PlatformToolset = v120_xp;
-vs2015.option.Configuration.PlatformToolset = v140_xp;
+//msvs.option.Configuration.PlatformToolset = v140_xp;
+msvs.option.Configuration.XPDeprecationWarning = false;
 
-// VS2015 generates thread-safe statics by default, but it's incompatible with
-// Windows XP when used in DLLs
-if ( $toolset == vs2015 ) {
-    compiler-options += "/Zc:threadSafeInit-";
-}
-
-// For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
 if ( $(arch) == x86 ) {
-    vs2012.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
-    vs2013.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
+    // VS2015/2017 generates thread-safe statics by default, but it's incompatible
+    // with Windows XP when used in DLLs
+    compiler-options += "/Zc:threadSafeInit-";
+    // For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
+    msvs.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
 }
 
 if ( $(config) == Release ) {
-    vs2008.option.VCCLCompilerTool.Optimization = 1;
-    vs2008.option.VCCLCompilerTool.FavorSizeOrSpeed = 2;
-    vs2008.option.VCCLCompilerTool.WholeProgramOptimization = true;
-    vs2008.option.VCCLCompilerTool.StringPooling = true;
-    vs2008.option.VCLinkerTool.LinkTimeCodeGeneration = 1;
-
-    vs2010.option.Configuration.WholeProgramOptimization = true;
-    vs2010.option.ClCompile.Optimization = MinSpace;
-    vs2010.option.ClCompile.FavorSizeOrSpeed = Size;
-    vs2010.option.ClCompile.WholeProgramOptimization = true;
-    vs2010.option.ClCompile.StringPooling = true;
-    vs2010.option.ClCompile.FunctionLevelLinking = true;
-    vs2010.option.Link.OptimizeReferences = true;
-    vs2010.option.Link.EnableCOMDATFolding = true;
-    vs2010.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
-
-    vs2012.option.Configuration.WholeProgramOptimization = true;
-    vs2012.option.ClCompile.Optimization = MinSpace;
-    vs2012.option.ClCompile.FavorSizeOrSpeed = Size;
-    vs2012.option.ClCompile.WholeProgramOptimization = true;
-    vs2012.option.ClCompile.StringPooling = true;
-    vs2012.option.ClCompile.FunctionLevelLinking = true;
-    vs2012.option.Link.OptimizeReferences = true;
-    vs2012.option.Link.EnableCOMDATFolding = true;
-    vs2012.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
-
-    vs2013.option.Configuration.WholeProgramOptimization = true;
-    vs2013.option.ClCompile.Optimization = MinSpace;
-    vs2013.option.ClCompile.FavorSizeOrSpeed = Size;
-    vs2013.option.ClCompile.WholeProgramOptimization = true;
-    vs2013.option.ClCompile.StringPooling = true;
-    vs2013.option.ClCompile.FunctionLevelLinking = true;
-    vs2013.option.Link.OptimizeReferences = true;
-    vs2013.option.Link.EnableCOMDATFolding = true;
-    vs2013.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
-
-    vs2015.option.Configuration.WholeProgramOptimization = true;
-    vs2015.option.ClCompile.Optimization = MinSpace;
-    vs2015.option.ClCompile.FavorSizeOrSpeed = Size;
-    vs2015.option.ClCompile.WholeProgramOptimization = true;
-    vs2015.option.ClCompile.StringPooling = true;
-    vs2015.option.ClCompile.FunctionLevelLinking = true;
-    vs2015.option.Link.OptimizeReferences = true;
-    vs2015.option.Link.EnableCOMDATFolding = true;
-    vs2015.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+    msvs.option.Configuration.WholeProgramOptimization = true;
+    msvs.option.ClCompile.Optimization = MinSpace;
+    msvs.option.ClCompile.FavorSizeOrSpeed = Size;
+    msvs.option.ClCompile.WholeProgramOptimization = true;
+    msvs.option.ClCompile.StringPooling = true;
+    msvs.option.ClCompile.FunctionLevelLinking = true;
+    msvs.option.Link.OptimizeReferences = true;
+    msvs.option.Link.EnableCOMDATFolding = true;
+    msvs.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
 }
 
 // 3rd party library dependencies:
 submodule 3rdparty/dependencies.bkl;
 
 shared-library WinSparkle {
-
-    vs2008.projectfile = $(id)$(SUFFIX).vcproj;
-    vs2010.projectfile = $(id)$(SUFFIX).vcxproj;
-    vs2012.projectfile = $(id)$(SUFFIX).vcxproj;
-    vs2013.projectfile = $(id)$(SUFFIX).vcxproj;
-    vs2015.projectfile = $(id)$(SUFFIX).vcxproj;
+    msvs.option.Globals.WindowsTargetPlatformVersion = 10.0;
 
     defines += XML_STATIC;
     includedirs += 3rdparty/expat/expat/lib;

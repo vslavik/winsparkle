@@ -1,24 +1,26 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle", "WinSparkle.vcproj", "{524CCCF2-61EA-5B64-A1D9-FF5497027B5F}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle", "WinSparkle.vcxproj", "{524CCCF2-61EA-5B64-A1D9-FF5497027B5F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF} = {47B228CB-24FE-5250-B1FC-DFC81D3E69DF}
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70} = {A0326E8B-57A0-548E-AB4A-2DB2B6704D70}
 		{499A5238-5AAC-5FD3-8902-819D787108A5} = {499A5238-5AAC-5FD3-8902-819D787108A5}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_expat", "3rdparty\expat.vcproj", "{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_expat", "3rdparty\expat.vcxproj", "{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_libcrypto", "3rdparty\libcrypto.vcproj", "{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_wx", "3rdparty\wx.vcxproj", "{499A5238-5AAC-5FD3-8902-819D787108A5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_wx", "3rdparty\wx.vcproj", "{499A5238-5AAC-5FD3-8902-819D787108A5}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_psdk", "examples\example_psdk.vcproj", "{AFBD6C55-82AB-5746-BABD-D254BE893418}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_psdk", "examples\example_psdk.vcxproj", "{AFBD6C55-82AB-5746-BABD-D254BE893418}"
 	ProjectSection(ProjectDependencies) = postProject
 		{524CCCF2-61EA-5B64-A1D9-FF5497027B5F} = {524CCCF2-61EA-5B64-A1D9-FF5497027B5F}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_libcrypto", "3rdparty\libcrypto.vcxproj", "{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,14 +46,6 @@ Global
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}.Release|Win32.Build.0 = Release|Win32
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}.Release|x64.ActiveCfg = Release|x64
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}.Release|x64.Build.0 = Release|x64
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|Win32.Build.0 = Debug|Win32
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|x64.ActiveCfg = Debug|x64
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|x64.Build.0 = Debug|x64
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|Win32.ActiveCfg = Release|Win32
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|Win32.Build.0 = Release|Win32
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.ActiveCfg = Release|x64
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.Build.0 = Release|x64
 		{499A5238-5AAC-5FD3-8902-819D787108A5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{499A5238-5AAC-5FD3-8902-819D787108A5}.Debug|Win32.Build.0 = Debug|Win32
 		{499A5238-5AAC-5FD3-8902-819D787108A5}.Debug|x64.ActiveCfg = Debug|x64
@@ -68,13 +62,24 @@ Global
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|Win32.Build.0 = Release|Win32
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|x64.ActiveCfg = Release|x64
 		{AFBD6C55-82AB-5746-BABD-D254BE893418}.Release|x64.Build.0 = Release|x64
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|Win32.Build.0 = Debug|Win32
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|x64.ActiveCfg = Debug|x64
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Debug|x64.Build.0 = Debug|x64
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|Win32.ActiveCfg = Release|Win32
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|Win32.Build.0 = Release|Win32
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.ActiveCfg = Release|x64
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
-		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
 		{499A5238-5AAC-5FD3-8902-819D787108A5} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
+		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11AC83A1-8DBC-46BE-94E3-26DBCEEFD609}
 	EndGlobalSection
 EndGlobal

@@ -1,18 +1,11 @@
 
 srcdir wxWidgets;
 
-vs2008.generate-solution = false;
-vs2010.generate-solution = false;
-vs2012.generate-solution = false;
-vs2013.generate-solution = false;
-vs2015.generate-solution = false;
+msvs.generate-solution = false;
 
 library WinSparkle_wx : t_3rdparty {
-    vs2008.projectfile = ../wx$(SUFFIX).vcproj;
-    vs2010.projectfile = ../wx$(SUFFIX).vcxproj;
-    vs2012.projectfile = ../wx$(SUFFIX).vcxproj;
-    vs2013.projectfile = ../wx$(SUFFIX).vcxproj;
-    vs2015.projectfile = ../wx$(SUFFIX).vcxproj;
+    msvs.projectfile = ../wx.vcxproj;
+    msvs.option.Globals.WindowsTargetPlatformVersion = 10.0;
 
     defines += WXBUILDING;
     includedirs += ../wxWidgets_setup_h include;
