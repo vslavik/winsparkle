@@ -20,3 +20,10 @@ packages
 pascal/lib/
 pascal/backup/
 .vs
+
+# pks
+3rdparty
+Backup/
+WinSparkle.vcxproj
+*.filters
+examples/example_psdk.vcxproj
