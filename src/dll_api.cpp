@@ -414,4 +414,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_without_ui()
 }
 
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_zip_download_callback(void (*cb)(std::wstring))
+{
+    ApplicationController::_win_sparkle_zip_download_callback = cb;
+}
+
 } // extern "C"

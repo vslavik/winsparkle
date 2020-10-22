@@ -39,6 +39,9 @@ namespace winsparkle
 class ApplicationController
 {
 public:
+
+    static void (*_win_sparkle_zip_download_callback)(std::wstring);
+
     /**
         Control functions.
      */

@@ -54,6 +54,8 @@ bool ApplicationController::IsReadyToShutdown()
     return true;
 }
 
+void (*ApplicationController::_win_sparkle_zip_download_callback)(std::wstring) = NULL;
+
 void ApplicationController::RequestShutdown()
 {
     {

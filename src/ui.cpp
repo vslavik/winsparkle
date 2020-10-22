@@ -696,8 +696,21 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     }
 }
 
+static inline bool ends_with(std::wstring const& value, std::wstring const& ending)
+{
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
 bool UpdateDialog::RunInstaller()
 {
+    // Jsut let the app deal with it if it's a zip archive.
+    std::wstring _updateFile = m_updateFile;
+    if (ends_with(_updateFile, L".zip") && ApplicationController::_win_sparkle_zip_download_callback) {
+        ApplicationController::_win_sparkle_zip_download_callback(_updateFile);
+        return true;
+    }
+
     std::wstring wArgs;
 
     SHELLEXECUTEINFO sei;
