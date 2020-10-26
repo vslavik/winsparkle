@@ -698,6 +698,12 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 
 bool UpdateDialog::RunInstaller()
 {
+
+    if (ApplicationController::UserRunInstallerCallback(m_updateFile.t_str()))
+    {
+        return true;
+    }
+
     std::wstring wArgs;
 
     SHELLEXECUTEINFO sei;
