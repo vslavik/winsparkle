@@ -156,15 +156,12 @@ void ApplicationController::NotifyUpdateDismissed()
 }
 
 
-bool ApplicationController::UserRunInstallerCallback(const wchar_t* filePath)
+int ApplicationController::UserRunInstallerCallback(const wchar_t* filePath)
 {
-    {
-        if (ms_cbUserRunInstaller)
-        {
-            return ms_cbUserRunInstaller(filePath) != 0;
-        }
-    }
-    return false;
+    if (!ms_cbUserRunInstaller)
+        return false;
+
+    return ms_cbUserRunInstaller(filePath);
 }
 
 } // namespace winsparkle

@@ -44,6 +44,12 @@ extern "C" {
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
+
+/// Return value for boolean functions to indicate unexpected error.
+/// Only used by functions or callbacks that are explicitly documented as using it.
+#define WINSPARKLE_RETURN_ERROR (-1)
+
+
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/
@@ -514,10 +520,10 @@ typedef int(__cdecl* win_sparkle_user_run_installer_callback_t)(const wchar_t *)
     downloaded and read to be executed.or handled in some
     other manner.
 
-    Return true if the file was handled and to prevent 
-    default WinSparkle handling, which is to execute the
-    payload through the default windows handler (an exe
-    is executed; a zip file is displayed in Explorer.)
+    The callback returns:
+    - 1 if the file was handled by the callback
+    - 0 if it was not, in which case WinSparkle default handling will take place
+    - WINSPARKLE_RETURN_ERROR in case of an error
 
     @since 0.8
 */

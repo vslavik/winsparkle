@@ -79,7 +79,7 @@ public:
     static void NotifyUpdateDismissed();
 
     /// Run the user installer callback if one is set.
-    static bool UserRunInstallerCallback(const wchar_t*);
+    static int UserRunInstallerCallback(const wchar_t*);
 
     //@}
 
