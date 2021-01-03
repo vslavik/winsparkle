@@ -78,6 +78,9 @@ public:
     /// Notify that update dialog was dismissed (closed)
     static void NotifyUpdateDismissed();
 
+    /// Run the user installer callback if one is set.
+    static int UserRunInstallerCallback(const wchar_t*);
+
     //@}
 
     /**
@@ -148,6 +151,12 @@ public:
         ms_cbUpdateDismissed = callback;
     }
 
+    static void SetUserRunInstallerCallback(win_sparkle_user_run_installer_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbUserRunInstaller = callback;
+    }
+
     //@}
 
 private:
@@ -165,6 +174,8 @@ private:
     static win_sparkle_update_skipped_callback_t      ms_cbUpdateSkipped;
     static win_sparkle_update_postponed_callback_t    ms_cbUpdatePostponed;
     static win_sparkle_update_dismissed_callback_t    ms_cbUpdateDismissed;
+    static win_sparkle_user_run_installer_callback_t  ms_cbUserRunInstaller;
+    
 };
 
 } // namespace winsparkle

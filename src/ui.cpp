@@ -698,6 +698,20 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
 
 bool UpdateDialog::RunInstaller()
 {
+    switch (ApplicationController::UserRunInstallerCallback(m_updateFile.t_str()))
+    {
+        case 0:
+            // carry on with default handling
+            break;
+        case 1:
+            // user callback handled installation
+            return true;
+        case WINSPARKLE_RETURN_ERROR:
+        default:
+            // some error occured (either runtime or unexpected return value)
+            return false;
+    }
+
     std::wstring wArgs;
 
     SHELLEXECUTEINFO sei;

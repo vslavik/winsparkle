@@ -44,6 +44,12 @@ extern "C" {
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
+
+/// Return value for boolean functions to indicate unexpected error.
+/// Only used by functions or callbacks that are explicitly documented as using it.
+#define WINSPARKLE_RETURN_ERROR (-1)
+
+
 /*--------------------------------------------------------------------------*
                        Initialization and shutdown
  *--------------------------------------------------------------------------*/
@@ -504,6 +510,24 @@ typedef void(__cdecl* win_sparkle_update_dismissed_callback_t)();
     @since 0.8
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_dismissed_callback(win_sparkle_update_dismissed_callback_t callback);
+
+
+/// Callback type for win_sparkle_user_run_installer_callback()
+typedef int(__cdecl* win_sparkle_user_run_installer_callback_t)(const wchar_t *);
+
+/**
+    Set callback to be called when the update payload is
+    downloaded and read to be executed.or handled in some
+    other manner.
+
+    The callback returns:
+    - 1 if the file was handled by the callback
+    - 0 if it was not, in which case WinSparkle default handling will take place
+    - WINSPARKLE_RETURN_ERROR in case of an error
+
+    @since 0.8
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_sparkle_user_run_installer_callback_t callback);
 
 //@}
 
