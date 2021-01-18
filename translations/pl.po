@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2020-09-12 17:00\n"
+"PO-Revision-Date: 2021-01-18 20:48\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
@@ -89,7 +89,7 @@ msgstr "Wystąpił błąd podczas pobierania informacji o aktualizacji. Czy jest
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
-msgstr ""
+msgstr "Aktualizacja jest nieprawidłowo podpisana."
 
 #: src/ui.cpp:855
 #, c-format
