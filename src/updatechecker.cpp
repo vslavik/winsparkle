@@ -1,7 +1,7 @@
 /*
  *  This file is part of WinSparkle (https://winsparkle.org)
  *
- *  Copyright (C) 2009-2020 Vaclav Slavik
+ *  Copyright (C) 2009-2021 Vaclav Slavik
  *  Copyright (C) 2007 Andy Matuschak
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
