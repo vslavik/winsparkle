@@ -14,6 +14,8 @@ endif()
 
 cmake_policy(SET CMP0022 NEW)
 
+find_package(Gettext REQUIRED)
+
 get_filename_component(ROOT_DIR ${CMAKE_SOURCE_DIR}/.. REALPATH)
 
 # Parse version header to always have actual version of winsparkle
@@ -35,7 +37,7 @@ set(INCLUDE_INSTALL_DIR "include")
 set(CONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
 set(CMAKE_DEBUG_POSTFIX "d")
 
-set(EXPAT_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/expat/lib")
+set(EXPAT_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/expat/expat/lib")
 
 # bundled expat
 add_subdirectory(expat)
@@ -77,14 +79,62 @@ set(PUBLIC_HEADERS
   ${ROOT_DIR}/include/winsparkle.h
   ${ROOT_DIR}/include/winsparkle-version.h)
 
-set(RESOURCES winsparkle translations)
+set(LANGUAGES
+  ar
+  be
+  bg
+  bs
+  ca_ES
+  co
+  cs
+  da
+  de
+  el
+  es
+  eu
+  fr
+  fy_NL
+  ga
+  he
+  hr
+  hu
+  hy
+  id
+  it
+  ja
+  kk
+  ko
+  nb
+  nl
+  pl
+  pt_BR
+  pt_PT
+  ru
+  sk
+  sr
+  sv
+  tr
+  uk
+  zh_CN
+  zh_TW
+)
 
-# resource compilation for MinGW
-foreach(RESOURCE ${RESOURCES})
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE}.o
-                     COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE}.rc
-                             -o ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE}.o)
+foreach(LANG ${LANGUAGES})
+  add_custom_command(OUTPUT ${LANG}.mo
+                     COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -c -o ${LANG}.mo ${ROOT_DIR}/translations/${LANG}.po
+                     DEPENDS ${ROOT_DIR}/translations/${LANG}.po
+  )
+
+  list(APPEND MO_FILES ${LANG}.mo)
 endforeach()
+
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/common_res.o
+                   COMMAND ${CMAKE_RC_COMPILER} -O coff -I${ROOT_DIR}/include -i ${CMAKE_CURRENT_SOURCE_DIR}/common.rc
+                           -o ${CMAKE_CURRENT_BINARY_DIR}/common_res.o
+                   DEPENDS ${MO_FILES}
+)
+
+list(APPEND SOURCES ${CMAKE_CURRENT_BINARY_DIR}/common_res.o)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat>)
 
