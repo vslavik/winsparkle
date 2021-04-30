@@ -561,7 +561,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_spa
 
     @see win_sparkle_check_update_without_ui()
  */
-WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui();
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui(int auto_install);
 
 /**
     Checks if an update is available, showing progress UI to the user and

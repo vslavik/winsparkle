@@ -63,7 +63,9 @@ protected:
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 
-    /// Should we install the update or prompt the user for options first?
+    /// Should we download the update or prompt the user for options first?
+    virtual bool ShouldAutomaticallyDownload() const { return false; }
+    /// Should we install the update after download or require action from the user first?
     virtual bool ShouldAutomaticallyInstall() const { return false; }
 
 protected:
@@ -95,15 +97,21 @@ class ManualUpdateChecker : public OneShotUpdateChecker
 {
 public:
     /// Creates checker thread.
+    ManualUpdateChecker(bool autoInstall) : OneShotUpdateChecker(), m_autoInstall(autoInstall) {}
     ManualUpdateChecker() : OneShotUpdateChecker() {}
 
 protected:
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
+
+    virtual bool ShouldAutomaticallyInstall() const { return m_autoInstall; }
+
+private:
+    bool m_autoInstall{false};
 };
 
 
 /**
-    Update checker used to automatically install updates when found.
+    Update checker used to automatically download and install updates when found.
  */
 class ManualAutoInstallUpdateChecker : public ManualUpdateChecker
 {
@@ -112,7 +120,8 @@ public:
     ManualAutoInstallUpdateChecker() : ManualUpdateChecker() {}
 
 protected:
-    virtual bool ShouldAutomaticallyInstall() const { return true; };
+    virtual bool ShouldAutomaticallyDownload() const { return true; }
+    virtual bool ShouldAutomaticallyInstall() const { return true; }
 };
 
 

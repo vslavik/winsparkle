@@ -373,7 +373,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_update_dismissed_callback(win_spark
                               Manual usage
  *--------------------------------------------------------------------------*/
 
-WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
+WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui(int auto_install)
 {
     try
     {
@@ -381,7 +381,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
         UI::ShowCheckingUpdates();
 
         // Then run the actual check in the background.
-        UpdateChecker *check = new ManualUpdateChecker();
+        UpdateChecker *check = new ManualUpdateChecker(auto_install);
         check->Start();
     }
     CATCH_ALL_EXCEPTIONS

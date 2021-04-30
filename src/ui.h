@@ -82,7 +82,7 @@ public:
 
         If the UI thread isn't running yet, it will be launched.
      */
-    static void NotifyUpdateAvailable(const Appcast& info, bool installAutomatically);
+    static void NotifyUpdateAvailable(const Appcast& info, bool downloadAutomatically, bool installAutomatically);
 
     /**
         Notifies the UI about download progress.
