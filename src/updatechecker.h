@@ -102,7 +102,6 @@ public:
 
 protected:
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
-
     virtual bool ShouldAutomaticallyInstall() const { return m_autoInstall; }
 
 private:

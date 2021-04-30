@@ -553,6 +553,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_spa
     the user is told so. If there is an update, the usual "update available"
     window is shown.
 
+    Pass a non-zero value for @a auto_install to skip the "install"
+    confirmation after download and automatically install.
+
     This function returns immediately.
 
     @note Because this function is intended for manual, user-initiated checks
