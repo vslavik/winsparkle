@@ -1221,7 +1221,7 @@ private:
     void OnNoUpdateFound(wxThreadEvent& event);
     void OnUpdateAvailable(wxThreadEvent& event);
     void OnUpdateError(wxThreadEvent& event);
-    void OnInstallProgress(wxThreadEvent& event);
+    void OnDownloadProgress(wxThreadEvent& event);
     void OnUpdateDownloaded(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
 
@@ -1256,7 +1256,7 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnNoUpdateFound, this, MSG_NO_UPDATE_FOUND);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateAvailable, this, MSG_UPDATE_AVAILABLE);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateError, this, MSG_UPDATE_ERROR);
-    Bind(wxEVT_COMMAND_THREAD, &App::OnInstallProgress, this, MSG_DOWNLOAD_PROGRESS);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
@@ -1381,7 +1381,7 @@ void App::OnUpdateError(wxThreadEvent& event)
     }
 }
 
-void App::OnInstallProgress(wxThreadEvent& event)
+void App::OnDownloadProgress(wxThreadEvent& event)
 {
     if ( m_win )
     {
