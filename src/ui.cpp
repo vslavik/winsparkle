@@ -1367,7 +1367,7 @@ void App::OnNoUpdateFound(wxThreadEvent& event)
     if ( m_win )
     {
         EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateNoUpdateFound(payload.installAutomatically);
+        m_win->StateNoUpdateFound(payload.downloadAutomatically);
     }
 }
 
@@ -1537,7 +1537,7 @@ void UI::ShutDown()
 
 
 /*static*/
-void UI::NotifyNoUpdates(bool installAutomatically)
+void UI::NotifyNoUpdates(bool downloadAutomatically)
 {
     ApplicationController::NotifyUpdateNotFound();
 
@@ -1547,7 +1547,7 @@ void UI::NotifyNoUpdates(bool installAutomatically)
         return;
 
     EventPayload payload;
-    payload.installAutomatically = installAutomatically;
+    payload.downloadAutomatically = downloadAutomatically;
     uit.App().SendMsg(MSG_NO_UPDATE_FOUND, &payload);
 }
 

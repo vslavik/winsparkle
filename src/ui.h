@@ -66,7 +66,7 @@ public:
         (i.e. the user is manually checking for updates), "no updates found"
         message is shown. Otherwise, does nothing.
      */
-    static void NotifyNoUpdates(bool installAutomatically);
+    static void NotifyNoUpdates(bool downloadAutomatically);
 
     /**
         Notifies the UI that there was an error retrieving updates.
