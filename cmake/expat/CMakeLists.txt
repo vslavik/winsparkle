@@ -39,7 +39,6 @@ add_definitions(-DWIN32)
 add_definitions(-DXML_STATIC)
 
 set(expat_SRCS
-    ${SOURCE_DIR}/lib/loadlibrary.c
     ${SOURCE_DIR}/lib/xmlparse.c
     ${SOURCE_DIR}/lib/xmlrole.c
     ${SOURCE_DIR}/lib/xmltok.c 
