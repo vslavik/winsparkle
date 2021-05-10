@@ -155,6 +155,7 @@ struct EventPayload
     Appcast      appcast;
     size_t       sizeDownloaded, sizeTotal;
     std::wstring updateFile;
+    bool         downloadAutomatically;
     bool         installAutomatically;
     ErrorCode    error;
 };
@@ -425,7 +426,7 @@ public:
     // change state into "update error"
     void StateUpdateError(ErrorCode err);
     // change state into "a new version is available"
-    void StateUpdateAvailable(const Appcast& info, bool installAutomatically);
+    void StateUpdateAvailable(const Appcast& info, bool downloadAutomatically, bool installAutomatically);
     // change state into "downloading update"
     void StateDownloading();
     // update download progress
@@ -476,6 +477,8 @@ private:
     std::string m_installerArguments;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
+    // whether the update should be downloaded without prompting the user
+    bool m_downloadAutomatically;
     // whether the update should be installed without prompting the user
     bool m_installAutomatically;
     // whether an error occurred (used to properly call NotifyUpdateCancelled)
@@ -490,6 +493,7 @@ UpdateDialog::UpdateDialog()
     : m_timer(this),
       m_downloader(NULL)
 {
+    m_downloadAutomatically = false;
     m_installAutomatically = false;
     m_errorOccurred = false;
 
@@ -757,11 +761,11 @@ void UpdateDialog::StateCheckingUpdates()
 }
 
 
-void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
+void UpdateDialog::StateNoUpdateFound(bool downloadAutomatically)
 {
-    m_installAutomatically = installAutomatically;
+    m_downloadAutomatically = downloadAutomatically;
 
-    if ( m_installAutomatically )
+    if (m_downloadAutomatically)
     {
         Close();
         return;
@@ -840,12 +844,13 @@ void UpdateDialog::StateUpdateError(ErrorCode err)
 
 
 
-void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomatically)
+void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool downloadAutomatically, bool installAutomatically)
 {
     m_appcast = info;
+    m_downloadAutomatically = downloadAutomatically;
     m_installAutomatically = installAutomatically;
 
-    if ( installAutomatically )
+    if (downloadAutomatically)
     {
         wxCommandEvent nullEvent;
         OnInstall(nullEvent);
@@ -1362,7 +1367,7 @@ void App::OnNoUpdateFound(wxThreadEvent& event)
     if ( m_win )
     {
         EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateNoUpdateFound(payload.installAutomatically);
+        m_win->StateNoUpdateFound(payload.downloadAutomatically);
     }
 }
 
@@ -1400,7 +1405,7 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
     InitWindow();
 
     EventPayload payload(event.GetPayload<EventPayload>());
-    m_win->StateUpdateAvailable(payload.appcast, payload.installAutomatically);
+    m_win->StateUpdateAvailable(payload.appcast, payload.downloadAutomatically, payload.installAutomatically);
 
     ShowWindow();
 }
@@ -1532,7 +1537,7 @@ void UI::ShutDown()
 
 
 /*static*/
-void UI::NotifyNoUpdates(bool installAutomatically)
+void UI::NotifyNoUpdates(bool downloadAutomatically)
 {
     ApplicationController::NotifyUpdateNotFound();
 
@@ -1542,19 +1547,20 @@ void UI::NotifyNoUpdates(bool installAutomatically)
         return;
 
     EventPayload payload;
-    payload.installAutomatically = installAutomatically;
+    payload.downloadAutomatically = downloadAutomatically;
     uit.App().SendMsg(MSG_NO_UPDATE_FOUND, &payload);
 }
 
 
 /*static*/
-void UI::NotifyUpdateAvailable(const Appcast& info, bool installAutomatically)
+void UI::NotifyUpdateAvailable(const Appcast& info, bool downloadAutomatically, bool installAutomatically)
 {
     ApplicationController::NotifyUpdateFound();
 
     UIThreadAccess uit;
     EventPayload payload;
     payload.appcast = info;
+    payload.downloadAutomatically = downloadAutomatically;
     payload.installAutomatically = installAutomatically;
     uit.App().SendMsg(MSG_UPDATE_AVAILABLE, &payload);
 }
