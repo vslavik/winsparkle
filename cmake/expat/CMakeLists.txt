@@ -1,13 +1,9 @@
 project(expat)
 
-set(SOURCE_DIR ${ROOT_DIR}/3rdparty/expat)
+set(SOURCE_DIR ${ROOT_DIR}/3rdparty/expat/expat)
 
 cmake_minimum_required(VERSION 2.6)
-set(PACKAGE_BUGREPORT "expat-bugs@libexpat.org")
-set(PACKAGE_NAME "expat")
-set(PACKAGE_VERSION "2.1.0")
-set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
-set(PACKAGE_TARNAME "${PACKAGE_NAME}")
+
 
 # configuration options
 set(XML_CONTEXT_BYTES 1024 CACHE STRING "Define to specify how much context to retain around the current parse point")
@@ -31,6 +27,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${SOURCE_DIR}/lib)
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -wd4996)
 endif(MSVC)
+add_definitions(-DWIN32)
+add_definitions(-DXML_STATIC)
 
 set(expat_SRCS
     ${SOURCE_DIR}/lib/xmlparse.c
