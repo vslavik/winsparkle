@@ -2,16 +2,8 @@ project(expat)
 
 set(SOURCE_DIR ${ROOT_DIR}/3rdparty/expat/expat)
 
-file(COPY ${SOURCE_DIR}/expat_config.h.cmake
-     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
 cmake_minimum_required(VERSION 2.6)
-set(PACKAGE_BUGREPORT "expat-bugs@libexpat.org")
-set(PACKAGE_NAME "expat")
-set(PACKAGE_VERSION "2.2.3")
-set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
-set(PACKAGE_TARNAME "${PACKAGE_NAME}")
+
 
 # configuration options
 set(XML_CONTEXT_BYTES 1024 CACHE STRING "Define to specify how much context to retain around the current parse point")
