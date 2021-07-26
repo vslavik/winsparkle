@@ -45,6 +45,7 @@
 #include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/choice.h>
 #include <wx/filename.h>
 #include <wx/gauge.h>
 #include <wx/statbmp.h>
@@ -68,6 +69,11 @@
 #ifndef ERROR_RESOURCE_ENUM_USER_STOP
 #define ERROR_RESOURCE_ENUM_USER_STOP                      15106
 #endif
+
+const int DOWNLOAD_NOW = 0;
+const int REMIND_ONE_HOUR = 1;
+const int REMIND_ONE_DAY = 2;
+const int REMIND_ONE_WEEK = 3;
 
 namespace winsparkle
 {
@@ -329,8 +335,6 @@ WinSparkleDialog::WinSparkleDialog()
     wxSize dpi = wxClientDC(this).GetPPI();
     m_scaleFactor = dpi.y / 96.0;
 
-    SetIcon(LoadNamedIcon(UI::GetDllHINSTANCE(), L"UpdateAvailable", GetSystemMetrics(SM_CXSMICON)));
-
     wxSizer *topSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Load the dialog box icon: the first 48x48 application icon will be loaded, if available,
@@ -392,7 +396,6 @@ void WinSparkleDialog::SetHeadingFont(wxWindow *win)
         // 9pt is base font, 12pt is for "Main instructions". See
         // http://msdn.microsoft.com/en-us/library/aa511282%28v=MSDN.10%29.aspx
         f.SetPointSize(f.GetPointSize() + 3);
-        win->SetForegroundColour(wxColour(0x00, 0x33, 0x99));
     }
     else // Windows XP/2000
     {
@@ -408,9 +411,8 @@ void WinSparkleDialog::SetHeadingFont(wxWindow *win)
                       Window for communicating with the user
  *--------------------------------------------------------------------------*/
 
-const int ID_SKIP_VERSION = wxNewId();
-const int ID_REMIND_LATER = wxNewId();
-const int ID_INSTALL = wxNewId();
+const int ID_REMIND_OPTIONS = wxNewId();
+const int ID_DOWNLOAD = wxNewId();
 const int ID_RUN_INSTALLER = wxNewId();
 
 class UpdateDialog : public WinSparkleDialog
@@ -439,9 +441,7 @@ private:
     void OnCloseButton(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
-    void OnSkipVersion(wxCommandEvent&);
-    void OnRemindLater(wxCommandEvent&);
-    void OnInstall(wxCommandEvent&);
+    void OnDownload(wxCommandEvent&);
 
     void OnRunInstaller(wxCommandEvent&);
 
@@ -465,6 +465,7 @@ private:
     wxSizer      *m_updateButtonsSizer;
     wxSizer      *m_releaseNotesSizer;
     wxPanel      *m_browserParent;
+    wxChoice     *m_remindChoiceList;
 
     wxAutoOleInterface<IWebBrowser2> m_webBrowser;
 
@@ -474,7 +475,7 @@ private:
     wxString m_updateFile;
     // space separated arguments to update file (only valid after StateUpdateDownloaded)
     std::string m_installerArguments;
-    // downloader (only valid between OnInstall and OnUpdateDownloaded)
+    // downloader (only valid between OnDownload and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
     // whether the update should be installed without prompting the user
     bool m_installAutomatically;
@@ -533,21 +534,16 @@ UpdateDialog::UpdateDialog()
 
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
+    const wxString REMIND_OPTIONS[] = { L"Download now", L"Remind me in an hour", L"Remind me tomorrow", L"Remind me in a week" };
+    m_remindChoiceList = new wxChoice(this, ID_REMIND_OPTIONS, wxDefaultPosition, wxDefaultSize, sizeof(REMIND_OPTIONS) / sizeof(REMIND_OPTIONS[0]), REMIND_OPTIONS);
+    m_remindChoiceList->SetSelection(DOWNLOAD_NOW);
+
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_updateButtonsSizer->Add
-                          (
-                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-                            wxSizerFlags().Border(wxRIGHT, PX(20))
-                          );
     m_updateButtonsSizer->AddStretchSpacer(1);
+    m_updateButtonsSizer->Add(m_remindChoiceList, wxSizerFlags().Border(wxRIGHT, PX(20)));
     m_updateButtonsSizer->Add
                           (
-                            new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
-                            wxSizerFlags().Border(wxRIGHT, PX(10))
-                          );
-    m_updateButtonsSizer->Add
-                          (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
+                            m_installButton = new wxButton(this, ID_DOWNLOAD, _("OK")),
                             wxSizerFlags()
                           );
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
@@ -576,9 +572,7 @@ UpdateDialog::UpdateDialog()
     Bind(wxEVT_CLOSE_WINDOW, &UpdateDialog::OnClose, this);
     Bind(wxEVT_TIMER, &UpdateDialog::OnTimer, this);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnCloseButton, this, wxID_CANCEL);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnSkipVersion, this, ID_SKIP_VERSION);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRemindLater, this, ID_REMIND_LATER);
-    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnInstall, this, ID_INSTALL);
+    Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnDownload, this, ID_DOWNLOAD);
     Bind(wxEVT_COMMAND_BUTTON_CLICKED, &UpdateDialog::OnRunInstaller, this, ID_RUN_INSTALLER);
 }
 
@@ -629,38 +623,47 @@ void UpdateDialog::OnClose(wxCloseEvent&)
 }
 
 
-void UpdateDialog::OnSkipVersion(wxCommandEvent&)
+void UpdateDialog::OnDownload(wxCommandEvent&)
 {
-    Settings::WriteConfigValue("SkipThisVersion", m_appcast.Version);
-    ApplicationController::NotifyUpdateSkipped();
-    Close();
-}
+    static const int ONE_HOUR_IN_SECONDS = 3600;
+    static const int ONE_DAY_IN_SECONDS = 86400;
+    static const int ONE_WEEK_IN_SECONDS = 604800;
+    int currentSelection = m_remindChoiceList->GetCurrentSelection();
 
-
-void UpdateDialog::OnRemindLater(wxCommandEvent&)
-{
-    // Just abort the update. Next time it's scheduled to run,
-    // the user will be prompted.
-    ApplicationController::NotifyUpdatePostponed();
-    Close();
-}
-
-
-void UpdateDialog::OnInstall(wxCommandEvent&)
-{
-    if ( !m_appcast.HasDownload() )
+    int updateInterval = ONE_DAY_IN_SECONDS;
+    switch (currentSelection)
     {
-        wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
-        Close();
-    }
-    else if ( m_downloader == NULL )
-    {
-        StateDownloading();
+    case DOWNLOAD_NOW:
+        if (!m_appcast.HasDownload())
+        {
+            wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
+            Close();
+        }
+        else if (m_downloader == NULL)
+        {
+            StateDownloading();
 
-        // Run the download in background.
-        m_downloader = new UpdateDownloader(m_appcast);
-        m_downloader->Start();
+            // Run the download in background.
+            m_downloader = new UpdateDownloader(m_appcast);
+            m_downloader->Start();
+        }
+        return;
+    case REMIND_ONE_HOUR:
+        updateInterval = ONE_HOUR_IN_SECONDS;
+        break;
+    case REMIND_ONE_DAY:
+        updateInterval = ONE_DAY_IN_SECONDS;
+        break;
+    case REMIND_ONE_WEEK:
+        updateInterval = ONE_WEEK_IN_SECONDS;
+        break;
+    default:
+        updateInterval = ONE_DAY_IN_SECONDS;
+        break;
     }
+
+    Settings::WriteConfigValue("UpdateInterval", updateInterval);
+    Close();
 }
 
 void UpdateDialog::OnRunInstaller(wxCommandEvent&)
@@ -769,27 +772,12 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 
     LayoutChangesGuard guard(this);
 
-    m_heading->SetLabel(_("You're up to date!"));
+    m_heading->SetLabel(_("You are up to date!"));
 
-    wxString msg;
-    try
-    {
-        msg = wxString::Format
-              (
-                  _("%s %s is currently the newest version available."),
-                  Settings::GetAppName(),
-                  Settings::GetAppVersion()
-              );
-    }
-    catch ( std::exception& )
-    {
-        // GetAppVersion() may fail
-        msg = "Error: Updates checking not properly configured.";
-    }
-
+    wxString msg = _("There are no new versions available at this time.");
     SetMessage(msg);
 
-    m_closeButton->SetLabel(_("Close"));
+    m_closeButton->SetLabel(_("OK"));
     m_closeButton->SetDefault();
     EnablePulsing(false);
 
@@ -824,7 +812,7 @@ void UpdateDialog::StateUpdateError(ErrorCode err)
     }
     SetMessage(msg);
 
-    m_closeButton->SetLabel(_("Cancel"));
+    m_closeButton->SetLabel(_("OK"));
     m_closeButton->SetDefault();
     EnablePulsing(false);
 
@@ -848,7 +836,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
     if ( installAutomatically )
     {
         wxCommandEvent nullEvent;
-        OnInstall(nullEvent);
+        OnDownload(nullEvent);
         return;
     }
 
@@ -879,8 +867,8 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
         (
             wxString::Format
             (
-                _("%s %s is now available (you have %s). Would you like to download it now?"),
-                appname, ver_new, ver_my
+                _("You are currently using %s version %s.\nWould you like to download our new version (%s) now?"),
+                appname, ver_my, ver_new
             ),
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
         );
@@ -1042,10 +1030,14 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 
     if( !info.ReleaseNotesURL.empty() )
     {
+        VARIANT varFlags;
+        varFlags.vt = VT_I4;
+        varFlags.llVal = (navNoHistory | navNoReadFromCache | navNoWriteToCache);
+
         m_webBrowser->Navigate
                       (
                           wxBasicString(info.ReleaseNotesURL),
-                          NULL,  // Flags
+                          &varFlags,  // Flags
                           NULL,  // TargetFrameName
                           NULL,  // PostData
                           NULL   // Headers

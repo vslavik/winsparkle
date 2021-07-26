@@ -286,9 +286,8 @@ void PeriodicUpdateChecker::Run()
 
     while (true)
     {
-        // time to wait for next iteration: either a reasonable default or
-        // time to next scheduled update check if checks are enabled
-        unsigned sleepTimeInSeconds = 60 * 60; // 1 hour
+        // time to wait for next iteration, set to a constant default so that on-the-fly changes are respected
+        const unsigned sleepTimeInSeconds = Settings::MIN_CHECK_INTERVAL; // 5 minutes
 
         bool checkUpdates;
         Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
@@ -299,17 +298,11 @@ void PeriodicUpdateChecker::Run()
             time_t lastCheck = 0;
             Settings::ReadConfigValue("LastCheckTime", lastCheck);
 
-            // Only check for updates in reasonable intervals:
             const int interval = win_sparkle_get_update_check_interval();
             time_t nextCheck = lastCheck + interval;
             if (currentTime >= nextCheck)
             {
                 PerformUpdateCheck();
-                sleepTimeInSeconds = interval;
-            }
-            else
-            {
-                sleepTimeInSeconds = unsigned(nextCheck - currentTime);
             }
         }
 

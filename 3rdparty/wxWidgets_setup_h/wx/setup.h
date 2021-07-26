@@ -881,7 +881,7 @@
 #define wxUSE_CALENDARCTRL  0   // wxCalendarCtrl
 #define wxUSE_CHECKBOX      1   // wxCheckBox
 #define wxUSE_CHECKLISTBOX  0   // wxCheckListBox (requires wxUSE_OWNER_DRAWN)
-#define wxUSE_CHOICE        0   // wxChoice
+#define wxUSE_CHOICE        1   // wxChoice
 #define wxUSE_COLLPANE      0   // wxCollapsiblePane
 #define wxUSE_COLOURPICKERCTRL 0    // wxColourPickerCtrl
 #define wxUSE_COMBOBOX      0   // wxComboBox

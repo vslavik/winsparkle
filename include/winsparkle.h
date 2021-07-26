@@ -353,6 +353,15 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 */
 WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time();
 
+/**
+Sets the time for the last update check.
+
+    @param time Set the time for the last update check.
+
+    @since 2.4 - CE-specific version
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_last_check_time(time_t time);
+
 /// Callback type for win_sparkle_error_callback()
 typedef void (__cdecl *win_sparkle_error_callback_t)();
 

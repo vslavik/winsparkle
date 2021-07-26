@@ -511,5 +511,11 @@
     <ClCompile Include="wxWidgets\src\msw\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\choiccmn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\choice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
