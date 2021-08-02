@@ -426,5 +426,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_spa
     ApplicationController::SetUserRunInstallerCallback(callback);
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_alternate_appcast_callback(win_sparkle_alternate_appcast_callback_t callback)
+{
+    ApplicationController::SetAlternateAppcastCallback(callback);
+}
 
 } // extern "C"
