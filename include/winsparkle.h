@@ -353,6 +353,15 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_update_check_interval();
 */
 WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time();
 
+/**
+Sets the time for the last update check.
+
+    @param time Set the time for the last update check.
+
+    @since 2.4 - CE-specific version
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_last_check_time(time_t time);
+
 /// Callback type for win_sparkle_error_callback()
 typedef void (__cdecl *win_sparkle_error_callback_t)();
 
@@ -528,6 +537,35 @@ typedef int(__cdecl* win_sparkle_user_run_installer_callback_t)(const wchar_t *)
     @since 0.8
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_sparkle_user_run_installer_callback_t callback);
+
+
+/// Callback type for win_sparkle_alternate_appcast_callback()
+typedef int(__cdecl* win_sparkle_alternate_appcast_callback_t)(
+    bool manual, int bufferSize, char* version, char* downloadUrl, char* releaseNotesUrl, char* webBrowserUrl, char* title, char* description);
+
+/**
+    Set callback to be called when Appcast data is needed to be
+    acquired from an alternate source (i.e. provided from
+    outside of Winsparkle)
+
+    Parameters:
+        - manual : What triggered the update processing? Manual (direct user initiated) OR automatic (timed/scheduled)
+        - buffersize : Maximum size of buffers that the callback function can populate
+        - version : the available (new) version o the application
+        - downloadUrl : the location where the updater can be downloaded from
+        - releaseNotesUrl : the location where the associated release notes can be found at
+        - webBrowserUrl : the location to launch in web browser for manual download
+        - title : the title of the update
+        - description :the description of the update
+
+    The callback returns:
+    - 1 : when Appcast data was successfully acquired, indicating update is available
+    - 0 : when Appcast data was successfully acquired, indicating that NO update is available
+    - WINSPARKLE_RETURN_ERROR : when Appcast data was NOT successfully acquired, in which case WinSparkle default handling should proceed
+
+    @since 0.7.1
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_alternate_appcast_callback(win_sparkle_alternate_appcast_callback_t callback);
 
 //@}
 

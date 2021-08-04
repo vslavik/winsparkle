@@ -171,9 +171,6 @@ std::string Settings::GetCustomResource(const char *name, const char *type)
 std::string Settings::GetDefaultRegistryPath()
 {
     std::string s("Software\\");
-    std::wstring vendor = Settings::GetCompanyName();
-    if ( !vendor.empty() )
-        s += WideToAnsi(vendor) + "\\";
     s += WideToAnsi(Settings::GetAppName());
     s += "\\WinSparkle";
 

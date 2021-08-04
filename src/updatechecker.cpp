@@ -26,6 +26,7 @@
 
 #include "updatechecker.h"
 #include "appcast.h"
+#include "appcontroller.h"
 #include "ui.h"
 #include "error.h"
 #include "settings.h"
@@ -218,19 +219,41 @@ UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
 {
 }
 
-void UpdateChecker::PerformUpdateCheck()
+void UpdateChecker::PerformUpdateCheck(bool manual)
 {
     try
     {
-        const std::string url = Settings::GetAppcastURL();
-        if ( url.empty() )
-            throw std::runtime_error("Appcast URL not specified.");
-        CheckForInsecureURL(url, "appcast feed");
+        struct winsparkle::Appcast appcast;
 
-        StringDownloadSink appcast_xml;
-        DownloadFile(url, &appcast_xml, this, Settings::GetHttpHeadersString(), Download_BypassProxies);
+        switch (ApplicationController::AlternateAppcastCallback(manual, appcast))
+        {
+            case 0:
+                // Alternate user callback handled acquiring update information (NO update is available)
+            case 1:
+                // Alternate user callback handled acquiring update information (update is available)
+                break;
 
-        Appcast appcast = Appcast::Load(appcast_xml.data);
+            case WINSPARKLE_RETURN_ERROR:
+            {
+                // Alternate user callback failed to handle acquiring update information therefore
+                // carry on with default Winsparkle handling
+                const std::string url = Settings::GetAppcastURL();
+                if (url.empty())
+                    throw std::runtime_error("Appcast URL not specified.");
+                CheckForInsecureURL(url, "appcast feed");
+
+                StringDownloadSink appcast_xml;
+                DownloadFile(url, &appcast_xml, this, Settings::GetHttpHeadersString(), Download_BypassProxies);
+                appcast = Appcast::Load(appcast_xml.data);
+                break;
+            }
+            default:
+            {
+                // some unknown error occured (either runtime or unexpected return value)
+                break;
+            }
+        }
+
         if (!appcast.ReleaseNotesURL.empty())
             CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
         if (!appcast.DownloadURL.empty())
@@ -286,9 +309,8 @@ void PeriodicUpdateChecker::Run()
 
     while (true)
     {
-        // time to wait for next iteration: either a reasonable default or
-        // time to next scheduled update check if checks are enabled
-        unsigned sleepTimeInSeconds = 60 * 60; // 1 hour
+        // time to wait for next iteration, set to a constant default so that on-the-fly changes are respected
+        const unsigned sleepTimeInSeconds = Settings::MIN_CHECK_INTERVAL; // 5 minutes
 
         bool checkUpdates;
         Settings::ReadConfigValue("CheckForUpdates", checkUpdates, false);
@@ -299,17 +321,11 @@ void PeriodicUpdateChecker::Run()
             time_t lastCheck = 0;
             Settings::ReadConfigValue("LastCheckTime", lastCheck);
 
-            // Only check for updates in reasonable intervals:
             const int interval = win_sparkle_get_update_check_interval();
             time_t nextCheck = lastCheck + interval;
             if (currentTime >= nextCheck)
             {
-                PerformUpdateCheck();
-                sleepTimeInSeconds = interval;
-            }
-            else
-            {
-                sleepTimeInSeconds = unsigned(nextCheck - currentTime);
+                PerformUpdateCheck(false);
             }
         }
 
@@ -323,7 +339,7 @@ void OneShotUpdateChecker::Run()
     // no initialization to do, so signal readiness immediately
     SignalReady();
 
-    PerformUpdateCheck();
+    PerformUpdateCheck(true);
 }
 
 

@@ -243,14 +243,13 @@ WIN_SPARKLE_API int __cdecl win_sparkle_get_automatic_check_for_updates()
 
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_check_interval(int interval)
 {
-    static const int MIN_CHECK_INTERVAL = 3600; // one hour
-
     try
     {
-        if ( interval < MIN_CHECK_INTERVAL )
+        // Allow for easy testing
+        if ( interval < Settings:: MIN_CHECK_INTERVAL )
         {
-            winsparkle::LogError("Invalid update interval (min: 3600 seconds)");
-            interval = MIN_CHECK_INTERVAL;
+            winsparkle::LogError("Invalid update interval (min: 300 seconds)");
+            interval = Settings::MIN_CHECK_INTERVAL;
         }
 
         Settings::WriteConfigValue("UpdateInterval", interval);
@@ -286,6 +285,15 @@ WIN_SPARKLE_API time_t __cdecl win_sparkle_get_last_check_time()
     CATCH_ALL_EXCEPTIONS
 
     return DEFAULT_LAST_CHECK_TIME;
+}
+
+WIN_SPARKLE_API void __cdecl win_sparkle_set_last_check_time(time_t lastCheckTime)
+{
+    try
+    {
+        Settings::WriteConfigValue("LastCheckTime", lastCheckTime);
+    }
+    CATCH_ALL_EXCEPTIONS
 }
 
 WIN_SPARKLE_API void __cdecl win_sparkle_set_error_callback(win_sparkle_error_callback_t callback)
@@ -418,5 +426,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_user_run_installer_callback(win_spa
     ApplicationController::SetUserRunInstallerCallback(callback);
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_alternate_appcast_callback(win_sparkle_alternate_appcast_callback_t callback)
+{
+    ApplicationController::SetAlternateAppcastCallback(callback);
+}
 
 } // extern "C"

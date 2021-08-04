@@ -195,6 +195,7 @@
     <ClCompile Include="wxWidgets\src\common\bmpbase.cpp" />
     <ClCompile Include="wxWidgets\src\common\btncmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\checkboxcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\choiccmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\clntdata.cpp" />
     <ClCompile Include="wxWidgets\src\common\cmdline.cpp" />
     <ClCompile Include="wxWidgets\src\common\cmdproc.cpp" />
@@ -297,6 +298,7 @@
     <ClCompile Include="wxWidgets\src\msw\brush.cpp" />
     <ClCompile Include="wxWidgets\src\msw\button.cpp" />
     <ClCompile Include="wxWidgets\src\msw\checkbox.cpp" />
+    <ClCompile Include="wxWidgets\src\msw\choice.cpp" />
     <ClCompile Include="wxWidgets\src\msw\colour.cpp" />
     <ClCompile Include="wxWidgets\src\msw\control.cpp" />
     <ClCompile Include="wxWidgets\src\msw\cursor.cpp" />
