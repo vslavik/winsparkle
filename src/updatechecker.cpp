@@ -325,7 +325,14 @@ void PeriodicUpdateChecker::Run()
             time_t nextCheck = lastCheck + interval;
             if (currentTime >= nextCheck)
             {
-                PerformUpdateCheck(false);
+                try
+                {
+                    // PerformUpdateCheck() will throw on error, for example: appcast file not found 
+                    // Uncaught exceptions will cause this thread (periodic checking) to terminate.
+                    // Therefore, catch all exceptions, so that periodic checking can remain active!
+                    PerformUpdateCheck(false);
+                }
+                CATCH_ALL_EXCEPTIONS
             }
         }
 
