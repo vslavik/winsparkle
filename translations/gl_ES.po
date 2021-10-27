@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2021-05-28 16:38\n"
+"PO-Revision-Date: 2021-10-27 09:51\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Galician\n"
 "Language: gl\n"
@@ -23,36 +23,36 @@ msgstr ""
 
 #: src/ui.cpp:325 src/ui.cpp:668 src/ui.cpp:684
 msgid "Software Update"
-msgstr ""
+msgstr "Actualización do soporte lóxico"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr ""
+msgstr "Novidades:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
-msgstr ""
+msgstr "Ignorar esta versión"
 
 #: src/ui.cpp:545
 msgid "Remind me later"
-msgstr ""
+msgstr "Lembrarmo máis tarde"
 
 #: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
-msgstr ""
+msgstr "Instalar actualización"
 
 #: src/ui.cpp:667
 #, c-format
 msgid "%s cannot be restarted."
-msgstr ""
+msgstr "non se pode reiniciar %s."
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr ""
+msgstr "Teña a certeza de que non ten ningún documento sen gardar e inténteo de novo."
 
 #: src/ui.cpp:677
 msgid "Launching the installer..."
-msgstr ""
+msgstr "Iniciando o instalador..."
 
 #: src/ui.cpp:683
 msgid "Failed to launch the installer."
