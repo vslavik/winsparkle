@@ -25,17 +25,17 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WinSparkle_wx</RootNamespace>
     <ProjectName>WinSparkle_wx</ProjectName>
-    <WindowsTargetPlatformVersion Condition="$(VisualStudioVersion)&gt;=16">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
@@ -54,10 +54,10 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -90,16 +90,16 @@
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup>
     <IntDir>..\$(Configuration)\WinSparkle_wx\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup>
     <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_wx\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup>
     <IntDir>..\$(Configuration)\WinSparkle_wx\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup>
     <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_wx\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,9 +111,8 @@
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,13 +145,11 @@
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>wxWidgets_setup_h;wxWidgets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
-      <DisableSpecificWarnings>4535</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +173,6 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
-      <DisableSpecificWarnings>4535</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -215,6 +211,7 @@
     <ClCompile Include="wxWidgets\src\common\encconv.cpp" />
     <ClCompile Include="wxWidgets\src\common\event.cpp" />
     <ClCompile Include="wxWidgets\src\common\evtloopcmn.cpp" />
+    <ClCompile Include="wxWidgets\src\common\extended.c" />
     <ClCompile Include="wxWidgets\src\common\file.cpp" />
     <ClCompile Include="wxWidgets\src\common\filefn.cpp" />
     <ClCompile Include="wxWidgets\src\common\filename.cpp" />

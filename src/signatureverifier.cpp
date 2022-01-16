@@ -34,7 +34,10 @@
 #include <openssl/pem.h>
 #include <openssl/sha.h>
 
+#include <ed25519.h>
+
 #include <stdexcept>
+#include <vector>
 
 #include <windows.h>
 #include <wincrypt.h>
@@ -284,6 +287,12 @@ std::string Base64ToBin(const std::string &base64)
     return bin;
 }
 
+std::vector<unsigned char> Base64ToUnsignedBin(const std::string& base64)
+{
+    std::string bin = Base64ToBin(base64);
+    return std::vector<unsigned char>(bin.data(), bin.data() + bin.length() + 1);
+}
+
 } // anonynous
 
 void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
@@ -291,6 +300,12 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
     // DSAPub::DSAPub() throw if not valid
     TinySSL::DSAPub dsa_pub(pem);
     (void)dsa_pub;
+}
+
+void SignatureVerifier::VerifyEdDSAPubKey(const std::string& key)
+{
+    // TODO: validate
+    (void)key;
 }
 
 void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
@@ -313,6 +328,40 @@ void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename
     {
         throw BadSignatureException();
     }
+}
+
+void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64)
+{
+    if (signature_base64.size() == 0)
+        throw BadSignatureException("Missing DSA signature!");
+
+    HANDLE payload;
+    payload = CreateFile(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (payload == INVALID_HANDLE_VALUE) {
+        throw BadSignatureException("Could not open payload!");
+    }
+
+    DWORD size = GetFileSize(payload, NULL);
+    DWORD bytes_read = 0;
+    unsigned char *buffer = new unsigned char[size + 1];
+    if (FALSE == ReadFile(payload, buffer, size, &bytes_read, NULL)) {
+        throw BadSignatureException("Could not read payload!");
+    }
+    buffer[bytes_read] = '\0';
+
+    std::vector<unsigned char> signature = Base64ToUnsignedBin(signature_base64);
+    std::vector<unsigned char> key = Base64ToUnsignedBin(Settings::GetEdDSAPubKey());
+
+    int result = ed25519_verify(signature.data(),
+                                buffer,
+                                bytes_read,
+                                key.data());
+
+    delete[] buffer;
+    CloseHandle(payload);
+
+    if (result != 1)
+        throw BadSignatureException();
 }
 
 } // namespace winsparkle

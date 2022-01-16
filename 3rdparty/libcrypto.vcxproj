@@ -31,10 +31,10 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
@@ -53,10 +53,10 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -89,16 +89,16 @@
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup>
     <IntDir>..\$(Configuration)\WinSparkle_libcrypto\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup>
     <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_libcrypto\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup>
     <IntDir>..\$(Configuration)\WinSparkle_libcrypto\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup>
     <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_libcrypto\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -110,9 +110,8 @@
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>openssl-win32;openssl-win32\openssl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,9 +144,8 @@
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>openssl-win32;openssl-win32\openssl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>

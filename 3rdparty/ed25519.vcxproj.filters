@@ -17,90 +17,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\winsparkle.h">
+    <ClInclude Include="ed25519\src\ed25519.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\winsparkle-version.h">
+    <ClInclude Include="ed25519\src\fe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\appcast.h">
+    <ClInclude Include="ed25519\src\fixedint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\appcontroller.h">
+    <ClInclude Include="ed25519\src\ge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\download.h">
+    <ClInclude Include="ed25519\src\precomp_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\error.h">
+    <ClInclude Include="ed25519\src\sc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\threads.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\updatechecker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\updatedownloader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\signatureverifier.h">
+    <ClInclude Include="ed25519\src\sha512.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\appcast.cpp">
+    <ClCompile Include="ed25519\src\add_scalar.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\appcontroller.cpp">
+    <ClCompile Include="ed25519\src\fe.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dll_api.cpp">
+    <ClCompile Include="ed25519\src\ge.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
+    <ClCompile Include="ed25519\src\key_exchange.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\download.cpp">
+    <ClCompile Include="ed25519\src\keypair.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\error.cpp">
+    <ClCompile Include="ed25519\src\sc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\settings.cpp">
+    <ClCompile Include="ed25519\src\seed.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\threads.cpp">
+    <ClCompile Include="ed25519\src\sha512.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui.cpp">
+    <ClCompile Include="ed25519\src\sign.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\updatechecker.cpp">
+    <ClCompile Include="ed25519\src\verify.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\updatedownloader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\signatureverifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="src\winsparkle.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="translations\translations.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

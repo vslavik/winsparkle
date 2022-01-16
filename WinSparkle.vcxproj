@@ -25,17 +25,17 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WinSparkle</RootNamespace>
     <ProjectName>WinSparkle</ProjectName>
-    <WindowsTargetPlatformVersion Condition="$(VisualStudioVersion)&gt;=16">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
@@ -54,10 +54,10 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141_xp</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='11'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -75,7 +75,8 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
   </ImportGroup>
@@ -108,14 +109,13 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -131,11 +131,11 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -153,17 +153,16 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
-      <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -184,14 +183,14 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -237,28 +236,20 @@
     <ResourceCompile Include="translations\translations.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="WinSparkle.Targets">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="3rdparty\expat.vcxproj">
       <Project>{47b228cb-24fe-5250-b1fc-dfc81d3e69df}</Project>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <ProjectReference Include="3rdparty\libcrypto.vcxproj">
       <Project>{a0326e8b-57a0-548e-ab4a-2db2b6704d70}</Project>
     </ProjectReference>
     <ProjectReference Include="3rdparty\wx.vcxproj">
       <Project>{499a5238-5aac-5fd3-8902-819d787108a5}</Project>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\ed25519.vcxproj">
+      <Project>{6a5fb0fa-2a9c-5a84-aa43-7814dc08d5b2}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="WinSparkle.targets" />
   </ImportGroup>
 </Project>

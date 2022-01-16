@@ -21,10 +21,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{47B228CB-24FE-5250-B1FC-DFC81D3E69DF}</ProjectGuid>
+    <ProjectGuid>{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>WinSparkle_expat</RootNamespace>
-    <ProjectName>WinSparkle_expat</ProjectName>
+    <RootNamespace>WinSparkle_ed25519</RootNamespace>
+    <ProjectName>WinSparkle_ed25519</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -90,22 +90,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IntDir>..\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Configuration)\WinSparkle_ed25519\</IntDir>
   </PropertyGroup>
   <PropertyGroup>
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_ed25519\</IntDir>
   </PropertyGroup>
   <PropertyGroup>
-    <IntDir>..\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Configuration)\WinSparkle_ed25519\</IntDir>
   </PropertyGroup>
   <PropertyGroup>
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_ed25519\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;COMPILING_FOR_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -121,7 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;COMPILING_FOR_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -137,7 +137,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;COMPILING_FOR_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -161,7 +161,7 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;COMPILING_FOR_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -178,26 +178,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="expat\expat\lib\xmlparse.c" />
-    <ClCompile Include="expat\expat\lib\xmlrole.c" />
-    <ClCompile Include="expat\expat\lib\xmltok.c" />
-    <ClCompile Include="expat\expat\lib\xmltok_impl.c" />
-    <ClCompile Include="expat\expat\lib\xmltok_ns.c" />
+    <ClCompile Include="ed25519\src\add_scalar.c" />
+    <ClCompile Include="ed25519\src\fe.c" />
+    <ClCompile Include="ed25519\src\ge.c" />
+    <ClCompile Include="ed25519\src\key_exchange.c" />
+    <ClCompile Include="ed25519\src\keypair.c" />
+    <ClCompile Include="ed25519\src\sc.c" />
+    <ClCompile Include="ed25519\src\seed.c" />
+    <ClCompile Include="ed25519\src\sha512.c" />
+    <ClCompile Include="ed25519\src\sign.c" />
+    <ClCompile Include="ed25519\src\verify.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="expat\expat\lib\ascii.h" />
-    <ClInclude Include="expat\expat\lib\asciitab.h" />
-    <ClInclude Include="expat\expat\lib\expat.h" />
-    <ClInclude Include="expat\expat\lib\expat_external.h" />
-    <ClInclude Include="expat\expat\lib\iasciitab.h" />
-    <ClInclude Include="expat\expat\lib\internal.h" />
-    <ClInclude Include="expat\expat\lib\latin1tab.h" />
-    <ClInclude Include="expat\expat\lib\nametab.h" />
-    <ClInclude Include="expat\expat\lib\utf8tab.h" />
-    <ClInclude Include="expat\expat\lib\winconfig.h" />
-    <ClInclude Include="expat\expat\lib\xmlrole.h" />
-    <ClInclude Include="expat\expat\lib\xmltok.h" />
-    <ClInclude Include="expat\expat\lib\xmltok_impl.h" />
+    <ClInclude Include="ed25519\src\ed25519.h" />
+    <ClInclude Include="ed25519\src\fe.h" />
+    <ClInclude Include="ed25519\src\fixedint.h" />
+    <ClInclude Include="ed25519\src\ge.h" />
+    <ClInclude Include="ed25519\src\precomp_data.h" />
+    <ClInclude Include="ed25519\src\sc.h" />
+    <ClInclude Include="ed25519\src\sha512.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

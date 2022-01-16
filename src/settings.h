@@ -122,6 +122,15 @@ public:
         return ms_DSAPubKey;
     }
 
+    /// Return EdDSA public key to verify update file signature
+    static const std::string& GetEdDSAPubKey()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        if (ms_EdDSAPubKey.empty())
+            ms_EdDSAPubKey = GetCustomResource("EdDSAPub", "EDDSA");
+        return ms_EdDSAPubKey;
+    }
+
     /// Return true if DSA public key is available
     static bool HasDSAPubKeyPem()
     {
@@ -131,6 +140,17 @@ public:
         }
         CATCH_ALL_EXCEPTIONS
         return false;
+    }
+
+    /// Return true if EdDSA public key is available
+    static bool HasEdDSAPubKey()
+    {
+        try
+        {
+            return !GetEdDSAPubKey().empty();
+        }
+        CATCH_ALL_EXCEPTIONS
+            return false;
     }
 
     //@}
@@ -265,6 +285,9 @@ public:
     static void SetDSAPubKeyPem(const std::string &pem);
     //@}
 
+    /// Set PEM data and verify in contains valid EdDSA public key
+    static void SetEdDSAPubKey(const std::string& key);
+    //@}
 
     /**
         Access to runtime configuration.
@@ -371,6 +394,7 @@ private:
     static std::wstring ms_appVersion;
     static std::wstring ms_appBuildVersion;
     static std::string  ms_DSAPubKey;
+    static std::string  ms_EdDSAPubKey;
     static std::map<std::string, std::string> ms_httpHeaders;
     static win_sparkle_config_methods_t ms_configMethods;
 };

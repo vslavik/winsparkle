@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_libcrypto", "3rdparty\libcrypto.vcxproj", "{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_ed25519", "3rdparty\ed25519.vcxproj", "{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +72,14 @@ Global
 		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|Win32.Build.0 = Release|Win32
 		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.ActiveCfg = Release|x64
 		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}.Release|x64.Build.0 = Release|x64
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Debug|Win32.Build.0 = Debug|Win32
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Debug|x64.ActiveCfg = Debug|x64
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Debug|x64.Build.0 = Debug|x64
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Release|Win32.ActiveCfg = Release|Win32
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Release|Win32.Build.0 = Release|Win32
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Release|x64.ActiveCfg = Release|x64
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +88,7 @@ Global
 		{47B228CB-24FE-5250-B1FC-DFC81D3E69DF} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
 		{499A5238-5AAC-5FD3-8902-819D787108A5} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
 		{A0326E8B-57A0-548E-AB4A-2DB2B6704D70} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
+		{6A5FB0FA-2A9C-5A84-AA43-7814DC08D5B2} = {2C4E4846-FF11-55AD-AFD1-BC1F3AF74724}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11AC83A1-8DBC-46BE-94E3-26DBCEEFD609}
