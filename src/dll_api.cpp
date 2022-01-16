@@ -161,6 +161,17 @@ WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
     return 0;
 }
 
+WIN_SPARKLE_API int __cdecl win_sparkle_set_eddsa_pub_base64(const char* eddsa_pub)
+{
+    try
+    {
+        Settings::SetEdDSAPubKey(eddsa_pub);
+        return 1;
+    }
+    CATCH_ALL_EXCEPTIONS
+        return 0;
+}
+
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_name,
                                                          const wchar_t *app_name,
                                                          const wchar_t *app_version)

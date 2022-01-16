@@ -186,6 +186,25 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
 WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem);
 
 /**
+    Sets EdDSA public key.
+
+    Only base64 encoded format is supported.
+
+    Public key will be used to verify EdDSA signature of the update file.
+    It will be set only if it contains valid EdDSA public key.
+
+    If this function isn't called by the app, public key is obtained from
+    Windows resource named "EdDSAPub" of type "EDDSA".
+
+    @param eddsa_pub  EdDSA public key in base64 encoded format.
+
+    @return  1 if valid EdDSA public key provided, 0 otherwise.
+
+    @since 0.8.0
+ */
+WIN_SPARKLE_API int __cdecl win_sparkle_set_eddsa_pub_base64(const char* eddsa_pub);
+
+/**
     Sets application metadata.
 
     Normally, these are taken from VERSIONINFO/StringFileInfo resources,
