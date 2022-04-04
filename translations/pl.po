@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2021-01-18 20:48\n"
+"PO-Revision-Date: 2022-04-04 09:00\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
@@ -48,19 +48,19 @@ msgstr "%s nie może zostać uruchomiony ponownie."
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Upewnij się, że nie masz żadnych niezapisanych zmian i spróbuj ponownie."
+msgstr "Upewnij się, że nie masz żadnych niezapisanych dokumentów i spróbuj ponownie."
 
 #: src/ui.cpp:677
 msgid "Launching the installer..."
-msgstr "Uruchamianie instalacji..."
+msgstr "Uruchamianie instalatora..."
 
 #: src/ui.cpp:683
 msgid "Failed to launch the installer."
-msgstr "Uruchomienie instalacji nie powiodło się."
+msgstr "Błąd uruchamiania instalatora."
 
 #: src/ui.cpp:726
 msgid "Checking for updates..."
-msgstr "Sprawdzanie dostępności aktualizacji..."
+msgstr "Sprawdzanie aktualizacji..."
 
 #: src/ui.cpp:728 src/ui.cpp:809 src/ui.cpp:897
 msgid "Cancel"
@@ -85,7 +85,7 @@ msgstr "Błąd aktualizacji!"
 
 #: src/ui.cpp:801
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Wystąpił błąd podczas pobierania informacji o aktualizacji. Czy jesteś podłączony do Internetu? Prosimy spróbować ponownie później."
+msgstr "Wystąpił błąd podczas pobierania informacji o aktualizacji; czy masz połączenie z Internetem? Spróbuj ponownie później."
 
 #: src/ui.cpp:804
 msgid "The update is improperly signed."
@@ -94,7 +94,7 @@ msgstr "Aktualizacja jest nieprawidłowo podpisana."
 #: src/ui.cpp:855
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Dostępna jest nowa wersja %s!"
+msgstr "Jest dostępna nowa wersja %s!"
 
 #: src/ui.cpp:858
 msgid "Get update"
@@ -103,7 +103,7 @@ msgstr "Pobierz aktualizację"
 #: src/ui.cpp:864
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "Program %s jest dostępny w wersji %s (obecnie masz wersję %s). Czy chcesz teraz pobrać nową wersję?"
+msgstr "Aktualizacja %s %s jest już dostępna (posiadasz %s). Czy chcesz pobrać ją teraz?"
 
 #: src/ui.cpp:895
 msgid "Downloading update..."
@@ -121,7 +121,7 @@ msgstr "Gotowa do zainstalowania."
 
 #: src/ui.cpp:1105
 msgid "Check for updates automatically?"
-msgstr "Czy automatycznie sprawdzać dostępność aktualizacji?"
+msgstr "Automatycznie sprawdzać aktualizacje?"
 
 #: src/ui.cpp:1115
 #, c-format
