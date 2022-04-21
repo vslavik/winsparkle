@@ -37,6 +37,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ConfigurationType>Application</ConfigurationType>
@@ -48,6 +49,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='15'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ConfigurationType>Application</ConfigurationType>
@@ -60,6 +62,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ConfigurationType>Application</ConfigurationType>
@@ -72,6 +75,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16'">v142</PlatformToolset>
     <XPDeprecationWarning>false</XPDeprecationWarning>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
