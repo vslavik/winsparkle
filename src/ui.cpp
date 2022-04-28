@@ -458,7 +458,8 @@ private:
     wxGauge      *m_progress;
     wxStaticText *m_progressLabel;
     wxButton     *m_closeButton;
-    wxSizer      *m_SkipButtonSizer;
+    wxSizer      *m_SkipVersionButtonSizer;
+    wxSizer      *m_RemindLaterButtonSizer;
     wxSizer      *m_closeButtonSizer;
     wxButton     *m_runInstallerButton;
     wxSizer      *m_runInstallerButtonSizer;
@@ -481,6 +482,8 @@ private:
     bool m_installAutomatically;
     // whether an error occurred (used to properly call NotifyUpdateCancelled)
     bool m_errorOccurred;
+    // whether the update is critical
+    bool m_criticalUpdate;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -536,25 +539,30 @@ UpdateDialog::UpdateDialog()
 
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    m_SkipButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_SkipButtonSizer->Add(
-		new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-		wxSizerFlags().Border(wxRIGHT, PX(20))
-	);
-    m_buttonSizer->Add(m_SkipButtonSizer, wxSizerFlags(1));
 
-    m_updateButtonsSizer->AddStretchSpacer(1);
-    m_updateButtonsSizer->Add
-                          (
+    m_SkipVersionButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+
+    m_SkipVersionButtonSizer->Add(
+							new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+							wxSizerFlags()
+	);
+
+    m_RemindLaterButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+    m_RemindLaterButtonSizer->Add(
                             new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
-                            wxSizerFlags().Border(wxRIGHT, PX(10))
+                            wxSizerFlags()
                           );
+
+    m_buttonSizer->Add(m_SkipVersionButtonSizer, wxSizerFlags(0));
+    m_buttonSizer->AddStretchSpacer(1);
+    m_buttonSizer->Add(m_RemindLaterButtonSizer, wxSizerFlags(0));
+
     m_updateButtonsSizer->Add
                           (
                             m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
                             wxSizerFlags()
                           );
-    m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
+    m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(0));
 
     m_closeButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     m_closeButton = new wxButton(this, wxID_CANCEL);
@@ -757,6 +765,7 @@ void UpdateDialog::StateCheckingUpdates()
     HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    EnableCloseButton(true);
     MakeResizable(false);
 }
 
@@ -805,6 +814,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
+    EnableCloseButton(true);
 }
 
 
@@ -839,6 +849,7 @@ void UpdateDialog::StateUpdateError(ErrorCode err)
     HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    EnableCloseButton(true);
     MakeResizable(false);
 }
 
@@ -848,6 +859,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
 {
     m_appcast = info;
     m_installAutomatically = installAutomatically;
+    m_criticalUpdate = info.CriticalUpdate;
 
     if ( installAutomatically )
     {
@@ -897,9 +909,18 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
         HIDE(m_progress);
         HIDE(m_progressLabel);
         HIDE(m_closeButtonSizer);
- //       HIDE(m_SkipButtonSizer);
         HIDE(m_runInstallerButtonSizer);
         SHOW(m_updateButtonsSizer);
+        if (m_criticalUpdate) {
+            HIDE(m_SkipVersionButtonSizer);
+            HIDE(m_RemindLaterButtonSizer);
+            EnableCloseButton(false);
+        }
+        else {
+            SHOW(m_SkipVersionButtonSizer);
+            SHOW(m_RemindLaterButtonSizer);
+			EnableCloseButton(true);
+        }
         DoShowElement(m_releaseNotesSizer, showRelnotes);
         MakeResizable(showRelnotes);
     }
@@ -928,6 +949,7 @@ void UpdateDialog::StateDownloading()
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
     MakeResizable(false);
+    EnableCloseButton(true);
 }
 
 
@@ -994,6 +1016,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
     SHOW(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
     HIDE(m_updateButtonsSizer);
+    EnableCloseButton(true);
     MakeResizable(false);
 }
 
