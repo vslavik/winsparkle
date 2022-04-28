@@ -458,6 +458,7 @@ private:
     wxGauge      *m_progress;
     wxStaticText *m_progressLabel;
     wxButton     *m_closeButton;
+    wxSizer      *m_SkipButtonSizer;
     wxSizer      *m_closeButtonSizer;
     wxButton     *m_runInstallerButton;
     wxSizer      *m_runInstallerButtonSizer;
@@ -534,11 +535,14 @@ UpdateDialog::UpdateDialog()
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_updateButtonsSizer->Add
-                          (
-                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-                            wxSizerFlags().Border(wxRIGHT, PX(20))
-                          );
+
+    m_SkipButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+    m_SkipButtonSizer->Add(
+		new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+		wxSizerFlags().Border(wxRIGHT, PX(20))
+	);
+    m_buttonSizer->Add(m_SkipButtonSizer, wxSizerFlags(1));
+
     m_updateButtonsSizer->AddStretchSpacer(1);
     m_updateButtonsSizer->Add
                           (
@@ -893,6 +897,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
         HIDE(m_progress);
         HIDE(m_progressLabel);
         HIDE(m_closeButtonSizer);
+ //       HIDE(m_SkipButtonSizer);
         HIDE(m_runInstallerButtonSizer);
         SHOW(m_updateButtonsSizer);
         DoShowElement(m_releaseNotesSizer, showRelnotes);
