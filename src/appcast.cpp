@@ -56,6 +56,8 @@ namespace
 #define NODE_LINK       "link"
 #define NODE_ENCLOSURE  "enclosure"
 #define NODE_MIN_OS_VERSION NS_SPARKLE_NAME("minimumSystemVersion")
+#define NODE_SPARKLE_TAGS NS_SPARKLE_NAME("tags")
+#define NODE_CRITIAL_UPDATE NS_SPARKLE_NAME("criticalUpdate")
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
@@ -74,7 +76,8 @@ struct ContextData
     ContextData(XML_Parser& p)
         : parser(p),
         in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0),
-        in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0)
+        in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0),
+       in_sparkle_tags(0), in_tag_critical_update(0)
     {}
 
     // the parser we're using
@@ -85,6 +88,9 @@ struct ContextData
 
     // is inside <sparkle:version> or <sparkle:shortVersionString> node?
     int in_version, in_shortversion, in_dsasignature, in_min_os_version;
+
+    // is inside <sparkle:tags> or <sparkle:criticalUpdate>
+    int in_sparkle_tags, in_tag_critical_update;
 
     // parsed <item>s
     std::vector<Appcast> items;
@@ -113,6 +119,7 @@ bool is_windows_version_acceptable(const Appcast &item)
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
+    const size_t size = ctxt.items.size();
 
     if ( strcmp(name, NODE_CHANNEL) == 0 )
     {
@@ -179,7 +186,19 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                 else if ( strcmp(name, ATTR_ARGUMENTS) == 0 )
                     ctxt.items[size-1].InstallerArguments = value;
             }
+        } 
+        else if (strcmp(name, NODE_SPARKLE_TAGS) == 0)
+        {
+            ctxt.in_sparkle_tags++;
         }
+        else if (strcmp(name, NODE_CRITIAL_UPDATE) == 0)
+        {
+
+            ctxt.items[size - 1].CriticalUpdate = true;
+
+            ctxt.in_tag_critical_update++;
+        }
+
     }
 }
 
@@ -247,6 +266,14 @@ void XMLCALL OnEndElement(void *data, const char *name)
         else if (strcmp(name, NODE_DSASIGNATURE) == 0)
         {
             ctxt.in_dsasignature--;
+        }
+        else if (strcmp(name, NODE_SPARKLE_TAGS) == 0)
+        {
+            ctxt.in_sparkle_tags--;
+        }
+        else if (strcmp(name, NODE_CRITIAL_UPDATE) == 0)
+        {
+            ctxt.in_tag_critical_update--;
         }
     }
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
