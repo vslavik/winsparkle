@@ -77,7 +77,7 @@ struct ContextData
         : parser(p),
         in_channel(0), in_item(0), in_relnotes(0), in_title(0), in_description(0), in_link(0),
         in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0),
-       in_sparkle_tags(0), in_tag_critical_update(0)
+        in_sparkle_tags(0), in_tag_critical_update(0)
     {}
 
     // the parser we're using

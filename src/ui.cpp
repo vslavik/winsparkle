@@ -543,9 +543,9 @@ UpdateDialog::UpdateDialog()
     m_SkipVersionButtonSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_SkipVersionButtonSizer->Add(
-							new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-							wxSizerFlags()
-	);
+                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
+                            wxSizerFlags()
+    );
 
     m_RemindLaterButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     m_RemindLaterButtonSizer->Add(
@@ -731,7 +731,7 @@ bool UpdateDialog::RunInstaller()
     sei.cbSize = sizeof(SHELLEXECUTEINFO);
     sei.lpFile = m_updateFile.t_str();
     sei.nShow = SW_SHOWDEFAULT;
-    sei.fMask = SEE_MASK_FLAG_NO_UI;	// We display our own dialog box on error
+    sei.fMask = SEE_MASK_FLAG_NO_UI;    // We display our own dialog box on error
 
     if (! m_installerArguments.empty())
     {
@@ -919,7 +919,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
         else {
             SHOW(m_SkipVersionButtonSizer);
             SHOW(m_RemindLaterButtonSizer);
-			EnableCloseButton(true);
+            EnableCloseButton(true);
         }
         DoShowElement(m_releaseNotesSizer, showRelnotes);
         MakeResizable(showRelnotes);
