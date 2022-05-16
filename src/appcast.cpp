@@ -167,7 +167,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
-            const size_t size = ctxt.items.size();
             for ( int i = 0; attrs[i]; i += 2 )
             {
                 const char *name = attrs[i];
