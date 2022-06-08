@@ -95,6 +95,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/strconv.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/string.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/stringimpl.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/stringops.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/strvararg.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/sysopt.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/textbuf.cpp
@@ -158,16 +159,15 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/msw/menu.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/menuitem.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/msgdlg.cpp
-  ${SOURCE_DIR}/wxWidgets/src/msw/mslu.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/nativdlg.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/nativewin.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/nonownedwnd.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ole/activex.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/ole/comimpl.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ole/dataobj.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ole/oleutils.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ole/safearray.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ole/uuid.cpp
-  ${SOURCE_DIR}/wxWidgets/src/msw/panel.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/pen.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/power.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/region.cpp

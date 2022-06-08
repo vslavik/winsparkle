@@ -27,6 +27,7 @@
 #define _winsparkle_h_
 
 #include <stddef.h>
+#include <time.h>
 
 #include "winsparkle-version.h"
 

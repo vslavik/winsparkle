@@ -14,6 +14,8 @@ endif()
 
 cmake_policy(SET CMP0022 NEW)
 
+find_package(Gettext REQUIRED)
+
 get_filename_component(ROOT_DIR ${CMAKE_SOURCE_DIR}/.. REALPATH)
 
 # Parse version header to always have actual version of winsparkle
@@ -35,7 +37,8 @@ set(INCLUDE_INSTALL_DIR "include")
 set(CONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
 set(CMAKE_DEBUG_POSTFIX "d")
 
-set(EXPAT_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/expat/lib")
+set(EXPAT_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/expat/expat/lib")
+set(OPENSSL_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/openssl-win32")
 
 # bundled expat
 add_subdirectory(expat)
@@ -43,12 +46,16 @@ add_subdirectory(expat)
 # bundled wxWidgets
 add_subdirectory(wxWidgets)
 
+# bundled crypto
+add_subdirectory(crypto)
+
 # WinSparkle
 set(SOURCE_DIR ${ROOT_DIR}/src)
 
 include_directories(${ROOT_DIR}/include)
 include_directories(${EXPAT_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
+include_directories(${OPENSSL_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -57,7 +64,8 @@ add_definitions(
   -DNTDDI_VERSION=0x06000000
   -DBUILDING_WIN_SPARKLE
   -DXML_STATIC
-  -DUNICODE -D_UNICODE)
+  -DUNICODE -D_UNICODE
+  -U__STRICT_ANSI__)
 
 set(SOURCES
   ${SOURCE_DIR}/appcast.cpp
@@ -77,18 +85,27 @@ set(PUBLIC_HEADERS
   ${ROOT_DIR}/include/winsparkle.h
   ${ROOT_DIR}/include/winsparkle-version.h)
 
-set(RESOURCES winsparkle translations)
-
-# resource compilation for MinGW
-foreach(RESOURCE ${RESOURCES})
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE}.o
-                     COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_SOURCE_DIR} -i${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE}.rc
-                             -o ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE}.o)
+file(GLOB PO_FILES ${ROOT_DIR}/translations/*.po)
+foreach(PO_FILE ${PO_FILES})
+  get_filename_component(LANG ${PO_FILE} NAME_WLE)
+  add_custom_command(OUTPUT ${LANG}.mo
+                     COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -c -o ${LANG}.mo ${PO_FILE}
+                     DEPENDS ${PO_FILE}
+  )
+  list(APPEND MO_FILES ${LANG}.mo)
 endforeach()
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat>)
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/common_res.o
+                   COMMAND ${CMAKE_RC_COMPILER} -O coff -I${ROOT_DIR}/include -i ${CMAKE_CURRENT_SOURCE_DIR}/common.rc
+                           -o ${CMAKE_CURRENT_BINARY_DIR}/common_res.o
+                   DEPENDS ${MO_FILES}
+)
 
-target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32)
+list(APPEND SOURCES ${CMAKE_CURRENT_BINARY_DIR}/common_res.o)
+
+add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat> $<TARGET_OBJECTS:crypto>)
+
+target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 UxTheme Shlwapi)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${LIB_MAJOR_VERSION}.${LIB_MINOR_VERSION}.${LIB_PATCH_VERSION}
