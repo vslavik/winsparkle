@@ -67,6 +67,10 @@ struct Appcast
     // Arguments passed on the the updater executable
     std::string InstallerArguments;
 
+    // CriticalUpdate?
+    bool CriticalUpdate = false;
+
+
     /**
         Initializes the struct with data from XML appcast feed.
 

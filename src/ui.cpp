@@ -457,6 +457,8 @@ private:
     wxStaticText *m_message;
     wxGauge      *m_progress;
     wxStaticText *m_progressLabel;
+    wxButton     *m_skipVersionButton;
+    wxButton     *m_remindLaterButton;
     wxButton     *m_closeButton;
     wxSizer      *m_closeButtonSizer;
     wxButton     *m_runInstallerButton;
@@ -533,23 +535,15 @@ UpdateDialog::UpdateDialog()
 
     m_buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
+    m_skipVersionButton = new wxButton(this, ID_SKIP_VERSION, _("Skip this version"));
+    m_remindLaterButton = new wxButton(this, ID_REMIND_LATER, _("Remind me later"));
+    m_installButton = new wxButton(this, ID_INSTALL, _("Install update"));
+
     m_updateButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_updateButtonsSizer->Add
-                          (
-                            new wxButton(this, ID_SKIP_VERSION, _("Skip this version")),
-                            wxSizerFlags().Border(wxRIGHT, PX(20))
-                          );
+    m_updateButtonsSizer->Add(m_skipVersionButton, wxSizerFlags().Border(wxRIGHT, PX(20)));
     m_updateButtonsSizer->AddStretchSpacer(1);
-    m_updateButtonsSizer->Add
-                          (
-                            new wxButton(this, ID_REMIND_LATER, _("Remind me later")),
-                            wxSizerFlags().Border(wxRIGHT, PX(10))
-                          );
-    m_updateButtonsSizer->Add
-                          (
-                            m_installButton = new wxButton(this, ID_INSTALL, _("Install update")),
-                            wxSizerFlags()
-                          );
+    m_updateButtonsSizer->Add(m_remindLaterButton, wxSizerFlags().Border(wxRIGHT, PX(10)));
+    m_updateButtonsSizer->Add(m_installButton, wxSizerFlags());
     m_buttonSizer->Add(m_updateButtonsSizer, wxSizerFlags(1));
 
     m_closeButtonSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -895,6 +889,16 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
         HIDE(m_closeButtonSizer);
         HIDE(m_runInstallerButtonSizer);
         SHOW(m_updateButtonsSizer);
+        if (info.CriticalUpdate)
+        {
+            HIDE(m_skipVersionButton);
+            HIDE(m_remindLaterButton);
+        }
+        else
+        {
+            SHOW(m_skipVersionButton);
+            SHOW(m_remindLaterButton);
+        }
         DoShowElement(m_releaseNotesSizer, showRelnotes);
         MakeResizable(showRelnotes);
     }

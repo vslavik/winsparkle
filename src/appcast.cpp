@@ -56,6 +56,7 @@ namespace
 #define NODE_LINK       "link"
 #define NODE_ENCLOSURE  "enclosure"
 #define NODE_MIN_OS_VERSION NS_SPARKLE_NAME("minimumSystemVersion")
+#define NODE_CRITICAL_UPDATE NS_SPARKLE_NAME("criticalUpdate")
 #define ATTR_URL        "url"
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
@@ -179,6 +180,11 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                 else if ( strcmp(name, ATTR_ARGUMENTS) == 0 )
                     ctxt.items[size-1].InstallerArguments = value;
             }
+        }
+        else if (strcmp(name, NODE_CRITICAL_UPDATE) == 0)
+        {
+            if (!ctxt.items.empty())
+                ctxt.items.back().CriticalUpdate = true;
         }
     }
 }
