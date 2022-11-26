@@ -40,6 +40,9 @@
     <ClCompile Include="wxWidgets\src\common\bmpbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\bmpbndl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\btncmn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,9 +94,6 @@
     <ClCompile Include="wxWidgets\src\common\dpycmn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wxWidgets\src\common\dynarray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\dynlib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -104,6 +104,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\evtloopcmn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\extended.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\ffile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\file.cpp">
@@ -143,6 +149,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\iconbndl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\imagbmp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\image.cpp">
@@ -208,6 +217,9 @@
     <ClCompile Include="wxWidgets\src\common\process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\quantize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\rendcmn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -235,6 +247,9 @@
     <ClCompile Include="wxWidgets\src\common\strconv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\stream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -254,6 +269,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\textcmn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\textentrycmn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\textmeasurecmn.cpp">
@@ -280,6 +298,12 @@
     <ClCompile Include="wxWidgets\src\common\translation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\txtstrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\uilocale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\common\unichar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -293,6 +317,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\variant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\wfstream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\common\wincmn.cpp">
@@ -442,6 +469,9 @@
     <ClCompile Include="wxWidgets\src\msw\ole\activex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\ole\comimpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\ole\dataobj.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -481,6 +511,12 @@
     <ClCompile Include="wxWidgets\src\msw\stdpaths.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\textctrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\textentry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\textmeasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -491,6 +527,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\toplevel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\uilocale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wxWidgets\src\msw\utils.cpp">

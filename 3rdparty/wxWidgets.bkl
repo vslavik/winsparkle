@@ -21,6 +21,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/arrstr.cpp
         src/common/artprov.cpp
         src/common/bmpbase.cpp
+        src/common/bmpbndl.cpp
         src/common/btncmn.cpp
         src/common/checkboxcmn.cpp
         src/common/clntdata.cpp
@@ -38,12 +39,12 @@ library WinSparkle_wx : t_3rdparty {
         src/common/dlgcmn.cpp
         src/common/dobjcmn.cpp
         src/common/dpycmn.cpp
-        src/common/dynarray.cpp
         src/common/dynlib.cpp
         src/common/encconv.cpp
         src/common/event.cpp
         src/common/evtloopcmn.cpp
         src/common/extended.c
+        src/common/ffile.cpp
         src/common/file.cpp
         src/common/filefn.cpp
         src/common/filename.cpp
@@ -57,6 +58,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/hash.cpp
         src/common/hashmap.cpp
         src/common/iconbndl.cpp
+	src/common/imagbmp.cpp
         src/common/image.cpp
         src/common/init.cpp
         src/common/intl.cpp
@@ -78,6 +80,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/platinfo.cpp
         src/common/powercmn.cpp
         src/common/process.cpp
+	src/common/quantize.cpp
         src/common/rendcmn.cpp
         src/common/rgncmn.cpp
         src/common/settcmn.cpp
@@ -87,6 +90,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/stdpbase.cpp
         src/common/stockitem.cpp
         src/common/strconv.cpp
+	src/common/stream.cpp
         src/common/string.cpp
         src/common/stringimpl.cpp
         src/common/stringops.cpp
@@ -94,6 +98,7 @@ library WinSparkle_wx : t_3rdparty {
         src/common/sysopt.cpp
         src/common/textbuf.cpp
         src/common/textcmn.cpp
+        src/common/textentrycmn.cpp
         src/common/textmeasurecmn.cpp
         src/common/threadinfo.cpp
         src/common/time.cpp
@@ -102,11 +107,14 @@ library WinSparkle_wx : t_3rdparty {
         src/common/tokenzr.cpp
         src/common/toplvcmn.cpp
         src/common/translation.cpp
+        src/common/txtstrm.cpp
+        src/common/uilocale.cpp
         src/common/unichar.cpp
         src/common/uri.cpp
         src/common/ustring.cpp
         src/common/utilscmn.cpp
         src/common/variant.cpp
+	src/common/wfstream.cpp
         src/common/wincmn.cpp
         src/common/windowid.cpp
         src/common/wrapsizer.cpp
@@ -156,6 +164,7 @@ library WinSparkle_wx : t_3rdparty {
         src/msw/nativewin.cpp
         src/msw/nonownedwnd.cpp
         src/msw/ole/activex.cpp
+	src/msw/ole/comimpl.cpp
         src/msw/ole/dataobj.cpp
         src/msw/ole/oleutils.cpp
         src/msw/ole/safearray.cpp
@@ -169,10 +178,13 @@ library WinSparkle_wx : t_3rdparty {
         src/msw/statbmp.cpp
         src/msw/stattext.cpp
         src/msw/stdpaths.cpp
+	src/msw/textctrl.cpp
+	src/msw/textentry.cpp
         src/msw/textmeasure.cpp
         src/msw/thread.cpp
         src/msw/timer.cpp
         src/msw/toplevel.cpp
+	src/msw/uilocale.cpp
         src/msw/utils.cpp
         src/msw/utilsexc.cpp
         src/msw/utilsgui.cpp
