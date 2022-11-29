@@ -28,6 +28,10 @@
 
 #include <stddef.h>
 
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif
+
 #include "winsparkle-version.h"
 
 #if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER)

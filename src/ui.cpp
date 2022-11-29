@@ -889,8 +889,17 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
 
     // Only show the release notes now that the layout was updated, as it may
     // take some time to load the MSIE control:
-    if ( showRelnotes )
-        ShowReleaseNotes(info);
+    if (showRelnotes)
+    {
+        // ShowReleaseNotes() has been found to generate exceptions 
+        // Uncaught exceptions will cause the CE client to terminate.
+        // Therefore, catch all exceptions, so that the client will remain active!
+        try
+        {
+            ShowReleaseNotes(info);
+        }
+        CATCH_ALL_EXCEPTIONS
+    }
 }
 
 
