@@ -463,7 +463,7 @@
 // anything if the functionality is not supported by the current platform.
 //
 // Recommended setting: 1 unless you want to save a tiny bit of code.
-#define wxUSE_SPELLCHECK 1
+#define wxUSE_SPELLCHECK 0
 
 // Use wxStandardPaths class which allows to retrieve some standard locations
 // in the file system
@@ -582,7 +582,7 @@
 // Default is 1.
 //
 // Recommended setting: 1.
-#define wxUSE_IPV6          1
+#define wxUSE_IPV6          0
 
 // Set to 1 to enable virtual file systems (required by wxHTML)
 #define wxUSE_FILESYSTEM    0
@@ -656,7 +656,7 @@
 //
 // Recommended setting: 1, setting it to 0 may be useful to avoid dependencies
 // on libcurl on Unix systems.
-#define wxUSE_WEBREQUEST 1
+#define wxUSE_WEBREQUEST 0
 
 // wxWebRequest backend based on NSURLSession
 //
@@ -757,7 +757,7 @@
 // Default is 1
 //
 // Recommended setting: 1 (required by XRC)
-#define wxUSE_XML       1
+#define wxUSE_XML       0
 
 // Use wxWidget's AUI docking system
 //
@@ -973,7 +973,7 @@
 //
 // Recommended setting: 1, but can be set to 0 if your program is affected by
 // the native control limitations.
-#define wxUSE_NATIVE_DATAVIEWCTRL 1
+#define wxUSE_NATIVE_DATAVIEWCTRL 0
 
 // Use a status bar class? Depending on the value of wxUSE_NATIVE_STATUSBAR
 // below either wxStatusBar95 or a generic wxStatusBar will be used.
@@ -1346,7 +1346,7 @@
 #define wxUSE_NUMBERDLG 0
 
 // credential entry dialog
-#define wxUSE_CREDENTIALDLG 1
+#define wxUSE_CREDENTIALDLG 0
 
 // splash screen class
 #define wxUSE_SPLASH 0
@@ -1586,7 +1586,7 @@
 #define wxUSE_LIBTIFF       0
 
 // Set to 1 for SVG rasterizing support using nanosvg
-#define wxUSE_NANOSVG       1
+#define wxUSE_NANOSVG       0
 
 // Set to 1 to use external nanosvg library when wxUSE_NANOSVG is enabled
 #define wxUSE_NANOSVG_EXTERNAL 0
@@ -1670,7 +1670,7 @@
 //
 // Recommended setting: 1, can be set to 0 if wxUSE_WEBREQUEST_CURL==1,
 // otherwise wxWebRequest won't be available at all.
-#define wxUSE_WEBREQUEST_WINHTTP 1
+#define wxUSE_WEBREQUEST_WINHTTP 0
 
 // ----------------------------------------------------------------------------
 // Windows-only settings
@@ -1785,7 +1785,7 @@
 // Default is 1.
 //
 // Recommended setting: 1, required to be 1 if wxUSE_IPV6 is 1.
-#define wxUSE_WINSOCK2 1
+#define wxUSE_WINSOCK2 0
 
 // ----------------------------------------------------------------------------
 // Generic versions of native controls
