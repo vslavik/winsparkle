@@ -113,9 +113,7 @@ wxIcon LoadNamedIcon(HMODULE module, const wchar_t *iconName, int size)
         return wxNullIcon;
 
     wxIcon icon;
-    icon.SetHICON(static_cast<WXHICON>(hIcon));
-    icon.SetWidth(size);
-    icon.SetHeight(size);
+    icon.InitFromHICON(static_cast<WXHICON>(hIcon), size, size);
 
     return icon;
 }
