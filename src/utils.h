@@ -105,7 +105,10 @@ inline bool IsWindowsVistaOrGreater()
 template<typename T>
 inline T* LoadDynamicFunc(const char *func, const char *dll)
 {
-    return reinterpret_cast<T*>(GetProcAddress(GetModuleHandleA(dll), func));
+    HMODULE mod = GetModuleHandleA(dll);
+    if (!mod)
+		return NULL;
+    return reinterpret_cast<T*>(GetProcAddress(mod, func));
 }
 
 #define LOAD_DYNAMIC_FUNC(func, dll) \

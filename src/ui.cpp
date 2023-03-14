@@ -1326,7 +1326,7 @@ void App::InitWindow()
 
 void App::ShowWindow()
 {
-    wxASSERT( m_win );
+    wxCHECK_RET( m_win, "no window" );
 
     m_win->Freeze();
     if (!m_win->IsShown())
