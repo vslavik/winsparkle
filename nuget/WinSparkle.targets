@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Make our header path available in the include path: -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- Update link path to include appropriate arch directory and link against our lib: -->
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>WinSparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Copy DLL to the output path: -->
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)$(Platform)\WinSparkle.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <PublishState>Included</PublishState>
+      <Visible>False</Visible>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Cleanup our copied files when cleaning: -->
+  <Target Name="CleanDownloadContentFiles" AfterTargets="Clean">
+    <Delete Files="$(OutputPath)\WinSparkle.dll"/>
+  </Target>
+
+</Project>
