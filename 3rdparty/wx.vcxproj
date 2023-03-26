@@ -456,6 +456,7 @@
     <ClCompile Include="wxWidgets\src\common\ustring.cpp" />
     <ClCompile Include="wxWidgets\src\common\utilscmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\variant.cpp" />
+    <ClCompile Include="wxWidgets\src\common\webview.cpp" />
     <ClCompile Include="wxWidgets\src\common\wfstream.cpp" />
     <ClCompile Include="wxWidgets\src\common\wincmn.cpp" />
     <ClCompile Include="wxWidgets\src\common\windowid.cpp" />
@@ -506,6 +507,7 @@
     <ClCompile Include="wxWidgets\src\msw\nativewin.cpp" />
     <ClCompile Include="wxWidgets\src\msw\nonownedwnd.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\activex.cpp" />
+    <ClCompile Include="wxWidgets\src\msw\ole\automtn.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\comimpl.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\dataobj.cpp" />
     <ClCompile Include="wxWidgets\src\msw\ole\oleutils.cpp" />
@@ -534,12 +536,29 @@
     <ClCompile Include="wxWidgets\src\msw\utilsgui.cpp" />
     <ClCompile Include="wxWidgets\src\msw\utilswin.cpp" />
     <ClCompile Include="wxWidgets\src\msw\uxtheme.cpp" />
+    <ClCompile Include="wxWidgets\src\msw\webview_edge.cpp" />
+    <ClCompile Include="wxWidgets\src\msw\webview_ie.cpp" />
     <ClCompile Include="wxWidgets\src\msw\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="wxWidgets\include\wx\msw\webview_edge.h" />
+    <ClInclude Include="wxWidgets\include\wx\msw\webview_ie.h" />
+    <ClInclude Include="wxWidgets\include\wx\webview.h" />
+    <ClInclude Include="wxWidgets\include\wx\webviewarchivehandler.h" />
+    <ClInclude Include="wxWidgets\include\wx\webviewfshandler.h" />
     <ClInclude Include="wxWidgets_setup_h\wx\setup.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.1661.34\build\native\Microsoft.Web.WebView2.targets'))" />
+  </Target>
 </Project>
