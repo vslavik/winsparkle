@@ -27,9 +27,6 @@ binary_files := \
 	ARM64/Release/WinSparkle.dll \
 	ARM64/Release/WinSparkle.lib \
 	ARM64/Release/WinSparkle.pdb \
-	ARM64EC/Release/WinSparkle.dll \
-	ARM64EC/Release/WinSparkle.lib \
-	ARM64EC/Release/WinSparkle.pdb \
 	AUTHORS COPYING NEWS README.md
 
 
@@ -45,7 +42,6 @@ $(binary_arch): $(binary_files)
 	@mkdir -p $(binary_base)/Release
 	@mkdir -p $(binary_base)/x64/Release
 	@mkdir -p $(binary_base)/ARM64/Release
-	@mkdir -p $(binary_base)/ARM64EC/Release
 	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
 	cp -a 3rdparty/expat/expat/COPYING $(binary_base)/COPYING.expat
 	zip -9 -r  $@ $(binary_base)

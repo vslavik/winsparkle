@@ -18,13 +18,11 @@
         <file src="..\include\*.h" target="build\native\include\" />
         <file src="..\Release\WinSparkle.dll" target="build\native\Win32\" />
         <file src="..\Release\WinSparkle.lib" target="build\native\Win32\" />
-		<file src="..\x64\Release\WinSparkle.dll" target="build\native\x64\" />
-		<file src="..\x64\Release\WinSparkle.lib" target="build\native\x64\" />
-		<file src="..\ARM64\Release\WinSparkle.dll" target="build\native\ARM64\" />
-		<file src="..\ARM64\Release\WinSparkle.lib" target="build\native\ARM64\" />
-        <file src="..\ARM64EC\Release\WinSparkle.dll" target="build\native\ARM64EC\" />
-        <file src="..\ARM64EC\Release\WinSparkle.lib" target="build\native\ARM64EC\" />
-		<file src="WinSparkle.targets" target="build\native\" />
+        <file src="..\x64\Release\WinSparkle.dll" target="build\native\x64\" />
+        <file src="..\x64\Release\WinSparkle.lib" target="build\native\x64\" />
+        <file src="..\ARM64\Release\WinSparkle.dll" target="build\native\ARM64\" />
+        <file src="..\ARM64\Release\WinSparkle.lib" target="build\native\ARM64\" />
+        <file src="WinSparkle.targets" target="build\native\" />
         <file src="..\*.md" target="" />
         <file src="..\COPYING" target="COPYING" />
     </files>
