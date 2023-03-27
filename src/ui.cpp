@@ -51,8 +51,9 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include <wx/settings.h>
-#include <wx/msw/ole/activex.h>
 #include <wx/msgdlg.h>
+#include <wx/webview.h>
+#include <wx/msw/webview_ie.h>
 
 #include <exdisp.h>
 #include <mshtml.h>
@@ -465,8 +466,7 @@ private:
     wxSizer      *m_updateButtonsSizer;
     wxSizer      *m_releaseNotesSizer;
     wxPanel      *m_browserParent;
-
-    wxAutoOleInterface<IWebBrowser2> m_webBrowser;
+    wxWebView    *m_webBrowser;
 
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast m_appcast;
@@ -518,6 +518,8 @@ UpdateDialog::UpdateDialog()
                                   wxDefaultPosition,
                                   wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
     m_browserParent->SetBackgroundColour(*wxWHITE);
+    m_webBrowser = NULL;
+
     m_releaseNotesSizer->Add
                          (
                              m_browserParent,
@@ -997,110 +999,29 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
 
 void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 {
-    if ( !m_webBrowser.IsOk() )
+    if ( !m_webBrowser )
     {
-        // Load MSIE control
-
         wxBusyCursor busy;
 
-        IWebBrowser2 *browser;
-        HRESULT hr = CoCreateInstance
-                     (
-                         CLSID_WebBrowser,
-                         NULL,
-                         CLSCTX_INPROC_SERVER,
-                         IID_IWebBrowser2,
-                         (void**)&browser
-                     );
-
-        if ( FAILED(hr) )
-        {
-            // hide the notes again, we cannot show them
-            LayoutChangesGuard guard(this);
-            HIDE(m_releaseNotesSizer);
-            MakeResizable(false);
-            LogError("Failed to create WebBrowser ActiveX control.");
-            return;
-        }
-
-        m_webBrowser = browser;
-
-        new wxActiveXContainer(m_browserParent, IID_IWebBrowser2, browser);
-
-        // Poke the browser to initialize it. This is needed when using
-        // info.Description and does no harm with ReleaseNotesURL. To
-        // complicate things, it must be done exactly once, which is why it's
-        // here and not below.
-        // See https://github.com/vslavik/winsparkle/issues/155
-        m_webBrowser->Navigate
-        (
-            wxBasicString("about:blank"),
-            NULL,  // Flags
-            NULL,  // TargetFrameName
-            NULL,  // PostData
-            NULL   // Headers
-        );
+        if (!wxWebView::IsBackendAvailable(wxWebViewBackendEdge))
+            wxWebViewIE::MSWSetEmulationLevel(wxWEBVIEWIE_EMU_IE11);
+        // Note that about:blank is used so that subsequent SetPage() call doesn't fail with
+        // MSIE. See https://github.com/vslavik/winsparkle/issues/155 and
+        // https://github.com/wxWidgets/wxWidgets/issues/14768
+        m_webBrowser = wxWebView::New(m_browserParent, wxID_ANY, "about:blank",
+                                      wxDefaultPosition, wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
+        auto sizer = new wxBoxSizer(wxVERTICAL);
+        sizer->Add(m_webBrowser, wxSizerFlags(1).Expand());
+        m_browserParent->SetSizer(sizer);
     }
 
     if( !info.ReleaseNotesURL.empty() )
     {
-        m_webBrowser->Navigate
-                      (
-                          wxBasicString(info.ReleaseNotesURL),
-                          NULL,  // Flags
-                          NULL,  // TargetFrameName
-                          NULL,  // PostData
-                          NULL   // Headers
-                      );
+        m_webBrowser->LoadURL(info.ReleaseNotesURL);
     }
     else if ( !info.Description.empty() )
     {
-        HRESULT hr = E_FAIL;
-        IHTMLDocument2 *doc;
-        hr = m_webBrowser->get_Document((IDispatch **)&doc);
-        if ( FAILED(hr) || !doc )
-        {
-            LogError("Failed to get HTML document");
-            return;
-        }
-
-        // If the code below looks crazy, that's because it is. Apparently,
-        // the document may be in some uninitialized state first time around,
-        // so we need to write an empty string into it first and only then the
-        // real content. (At least that's what wxWebView does...)
-        //
-        // See https://github.com/vslavik/winsparkle/issues/29
-        SAFEARRAY *psaStrings = SafeArrayCreateVector(VT_VARIANT, 0, 1);
-        if ( psaStrings != NULL )
-        {
-            VARIANT *param;
-            SafeArrayAccessData(psaStrings, (LPVOID*)&param);
-            param->vt = VT_BSTR;
-            param->bstrVal = SysAllocString(OLESTR(""));
-            SafeArrayUnaccessData(psaStrings);
-
-            doc->write(psaStrings);
-            doc->close();
-
-            SafeArrayDestroy(psaStrings);
-
-            psaStrings = SafeArrayCreateVector(VT_VARIANT, 0, 1);
-            if (psaStrings != NULL)
-            {
-                VARIANT *param;
-                SafeArrayAccessData(psaStrings, (LPVOID*) &param);
-                param->vt = VT_BSTR;
-                param->bstrVal = wxBasicString(wxString::FromUTF8(info.Description.c_str())).Detach();
-                SafeArrayUnaccessData(psaStrings);
-
-                doc->write(psaStrings);
-                doc->close();
-
-                SafeArrayDestroy(psaStrings);
-            }
-
-            doc->Release();
-        }
+        m_webBrowser->SetPage(wxString::FromUTF8(info.Description), "");
     }
 
     SetWindowStyleFlag(GetWindowStyleFlag() | wxRESIZE_BORDER);
