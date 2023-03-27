@@ -585,7 +585,7 @@
 #define wxUSE_IPV6          0
 
 // Set to 1 to enable virtual file systems (required by wxHTML)
-#define wxUSE_FILESYSTEM    0
+#define wxUSE_FILESYSTEM    1
 
 // Set to 1 to enable virtual ZIP filesystem (requires wxUSE_FILESYSTEM)
 #define wxUSE_FS_ZIP        0
@@ -792,32 +792,28 @@
 // Default is 1
 //
 // Recommended setting: 1
-#define wxUSE_WEBVIEW 0
+#define wxUSE_WEBVIEW 1
 
 // Use the IE wxWebView backend
 //
 // Default is 1 on MSW
 //
 // Recommended setting: 1
-#ifdef __WXMSW__
-#define wxUSE_WEBVIEW_IE 0
-#else
-#define wxUSE_WEBVIEW_IE 0
-#endif
+#define wxUSE_WEBVIEW_IE 1
 
 // Use the Edge (Chromium) wxWebView backend (Requires WebView2 SDK)
 //
 // Default is 0 because WebView2 is not always available, set it to 1 if you do have it.
 //
-// Recommended setting: 1 when building for Windows with WebView2 SDK
-#define wxUSE_WEBVIEW_EDGE 0
+// Recommended setting: 1 when building for Windows with W  ebView2 SDK
+#define wxUSE_WEBVIEW_EDGE 1
 
 // Use the Edge (Chromium) wxWebView backend without loader DLL
 //
 // Default is 0, set it to 1 if you don't want to depend on WebView2Loader.dll.
 //
 // Recommended setting: 0
-#define wxUSE_WEBVIEW_EDGE_STATIC 0
+#define wxUSE_WEBVIEW_EDGE_STATIC 1
 
 // Use the WebKit wxWebView backend
 //
@@ -1691,7 +1687,7 @@
 //
 // Recommended setting: 1 if you need to control other applications via OLE
 // Automation, can be safely set to 0 otherwise
-#define wxUSE_OLE_AUTOMATION 0
+#define wxUSE_OLE_AUTOMATION 1
 
 // Set this to 1 to enable wxActiveXContainer class allowing to embed OLE
 // controls in wx.

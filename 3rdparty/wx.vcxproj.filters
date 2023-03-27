@@ -20,6 +20,21 @@
     <ClInclude Include="wxWidgets_setup_h\wx\setup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="wxWidgets\include\wx\webview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wxWidgets\include\wx\webviewarchivehandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wxWidgets\include\wx\webviewfshandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wxWidgets\include\wx\msw\webview_edge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wxWidgets\include\wx\msw\webview_ie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="wxWidgets\src\common\any.cpp">
@@ -550,5 +565,20 @@
     <ClCompile Include="wxWidgets\src\msw\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\webview_edge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\webview_ie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\common\webview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wxWidgets\src\msw\ole\automtn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\packages.config" />
   </ItemGroup>
 </Project>
