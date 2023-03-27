@@ -1,4 +1,3 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/acsuqjheafef29m1?svg=true)](https://ci.appveyor.com/project/vslavik/winsparkle)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/winsparkle/localized.png)](https://crowdin.com/project/winsparkle)
 
  About
