@@ -1,0 +1,123 @@
+name: Build WinSparkle
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build DLL
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform: [Win32, x64, ARM64]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Restore dependency packages
+      run: nuget restore
+
+    - name: Build binaries
+      run: msbuild -m -t:Build -p:Configuration=Release -p:Platform=${{ matrix.platform }} WinSparkle.sln
+
+    - name: Archive binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: winsparkle-binaries-${{ matrix.platform }}
+        path: |
+          include/winsparkle*.h
+          **/WinSparkle.dll
+          **/WinSparkle.lib
+          **/WinSparkle.pdb
+          **/example*.exe
+
+  build-nuget:
+    name: Build NuGet package
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch binaries (Win32)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-Win32
+
+      - name: Fetch binaries (x64)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-x64
+
+      - name: Fetch binaries (ARM64)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-ARM64
+
+      - name: Build NuGet package
+        run: nuget pack nuget/WinSparkle.nuspec -Verbosity detailed
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nuget-package
+          path: "*.nupkg"
+
+  publish-nuget:
+    name: Publish NuGet
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    needs: build-nuget
+    steps:
+      - name: Fetch artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: nuget-package
+
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-api-key-source: https://www.nuget.org/api/v2/package
+
+      - name: Publish to NuGet
+        run: nuget push *.nupkg -Source https://www.nuget.org/api/v2/package
+
+  publish-release:
+    name: Publish release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - name: Fetch binaries (Win32)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-Win32
+
+      - name: Fetch binaries (x64)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-x64
+
+      - name: Fetch binaries (ARM64)
+        uses: actions/download-artifact@v3
+        with:
+          name: winsparkle-binaries-ARM64
+
+      - name: Package tarballs
+        run: make -f distrib.makefile
+
+      - uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          prerelease: true
+          artifacts: "WinSparkle*.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
