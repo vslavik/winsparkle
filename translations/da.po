@@ -1,25 +1,27 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2020-06-07 08:06\n"
+"POT-Creation-Date: 2018-02-05 20:00+0100\n"
+"PO-Revision-Date: 2023-03-28 16:28\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
+"X-Crowdin-Project-ID: 82678\n"
 "X-Crowdin-Language: da\n"
-"X-Crowdin-File: /master/winsparkle.pot\n"
+"X-Crowdin-File: winsparkle.pot\n"
+"X-Crowdin-File-ID: 57\n"
 
-#: src/ui.cpp:325 src/ui.cpp:668 src/ui.cpp:684
+#: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
 msgstr "Softwareopdatering"
 
@@ -29,7 +31,7 @@ msgstr "Udgivelsesnoter:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
-msgstr "Spring denne version over"
+msgstr "Overspring denne version"
 
 #: src/ui.cpp:545
 msgid "Remind me later"
@@ -39,98 +41,98 @@ msgstr "Påmind mig senere"
 msgid "Install update"
 msgstr "Installer opdateringer"
 
-#: src/ui.cpp:667
+#: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
 msgstr "%s kan ikke genstartes."
 
-#: src/ui.cpp:670
+#: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Sørg for at du ikke har nogen dokumenter der ikke er gemt, og prøv så igen."
+msgstr "Sørg for, at der ikke er dokumenter, som ikke er gemt, og forsøg igen."
 
-#: src/ui.cpp:677
+#: src/ui.cpp:683
 msgid "Launching the installer..."
 msgstr "Starter installationsprogrammet..."
 
-#: src/ui.cpp:683
+#: src/ui.cpp:689
 msgid "Failed to launch the installer."
 msgstr "Kunne ikke starte installationsprogrammet."
 
-#: src/ui.cpp:726
+#: src/ui.cpp:732
 msgid "Checking for updates..."
 msgstr "Søger efter opdateringer..."
 
-#: src/ui.cpp:728 src/ui.cpp:809 src/ui.cpp:897
+#: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
-msgstr "Annuller"
+msgstr "Annullér"
 
-#: src/ui.cpp:754
+#: src/ui.cpp:760
 msgid "You're up to date!"
 msgstr "Du er opdateret!"
 
-#: src/ui.cpp:761
+#: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s er aktuelt den nyeste version der fås."
+msgstr "%s %s er pt. senest tilgængelige version."
 
-#: src/ui.cpp:774
+#: src/ui.cpp:780
 msgid "Close"
 msgstr "Luk"
 
-#: src/ui.cpp:795
+#: src/ui.cpp:801
 msgid "Update Error!"
 msgstr "Opdateringsfejl!"
 
-#: src/ui.cpp:801
+#: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Der opstod en fejl ved at hente opdateringsoplysninger; er du forbundet til internettet? Prøv venligst igen senere."
+msgstr "En fejl opstod under hentning af opdateringsoplysninger. Er internetforbindelsen aktiv? Forsøg igen senere."
 
-#: src/ui.cpp:804
+#: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr "Opdateringen er ikke underskrevet korrekt."
+msgstr "Opdateringen er ikke korrekt signeret."
 
-#: src/ui.cpp:855
+#: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
 msgstr "En ny version af %s er tilgængelig!"
 
-#: src/ui.cpp:858
+#: src/ui.cpp:864
 msgid "Get update"
 msgstr "Hent opdatering"
 
-#: src/ui.cpp:864
+#: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s er nu tilgængelig (du har %s). Vil du gerne downloade den nu?"
+msgstr "%s %s er nu tilgængelig (denne er %s). Download den nu?"
 
-#: src/ui.cpp:895
+#: src/ui.cpp:901
 msgid "Downloading update..."
 msgstr "Downloader opdatering..."
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
-#: src/ui.cpp:923
+#: src/ui.cpp:929
 #, c-format
 msgid "%s of %s"
 msgstr "%s af %s"
 
-#: src/ui.cpp:960
+#: src/ui.cpp:966
 msgid "Ready to install."
 msgstr "Klar til at installere."
 
-#: src/ui.cpp:1105
+#: src/ui.cpp:1111
 msgid "Check for updates automatically?"
 msgstr "Søg automatisk efter opdateringer?"
 
-#: src/ui.cpp:1115
+#: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Skal %s automatisk søge efter opdateringer? Du kan altid søge manuelt efter opdateringer i menuen."
+msgstr "Skal %s automatisk søge efter opdateringer? Man kan altid søge efter opdateringer manuelt i menuen."
 
-#: src/ui.cpp:1129
+#: src/ui.cpp:1135
 msgid "Check automatically"
 msgstr "Søg automatisk"
 
-#: src/ui.cpp:1134
+#: src/ui.cpp:1140
 msgid "Don't check"
 msgstr "Søg ikke"
 

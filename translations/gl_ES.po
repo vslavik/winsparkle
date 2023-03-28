@@ -4,110 +4,110 @@ msgstr ""
 "POT-Creation-Date: 2018-02-05 20:00+0100\n"
 "PO-Revision-Date: 2023-03-28 16:28\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
-"Language-Team: French\n"
-"Language: fr\n"
+"Language-Team: Galician\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Crowdin-Project: winsparkle\n"
 "X-Crowdin-Project-ID: 82678\n"
-"X-Crowdin-Language: fr\n"
+"X-Crowdin-Language: gl\n"
 "X-Crowdin-File: winsparkle.pot\n"
 "X-Crowdin-File-ID: 57\n"
 
 #: src/ui.cpp:325 src/ui.cpp:674 src/ui.cpp:690
 msgid "Software Update"
-msgstr "Mise à jour du Logiciel"
+msgstr "Actualización do soporte lóxico"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Notes de version :"
+msgstr "Novidades:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
-msgstr "Ignorer cette version"
+msgstr "Ignorar esta versión"
 
 #: src/ui.cpp:545
 msgid "Remind me later"
-msgstr "Me le rappeler ultérieurement"
+msgstr "Lembrarmo máis tarde"
 
 #: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
-msgstr "Installer la mise à jour"
+msgstr "Instalar actualización"
 
 #: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s ne peut être redémarré."
+msgstr "non se pode reiniciar %s."
 
 #: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Assurez-vous que vos documents soient enregistrés et réessayez."
+msgstr "Teña a certeza de que non ten ningún documento sen gardar e inténteo de novo."
 
 #: src/ui.cpp:683
 msgid "Launching the installer..."
-msgstr "Démarrage du programme d'installation ... "
+msgstr "Iniciando o instalador..."
 
 #: src/ui.cpp:689
 msgid "Failed to launch the installer."
-msgstr "Impossible de démarrer le programme d'installation."
+msgstr "Houbo un erro ao iniciar o instalador."
 
 #: src/ui.cpp:732
 msgid "Checking for updates..."
-msgstr "Recherche de mises à jour..."
+msgstr "Buscando actualizacións..."
 
 #: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "Cancelar"
 
 #: src/ui.cpp:760
 msgid "You're up to date!"
-msgstr "Le programme est à jour !"
+msgstr "Xa está actualizado!"
 
 #: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s est actuellement la version la plus récente disponible."
+msgstr "%s %s é a versión dispoñible máis recente."
 
 #: src/ui.cpp:780
 msgid "Close"
-msgstr "Fermer"
+msgstr "Pechar"
 
 #: src/ui.cpp:801
 msgid "Update Error!"
-msgstr "Erreur lors de la mise à jour !"
+msgstr "Houbo un erro ao actualizar!"
 
 #: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Une erreur est survenue lors de la récupération des données de mise à jour. Êtes-vous connecté à internet ? Veuillez réessayer ultérieurement."
+msgstr "Ocorreu un erro ao querer obter información sobre a actualización. Está conectado á rede? Inténteo novamente máis tarde."
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr "La mise à jour est incorrectement signée."
+msgstr "A actualización non está asinada correctamente."
 
 #: src/ui.cpp:861
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Une nouvelle version de %s est disponible !"
+msgstr "Está dispoñible unha nova versión de %s!"
 
 #: src/ui.cpp:864
 msgid "Get update"
-msgstr "Mettre à jour"
+msgstr "Baixar actualización"
 
 #: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s est disponible (vous possédez actuellement %s). Souhaitez-vous la télécharger maintenant ?"
+msgstr "%s %s está dispoñible (a súa versión é a %s). Gustaríache baixar a nova versión agora?"
 
 #: src/ui.cpp:901
 msgid "Downloading update..."
-msgstr "Téléchargement de la mise à jour..."
+msgstr "Descargando actualización..."
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
 #: src/ui.cpp:929
@@ -117,22 +117,22 @@ msgstr "%s de %s"
 
 #: src/ui.cpp:966
 msgid "Ready to install."
-msgstr "Prête à être installée."
+msgstr "Listo para instalar."
 
 #: src/ui.cpp:1111
 msgid "Check for updates automatically?"
-msgstr "Vérification automatique des mises à jour ?"
+msgstr "Buscar actualizacións automaticamente?"
 
 #: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Souhaitez-vous que %s recherche automatiquement les mises à jours ? Vous pouvez le faire manuellement à partir du menu."
+msgstr "Debe %s comprobar as actualizacións automaticamente? Podes comprobar as actualizacións manualmente desde o menú."
 
 #: src/ui.cpp:1135
 msgid "Check automatically"
-msgstr "Vérifier automatiquement"
+msgstr "Buscar automaticamente"
 
 #: src/ui.cpp:1140
 msgid "Don't check"
-msgstr "Ne pas vérifier"
+msgstr "Non comprobar"
 
