@@ -17,8 +17,10 @@ the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/incl
  Using prebuilt binaries
 -------------------------
 
-The easiest way to use WinSparkle is to download the prebuilt `WinSparkle.dll`
-binary.
+The easiest way to use WinSparkle is to either download the prebuilt `WinSparkle.dll`
+binary from releases or use the `WinSparkle` [NuGet package](https://www.nuget.org/packages/WinSparkle/).
+Prebuilt binaries are available for x86, x64 and arm64 platforms.
+
 
  Bindings
 ----------

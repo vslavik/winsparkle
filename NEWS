@@ -1,4 +1,20 @@
 
+Version 0.8.0
+-------------
+
+- Added support for modern Edge/WebView2 browser for release notes.
+- Added win_sparkle_set_update_dismissed_callback() and
+  win_sparkle_set_update_postponed_callback() callbacks.
+- Added partiaul support for <sparkle:criticalUpdate> tag.
+- Links in release notes now open in user's default browser as they should.
+- Added support for Visual Studio 2019 and 2022.
+- Added official NuGet package.
+- Added support for ARM64 architecture.
+- This version drops official support for Windows XP. It may still be possible
+  to target it with vs*_xp toolsets, but would probably require at least
+  disabling WebView2. Prebuilt binaries and NuGet package don't support XP.
+
+
 Version 0.7.0
 -------------
 
