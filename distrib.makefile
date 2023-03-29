@@ -44,15 +44,11 @@ $(binary_arch): $(binary_files)
 	@mkdir -p $(binary_base)/ARM64/Release
 	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
 	cp -a 3rdparty/expat/expat/COPYING $(binary_base)/COPYING.expat
-	zip -9 -r  $@ $(binary_base)
-	@rm -rf $(binary_base) $(binary_base).tar
+	zip -9 -r $@ $(binary_base)
 
 $(sources_arch):
-	@rm -rf $(sources_base) $@
-	git-archive-all --prefix=$(sources_base)/ $(sources_base).tar
-	tar xf $(sources_base).tar
-	zip -9 -r  $@ $(sources_base)
-	@rm -rf $(sources_base) $(sources_base).tar
+	@rm -rf $@
+	git ls-files --recurse-submodules | zip -9 -@ $@
 
 
 clean:
