@@ -161,24 +161,27 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
-            const size_t size = ctxt.items.size();
-            for ( int i = 0; attrs[i]; i += 2 )
+            if (!ctxt.items.empty())
             {
-                const char *name = attrs[i];
-                const char *value = attrs[i+1];
+                Appcast& item = ctxt.items.back();
+                for (int i = 0; attrs[i]; i += 2)
+                {
+                    const char* name = attrs[i];
+                    const char* value = attrs[i + 1];
 
-                if ( strcmp(name, ATTR_URL) == 0 )
-                    ctxt.items[size-1].DownloadURL = value;
-                else if ( strcmp(name, ATTR_VERSION) == 0 )
-                    ctxt.items[size-1].Version = value;
-                else if ( strcmp(name, ATTR_SHORTVERSION) == 0 )
-                    ctxt.items[size-1].ShortVersionString = value;
-                else if ( strcmp(name, ATTR_DSASIGNATURE) == 0 )
-                    ctxt.items[size-1].DsaSignature = value;
-                else if ( strcmp(name, ATTR_OS) == 0 )
-                    ctxt.items[size-1].Os = value;
-                else if ( strcmp(name, ATTR_ARGUMENTS) == 0 )
-                    ctxt.items[size-1].InstallerArguments = value;
+                    if (strcmp(name, ATTR_URL) == 0)
+                        item.DownloadURL = value;
+                    else if (strcmp(name, ATTR_VERSION) == 0)
+                        item.Version = value;
+                    else if (strcmp(name, ATTR_SHORTVERSION) == 0)
+                        item.ShortVersionString = value;
+                    else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
+                        item.DsaSignature = value;
+                    else if (strcmp(name, ATTR_OS) == 0)
+                        item.Os = value;
+                    else if (strcmp(name, ATTR_ARGUMENTS) == 0)
+                        item.InstallerArguments = value;
+                }
             }
         }
         else if (strcmp(name, NODE_CRITICAL_UPDATE) == 0)
@@ -274,24 +277,27 @@ void XMLCALL OnEndElement(void *data, const char *name)
 void XMLCALL OnText(void *data, const char *s, int len)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
-    const size_t size = ctxt.items.size();
+    if (ctxt.items.empty())
+		return;
+
+    Appcast& item = ctxt.items.back();
 
     if ( ctxt.in_relnotes )
-        ctxt.items[size-1].ReleaseNotesURL.append(s, len);
+        item.ReleaseNotesURL.append(s, len);
     else if ( ctxt.in_title )
-        ctxt.items[size-1].Title.append(s, len);
+        item.Title.append(s, len);
     else if ( ctxt.in_description )
-        ctxt.items[size-1].Description.append(s, len);
+        item.Description.append(s, len);
     else if ( ctxt.in_link )
-        ctxt.items[size-1].WebBrowserURL.append(s, len);
+        item.WebBrowserURL.append(s, len);
     else if ( ctxt.in_version )
-        ctxt.items[size-1].Version.append(s, len);
+        item.Version.append(s, len);
     else if ( ctxt.in_shortversion )
-        ctxt.items[size-1].ShortVersionString.append(s, len);
+        item.ShortVersionString.append(s, len);
     else if (ctxt.in_dsasignature)
-        ctxt.items[size-1].DsaSignature.append(s, len);
+        item.DsaSignature.append(s, len);
     else if ( ctxt.in_min_os_version )
-        ctxt.items[size-1].MinOSVersion.append(s, len);
+        item.MinOSVersion.append(s, len);
 }
 
 } // anonymous namespace
