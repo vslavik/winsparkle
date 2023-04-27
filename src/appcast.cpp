@@ -219,6 +219,17 @@ bool is_suitable_windows_item(const Appcast &item)
 }
 
 
+void trim_whitespace(std::string& s)
+{
+    size_t startpos = s.find_first_not_of(" \t\r\n");
+    if (startpos != std::string::npos)
+        s = s.substr(startpos);
+    size_t endpos = s.find_last_not_of(" \t\r\n");
+    if (endpos != std::string::npos)
+        s = s.substr(0, endpos + 1);
+}
+
+
 void XMLCALL OnEndElement(void *data, const char *name)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
@@ -282,22 +293,40 @@ void XMLCALL OnText(void *data, const char *s, int len)
 
     Appcast& item = ctxt.items.back();
 
-    if ( ctxt.in_relnotes )
+    if (ctxt.in_relnotes)
+    {
         item.ReleaseNotesURL.append(s, len);
-    else if ( ctxt.in_title )
+        trim_whitespace(item.ReleaseNotesURL);
+    }
+    else if (ctxt.in_title)
+    {
         item.Title.append(s, len);
-    else if ( ctxt.in_description )
+    }
+    else if (ctxt.in_description)
+    {
         item.Description.append(s, len);
-    else if ( ctxt.in_link )
+    }
+    else if (ctxt.in_link)
+    {
         item.WebBrowserURL.append(s, len);
-    else if ( ctxt.in_version )
+        trim_whitespace(item.WebBrowserURL);
+    }
+    else if (ctxt.in_version)
+    {
         item.Version.append(s, len);
-    else if ( ctxt.in_shortversion )
+    }
+    else if (ctxt.in_shortversion)
+    {
         item.ShortVersionString.append(s, len);
+    }
     else if (ctxt.in_dsasignature)
+    {
         item.DsaSignature.append(s, len);
-    else if ( ctxt.in_min_os_version )
+    }
+    else if (ctxt.in_min_os_version)
+    {
         item.MinOSVersion.append(s, len);
+    }
 }
 
 } // anonymous namespace
