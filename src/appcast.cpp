@@ -183,7 +183,7 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                         item.ShortVersionString = value;
                     else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
                         item.DsaSignature = value;
-                    else if (strcmp(name, ATTR_EDSASIGNATURE) == 0)
+                    else if (strcmp(name, ATTR_EDDSASIGNATURE) == 0)
                         item.EdDsaSignature = value;
                     else if (strcmp(name, ATTR_OS) == 0)
                         item.Os = value;

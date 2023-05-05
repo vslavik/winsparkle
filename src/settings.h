@@ -286,7 +286,7 @@ public:
     //@}
 
     /// Set PEM data and verify in contains valid EdDSA public key
-    static void SetEdDSAPubKey(const std::string& key);
+    static void SetEdDSAPubKey(const std::string& pubkey_base64);
     //@}
 
     /**

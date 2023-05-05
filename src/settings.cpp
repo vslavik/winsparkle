@@ -352,11 +352,11 @@ void Settings::SetDSAPubKeyPem(const std::string &pem)
     ms_DSAPubKey = pem;
 }
 
-void Settings::SetEdDSAPubKey(const std::string& key)
+void Settings::SetEdDSAPubKey(const std::string& pubkey_base64)
 {
     CriticalSectionLocker lock(ms_csVars);
-    SignatureVerifier::VerifyEdDSAPubKey(key);
-    ms_EdDSAPubKey = key;
+    SignatureVerifier::VerifyEdDSAPubKey(pubkey_base64);
+    ms_EdDSAPubKey = pubkey_base64;
 }
 
 } // namespace winsparkle

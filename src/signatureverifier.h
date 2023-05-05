@@ -46,7 +46,7 @@ public:
     static void VerifyDSAPubKeyPem(const std::string &pem);
 
     // Throws an exception if pem is not a valid EdDSA public key in base64 format
-    static void VerifyEdDSAPubKey(const std::string& key);
+    static void VerifyEdDSAPubKey(const std::string& pubkey_base64);
 
     // Verify DSA signature of SHA1 hash of the file. Equivalent to:
     // openssl dgst -sha1 -binary < filename | openssl dgst -sha1 -verify dsa_pub.pem -signature signature.bin

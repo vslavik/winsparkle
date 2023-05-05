@@ -287,12 +287,6 @@ std::string Base64ToBin(const std::string &base64)
     return bin;
 }
 
-std::vector<unsigned char> Base64ToUnsignedBin(const std::string& base64)
-{
-    std::string bin = Base64ToBin(base64);
-    return std::vector<unsigned char>(bin.data(), bin.data() + bin.length() + 1);
-}
-
 } // anonynous
 
 void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
@@ -302,10 +296,12 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
     (void)dsa_pub;
 }
 
-void SignatureVerifier::VerifyEdDSAPubKey(const std::string& key)
+void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 {
-    // TODO: validate
-    (void)key;
+    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    if (pubkey.size() != 32) {
+        throw BadSignatureException("Invalid public key size.");
+    }
 }
 
 void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
@@ -333,31 +329,37 @@ void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename
 void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64)
 {
     if (signature_base64.size() == 0)
-        throw BadSignatureException("Missing DSA signature!");
+        throw BadSignatureException("Missing EdDSA signature!");
 
-    HANDLE payload;
-    payload = CreateFile(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (payload == INVALID_HANDLE_VALUE) {
+    CFile payload = _wfopen(filename.c_str(), L"rb");
+    if (payload == nullptr) {
         throw BadSignatureException("Could not open payload!");
     }
 
     DWORD size = GetFileSize(payload, NULL);
-    DWORD bytes_read = 0;
-    unsigned char *buffer = new unsigned char[size + 1];
-    if (FALSE == ReadFile(payload, buffer, size, &bytes_read, NULL)) {
+    std::vector<unsigned char> buffer;
+    buffer.resize(size);
+    size_t bytes_read = fread(buffer.data(), 1, size, payload);
+    if (bytes_read < size) {
         throw BadSignatureException("Could not read payload!");
     }
-    buffer[bytes_read] = '\0';
+    fclose(payload);
 
-    std::vector<unsigned char> signature = Base64ToUnsignedBin(signature_base64);
-    std::vector<unsigned char> key = Base64ToUnsignedBin(Settings::GetEdDSAPubKey());
+    const std::string signature = Base64ToBin(signature_base64);
+    if (signature.size() != 64) {
+        throw BadSignatureException("Invalid signature size.");
+    }
 
-    int result = ed25519_verify(signature.data(),
-                                buffer,
+    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    if (pubkey.size() != 32) {
+        throw BadSignatureException("Invalid public key size.");
+    }
+
+    int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
+                                buffer.data(),
                                 bytes_read,
-                                key.data());
+                                reinterpret_cast<const unsigned char*>(pubkey.data()));
 
-    delete[] buffer;
     CloseHandle(payload);
 
     if (result != 1)
