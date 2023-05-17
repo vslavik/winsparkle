@@ -42,7 +42,7 @@ submodules.
 
 Check the sources out and initialize the submodules:
 
-    $ git clone git://github.com/vslavik/winsparkle.git
+    $ git clone https://github.com/vslavik/winsparkle.git
     $ cd winsparkle
     $ git submodule init
     $ git submodule update
@@ -114,7 +114,7 @@ https://github.com/vslavik/winsparkle
 WinSparkle uses submodules for some dependencies, so you have to initialize
 them after checking the tree out:
 
-    $ git clone git://github.com/vslavik/winsparkle.git
+    $ git clone https://github.com/vslavik/winsparkle.git
     $ cd winsparkle
     $ git submodule init
     $ git submodule update
