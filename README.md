@@ -91,7 +91,7 @@ When your update is ready (e.g. `Updater.exe`), sign it and include signature
 to your appcast file:
 
  - Sign: `bin\sign_update.bat Updater.exe dsa_priv.pem`
- - Add standard output of previos command as `sparkle:dsaSignature` attribute
+ - Add standard output of previous command as `sparkle:dsaSignature` attribute
  of `enclosure` node of your appcast file.
  Alternatively `sparkle:dsaSignature` can be a child node of `enclosure`.
 
