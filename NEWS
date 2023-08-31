@@ -1,3 +1,9 @@
+Version 0.8.1
+-------------
+
+- Fixed release notes not shown if <sparkle:releaseNotesLink> is malformed
+  and has whitespace around the URL.
+
 
 Version 0.8.0
 -------------
