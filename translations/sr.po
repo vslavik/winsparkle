@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2023-03-28 16:28\n"
+"POT-Creation-Date: 2019-10-06 14:19+0200\n"
+"PO-Revision-Date: 2023-08-31 16:21\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Language: sr\n"
@@ -27,7 +27,7 @@ msgstr "Ажурирање софтвера"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Белешке о издању:"
+msgstr "Напомене о верзији:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
@@ -44,7 +44,7 @@ msgstr "Инсталирај"
 #: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "Не могу да поново покренем %s."
+msgstr "Није могуће поново покренути %s."
 
 #: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
@@ -52,15 +52,15 @@ msgstr "Проверите да ли сте сачували све докуме
 
 #: src/ui.cpp:683
 msgid "Launching the installer..."
-msgstr "Покрећем инсталацију…"
+msgstr "Покретање инсталације…"
 
 #: src/ui.cpp:689
 msgid "Failed to launch the installer."
-msgstr "Не могу да покренем инсталацију."
+msgstr "Није могуће покренути инсталацију."
 
 #: src/ui.cpp:732
 msgid "Checking for updates..."
-msgstr "Тражим ажурирања…"
+msgstr "Тражење ажурирања…"
 
 #: src/ui.cpp:734 src/ui.cpp:815 src/ui.cpp:903
 msgid "Cancel"
@@ -103,11 +103,11 @@ msgstr "Преузми"
 #: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "Изашао је %s %s (ви имате в. %s). Желите ли да преузмете ажурирање?"
+msgstr "Доступан је %s %s (ви имате верзију %s). Желите ли да преузмете ажурирање?"
 
 #: src/ui.cpp:901
 msgid "Downloading update..."
-msgstr "Преузимам ажурирање…"
+msgstr "Преузимање ажурирања…"
 
 #. TRANSLATORS: This is the progress of a download, e.g. "3 MB of 12 MB".
 #: src/ui.cpp:929
@@ -126,7 +126,7 @@ msgstr "Тражити ажурирања аутоматски?"
 #: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Желите ли да %s аутоматски тражи ажурирања? Ажурирања можете потражити и ручно из менија."
+msgstr "Желите ли да %s аутоматски тражи ажурирања? То можете да урадите и ручно из менија."
 
 #: src/ui.cpp:1135
 msgid "Check automatically"

@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
-"POT-Creation-Date: 2018-02-05 20:00+0100\n"
-"PO-Revision-Date: 2023-03-28 16:28\n"
+"POT-Creation-Date: 2019-10-06 14:19+0200\n"
+"PO-Revision-Date: 2023-08-31 16:21\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Portuguese, Brazilian\n"
-"Language: pt\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,7 +27,7 @@ msgstr "Atualização do Software"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Notas de lançamento:"
+msgstr "Notas do lançamento:"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
@@ -35,7 +35,7 @@ msgstr "Ignorar esta versão"
 
 #: src/ui.cpp:545
 msgid "Remind me later"
-msgstr "Lembrar mais tarde"
+msgstr "Lembre-me mais tarde"
 
 #: src/ui.cpp:550 src/ui.cpp:563
 msgid "Install update"
@@ -44,11 +44,11 @@ msgstr "Instalar atualização"
 #: src/ui.cpp:673
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s não pode ser reiniciado."
+msgstr "O %s não pode ser reiniciado."
 
 #: src/ui.cpp:676
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Assegure-se de não ter quaisquer documentos não salvos e tente de novo."
+msgstr "Certifique-se que você não tenha quaisquer documentos não salvos e tente de novo."
 
 #: src/ui.cpp:683
 msgid "Launching the installer..."
@@ -56,7 +56,7 @@ msgstr "Executando o instalador..."
 
 #: src/ui.cpp:689
 msgid "Failed to launch the installer."
-msgstr "Falhou ao iniciar o instalador."
+msgstr "Falhou em executar o instalador."
 
 #: src/ui.cpp:732
 msgid "Checking for updates..."
@@ -68,12 +68,12 @@ msgstr "Cancelar"
 
 #: src/ui.cpp:760
 msgid "You're up to date!"
-msgstr "Sua versão está atualizada!"
+msgstr "Você está atualizado!"
 
 #: src/ui.cpp:767
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s é atualmente a última versão disponível."
+msgstr "%s %s é atualmente a versão mais nova disponível."
 
 #: src/ui.cpp:780
 msgid "Close"
@@ -81,15 +81,15 @@ msgstr "Fechar"
 
 #: src/ui.cpp:801
 msgid "Update Error!"
-msgstr "Erro ao atualizar!"
+msgstr "Erro da Atualização!"
 
 #: src/ui.cpp:807
 msgid "An error occurred in retrieving update information; are you connected to the internet? Please try again later."
-msgstr "Ocorreu um erro ao obter as informações da atualização. Você está conectado à internet? Tente novamente mais tarde."
+msgstr "Um erro ocorreu ao recuperar as informações da atualização; você está conectado a internet? Por favor tente de novo mais tarde."
 
 #: src/ui.cpp:810
 msgid "The update is improperly signed."
-msgstr "A atualização não está assinada corretamente."
+msgstr "A atualização não está assinada apropriadamente."
 
 #: src/ui.cpp:861
 #, c-format
@@ -98,12 +98,12 @@ msgstr "Uma nova versão do %s está disponível!"
 
 #: src/ui.cpp:864
 msgid "Get update"
-msgstr "Baixar atualização"
+msgstr "Obter atualização"
 
 #: src/ui.cpp:870
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s está disponível (sua versão é a %s). Gostaria de baixar a nova versão agora?"
+msgstr "%s %s agora está disponível (você tem a %s). Você gostaria de baixá-la agora?"
 
 #: src/ui.cpp:901
 msgid "Downloading update..."
@@ -126,7 +126,7 @@ msgstr "Procurar atualizações automaticamente?"
 #: src/ui.cpp:1121
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "O %s deve procurar atualizações automaticamente? Você pode sempre procurar atualizações manualmente no menu."
+msgstr "O %s deveria procurar atualizações automaticamente? Você pode sempre procurar atualizações manualmente no menu."
 
 #: src/ui.cpp:1135
 msgid "Check automatically"
