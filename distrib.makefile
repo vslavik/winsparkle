@@ -6,7 +6,7 @@
 
 # The version to package. It is assumed that binaries in the tree are
 # for this version.
-VERSION := $(shell git describe --always | sed -e 's/^v//g')
+VERSION := $(shell git describe --always --tags | sed -e 's/^v//g')
 
 
 sources_base := WinSparkle-$(VERSION)-src
