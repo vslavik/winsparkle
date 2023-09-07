@@ -1343,6 +1343,10 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
 void App::OnAskForPermission(wxThreadEvent& event)
 {
     AskPermissionDialog dlg;
+    // center inside parent window
+    dlg.CentreOnParent();
+    // to the top
+    dlg.Raise();
     bool shouldCheck = (dlg.ShowModal() == wxID_OK);
 
     Settings::WriteConfigValue("CheckForUpdates", shouldCheck);
