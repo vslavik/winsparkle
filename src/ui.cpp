@@ -1343,9 +1343,8 @@ void App::OnUpdateAvailable(wxThreadEvent& event)
 void App::OnAskForPermission(wxThreadEvent& event)
 {
     AskPermissionDialog dlg;
-    // center inside parent window
-    dlg.CentreOnParent();
-    // to the top
+    // make the dialog window more visible
+    CenterWindowOnHostApplication(&dlg);
     dlg.Raise();
     bool shouldCheck = (dlg.ShowModal() == wxID_OK);
 
