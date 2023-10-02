@@ -1,4 +1,4 @@
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/winsparkle/localized.png)](https://crowdin.com/project/winsparkle)
+[![Crowdin](https://badges.crowdin.net/winsparkle/localized.svg)](https://crowdin.com/project/winsparkle)
 
  About
 -------
