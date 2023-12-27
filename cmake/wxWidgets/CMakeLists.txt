@@ -34,6 +34,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # Note: WebView2Loader is built with buffercheck, which isn't available on LLVM MinGW. Thus, we have no choice
   # but to require WebView2Loader.dll along with WinSparkle when built with this version of MinGW.
   set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll.lib")
+  set(WEBVIEW2_LOADER_LIB_DLL "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll")
+  set(WEBVIEW2_LOADER_LIB_DLL ${WEBVIEW2_LOADER_LIB_DLL} CACHE INTERNAL "" FORCE)
 else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(INCLUDE_DIRS ${SOURCE_DIR/WebView2 ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
   set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2LoaderStatic.lib")
