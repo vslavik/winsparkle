@@ -7,21 +7,23 @@ endif()
 
 set(SOURCE_DIR ${ROOT_DIR}/3rdparty)
 
-set(ARCHS_64BIT_INTEL "AMD64" "x86_64")
-set(ARCHS_64BIT_ARM "ARM64" "aarch64")
-set(ARCHS_32BIT_INTEL "X86" "i686")
+set(ARCHS_64BIT_INTEL "amd64" "x86_64")
+set(ARCHS_64BIT_ARM "arm64" "aarch64")
+set(ARCHS_32BIT_INTEL "x86" "i686")
 
-list(FIND ARCHS_64BIT_INTEL "${CMAKE_SYSTEM_PROCESSOR}" _list_idx)
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" _SYSTEM_PROCESSOR_LOWERED)
+
+list(FIND ARCHS_64BIT_INTEL "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
 if (${_list_idx} GREATER -1)
     set(WEBVIEW2_LOADER_ARCH "x64")
 endif (${_list_idx} GREATER -1)
 
-list(FIND ARCHS_64BIT_ARM "${CMAKE_SYSTEM_PROCESSOR}" _list_idx)
+list(FIND ARCHS_64BIT_ARM "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
 if (${_list_idx} GREATER -1)
     set(WEBVIEW2_LOADER_ARCH "arm64")
 endif (${_list_idx} GREATER -1)
 
-list(FIND ARCHS_32BIT_INTEL "${CMAKE_SYSTEM_PROCESSOR}" _list_idx)
+list(FIND ARCHS_32BIT_INTEL "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
 if (${_list_idx} GREATER -1)
     set(WEBVIEW2_LOADER_ARCH "x86")
 endif (${_list_idx} GREATER -1)
