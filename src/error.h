@@ -26,6 +26,7 @@
 #ifndef _error_h_
 #define _error_h_
 
+#include <string>
 #include <stdexcept>
 
 namespace winsparkle
