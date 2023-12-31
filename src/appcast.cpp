@@ -213,11 +213,11 @@ bool is_suitable_windows_item(const Appcast &item)
 
     // Check suffix for matching bitness
 #ifdef _WIN64
-#ifdef defined(__AARCH64EL__) || defined(_M_ARM64)
+  #if defined(__AARCH64EL__) || defined(_M_ARM64)
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
-#else
+  #else
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
-#endif // defined(__AARCH64EL__) || defined(_M_ARM64)
+  #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
 #else
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
 #endif // _WIN64
