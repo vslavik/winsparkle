@@ -195,7 +195,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 
 /**
  * Returns true if item os is exactly "windows"
- *   or if item is "windows-x64" on 64bit
+ *   or if item is "windows-arm64" on 64bit ARM
+ *   or if item is "windows-x64" on 64bit Intel/AMD
  *   or if item is "windows-x86" on 32bit
  *   and is above minimum version
  */
@@ -212,10 +213,14 @@ bool is_suitable_windows_item(const Appcast &item)
 
     // Check suffix for matching bitness
 #ifdef _WIN64
+  #if defined(__AARCH64EL__) || defined(_M_ARM64)
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
+  #else
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+  #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
 #else
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
-#endif
+#endif // _WIN64
 }
 
 
@@ -365,7 +370,7 @@ Appcast Appcast::Load(const std::string& xml)
 
     /*
      * Search for first <item> which specifies with the attribute sparkle:os set to "windows"
-     * or "windows-x64"/"windows-x86" based on this modules bitness and meets the minimum
+     * or "windows-x64"/"windows-arm64"/"windows-x86" based on this modules bitness and meets the minimum
      * os version, if set. If none, use the first item that meets the minimum os version, if set.
      */
     std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
