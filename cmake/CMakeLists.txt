@@ -105,12 +105,7 @@ list(APPEND SOURCES ${CMAKE_CURRENT_BINARY_DIR}/common_res.o)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat> $<TARGET_OBJECTS:crypto>)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    # LLVM MinGW uses slightly different naming for UxTheme and Shlwapi.
-    target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 uxtheme shlwapi "${WEBVIEW2_LOADER_LIB}")
-else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 UxTheme Shlwapi "${WEBVIEW2_LOADER_LIB}")
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 uxtheme shlwapi "${WEBVIEW2_LOADER_LIB}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${LIB_MAJOR_VERSION}.${LIB_MINOR_VERSION}.${LIB_PATCH_VERSION}
