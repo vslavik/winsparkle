@@ -813,7 +813,11 @@
 // Default is 0, set it to 1 if you don't want to depend on WebView2Loader.dll.
 //
 // Recommended setting: 0
+#if defined(__clang__)
+#define wxUSE_WEBVIEW_EDGE_STATIC 0
+#else
 #define wxUSE_WEBVIEW_EDGE_STATIC 1
+#endif // defined(__clang__)
 
 // Use the WebKit wxWebView backend
 //
