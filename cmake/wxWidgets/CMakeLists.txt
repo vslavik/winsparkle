@@ -28,22 +28,6 @@ if (${_list_idx} GREATER -1)
     set(WEBVIEW2_LOADER_ARCH "x86")
 endif (${_list_idx} GREATER -1)
  
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  set(INCLUDE_DIRS ${SOURCE_DIR}/WebView2 ${SOURCE_DIR}/wxWidgets_setup_h/clang ${SOURCE_DIR}/wxWidgets/include)
-
-  # Note: WebView2Loader is built with buffercheck, which isn't available on LLVM MinGW. Thus, we have no choice
-  # but to require WebView2Loader.dll along with WinSparkle when built with this version of MinGW.
-  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll.lib")
-  set(WEBVIEW2_LOADER_LIB_DLL "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll")
-  set(WEBVIEW2_LOADER_LIB_DLL ${WEBVIEW2_LOADER_LIB_DLL} CACHE INTERNAL "" FORCE)
-else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  set(INCLUDE_DIRS ${SOURCE_DIR/WebView2 ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
-  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2LoaderStatic.lib")
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-set(WEBVIEW2_LOADER_LIB ${WEBVIEW2_LOADER_LIB} CACHE INTERNAL "" FORCE)
-
-include_directories(${INCLUDE_DIRS})
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_definitions(
@@ -246,19 +230,14 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/wxprintf.cpp)
 
 add_library(${PROJECT_NAME} OBJECT ${SOURCES})
-set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-include(PCHSupport)
-if(NOT PCHSupport_FOUND)
-  message(FATAL_ERROR "Precompiled headers are not supported")
-endif()
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../../packages.config" PACKAGES_CONFIG_FILE)
+string(REGEX MATCH "package id=\"Microsoft.Web.WebView2\" version=\"([^\"]+)\"" WEBVIEW_MATCH "${PACKAGES_CONFIG_FILE}")
 
-ADD_PRECOMPILED_HEADER(${PROJECT_NAME} ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
+message(STATUS "Using WebView2 version ${CMAKE_MATCH_1}")
 
-set(WEBVIEW2_VERSION "1.0.705.50")
+set(WEBVIEW2_VERSION ${CMAKE_MATCH_1})
 set(WEBVIEW2_URL "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/${WEBVIEW2_VERSION}")
-set(WEBVIEW2_SHA256 "6a34bb553e18cfac7297b4031f3eac2558e439f8d16a45945c22945ac404105d")
 
 set(WEBVIEW2_DEFAULT_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Web.WebView2.${WEBVIEW2_VERSION}")
 
@@ -277,8 +256,7 @@ if (NOT WEBVIEW2_PACKAGE_DIR)
     set(WEBVIEW2_PACKAGE_DIR ${WEBVIEW2_DEFAULT_PACKAGE_DIR} CACHE PATH "WebView2 SDK PATH" FORCE)
     file(DOWNLOAD
         ${WEBVIEW2_URL}
-        ${CMAKE_CURRENT_BINARY_DIR}/webview2.nuget
-        EXPECTED_HASH SHA256=${WEBVIEW2_SHA256})
+        ${CMAKE_CURRENT_BINARY_DIR}/webview2.nuget)
     file(MAKE_DIRECTORY ${WEBVIEW2_PACKAGE_DIR})
     execute_process(COMMAND
         "${CMAKE_COMMAND}" -E tar x "${CMAKE_CURRENT_BINARY_DIR}/webview2.nuget"
@@ -286,5 +264,30 @@ if (NOT WEBVIEW2_PACKAGE_DIR)
     )
 endif()
 set(WEBVIEW2_PACKAGE_DIR ${WEBVIEW2_PACKAGE_DIR} CACHE INTERNAL "" FORCE)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  set(INCLUDE_DIRS ${SOURCE_DIR}/WebView2 ${SOURCE_DIR}/wxWidgets_setup_h/clang ${SOURCE_DIR}/wxWidgets/include)
+
+  # Note: WebView2Loader is built with buffercheck, which isn't available on LLVM MinGW. Thus, we have no choice
+  # but to require WebView2Loader.dll along with WinSparkle when built with this version of MinGW.
+  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll.lib")
+  set(WEBVIEW2_LOADER_LIB_DLL "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll")
+  set(WEBVIEW2_LOADER_LIB_DLL ${WEBVIEW2_LOADER_LIB_DLL} CACHE INTERNAL "" FORCE)
+else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  set(INCLUDE_DIRS ${SOURCE_DIR/WebView2 ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
+  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2LoaderStatic.lib")
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+set(WEBVIEW2_LOADER_LIB ${WEBVIEW2_LOADER_LIB} CACHE INTERNAL "" FORCE)
+
+set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+include_directories(${INCLUDE_DIRS})
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+include(PCHSupport)
+if(NOT PCHSupport_FOUND)
+  message(FATAL_ERROR "Precompiled headers are not supported")
+endif()
+
+ADD_PRECOMPILED_HEADER(${PROJECT_NAME} ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${WEBVIEW2_PACKAGE_DIR}/build/native/include")
