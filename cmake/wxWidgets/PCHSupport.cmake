@@ -16,7 +16,7 @@
 # for other platforms this simply falls back to ADD_NATIVE_PRECOMPILED_HEADER
 #  SET_PRECOMPILED_HEADER targetName hFileName cppFileName
 
-IF(CMAKE_COMPILER_IS_GNUCXX)
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
   EXEC_PROGRAM(
     ${CMAKE_CXX_COMPILER}
@@ -26,14 +26,14 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(PCHSupport_FOUND TRUE)
   SET(_PCH_include_prefix "-I")
 
-ELSE(CMAKE_COMPILER_IS_GNUCXX)
+ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   IF(WIN32)
     SET(PCHSupport_FOUND TRUE) # for experimental msvc support
     SET(_PCH_include_prefix "/I")
   ELSE(WIN32)
     SET(PCHSupport_FOUND FALSE)
   ENDIF(WIN32)
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 
 MACRO(_PCH_GET_COMPILE_FLAGS _out_compile_flags)
@@ -42,16 +42,16 @@ MACRO(_PCH_GET_COMPILE_FLAGS _out_compile_flags)
   STRING(TOUPPER "CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}" _flags_var_name)
   SET(${_out_compile_flags} ${${_flags_var_name}} )
 
-  IF(CMAKE_COMPILER_IS_GNUCXX)
+  IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     GET_TARGET_PROPERTY(_targetType ${_PCH_current_target} TYPE)
     IF(${_targetType} STREQUAL SHARED_LIBRARY)
       LIST(APPEND ${_out_compile_flags} "${${_out_compile_flags}} -fPIC")
     ENDIF(${_targetType} STREQUAL SHARED_LIBRARY)
 
-  ELSE(CMAKE_COMPILER_IS_GNUCXX)
+  ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     ## TODO ... ? or does it work out of the box
-  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+  ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
   GET_DIRECTORY_PROPERTY(DIRINC INCLUDE_DIRECTORIES )
   FOREACH(item ${DIRINC})
@@ -88,7 +88,7 @@ MACRO(_PCH_GET_COMPILE_COMMAND out_command _input _output)
   FILE(TO_NATIVE_PATH ${_output} _native_output)
 
 
-  IF(CMAKE_COMPILER_IS_GNUCXX)
+  IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     IF(CMAKE_CXX_COMPILER_ARG1)
       # remove leading space in compiler argument
       STRING(REGEX REPLACE "^ +" "" pchsupport_compiler_cxx_arg1 ${CMAKE_CXX_COMPILER_ARG1})
@@ -101,7 +101,7 @@ MACRO(_PCH_GET_COMPILE_COMMAND out_command _input _output)
         ${CMAKE_CXX_COMPILER}  ${_compile_FLAGS}  -x c++-header -o ${_output} ${_input}
         )
     ENDIF(CMAKE_CXX_COMPILER_ARG1)
-  ELSE(CMAKE_COMPILER_IS_GNUCXX)
+  ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     SET(_dummy_str "#include <${_input}>")
     FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/pch_dummy.cpp ${_dummy_str})
@@ -111,7 +111,7 @@ MACRO(_PCH_GET_COMPILE_COMMAND out_command _input _output)
       )
     #/out:${_output}
 
-  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+  ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 ENDMACRO(_PCH_GET_COMPILE_COMMAND )
 
@@ -121,7 +121,7 @@ MACRO(_PCH_GET_TARGET_COMPILE_FLAGS _cflags  _header_name _pch_path _dowarn )
 
   FILE(TO_NATIVE_PATH ${_pch_path} _native_pch_path)
 
-  IF(CMAKE_COMPILER_IS_GNUCXX)
+  IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # for use with distcc and gcc >4.0.1 if preprocessed files are accessible
     # on all remote machines set
     # PCH_ADDITIONAL_COMPILER_FLAGS to -fpch-preprocess
@@ -133,11 +133,11 @@ MACRO(_PCH_GET_TARGET_COMPILE_FLAGS _cflags  _header_name _pch_path _dowarn )
     ELSE (_dowarn)
       SET(${_cflags} "${PCH_ADDITIONAL_COMPILER_FLAGS} -include ${CMAKE_CURRENT_BINARY_DIR}/${_header_name} " )
     ENDIF (_dowarn)
-  ELSE(CMAKE_COMPILER_IS_GNUCXX)
+  ELSE(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     set(${_cflags} "/Fp${_native_pch_path} /Yu${_header_name}" )
 
-  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+  ENDIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 ENDMACRO(_PCH_GET_TARGET_COMPILE_FLAGS )
 

@@ -7,9 +7,27 @@ endif()
 
 set(SOURCE_DIR ${ROOT_DIR}/3rdparty)
 
-set(INCLUDE_DIRS ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
-include_directories(${INCLUDE_DIRS})
+set(ARCHS_64BIT_INTEL "amd64" "x86_64")
+set(ARCHS_64BIT_ARM "arm64" "aarch64")
+set(ARCHS_32BIT_INTEL "x86" "i686")
 
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" _SYSTEM_PROCESSOR_LOWERED)
+
+list(FIND ARCHS_64BIT_INTEL "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
+if (${_list_idx} GREATER -1)
+    set(WEBVIEW2_LOADER_ARCH "x64")
+endif (${_list_idx} GREATER -1)
+
+list(FIND ARCHS_64BIT_ARM "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
+if (${_list_idx} GREATER -1)
+    set(WEBVIEW2_LOADER_ARCH "arm64")
+endif (${_list_idx} GREATER -1)
+
+list(FIND ARCHS_32BIT_INTEL "${_SYSTEM_PROCESSOR_LOWERED}" _list_idx)
+if (${_list_idx} GREATER -1)
+    set(WEBVIEW2_LOADER_ARCH "x86")
+endif (${_list_idx} GREATER -1)
+ 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_definitions(
@@ -28,6 +46,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/arrstr.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/artprov.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/bmpbase.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/bmpbndl.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/btncmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/checkboxcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/clntdata.cpp
@@ -45,14 +64,16 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/dlgcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/dobjcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/dpycmn.cpp
-  ${SOURCE_DIR}/wxWidgets/src/common/dynarray.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/dynlib.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/encconv.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/event.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/evtloopcmn.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/ffile.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/file.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/fileback.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/filefn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/filename.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/filesys.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/fmapbase.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/fontcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/fontmap.cpp
@@ -63,6 +84,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/hash.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/hashmap.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/iconbndl.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/imagbmp.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/image.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/init.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/intl.cpp
@@ -72,6 +94,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/list.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/longlong.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/matrix.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/mstream.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/menucmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/modalhook.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/module.cpp
@@ -84,6 +107,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/platinfo.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/powercmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/process.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/quantize.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/rendcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/rgncmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/settcmn.cpp
@@ -93,6 +117,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/stdpbase.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/stockitem.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/strconv.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/stream.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/string.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/stringimpl.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/stringops.cpp
@@ -100,6 +125,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/sysopt.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/textbuf.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/textcmn.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/textentrycmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/textmeasurecmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/threadinfo.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/time.cpp
@@ -108,11 +134,17 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/tokenzr.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/toplvcmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/translation.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/txtstrm.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/uilocale.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/unichar.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/uri.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/ustring.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/utilscmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/variant.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/webview.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/webviewfshandler.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/webviewarchivehandler.cpp
+  ${SOURCE_DIR}/wxWidgets/src/common/wfstream.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/wincmn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/windowid.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/wrapsizer.cpp
@@ -130,6 +162,7 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/msw/artmsw.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/basemsw.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/bitmap.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/bmpbndl.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/brush.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/button.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/checkbox.cpp
@@ -177,21 +210,75 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/msw/statbmp.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/stattext.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/stdpaths.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/textctrl.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/textentry.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/textmeasure.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/thread.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/timer.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/toplevel.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/uilocale.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/utils.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/utilsexc.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/utilsgui.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/utilswin.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/uxtheme.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/webview_edge.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/webview_ie.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/window.cpp
   ${SOURCE_DIR}/wxWidgets/src/msw/ownerdrw.cpp
+  ${SOURCE_DIR}/wxWidgets/src/msw/ole/automtn.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/wxprintf.cpp)
 
 add_library(${PROJECT_NAME} OBJECT ${SOURCES})
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../../packages.config" PACKAGES_CONFIG_FILE)
+string(REGEX MATCH "package id=\"Microsoft.Web.WebView2\" version=\"([^\"]+)\"" WEBVIEW_MATCH "${PACKAGES_CONFIG_FILE}")
+
+message(STATUS "Using WebView2 version ${CMAKE_MATCH_1}")
+
+set(WEBVIEW2_VERSION ${CMAKE_MATCH_1})
+set(WEBVIEW2_URL "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/${WEBVIEW2_VERSION}")
+
+set(WEBVIEW2_DEFAULT_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Web.WebView2.${WEBVIEW2_VERSION}")
+
+if(NOT EXISTS ${WEBVIEW2_PACKAGE_DIR})
+    unset(WEBVIEW2_PACKAGE_DIR CACHE)
+endif()
+find_path(WEBVIEW2_PACKAGE_DIR
+    NAMES build/native/include/WebView2.h
+    PATHS
+        "${PROJECT_SOURCE_DIR}/3rdparty/webview2"
+        ${WEBVIEW2_DEFAULT_PACKAGE_DIR}
+)
+
+if (NOT WEBVIEW2_PACKAGE_DIR)
+    message(STATUS "WebView2 SDK not found locally, downloading...")
+    set(WEBVIEW2_PACKAGE_DIR ${WEBVIEW2_DEFAULT_PACKAGE_DIR} CACHE PATH "WebView2 SDK PATH" FORCE)
+    file(DOWNLOAD
+        ${WEBVIEW2_URL}
+        ${CMAKE_CURRENT_BINARY_DIR}/webview2.nuget)
+    file(MAKE_DIRECTORY ${WEBVIEW2_PACKAGE_DIR})
+    execute_process(COMMAND
+        "${CMAKE_COMMAND}" -E tar x "${CMAKE_CURRENT_BINARY_DIR}/webview2.nuget"
+        WORKING_DIRECTORY "${WEBVIEW2_PACKAGE_DIR}"
+    )
+endif()
+set(WEBVIEW2_PACKAGE_DIR ${WEBVIEW2_PACKAGE_DIR} CACHE INTERNAL "" FORCE)
+
+set(INCLUDE_DIRS ${SOURCE_DIR}/wxWidgets/include/wx/msw/wrl ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  # Note: WebView2Loader is built with buffercheck, which isn't available on LLVM MinGW. Thus, we have no choice
+  # but to require WebView2Loader.dll along with WinSparkle when built with this version of MinGW.
+  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll.lib")
+  set(WEBVIEW2_LOADER_LIB_DLL "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2Loader.dll")
+  set(WEBVIEW2_LOADER_LIB_DLL ${WEBVIEW2_LOADER_LIB_DLL} CACHE INTERNAL "" FORCE)
+else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  set(WEBVIEW2_LOADER_LIB "${WEBVIEW2_PACKAGE_DIR}/build/native/${WEBVIEW2_LOADER_ARCH}/WebView2LoaderStatic.lib")
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+set(WEBVIEW2_LOADER_LIB ${WEBVIEW2_LOADER_LIB} CACHE INTERNAL "" FORCE)
+
 set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+include_directories(${INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 include(PCHSupport)
@@ -200,3 +287,5 @@ if(NOT PCHSupport_FOUND)
 endif()
 
 ADD_PRECOMPILED_HEADER(${PROJECT_NAME} ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
+
+target_include_directories(${PROJECT_NAME} PUBLIC "${WEBVIEW2_PACKAGE_DIR}/build/native/include")

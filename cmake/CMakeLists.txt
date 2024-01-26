@@ -105,7 +105,7 @@ list(APPEND SOURCES ${CMAKE_CURRENT_BINARY_DIR}/common_res.o)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat> $<TARGET_OBJECTS:crypto>)
 
-target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 UxTheme Shlwapi)
+target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 uxtheme shlwapi "${WEBVIEW2_LOADER_LIB}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${LIB_MAJOR_VERSION}.${LIB_MINOR_VERSION}.${LIB_PATCH_VERSION}
@@ -135,3 +135,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
         DESTINATION "${CONFIG_INSTALL_DIR}")
 
 install(EXPORT ${PROJECT_NAME}-export DESTINATION "${CONFIG_INSTALL_DIR}" FILE ${PROJECT_NAME}Targets.cmake)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    install(FILES ${WEBVIEW2_LOADER_LIB_DLL}
+            DESTINATION "${LIB_INSTALL_DIR}")
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+
