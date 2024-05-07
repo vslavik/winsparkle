@@ -40,6 +40,9 @@
 #ifndef HTTP_PROTOCOL_FLAG_HTTP2
     #define HTTP_PROTOCOL_FLAG_HTTP2 0x2
 #endif
+#ifndef INTERNET_OPTION_HTTP_DECODING
+	#define INTERNET_OPTION_HTTP_DECODING 65
+#endif
 
 
 namespace winsparkle
@@ -188,8 +191,9 @@ void WaitUntilSignaledWithTerminationCheck(Event& event, Thread *thread)
                                 public functions
  *--------------------------------------------------------------------------*/
 
-void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread, const std::string &headers, int flags)
+void DownloadFile(const std::string& url, IDownloadSink* sink, Thread* onThread, const std::string& headers_, int flags)
 {
+    std::string headers = headers_;
     char url_path[2048];
     URL_COMPONENTSA urlc;
     memset(&urlc, 0, sizeof(urlc));
@@ -213,6 +217,13 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, Thread *onThread,
 
     DWORD dwOption = HTTP_PROTOCOL_FLAG_HTTP2;
     InternetSetOptionW(inet, INTERNET_OPTION_ENABLE_HTTP_PROTOCOL, &dwOption, sizeof(dwOption));
+
+    if (IsWindowsVistaOrGreater())
+    {
+        DWORD dwEnableHttpDecoding = TRUE;
+        InternetSetOptionW(inet, INTERNET_OPTION_HTTP_DECODING, &dwEnableHttpDecoding, sizeof(dwEnableHttpDecoding));
+        headers += "Accept-Encoding: gzip, deflate\r\n";
+    }
 
     // Never allow local caching, always contact the server for both
     // appcast feeds and downloads. This is useful in case of
