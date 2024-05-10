@@ -69,6 +69,9 @@ public:
     /// Notify that an update was cancelled.
     static void NotifyUpdateCancelled();
 
+    /// Notify that an update was close.
+    static void NotifyUpdateClosed();
+
     /// Notify that an update was skipped
     static void NotifyUpdateSkipped();
 
@@ -130,6 +133,13 @@ public:
         ms_cbUpdateCancelled = callback;
     }
 
+    /// Set the win_sparkle_update_closed_callback_t function
+    static void SetUpdateClosedCallback(win_sparkle_update_closed_callback_t callback)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_cbUpdateClosed = callback;
+    }
+
     /// Set the win_sparkle_update_skipped_callback_t function
     static void SetUpdateSkippedCallback(win_sparkle_update_skipped_callback_t callback)
     {
@@ -171,6 +181,7 @@ private:
     static win_sparkle_did_find_update_callback_t     ms_cbDidFindUpdate;
     static win_sparkle_did_not_find_update_callback_t ms_cbDidNotFindUpdate;
     static win_sparkle_update_cancelled_callback_t    ms_cbUpdateCancelled;
+    static win_sparkle_update_closed_callback_t       ms_cbUpdateClosed;
     static win_sparkle_update_skipped_callback_t      ms_cbUpdateSkipped;
     static win_sparkle_update_postponed_callback_t    ms_cbUpdatePostponed;
     static win_sparkle_update_dismissed_callback_t    ms_cbUpdateDismissed;

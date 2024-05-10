@@ -459,6 +459,23 @@ typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
+/// Callback type for win_sparkle_update_closed_callback_t()
+typedef void(__cdecl *win_sparkle_update_closed_callback_t)();
+
+/**
+    Set callback to be called when the download dialog is closed
+    even by the user or at the end of the process.
+
+    This is useful in combination with
+    win_sparkle_check_update_with_ui_and_install() as it allows you to perform
+    some action when the update download process end (by user action or installation starts).
+
+    @since 8.2
+
+    @see win_sparkle_check_update_with_ui_and_install()
+*/
+WIN_SPARKLE_API void __cdecl win_sparkle_set_update_closed_callback(win_sparkle_update_closed_callback_t callback);
+
 /// Callback type for win_sparkle_update_skipped_callback()
 typedef void(__cdecl* win_sparkle_update_skipped_callback_t)();
 

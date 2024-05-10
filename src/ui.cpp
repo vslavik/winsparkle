@@ -618,8 +618,10 @@ void UpdateDialog::OnClose(wxCloseEvent&)
     // If the update was not downloaded and the appcast is empty and we're closing,
     // it means that we're about to restart or there was an error, and that the
     // window-close event wasn't initiated by the user.
-    if ( m_appcast.IsValid() && m_updateFile.IsEmpty() && !m_errorOccurred )
+    if (m_appcast.IsValid() && m_updateFile.IsEmpty() && !m_errorOccurred)
         ApplicationController::NotifyUpdateCancelled();
+
+    ApplicationController::NotifyUpdateClosed();
 }
 
 
