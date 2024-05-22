@@ -22,7 +22,7 @@
       <Link>%(Filename)%(Extension)</Link>
       <PublishState>Included</PublishState>
       <Visible>False</Visible>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
