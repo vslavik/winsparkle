@@ -447,7 +447,9 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_did_not_find_update_callback(win_sp
 typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
 
 /**
-    Set callback to be called when the user cancels a download.
+    Set callback to be called when the user cancels an update, e.g.
+    by closing the window, skipping an update or cancelling download.
+    This callback is not called when there's no update to install or an error occurs.
 
     This is useful in combination with
     win_sparkle_check_update_with_ui_and_install() as it allows you to perform
@@ -455,7 +457,7 @@ typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
 
     @since 0.5
 
-    @see win_sparkle_check_update_with_ui_and_install()
+    @see win_sparkle_check_update_with_ui_and_install(), win_sparkle_set_update_dismissed_callback()
 */
 WIN_SPARKLE_API void __cdecl win_sparkle_set_update_cancelled_callback(win_sparkle_update_cancelled_callback_t callback);
 
@@ -499,14 +501,16 @@ typedef void(__cdecl* win_sparkle_update_dismissed_callback_t)();
 
 /**
     Set callback to be called when the user dismisses
-    (closes) update dialog.
+    (closes) update dialog, including when there were no updates or an error occured.
+    See win_sparkle_set_update_cancelled_callback() for a subtly different callback
+    that may be more appropriate.
 
     This is useful in combination with
     win_sparkle_check_update_with_ui() or similar as it
     allows you to perform some action when the update
     dialog is closed.
 
-    @see win_sparkle_check_update_with_ui()
+    @see win_sparkle_check_update_with_ui(), win_sparkle_set_update_cancelled_callback()
 
     @since 0.8
 */

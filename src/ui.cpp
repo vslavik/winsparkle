@@ -480,6 +480,8 @@ private:
     bool m_installAutomatically;
     // whether an error occurred (used to properly call NotifyUpdateCancelled)
     bool m_errorOccurred;
+    // whether window closure was updater-initiated (i.e. not caused by user)
+    bool m_closeInitiatedByUpdater;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -492,6 +494,7 @@ UpdateDialog::UpdateDialog()
 {
     m_installAutomatically = false;
     m_errorOccurred = false;
+    m_closeInitiatedByUpdater = false;
 
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
@@ -594,7 +597,7 @@ void UpdateDialog::OnTimer(wxTimerEvent&)
 
 void UpdateDialog::OnCloseButton(wxCommandEvent&)
 {
-    ApplicationController::NotifyUpdateDismissed();
+    m_closeInitiatedByUpdater = false;
     Close();
 }
 
@@ -615,11 +618,15 @@ void UpdateDialog::OnClose(wxCloseEvent&)
     // destroy itself in Close().
     Destroy();
 
-    // If the update was not downloaded and the appcast is empty and we're closing,
-    // it means that we're about to restart or there was an error, and that the
-    // window-close event wasn't initiated by the user.
-    if ( m_appcast.IsValid() && m_updateFile.IsEmpty() && !m_errorOccurred )
-        ApplicationController::NotifyUpdateCancelled();
+    // Notify about window being dismissed or update cancelled. We must not notify
+    // if window closure was initiated by WinSparkle itself e.g. to run the installer.
+    if (!m_closeInitiatedByUpdater)
+    {
+        if (!m_errorOccurred && m_appcast.IsValid())
+            ApplicationController::NotifyUpdateCancelled();
+
+        ApplicationController::NotifyUpdateDismissed();
+    }
 }
 
 
@@ -627,6 +634,7 @@ void UpdateDialog::OnSkipVersion(wxCommandEvent&)
 {
     Settings::WriteConfigValue("SkipThisVersion", m_appcast.Version);
     ApplicationController::NotifyUpdateSkipped();
+    m_closeInitiatedByUpdater = false; // skipping is cancellation
     Close();
 }
 
@@ -636,6 +644,7 @@ void UpdateDialog::OnRemindLater(wxCommandEvent&)
     // Just abort the update. Next time it's scheduled to run,
     // the user will be prompted.
     ApplicationController::NotifyUpdatePostponed();
+    m_closeInitiatedByUpdater = false; // skipping is cancellation
     Close();
 }
 
@@ -645,6 +654,7 @@ void UpdateDialog::OnInstall(wxCommandEvent&)
     if ( !m_appcast.HasDownload() )
     {
         wxLaunchDefaultBrowser(m_appcast.WebBrowserURL, wxBROWSER_NEW_WINDOW);
+        m_closeInitiatedByUpdater = true;
         Close();
     }
     else if ( m_downloader == NULL )
@@ -685,6 +695,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     }
     else
     {
+        m_closeInitiatedByUpdater = true;
         Close();
         ApplicationController::RequestShutdown();
     }
@@ -757,6 +768,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 
     if ( m_installAutomatically )
     {
+        m_closeInitiatedByUpdater = true;
         Close();
         return;
     }
