@@ -11,12 +11,12 @@ jobs:
         platform: [Win32, x64, ARM64]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: 'recursive'
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
 
     - name: Restore dependency packages
       run: nuget restore
@@ -25,7 +25,7 @@ jobs:
       run: msbuild -m -t:Build -p:Configuration=Release -p:Platform=${{ matrix.platform }} WinSparkle.sln
 
     - name: Archive binaries
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: winsparkle-binaries-${{ matrix.platform }}
         path: |
@@ -41,20 +41,20 @@ jobs:
     needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Fetch binaries (Win32)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-Win32
 
       - name: Fetch binaries (x64)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-x64
 
       - name: Fetch binaries (ARM64)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-ARM64
 
@@ -62,7 +62,7 @@ jobs:
         run: nuget pack nuget/WinSparkle.nuspec -Verbosity detailed
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nuget-package
           path: "*.nupkg"
@@ -74,7 +74,7 @@ jobs:
     needs: build-nuget
     steps:
       - name: Fetch artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nuget-package
 
@@ -93,23 +93,23 @@ jobs:
     needs: build-nuget
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 0
 
       - name: Fetch binaries (Win32)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-Win32
 
       - name: Fetch binaries (x64)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-x64
 
       - name: Fetch binaries (ARM64)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: winsparkle-binaries-ARM64
 
