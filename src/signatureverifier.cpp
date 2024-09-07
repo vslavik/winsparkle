@@ -34,7 +34,10 @@
 #include <openssl/pem.h>
 #include <openssl/sha.h>
 
+#include <ed25519.h>
+
 #include <stdexcept>
+#include <vector>
 
 #include <windows.h>
 #include <wincrypt.h>
@@ -293,6 +296,14 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
     (void)dsa_pub;
 }
 
+void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
+{
+    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    if (pubkey.size() != 32) {
+        throw BadSignatureException("Invalid public key size.");
+    }
+}
+
 void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
 {
     try
@@ -313,6 +324,46 @@ void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename
     {
         throw BadSignatureException();
     }
+}
+
+void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64)
+{
+    if (signature_base64.size() == 0)
+        throw BadSignatureException("Missing EdDSA signature!");
+
+    CFile payload = _wfopen(filename.c_str(), L"rb");
+    if (payload == nullptr) {
+        throw BadSignatureException("Could not open payload!");
+    }
+
+    DWORD size = GetFileSize(payload, NULL);
+    std::vector<unsigned char> buffer;
+    buffer.resize(size);
+    size_t bytes_read = fread(buffer.data(), 1, size, payload);
+    if (bytes_read < size) {
+        throw BadSignatureException("Could not read payload!");
+    }
+    fclose(payload);
+
+    const std::string signature = Base64ToBin(signature_base64);
+    if (signature.size() != 64) {
+        throw BadSignatureException("Invalid signature size.");
+    }
+
+    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    if (pubkey.size() != 32) {
+        throw BadSignatureException("Invalid public key size.");
+    }
+
+    int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
+                                buffer.data(),
+                                bytes_read,
+                                reinterpret_cast<const unsigned char*>(pubkey.data()));
+
+    CloseHandle(payload);
+
+    if (result != 1)
+        throw BadSignatureException();
 }
 
 } // namespace winsparkle

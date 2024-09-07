@@ -26,7 +26,4 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="psdk\dsa_pub.pem" />
-  </ItemGroup>
 </Project>
