@@ -242,7 +242,7 @@ void UpdateChecker::PerformUpdateCheck()
                 WideToAnsi(Settings::GetAppBuildVersion());
 
         // Check if our version is out of date.
-        if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
+        if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.MinAutoUpdateVersion) < 0 || CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
             UI::NotifyNoUpdates(ShouldAutomaticallyInstall());

@@ -39,6 +39,7 @@ struct Appcast
     /// App version fields
     std::string Version;
     std::string ShortVersionString;
+    std::string MinAutoUpdateVersion;
 
     /// URL of the update
     std::string DownloadURL;

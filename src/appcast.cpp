@@ -68,6 +68,7 @@ namespace
 #define NODE_DSASIGNATURE ATTR_DSASIGNATURE
 #define OS_MARKER       "windows"
 #define OS_MARKER_LEN   7
+#define NODE_MIN_AUTOUPDATE_VERSION   NS_SPARKLE_NAME("minimumAutoupdateVersion")
 
 // context data for the parser
 struct ContextData
@@ -85,7 +86,7 @@ struct ContextData
     int in_channel, in_item, in_relnotes, in_title, in_description, in_link;
 
     // is inside <sparkle:version> or <sparkle:shortVersionString> node?
-    int in_version, in_shortversion, in_dsasignature, in_min_os_version;
+    int in_version, in_shortversion, in_dsasignature, in_min_os_version, in_min_autoupdate_version;
 
     // parsed <item>s
     std::vector<Appcast> items;
@@ -189,6 +190,10 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
             if (!ctxt.items.empty())
                 ctxt.items.back().CriticalUpdate = true;
         }
+        else if (strcmp(name, NODE_MIN_AUTOUPDATE_VERSION) == 0)
+        {
+            ctxt.in_min_autoupdate_version++;
+        }
     }
 }
 
@@ -273,6 +278,10 @@ void XMLCALL OnEndElement(void *data, const char *name)
         {
             ctxt.in_dsasignature--;
         }
+        else if (strcmp(name, NODE_MIN_AUTOUPDATE_VERSION) == 0)
+        {
+            ctxt.in_min_autoupdate_version--;
+        }
     }
     else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
     {
@@ -331,6 +340,10 @@ void XMLCALL OnText(void *data, const char *s, int len)
     else if (ctxt.in_min_os_version)
     {
         item.MinOSVersion.append(s, len);
+    }
+    else if (ctxt.in_min_autoupdate_version)
+    {
+        item.MinAutoUpdateVersion.append(s, len);
     }
 }
 
