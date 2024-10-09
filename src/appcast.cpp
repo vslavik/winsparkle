@@ -25,6 +25,8 @@
 
 #include "appcast.h"
 #include "error.h"
+#include "settings.h"
+#include "updatechecker.h"
 
 #include <expat.h>
 #include <vector>
@@ -226,6 +228,22 @@ bool is_suitable_windows_item(const Appcast &item)
 #else
     return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
 #endif // _WIN64
+}
+
+/**
+* Returns true is no minimum update version is set or
+* if the current version is >= MinAutoUpdateVersion
+*/
+bool is_suitable_update_item(const Appcast& item)
+{
+    const std::string currentVersion = WideToAnsi(Settings::GetAppBuildVersion());
+    return item.MinAutoUpdateVersion.empty() || UpdateChecker::CompareVersions(currentVersion, item.MinAutoUpdateVersion) >= 0;
+}
+
+
+bool is_suitable_windows_and_update_item(const Appcast& item)
+{
+    return is_suitable_windows_item(item) && is_suitable_update_item(item);
 }
 
 
