@@ -430,7 +430,7 @@ Appcast Appcast::Load(const std::string& xml)
      * or "windows-x64"/"windows-arm64"/"windows-x86" based on this modules bitness and meets the minimum
      * os version, if set. If none, use the first item that meets the minimum os version, if set.
      */
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_and_update_item);
     if (it != ctxt.items.end())
         return *it;
     else
