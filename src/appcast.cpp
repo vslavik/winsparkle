@@ -273,12 +273,12 @@ void XMLCALL OnEndElement(void *data, const char *name)
         {
             ctxt.in_dsasignature--;
         }
-    }
-    else if (ctxt.in_channel && strcmp(name, NODE_ITEM) == 0)
-    {
-        ctxt.in_item--;
-        if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
-            XML_StopParser(ctxt.parser, XML_TRUE);
+        else if (strcmp(name, NODE_ITEM) == 0)
+        {
+            ctxt.in_item--;
+            if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
+                XML_StopParser(ctxt.parser, XML_TRUE);
+        }
     }
     else if (strcmp(name, NODE_CHANNEL) == 0 )
     {
