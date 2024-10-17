@@ -111,6 +111,37 @@ bool is_windows_version_acceptable(const Appcast &item)
         VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
 }
 
+
+/**
+ * Returns true if item os is exactly "windows"
+ *   or if item is "windows-arm64" on 64bit ARM
+ *   or if item is "windows-x64" on 64bit Intel/AMD
+ *   or if item is "windows-x86" on 32bit
+ *   and is above minimum version
+ */
+bool is_suitable_windows_item(const Appcast& item)
+{
+    if (!is_windows_version_acceptable(item))
+        return false;
+
+    if (item.Os == OS_MARKER)
+        return true;
+
+    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
+        return false;
+
+    // Check suffix for matching bitness
+#ifdef _WIN64
+#if defined(__AARCH64EL__) || defined(_M_ARM64)
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
+#else
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+#endif // defined(__AARCH64EL__) || defined(_M_ARM64)
+#else
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
+#endif // _WIN64
+}
+
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
@@ -163,24 +194,40 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         {
             if (!ctxt.items.empty())
             {
+                Appcast enclosure_item;
                 Appcast& item = ctxt.items.back();
+
                 for (int i = 0; attrs[i]; i += 2)
                 {
                     const char* name = attrs[i];
                     const char* value = attrs[i + 1];
 
                     if (strcmp(name, ATTR_URL) == 0)
-                        item.DownloadURL = value;
+                        enclosure_item.DownloadURL = value;
                     else if (strcmp(name, ATTR_VERSION) == 0)
-                        item.Version = value;
+                        enclosure_item.Version = value;
                     else if (strcmp(name, ATTR_SHORTVERSION) == 0)
-                        item.ShortVersionString = value;
+                        enclosure_item.ShortVersionString = value;
                     else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
-                        item.DsaSignature = value;
+                        enclosure_item.DsaSignature = value;
                     else if (strcmp(name, ATTR_OS) == 0)
-                        item.Os = value;
+                        enclosure_item.Os = value;
                     else if (strcmp(name, ATTR_ARGUMENTS) == 0)
-                        item.InstallerArguments = value;
+                        enclosure_item.InstallerArguments = value;
+                }
+
+                // Set any enclosure data if no Os is set, otherwise just set
+                // data if it is suitable for windows.
+                // This might set the wrong operating system but accepts enclosures
+                // without Os information.
+                if (item.Os.empty() || is_suitable_windows_item(enclosure_item))
+                {
+                    item.Os = enclosure_item.Os;
+                    item.DownloadURL = enclosure_item.DownloadURL;
+                    item.Version = enclosure_item.Version;
+                    item.ShortVersionString = enclosure_item.ShortVersionString;
+                    item.DsaSignature = enclosure_item.DsaSignature;
+                    item.InstallerArguments = enclosure_item.InstallerArguments;
                 }
             }
         }
@@ -192,36 +239,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     }
 }
 
-
-/**
- * Returns true if item os is exactly "windows"
- *   or if item is "windows-arm64" on 64bit ARM
- *   or if item is "windows-x64" on 64bit Intel/AMD
- *   or if item is "windows-x86" on 32bit
- *   and is above minimum version
- */
-bool is_suitable_windows_item(const Appcast &item)
-{
-    if (!is_windows_version_acceptable(item))
-        return false;
-
-    if (item.Os == OS_MARKER)
-        return true;
-
-    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
-        return false;
-
-    // Check suffix for matching bitness
-#ifdef _WIN64
-  #if defined(__AARCH64EL__) || defined(_M_ARM64)
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
-  #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
-  #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
-#else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
-#endif // _WIN64
-}
 
 
 void trim_whitespace(std::string& s)
