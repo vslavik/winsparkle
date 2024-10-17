@@ -86,7 +86,7 @@ struct Appcast
     static Appcast Load(const std::string& xml);
 
     /// Returns true if the struct constains valid data.
-    bool IsValid() const { return !Version.empty(); }
+    bool IsValid() const;
 
     /// If true, then download and install the update ourselves.
     /// If false, launch a web browser to WebBrowserURL.

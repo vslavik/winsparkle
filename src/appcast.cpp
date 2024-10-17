@@ -386,4 +386,15 @@ Appcast Appcast::Load(const std::string& xml)
     }
 }
 
+
+/**
+* Returns true if Version is not empty and
+* Os is empty or starts with OS_MARKER
+*/
+bool Appcast::IsValid() const
+{
+    return !Version.empty() &&
+        (Os.empty() || Os.compare(0, OS_MARKER_LEN, OS_MARKER) == 0);
+}
+
 } // namespace winsparkle
