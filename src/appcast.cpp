@@ -34,12 +34,81 @@
 namespace winsparkle
 {
 
+namespace
+{
+
+// Misc helper functions:
+
+#define OS_MARKER       "windows"
+#define OS_MARKER_LEN   7
+
+
+bool is_windows_version_acceptable(const Appcast &item)
+{
+    if (item.MinOSVersion.empty())
+        return true;
+
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
+    DWORDLONG const dwlConditionMask = VerSetConditionMask(
+        VerSetConditionMask(
+        VerSetConditionMask(
+        0, VER_MAJORVERSION, VER_GREATER_EQUAL),
+        VER_MINORVERSION, VER_GREATER_EQUAL),
+        VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+
+    sscanf(item.MinOSVersion.c_str(), "%lu.%lu.%hu", &osvi.dwMajorVersion,
+        &osvi.dwMinorVersion, &osvi.wServicePackMajor);
+
+    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
+        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+}
+
+
+/**
+ * Returns true if item os is exactly "windows"
+ *   or if item is "windows-arm64" on 64bit ARM
+ *   or if item is "windows-x64" on 64bit Intel/AMD
+ *   or if item is "windows-x86" on 32bit
+ *   and is above minimum version
+ */
+bool is_suitable_windows_item(const Appcast& item)
+{
+    if (!is_windows_version_acceptable(item))
+        return false;
+
+    if (item.Os == OS_MARKER)
+        return true;
+
+    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
+        return false;
+
+    // Check suffix for matching bitness
+#ifdef _WIN64
+#if defined(__AARCH64EL__) || defined(_M_ARM64)
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
+#else
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+#endif // defined(__AARCH64EL__) || defined(_M_ARM64)
+#else
+    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
+#endif // _WIN64
+}
+
+
+void trim_whitespace(std::string& s)
+{
+    size_t startpos = s.find_first_not_of(" \t\r\n");
+    if (startpos != std::string::npos)
+        s = s.substr(startpos);
+    size_t endpos = s.find_last_not_of(" \t\r\n");
+    if (endpos != std::string::npos)
+        s = s.substr(0, endpos + 1);
+}
+
+
 /*--------------------------------------------------------------------------*
                                 XML parsing
  *--------------------------------------------------------------------------*/
-
-namespace
-{
 
 #define MVAL(x) x
 #define CONCAT3(a,b,c) MVAL(a)##MVAL(b)##MVAL(c)
@@ -66,8 +135,7 @@ namespace
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
 #define NODE_SHORTVERSION ATTR_SHORTVERSION   // attributes.
 #define NODE_DSASIGNATURE ATTR_DSASIGNATURE
-#define OS_MARKER       "windows"
-#define OS_MARKER_LEN   7
+
 
 // context data for the parser
 struct ContextData
@@ -91,25 +159,6 @@ struct ContextData
     std::vector<Appcast> items;
 };
 
-bool is_windows_version_acceptable(const Appcast &item)
-{
-    if (item.MinOSVersion.empty())
-        return true;
-
-    OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, { 0 }, 0, 0 };
-    DWORDLONG const dwlConditionMask = VerSetConditionMask(
-        VerSetConditionMask(
-        VerSetConditionMask(
-        0, VER_MAJORVERSION, VER_GREATER_EQUAL),
-        VER_MINORVERSION, VER_GREATER_EQUAL),
-        VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
-
-    sscanf(item.MinOSVersion.c_str(), "%lu.%lu.%hu", &osvi.dwMajorVersion,
-        &osvi.dwMinorVersion, &osvi.wServicePackMajor);
-
-    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
-        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
-}
 
 void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 {
@@ -190,48 +239,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                 ctxt.items.back().CriticalUpdate = true;
         }
     }
-}
-
-
-/**
- * Returns true if item os is exactly "windows"
- *   or if item is "windows-arm64" on 64bit ARM
- *   or if item is "windows-x64" on 64bit Intel/AMD
- *   or if item is "windows-x86" on 32bit
- *   and is above minimum version
- */
-bool is_suitable_windows_item(const Appcast &item)
-{
-    if (!is_windows_version_acceptable(item))
-        return false;
-
-    if (item.Os == OS_MARKER)
-        return true;
-
-    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
-        return false;
-
-    // Check suffix for matching bitness
-#ifdef _WIN64
-  #if defined(__AARCH64EL__) || defined(_M_ARM64)
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
-  #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
-  #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
-#else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
-#endif // _WIN64
-}
-
-
-void trim_whitespace(std::string& s)
-{
-    size_t startpos = s.find_first_not_of(" \t\r\n");
-    if (startpos != std::string::npos)
-        s = s.substr(startpos);
-    size_t endpos = s.find_last_not_of(" \t\r\n");
-    if (endpos != std::string::npos)
-        s = s.substr(0, endpos + 1);
 }
 
 
