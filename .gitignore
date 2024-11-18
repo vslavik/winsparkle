@@ -20,5 +20,3 @@ packages
 pascal/lib/
 pascal/backup/
 .vs
-*.aps
-*.bak
