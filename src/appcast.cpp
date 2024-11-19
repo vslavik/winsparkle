@@ -149,6 +149,7 @@ struct ContextData
 	// call when entering <item> element
     void reset_for_new_item()
     {
+		current = Appcast();
 		legacy_dsa_signature.clear();
     }
 
@@ -161,11 +162,14 @@ struct ContextData
     // is inside <sparkle:version> or <sparkle:shortVersionString> etc. node?
     int in_version, in_shortversion, in_dsasignature, in_min_os_version;
 
+    // currently parsed item
+    Appcast current;
+
     // signature present as <sparkle:dsaSignature>, not enclosure attribute 
     std::string legacy_dsa_signature;
     
     // parsed <item>s
-    std::vector<Appcast> items;
+    std::vector<Appcast> all_items;
 };
 
 
@@ -180,9 +184,6 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
     else if ( ctxt.in_channel && strcmp(name, NODE_ITEM) == 0 )
     {
         ctxt.in_item++;
-        Appcast item;
-        ctxt.items.push_back(item);
-
         ctxt.reset_for_new_item();
     }
     else if ( ctxt.in_item )
@@ -221,34 +222,30 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         }
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
-            if (!ctxt.items.empty())
+            Appcast& item = ctxt.current;
+            for (int i = 0; attrs[i]; i += 2)
             {
-                Appcast& item = ctxt.items.back();
-                for (int i = 0; attrs[i]; i += 2)
-                {
-                    const char* name = attrs[i];
-                    const char* value = attrs[i + 1];
+                const char* name = attrs[i];
+                const char* value = attrs[i + 1];
 
-                    if (strcmp(name, ATTR_URL) == 0)
-                        item.enclosure.DownloadURL = value;
-                    else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
-                        item.enclosure.DsaSignature = value;
-                    else if (strcmp(name, ATTR_OS) == 0)
-                        item.enclosure.OS = value;
-                    else if (strcmp(name, ATTR_ARGUMENTS) == 0)
-                        item.enclosure.InstallerArguments = value;
-                    // legacy syntax where version info was on enclosure, not item:
-                    else if (strcmp(name, ATTR_VERSION) == 0)
-                        item.Version = value;
-                    else if (strcmp(name, ATTR_SHORTVERSION) == 0)
-                        item.ShortVersionString = value;
-                }
+                if (strcmp(name, ATTR_URL) == 0)
+                    item.enclosure.DownloadURL = value;
+                else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
+                    item.enclosure.DsaSignature = value;
+                else if (strcmp(name, ATTR_OS) == 0)
+                    item.enclosure.OS = value;
+                else if (strcmp(name, ATTR_ARGUMENTS) == 0)
+                    item.enclosure.InstallerArguments = value;
+                // legacy syntax where version info was on enclosure, not item:
+                else if (strcmp(name, ATTR_VERSION) == 0)
+                    item.Version = value;
+                else if (strcmp(name, ATTR_SHORTVERSION) == 0)
+                    item.ShortVersionString = value;
             }
         }
         else if (strcmp(name, NODE_CRITICAL_UPDATE) == 0)
         {
-            if (!ctxt.items.empty())
-                ctxt.items.back().CriticalUpdate = true;
+            ctxt.current.CriticalUpdate = true;
         }
     }
 }
@@ -296,10 +293,12 @@ void XMLCALL OnEndElement(void *data, const char *name)
         {
             ctxt.in_item--;
 
-            Appcast& item = ctxt.items.back();
+            Appcast& item = ctxt.current;
 
-			if (!ctxt.legacyDsaSignature.empty() && item.enclosure.DsaSignature.empty())
+			if (!ctxt.legacy_dsa_signature.empty() && item.enclosure.DsaSignature.empty())
 				item.enclosure.DsaSignature = ctxt.legacy_dsa_signature;
+
+			ctxt.all_items.push_back(item);
 
             if (is_suitable_windows_item(item))
                 XML_StopParser(ctxt.parser, XML_TRUE);
@@ -318,10 +317,7 @@ void XMLCALL OnEndElement(void *data, const char *name)
 void XMLCALL OnText(void *data, const char *s, int len)
 {
     ContextData& ctxt = *static_cast<ContextData*>(data);
-    if (ctxt.items.empty())
-		return;
-
-    Appcast& item = ctxt.items.back();
+    Appcast& item = ctxt.current;
 
     if (ctxt.in_relnotes)
     {
@@ -390,7 +386,7 @@ Appcast Appcast::Load(const std::string& xml)
 
     XML_ParserFree(p);
 
-    if (ctxt.items.empty())
+    if (ctxt.all_items.empty())
         return Appcast(); // invalid
 
     /*
@@ -398,13 +394,13 @@ Appcast Appcast::Load(const std::string& xml)
      * or "windows-x64"/"windows-arm64"/"windows-x86" based on this modules bitness and meets the minimum
      * os version, if set. If none, use the first item that meets the minimum os version, if set.
      */
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_suitable_windows_item);
-    if (it != ctxt.items.end())
+    std::vector<Appcast>::iterator it = std::find_if(ctxt.all_items.begin(), ctxt.all_items.end(), is_suitable_windows_item);
+    if (it != ctxt.all_items.end())
         return *it;
     else
     {
-        it = std::find_if(ctxt.items.begin(), ctxt.items.end(), is_windows_version_acceptable);
-        if (it != ctxt.items.end())
+        it = std::find_if(ctxt.all_items.begin(), ctxt.all_items.end(), is_windows_version_acceptable);
+        if (it != ctxt.all_items.end())
             return *it;
         else 
             return Appcast(); // There are no items that meet the set minimum os version
