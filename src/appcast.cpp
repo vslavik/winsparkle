@@ -27,8 +27,9 @@
 #include "error.h"
 
 #include <expat.h>
-#include <vector>
 #include <algorithm>
+#include <iterator>
+#include <vector>
 #include <windows.h>
 
 namespace winsparkle
@@ -37,13 +38,23 @@ namespace winsparkle
 namespace
 {
 
+// OS identification strings:
+
+#define OS_MARKER_GENERIC       "windows"
+#ifdef _WIN64
+  #if defined(__AARCH64EL__) || defined(_M_ARM64)
+    #define OS_MARKER_ARCH "windows-arm64"
+  #else
+    #define OS_MARKER_ARCH "windows-x64"
+  #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
+#else
+    #define OS_MARKER_ARCH "windows-x86"
+#endif // _WIN64
+
+
 // Misc helper functions:
 
-#define OS_MARKER       "windows"
-#define OS_MARKER_LEN   7
-
-
-bool is_windows_version_acceptable(const Appcast &item)
+bool is_compatible_with_windows_version(const Appcast &item)
 {
     if (item.MinOSVersion.empty())
         return true;
@@ -64,34 +75,45 @@ bool is_windows_version_acceptable(const Appcast &item)
 }
 
 
-/**
- * Returns true if item os is exactly "windows"
- *   or if item is "windows-arm64" on 64bit ARM
- *   or if item is "windows-x64" on 64bit Intel/AMD
- *   or if item is "windows-x86" on 32bit
- *   and is above minimum version
- */
-bool is_suitable_windows_item(const Appcast& item)
+// Checks if the item is compatible with the running OS, that is:
+// - is not for a different OS
+// - is either for current architecture or is architecture-independent
+//
+// E.g. returns true if item is
+// - "windows-arm64" on 64bit ARM
+// - "windows-x64"   on 64bit Intel/AMD
+// - "windows-x86"   on 32bit
+// - "windows"       on any Windows arch
+// - empty string    on any OS
+inline bool is_compatible_with_os_arch(const Appcast::Enclosure& enclosure)
 {
-    if (!is_windows_version_acceptable(item))
-        return false;
+    return enclosure.OS.empty() || enclosure.OS == OS_MARKER_GENERIC || enclosure.OS == OS_MARKER_ARCH;
+}
 
-    if (item.enclosure.OS == OS_MARKER)
-        return true;
 
-    if (item.enclosure.OS.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
-        return false;
+// Finds the best enclosure for the current OS and architecture.
+Appcast::Enclosure find_best_enclosure_for_os_arch(const std::vector<Appcast::Enclosure>& enclosures)
+{
+	// filter out incompatible enclosures:
+	std::vector<Appcast::Enclosure> compatible;
+	std::copy_if(enclosures.begin(), enclosures.end(), std::back_inserter(compatible), is_compatible_with_os_arch);
+    if (compatible.empty())
+		return Appcast::Enclosure();
 
-    // Check suffix for matching bitness
-#ifdef _WIN64
-#if defined(__AARCH64EL__) || defined(_M_ARM64)
-    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
-#else
-    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
-#endif // defined(__AARCH64EL__) || defined(_M_ARM64)
-#else
-    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
-#endif // _WIN64
+	// is there arch-specific enclosure?
+	auto it = std::find_if(compatible.begin(), compatible.end(),
+                           [](const Appcast::Enclosure& e) { return e.OS == OS_MARKER_ARCH; });
+	if (it != compatible.end())
+		return *it;
+
+    // is there an enclosure explicitly marked as for windows?
+    it = std::find_if(compatible.begin(), compatible.end(),
+                      [](const Appcast::Enclosure& e) { return e.OS == OS_MARKER_GENERIC; });
+    if (it != compatible.end())
+        return *it;
+
+    // because all enclosures are compatible, any one will do, e.g. the first one:
+	return compatible.front();
 }
 
 
@@ -150,6 +172,7 @@ struct ContextData
     void reset_for_new_item()
     {
 		current = Appcast();
+        enclosures.clear();
 		legacy_dsa_signature.clear();
     }
 
@@ -164,6 +187,9 @@ struct ContextData
 
     // currently parsed item
     Appcast current;
+
+    // enclosures encountered so far
+    std::vector<Appcast::Enclosure> enclosures;
 
     // signature present as <sparkle:dsaSignature>, not enclosure attribute 
     std::string legacy_dsa_signature;
@@ -223,25 +249,33 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         else if (strcmp(name, NODE_ENCLOSURE) == 0)
         {
             Appcast& item = ctxt.current;
+			Appcast::Enclosure enclosure;
+
             for (int i = 0; attrs[i]; i += 2)
             {
                 const char* name = attrs[i];
                 const char* value = attrs[i + 1];
 
                 if (strcmp(name, ATTR_URL) == 0)
-                    item.enclosure.DownloadURL = value;
+                    enclosure.DownloadURL = value;
                 else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
-                    item.enclosure.DsaSignature = value;
+                    enclosure.DsaSignature = value;
                 else if (strcmp(name, ATTR_OS) == 0)
-                    item.enclosure.OS = value;
+                    enclosure.OS = value;
                 else if (strcmp(name, ATTR_ARGUMENTS) == 0)
-                    item.enclosure.InstallerArguments = value;
+                    enclosure.InstallerArguments = value;
+
                 // legacy syntax where version info was on enclosure, not item:
                 else if (strcmp(name, ATTR_VERSION) == 0)
                     item.Version = value;
                 else if (strcmp(name, ATTR_SHORTVERSION) == 0)
                     item.ShortVersionString = value;
             }
+
+			// note: we intentionally include incompatible enclosures in the list so that
+			// we can check for that case later in OnEndElement() and skip the entire <item>
+			if (enclosure.IsValid())
+				ctxt.enclosures.push_back(enclosure);
         }
         else if (strcmp(name, NODE_CRITICAL_UPDATE) == 0)
         {
@@ -298,10 +332,25 @@ void XMLCALL OnEndElement(void *data, const char *name)
 			if (!ctxt.legacy_dsa_signature.empty() && item.enclosure.DsaSignature.empty())
 				item.enclosure.DsaSignature = ctxt.legacy_dsa_signature;
 
-			ctxt.all_items.push_back(item);
+			if (!ctxt.enclosures.empty())
+            {
+                item.enclosure = find_best_enclosure_for_os_arch(ctxt.enclosures);
+				if (!item.enclosure.IsValid())
+				{
+					// There are enclosures (e.g. weblink is not used), but all enclosures are
+                    // incompatible. This means the <item> is not meant for this OS and should be
+                    // skipped (as Sparkle does; there may be another <item> for us).
+                    return;
+				}
+            }
 
-            if (is_suitable_windows_item(item))
+            if (is_compatible_with_windows_version(item))
+            {
+                ctxt.all_items.push_back(item);
+
+                // FIXME: this is premature, we should sort appcast items by date and pick the newest (as Sparkle does)
                 XML_StopParser(ctxt.parser, XML_TRUE);
+            }
         }
     }
     else if (strcmp(name, NODE_CHANNEL) == 0 )
@@ -389,22 +438,9 @@ Appcast Appcast::Load(const std::string& xml)
     if (ctxt.all_items.empty())
         return Appcast(); // invalid
 
-    /*
-     * Search for first <item> which specifies with the attribute sparkle:os set to "windows"
-     * or "windows-x64"/"windows-arm64"/"windows-x86" based on this modules bitness and meets the minimum
-     * os version, if set. If none, use the first item that meets the minimum os version, if set.
-     */
-    std::vector<Appcast>::iterator it = std::find_if(ctxt.all_items.begin(), ctxt.all_items.end(), is_suitable_windows_item);
-    if (it != ctxt.all_items.end())
-        return *it;
-    else
-    {
-        it = std::find_if(ctxt.all_items.begin(), ctxt.all_items.end(), is_windows_version_acceptable);
-        if (it != ctxt.all_items.end())
-            return *it;
-        else 
-            return Appcast(); // There are no items that meet the set minimum os version
-    }
+	// the items were already filtered to only include those compatible with the current OS + arch
+	// and meeting minimum OS version requirements, so we can just return the first one
+	return ctxt.all_items.front();
 }
 
 } // namespace winsparkle
