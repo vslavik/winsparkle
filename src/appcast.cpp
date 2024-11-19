@@ -76,21 +76,21 @@ bool is_suitable_windows_item(const Appcast& item)
     if (!is_windows_version_acceptable(item))
         return false;
 
-    if (item.Os == OS_MARKER)
+    if (item.enclosure.OS == OS_MARKER)
         return true;
 
-    if (item.Os.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
+    if (item.enclosure.OS.compare(0, OS_MARKER_LEN, OS_MARKER) != 0)
         return false;
 
     // Check suffix for matching bitness
 #ifdef _WIN64
 #if defined(__AARCH64EL__) || defined(_M_ARM64)
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
+    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-arm64") == 0;
 #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
+    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-x64") == 0;
 #endif // defined(__AARCH64EL__) || defined(_M_ARM64)
 #else
-    return item.Os.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
+    return item.enclosure.OS.compare(OS_MARKER_LEN, std::string::npos, "-x86") == 0;
 #endif // _WIN64
 }
 
@@ -219,17 +219,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                     const char* value = attrs[i + 1];
 
                     if (strcmp(name, ATTR_URL) == 0)
-                        item.DownloadURL = value;
+                        item.enclosure.DownloadURL = value;
                     else if (strcmp(name, ATTR_VERSION) == 0)
                         item.Version = value;
                     else if (strcmp(name, ATTR_SHORTVERSION) == 0)
                         item.ShortVersionString = value;
                     else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
-                        item.DsaSignature = value;
+                        item.enclosure.DsaSignature = value;
                     else if (strcmp(name, ATTR_OS) == 0)
-                        item.Os = value;
+                        item.enclosure.OS = value;
                     else if (strcmp(name, ATTR_ARGUMENTS) == 0)
-                        item.InstallerArguments = value;
+                        item.enclosure.InstallerArguments = value;
                 }
             }
         }
@@ -333,7 +333,7 @@ void XMLCALL OnText(void *data, const char *s, int len)
     }
     else if (ctxt.in_dsasignature)
     {
-        item.DsaSignature.append(s, len);
+        item.enclosure.DsaSignature.append(s, len);
     }
     else if (ctxt.in_min_os_version)
     {
