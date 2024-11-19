@@ -344,7 +344,7 @@ void XMLCALL OnEndElement(void *data, const char *name)
 				}
             }
 
-            if (is_compatible_with_windows_version(item))
+            if (item.IsValid() && is_compatible_with_windows_version(item))
             {
                 ctxt.all_items.push_back(item);
 
