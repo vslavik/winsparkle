@@ -146,15 +146,24 @@ struct ContextData
         in_version(0), in_shortversion(0), in_dsasignature(0), in_min_os_version(0)
     {}
 
+	// call when entering <item> element
+    void reset_for_new_item()
+    {
+		legacy_dsa_signature.clear();
+    }
+
     // the parser we're using
     XML_Parser& parser;
 
     // is inside <channel>, <item> or <sparkle:releaseNotesLink>, <title>, <description>, or <link> respectively?
     int in_channel, in_item, in_relnotes, in_title, in_description, in_link;
 
-    // is inside <sparkle:version> or <sparkle:shortVersionString> node?
+    // is inside <sparkle:version> or <sparkle:shortVersionString> etc. node?
     int in_version, in_shortversion, in_dsasignature, in_min_os_version;
 
+    // signature present as <sparkle:dsaSignature>, not enclosure attribute 
+    std::string legacy_dsa_signature;
+    
     // parsed <item>s
     std::vector<Appcast> items;
 };
@@ -173,6 +182,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
         ctxt.in_item++;
         Appcast item;
         ctxt.items.push_back(item);
+
+        ctxt.reset_for_new_item();
     }
     else if ( ctxt.in_item )
     {
@@ -220,16 +231,17 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 
                     if (strcmp(name, ATTR_URL) == 0)
                         item.enclosure.DownloadURL = value;
-                    else if (strcmp(name, ATTR_VERSION) == 0)
-                        item.Version = value;
-                    else if (strcmp(name, ATTR_SHORTVERSION) == 0)
-                        item.ShortVersionString = value;
                     else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
                         item.enclosure.DsaSignature = value;
                     else if (strcmp(name, ATTR_OS) == 0)
                         item.enclosure.OS = value;
                     else if (strcmp(name, ATTR_ARGUMENTS) == 0)
                         item.enclosure.InstallerArguments = value;
+                    // legacy syntax where version info was on enclosure, not item:
+                    else if (strcmp(name, ATTR_VERSION) == 0)
+                        item.Version = value;
+                    else if (strcmp(name, ATTR_SHORTVERSION) == 0)
+                        item.ShortVersionString = value;
                 }
             }
         }
@@ -283,7 +295,13 @@ void XMLCALL OnEndElement(void *data, const char *name)
         else if (strcmp(name, NODE_ITEM) == 0)
         {
             ctxt.in_item--;
-            if (is_suitable_windows_item(ctxt.items[ctxt.items.size() - 1]))
+
+            Appcast& item = ctxt.items.back();
+
+			if (!ctxt.legacyDsaSignature.empty() && item.enclosure.DsaSignature.empty())
+				item.enclosure.DsaSignature = ctxt.legacy_dsa_signature;
+
+            if (is_suitable_windows_item(item))
                 XML_StopParser(ctxt.parser, XML_TRUE);
         }
     }
@@ -333,7 +351,7 @@ void XMLCALL OnText(void *data, const char *s, int len)
     }
     else if (ctxt.in_dsasignature)
     {
-        item.enclosure.DsaSignature.append(s, len);
+        ctxt.legacy_dsa_signature.assign(s, len);
     }
     else if (ctxt.in_min_os_version)
     {
