@@ -230,7 +230,24 @@ void UpdateChecker::PerformUpdateCheck()
         StringDownloadSink appcast_xml;
         DownloadFile(url, &appcast_xml, this, Settings::GetHttpHeadersString(), Download_BypassProxies);
 
-        Appcast appcast = Appcast::Load(appcast_xml.data);
+        auto all = Appcast::Load(appcast_xml.data);
+
+        if (all.empty())
+        {
+            // No applicable updates in the feed.
+            UI::NotifyNoUpdates(ShouldAutomaticallyInstall());
+            return;
+        }
+
+        // Sort by version number and pick the latest:
+		std::stable_sort
+        (
+            all.begin(), all.end(),
+            [](const Appcast& a, const Appcast& b) { return CompareVersions(a.Version, b.Version) > 0; }
+        );
+
+        auto appcast = all.front();
+
         if (!appcast.ReleaseNotesURL.empty())
             CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
         if (!appcast.enclosure.DownloadURL.empty())

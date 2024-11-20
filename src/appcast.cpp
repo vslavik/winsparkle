@@ -347,9 +347,6 @@ void XMLCALL OnEndElement(void *data, const char *name)
             if (item.IsValid() && is_compatible_with_windows_version(item))
             {
                 ctxt.all_items.push_back(item);
-
-                // FIXME: this is premature, we should sort appcast items by date and pick the newest (as Sparkle does)
-                XML_StopParser(ctxt.parser, XML_TRUE);
             }
         }
     }
@@ -411,7 +408,7 @@ void XMLCALL OnText(void *data, const char *s, int len)
                                Appcast class
  *--------------------------------------------------------------------------*/
 
-Appcast Appcast::Load(const std::string& xml)
+std::vector<Appcast> Appcast::Load(const std::string& xml)
 {
     XML_Parser p = XML_ParserCreateNS(NULL, NS_SEP);
     if ( !p )
@@ -436,11 +433,11 @@ Appcast Appcast::Load(const std::string& xml)
     XML_ParserFree(p);
 
     if (ctxt.all_items.empty())
-        return Appcast(); // invalid
+        return {}; // invalid
 
 	// the items were already filtered to only include those compatible with the current OS + arch
 	// and meeting minimum OS version requirements, so we can just return the first one
-	return ctxt.all_items.front();
+	return std::move(ctxt.all_items);
 }
 
 } // namespace winsparkle

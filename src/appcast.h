@@ -27,6 +27,8 @@
 #define _appcast_h_
 
 #include <string>
+#include <vector>
+
 
 namespace winsparkle
 {
@@ -79,18 +81,20 @@ struct Appcast
 
 
     /**
-        Initializes the struct with data from XML appcast feed.
+        Loads all updates from XML appcast feed.
 
-        If the feed contains multiple entries, only the latest one is read,
-        the rest is ignored. Entries that are not appliable (e.g. for different
-        OS) are likewise skipped.
+		The list is in the order of the feed, without any additional sorting.
+
+        Entries that are not appliable (e.g. for different OS) are skipped.
 
         Throws on error.
-        Returns NULL if no error ocurred, but there was no update in the appcast.
+
+        Returns emty list if no error ocurred, but there was no usable update
+        in the appcast.
 
         @param xml Appcast feed data.
      */
-    static Appcast Load(const std::string& xml);
+    static std::vector<Appcast> Load(const std::string& xml);
 
     /// Returns true if the struct constains valid data.
     bool IsValid() const { return !Version.empty() && (HasDownload() || !WebBrowserURL.empty()); }
