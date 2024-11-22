@@ -40,12 +40,6 @@ struct Appcast
     std::string Version;
     std::string ShortVersionString;
 
-    /// URL of the update
-    std::string DownloadURL;
-
-    /// Signing signature of the update
-    std::string DsaSignature;
-
     /// URL of the release notes page
     std::string ReleaseNotesURL;
 
@@ -58,17 +52,30 @@ struct Appcast
     /// Description of the update
     std::string Description;
 
-    // Operating system
-    std::string Os;
-
     // Minimum OS version required for update
     std::string MinOSVersion;
 
-    // Arguments passed on the the updater executable
-    std::string InstallerArguments;
-
     // CriticalUpdate?
     bool CriticalUpdate = false;
+
+    struct Enclosure
+    {
+        /// URL of the update
+        std::string DownloadURL;
+
+        /// Signing signature of the update
+        std::string DsaSignature;
+
+        // Operating system
+        std::string OS;
+
+        // Arguments passed on the the updater executable
+        std::string InstallerArguments;
+
+		bool IsValid() const { return !DownloadURL.empty(); }
+    };
+
+	Enclosure enclosure;
 
 
     /**
@@ -86,11 +93,11 @@ struct Appcast
     static Appcast Load(const std::string& xml);
 
     /// Returns true if the struct constains valid data.
-    bool IsValid() const { return !Version.empty(); }
+    bool IsValid() const { return !Version.empty() && (HasDownload() || !WebBrowserURL.empty()); }
 
     /// If true, then download and install the update ourselves.
     /// If false, launch a web browser to WebBrowserURL.
-    bool HasDownload() const { return !DownloadURL.empty(); }
+    bool HasDownload() const { return enclosure.IsValid(); }
 };
 
 } // namespace winsparkle

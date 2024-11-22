@@ -233,8 +233,8 @@ void UpdateChecker::PerformUpdateCheck()
         Appcast appcast = Appcast::Load(appcast_xml.data);
         if (!appcast.ReleaseNotesURL.empty())
             CheckForInsecureURL(appcast.ReleaseNotesURL, "release notes");
-        if (!appcast.DownloadURL.empty())
-            CheckForInsecureURL(appcast.DownloadURL, "update file");
+        if (!appcast.enclosure.DownloadURL.empty())
+            CheckForInsecureURL(appcast.enclosure.DownloadURL, "update file");
 
         Settings::WriteConfigValue("LastCheckTime", time(NULL));
 

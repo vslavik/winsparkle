@@ -1336,7 +1336,7 @@ void App::OnUpdateDownloaded(wxThreadEvent& event)
     if ( m_win )
     {
         EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateUpdateDownloaded(payload.updateFile, payload.appcast.InstallerArguments);
+        m_win->StateUpdateDownloaded(payload.updateFile, payload.appcast.enclosure.InstallerArguments);
     }
 }
 
