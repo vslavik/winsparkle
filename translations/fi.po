@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2023-10-02 16:11\n"
+"PO-Revision-Date: 2024-12-02 18:00\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Finnish\n"
 "Language: fi_FI\n"
@@ -44,7 +44,7 @@ msgstr "Asenna päivitys"
 #: src/ui.cpp:667
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s ei voida käynnistää uudelleen."
+msgstr "Sovellusta %s ei voida käynnistää uudelleen."
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
@@ -94,7 +94,7 @@ msgstr "Päivityksen allekirjoitus ei kelpaa."
 #: src/ui.cpp:855
 #, c-format
 msgid "A new version of %s is available!"
-msgstr "Uusi %s -versio on saatavilla!"
+msgstr "Sovelluksesta %s in saatavilla uusi versio!"
 
 #: src/ui.cpp:858
 msgid "Get update"
@@ -103,7 +103,7 @@ msgstr "Hanki päivitys"
 #: src/ui.cpp:864
 #, c-format
 msgid "%s %s is now available (you have %s). Would you like to download it now?"
-msgstr "%s %s on saatavilla (sinulla on %s). Haluatko ladata sen nyt?"
+msgstr "%s %s on saatavilla (nykyinen versiosi on %s). Haluatko ladata sen nyt?"
 
 #: src/ui.cpp:895
 msgid "Downloading update..."
@@ -126,7 +126,7 @@ msgstr "Tarkistetaanko päivitykset automaattisesti?"
 #: src/ui.cpp:1115
 #, c-format
 msgid "Should %s automatically check for updates? You can always check for updates manually from the menu."
-msgstr "Pitäisikö %s -päivitykset tarkistaa automaattisesti? Voit aina tarkistaa päivitykset myös manuaalisesti valikosta."
+msgstr "Tuleeko sovelluksen %s tarkistaa päivitykset automaattisesti? Voit aina tarkistaa päivitykset myös manuaalisesti valikosta."
 
 #: src/ui.cpp:1129
 msgid "Check automatically"
