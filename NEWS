@@ -1,3 +1,16 @@
+Version 0.8.2
+-------------
+
+- Added support for gzip/deflate-compressed appcasts.
+- Added support for ARM-specific enclosures.
+- Fixed handling of multiple enclosures to correctly pick the most-specific
+  binary available, and to use the latest available app version.
+- Fixed feed parsing to ignore appcast order of items and instead find the
+  highest compatible version.
+- Call cancelled/dismissed callbacks when user closes WinSparkle's window.
+- New and updated translations.
+
+
 Version 0.8.1
 -------------
 
