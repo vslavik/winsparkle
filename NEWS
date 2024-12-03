@@ -1,6 +1,8 @@
 Version 0.8.2
 -------------
 
+- Support major.minor.build versioning scheme in <sparkle:minimumSystemVersion>;
+  previously only much less useful major.minor.servicepack was used.
 - Added support for gzip/deflate-compressed appcasts.
 - Added support for ARM-specific enclosures.
 - Fixed handling of multiple enclosures to correctly pick the most-specific
