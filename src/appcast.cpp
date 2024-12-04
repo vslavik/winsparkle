@@ -54,12 +54,8 @@ namespace
 
 // Misc helper functions:
 
-bool is_compatible_with_windows_version(const Appcast &item_)
+bool is_compatible_with_windows_version(const Appcast &item)
 {
-    Appcast item(item_);
-
-    item.MinOSVersion = "10";
-
     if (item.MinOSVersion.empty())
         return true;
 
