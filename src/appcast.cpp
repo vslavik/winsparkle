@@ -54,22 +54,23 @@ namespace
 
 // Misc helper functions:
 
-bool is_compatible_with_windows_version(const Appcast &item)
+bool is_compatible_with_windows_version(Appcast item)
 {
-    if (item.MinOSVersion.empty())
+    auto& version = item.MinOSVersion;
+
+    if (version.empty())
         return true;
 
-    OSVERSIONINFOEXW osvi = {};
+    OSVERSIONINFOEXW osvi {};
     osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-    DWORDLONG const dwlConditionMask = VerSetConditionMask(
-        VerSetConditionMask(
-        VerSetConditionMask(
-        0, VER_MAJORVERSION, VER_GREATER_EQUAL),
-        VER_MINORVERSION, VER_GREATER_EQUAL),
-        VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+	DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION | VER_BUILDNUMBER;
+    DWORDLONG dwlConditionMask = 0;
+    VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+    VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL);
+    VER_SET_CONDITION(dwlConditionMask, VER_BUILDNUMBER,  VER_GREATER_EQUAL);
 
-    const int parsed = sscanf(item.MinOSVersion.c_str(), "%lu.%lu.%lu",
+    const int parsed = sscanf(version.c_str(), "%lu.%lu.%lu",
                               &osvi.dwMajorVersion, &osvi.dwMinorVersion, &osvi.dwBuildNumber);
     if (parsed == 0)
     {
@@ -78,15 +79,16 @@ bool is_compatible_with_windows_version(const Appcast &item)
     }
 
     // backwards compatibility with WinSparkle < 0.8.2 which used major.minor.sp
-	// instead of major.minor.build for the version number:
+    // instead of major.minor.build for the version number:
     if (parsed == 3 && osvi.dwBuildNumber < 100)
     {
         osvi.wServicePackMajor = static_cast<WORD>(osvi.dwBuildNumber);
-		osvi.dwBuildNumber = 0;
+        osvi.dwBuildNumber = 0;
+        dwTypeMask |= VER_SERVICEPACKMAJOR;
+        VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
     }
 
-    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION |
-        VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+    return VerifyVersionInfoW(&osvi, dwTypeMask, dwlConditionMask) != FALSE;
 }
 
 
