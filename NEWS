@@ -1,3 +1,10 @@
+Version 0.8.3
+-------------
+
+- Fixed <sparkle:minimumSystemVersion> parsing breakage introduced in 0.8.2.
+- Also understand major.minor-build for <sparkle:minimumSystemVersion>.
+
+
 Version 0.8.2
 -------------
 
