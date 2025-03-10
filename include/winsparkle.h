@@ -45,6 +45,21 @@ extern "C" {
     #define WIN_SPARKLE_API __declspec(dllimport)
 #endif
 
+#if defined(__has_cpp_attribute)
+    #if __has_cpp_attribute(deprecated)
+        #define WIN_SPARKLE_DEPRECATED(msg) [[deprecated(msg)]]
+    #endif
+#endif
+#ifndef WIN_SPARKLE_DEPRECATED
+    #if defined(_MSC_VER)
+        #define WIN_SPARKLE_DEPRECATED(msg) __declspec(deprecated("deprecated: " msg))
+    #elif defined(__GNUC__) || defined(__clang__)
+        #define WIN_SPARKLE_DEPRECATED(msg) __attribute__((deprecated(msg)))
+    #else
+        #define WIN_SPARKLE_DEPRECATED(msg)
+    #endif
+#endif
+
 
 /// Return value for boolean functions to indicate unexpected error.
 /// Only used by functions or callbacks that are explicitly documented as using it.
@@ -177,12 +192,20 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url);
     If this function isn't called by the app, public key is obtained from
     Windows resource named "DSAPub" of type "DSAPEM".
 
+    @deprecated
+    DSA signatures are deprecated and will be removed in a future version.
+    Migrate over to EdDSA (ed25519), see
+    https://github.com/vslavik/winsparkle/wiki/Upgrading-from-DSA-to-EdDSA-signatures
+
     @param dsa_pub_pem  DSA public key in PEM format.
 
     @return  1 if valid DSA public key provided, 0 otherwise.
 
     @since 0.6.0
+
+    @see win_sparkle_set_eddsa_public_key()
  */
+WIN_SPARKLE_DEPRECATED("use EdDSA signatures and win_sparkle_set_eddsa_public_key() instead")
 WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem);
 
 /**
@@ -195,6 +218,10 @@ WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
 
     If this function isn't called by the app, public key is obtained from
     Windows resource named "EdDSAPub" of type "EDDSA".
+
+    @note
+    If this function is called, DSA public key set with win_sparkle_set_dsa_pub_pem()
+    or present in the resources will be ignored; so will DSA signatures in the appcast.
 
     @param pubkey  EdDSA public key in base64 encoded format.
 
@@ -305,12 +332,12 @@ typedef struct win_sparkle_config_methods_tag {
 
     By default, WinSparkle will read, write and delete configuration values by
     interacting directly with Windows Registry.
-    If you want to manage configuration by yourself, or if you don't want let WinSparkle 
-    write settings directly to the Windows Registry, you can provide your own functions 
+    If you want to manage configuration by yourself, or if you don't want let WinSparkle
+    write settings directly to the Windows Registry, you can provide your own functions
     to read, write and delete configuration.
 
     These functions needs to return TRUE on success, FALSE on failure.
-    If you passed NULL as a configuration action (read, write or delete)'s function pointer, 
+    If you passed NULL as a configuration action (read, write or delete)'s function pointer,
     WinSparkle will use the default function for that action.
 
     @param config_methods  Your own configuration read, write and delete functions.

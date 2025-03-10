@@ -95,4 +95,9 @@ void LogError(const char *msg)
     OutputDebugStringA(err.c_str());
 }
 
+void LogWarning(const char *msg)
+{
+    LogError(msg);
+}
+
 } // namespace winsparkle

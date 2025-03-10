@@ -186,6 +186,7 @@ void UpdateDownloader::Run()
       }
       else if (Settings::HasDSAPubKeyPem())
       {
+          LogWarning("Using deprecated DSA signature. Please update your app to use EdDSA.");
           SignatureVerifier::VerifyDSASHA1SignatureValid(sink.GetFilePath(), m_appcast.enclosure.DsaSignature);
       }
       else
