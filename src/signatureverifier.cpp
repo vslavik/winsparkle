@@ -331,19 +331,22 @@ void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, 
     if (signature_base64.size() == 0)
         throw BadSignatureException("Missing EdDSA signature!");
 
-    CFile payload = _wfopen(filename.c_str(), L"rb");
-    if (payload == nullptr) {
-        throw BadSignatureException("Could not open payload!");
-    }
+    CFile f(_wfopen(filename.c_str(), L"rb"));
+    if (!f)
+    if (ferror(f))
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
-    DWORD size = GetFileSize(payload, NULL);
-    std::vector<unsigned char> buffer;
-    buffer.resize(size);
-    size_t bytes_read = fread(buffer.data(), 1, size, payload);
-    if (bytes_read < size) {
-        throw BadSignatureException("Could not read payload!");
-    }
-    fclose(payload);
+    fseek(f, 0, SEEK_END);
+    long lsize = ftell(f);
+    if (lsize < 0)
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
+    size_t size = static_cast<size_t>(lsize);
+    rewind(f);
+
+    std::vector<unsigned char> payload(size);
+    size_t bytes_read = fread(payload.data(), 1, (size_t)size, f);
+    if (bytes_read != size || ferror(f))
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
     const std::string signature = Base64ToBin(signature_base64);
     if (signature.size() != 64) {
@@ -356,12 +359,9 @@ void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, 
     }
 
     int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
-                                buffer.data(),
-                                bytes_read,
+                                payload.data(),
+                                payload.size(),
                                 reinterpret_cast<const unsigned char*>(pubkey.data()));
-
-    CloseHandle(payload);
-
     if (result != 1)
         throw BadSignatureException();
 }
