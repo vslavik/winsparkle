@@ -129,7 +129,7 @@ public:
 
     void hashFile(const std::wstring &filename)
     {
-        CFile f (_wfopen(filename.c_str(), L"rb"));
+        CFile f(_wfopen(filename.c_str(), L"rb"));
         if (!f)
             throw std::runtime_error(WideToAnsi(L"Failed to open file " + filename));
 
@@ -299,7 +299,8 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
 void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 {
     const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
-    if (pubkey.size() != 32) {
+    if (pubkey.size() != 32)
+    {
         throw BadSignatureException("Invalid public key size.");
     }
 }
@@ -349,12 +350,14 @@ void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, 
         throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
     const std::string signature = Base64ToBin(signature_base64);
-    if (signature.size() != 64) {
+    if (signature.size() != 64)
+    {
         throw BadSignatureException("Invalid signature size.");
     }
 
     const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
-    if (pubkey.size() != 32) {
+    if (pubkey.size() != 32)
+    {
         throw BadSignatureException("Invalid public key size.");
     }
 

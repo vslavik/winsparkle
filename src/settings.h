@@ -150,7 +150,7 @@ public:
             return !GetEdDSAPubKey().empty();
         }
         CATCH_ALL_EXCEPTIONS
-            return false;
+        return false;
     }
 
     //@}
@@ -180,7 +180,7 @@ public:
         CriticalSectionLocker lock(ms_csVars);
         ms_lang.lang = lang;
     }
-    
+
     static void SetLanguage(unsigned short langid)
     {
         CriticalSectionLocker lock(ms_csVars);
@@ -281,11 +281,11 @@ public:
         ms_configMethods = customConfigMethods ? *customConfigMethods : GetDefaultConfigMethods();
     }
 
-    /// Set PEM data and verify in contains valid DSA public key
+    /// Set PEM data and verify that it contains valid DSA public key
     static void SetDSAPubKeyPem(const std::string &pem);
     //@}
 
-    /// Set PEM data and verify in contains valid EdDSA public key
+    /// Set base64-encoded data and verify it contains valid EdDSA public key
     static void SetEdDSAPubKey(const std::string& pubkey_base64);
     //@}
 

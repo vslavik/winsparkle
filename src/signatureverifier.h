@@ -53,7 +53,7 @@ public:
     // Throws BadSignatureException on failure.
     static void VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64);
 
-    // Verify EdDSA signature of the file. Equivalent to:
+    // Verify EdDSA signature of the file.
     // Throws BadSignatureException on failure.
     static void VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64);
 };
