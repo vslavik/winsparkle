@@ -11,5 +11,6 @@ template t_3rdparty {
 submodule expat.bkl;
 submodule libcrypto.bkl;
 submodule wxWidgets.bkl;
+submodule ed25519.bkl;
 
 msvs.generate-solution = false;

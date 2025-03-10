@@ -68,6 +68,9 @@ struct Appcast
         /// Signing signature of the update
         std::string DsaSignature;
 
+        /// Signing EdDSA signature of the update
+        std::string EdDsaSignature;
+
         // Operating system
         std::string OS;
 

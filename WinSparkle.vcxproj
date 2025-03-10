@@ -158,14 +158,14 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -181,11 +181,11 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -201,7 +201,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;_DEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\ed25519\src;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <ResourceCompile>
@@ -223,7 +223,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
@@ -233,7 +233,7 @@
       <StringPooling>true</StringPooling>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -254,14 +254,14 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;WIN32;NDEBUG;WINSPARKLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>3rdparty\expat\expat\lib;3rdparty\openssl-win32;3rdparty\wxWidgets_setup_h;3rdparty\wxWidgets\include;3rdparty\ed25519\src;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;BUILDING_WIN_SPARKLE;_UNICODE;UNICODE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
@@ -348,9 +348,16 @@
     </ProjectReference>
     <ProjectReference Include="3rdparty\libcrypto.vcxproj">
       <Project>{a0326e8b-57a0-548e-ab4a-2db2b6704d70}</Project>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <ProjectReference Include="3rdparty\wx.vcxproj">
       <Project>{499a5238-5aac-5fd3-8902-819d787108a5}</Project>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\ed25519.vcxproj">
+      <Project>{6a5fb0fa-2a9c-5a84-aa43-7814dc08d5b2}</Project>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
