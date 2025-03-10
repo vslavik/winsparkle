@@ -196,13 +196,13 @@ WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
     If this function isn't called by the app, public key is obtained from
     Windows resource named "EdDSAPub" of type "EDDSA".
 
-    @param eddsa_pub_base64  EdDSA public key in base64 encoded format.
+    @param pubkey  EdDSA public key in base64 encoded format.
 
     @return  1 if valid EdDSA public key provided, 0 otherwise.
 
     @since 0.9.0
  */
-WIN_SPARKLE_API int __cdecl win_sparkle_set_eddsa_pub_base64(const char* eddsa_pub_base64);
+WIN_SPARKLE_API int __cdecl win_sparkle_set_eddsa_public_key(const char *pubkey);
 
 /**
     Sets application metadata.
