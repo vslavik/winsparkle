@@ -31,8 +31,8 @@
  *--------------------------------------------------------------------------*/
 
 #define WIN_SPARKLE_VERSION_MAJOR   0
-#define WIN_SPARKLE_VERSION_MINOR   8
-#define WIN_SPARKLE_VERSION_MICRO   3
+#define WIN_SPARKLE_VERSION_MINOR   9
+#define WIN_SPARKLE_VERSION_MICRO   0
 
 /**
     Checks if WinSparkle version is at least @a major.@a minor.@a micro.
