@@ -1,11 +1,18 @@
+<p align="center">
+  <img height="128" src="https://github.com/vslavik/winsparkle/raw/refs/heads/devel/new-icon/artwork/WinSparkle.svg" alt="WinSparkle"/>
+</p>
+
+WinSparkle
+======
+
+**WinSparkle is a plug-and-forget software update library for Windows
+applications.**
+
+[![Build WinSparkle](https://github.com/vslavik/winsparkle/actions/workflows/build.yml/badge.svg)](https://github.com/vslavik/winsparkle/actions/workflows/build.yml)
 [![Crowdin](https://badges.crowdin.net/winsparkle/localized.svg)](https://crowdin.com/project/winsparkle)
 
- About
--------
-
-WinSparkle is a plug-and-forget software update library for Windows
-applications. It is heavily inspired by the Sparkle framework for OS X
-written by Andy Matuschak and others, to the point of sharing the same 
+WinSparkle is heavily inspired by the Sparkle framework for Mac
+written by Andy Matuschak and others, to the point of sharing the same
 updates format (appcasts) and having very similar user interface.
 
 See https://winsparkle.org for more information about WinSparkle.
