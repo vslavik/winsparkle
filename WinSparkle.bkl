@@ -97,4 +97,6 @@ shared-library WinSparkle {
     }
 }
 
+submodule tools/tools.bkl;
+
 submodule examples/examples.bkl;
