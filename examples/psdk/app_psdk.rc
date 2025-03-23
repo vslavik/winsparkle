@@ -5,7 +5,10 @@
  *
  */
 
-appicon ICON "appicon.ico"
+
+// WinSparkle UI will use application icon of the app if present.
+// If absent, WinSparkle's icon is used.
+appicon ICON "winui_logo.ico"
 
 #include <winver.h>
 
