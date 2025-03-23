@@ -105,7 +105,7 @@ int RegisterMainClass()
     wc.style         = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc   = MainWndProc;
     wc.hInstance     = g_hInstance;
-    wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
+    wc.hIcon         = LoadIcon(NULL, _TEXT("appicon"));
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wc.lpszClassName = MAIN_WIN_CLASS_NAME;
@@ -126,6 +126,9 @@ int CreateMainWindow()
                  );
     if ( !g_hwndMain )
         return FALSE;
+
+    SendMessage(g_hwndMain, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(g_hInstance, _TEXT("appicon")));
+    SendMessage(g_hwndMain, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(g_hInstance, _TEXT("appicon")));
 
     CreateWindow
     (
