@@ -41,6 +41,9 @@
 #endif
 
 
+bool g_verbose = false;
+
+
 std::string base64_encode(const uint8_t* data, size_t len)
 {
     DWORD base64_len = 0;
@@ -152,9 +155,42 @@ void generate_key(const std::string& private_key_file)
 }
 
 
+void sign_update(const KeyData& key, const std::string& filename)
+{
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
+    if (!file)
+    {
+        throw std::runtime_error("Failed to open file for reading");
+    }
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<uint8_t> buffer(size);
+    if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
+    {
+        throw std::runtime_error("Failed to read file");
+    }
+
+    uint8_t signature[64];
+    ed25519_sign(signature, buffer.data(), buffer.size(), key.public_key, key.private_key);
+
+    auto sig_base64 = base64_encode(signature, sizeof(signature));
+
+    if (g_verbose)
+    {
+        std::cout << "sparkle:edSignature=\"" << sig_base64 << "\" length=\"" << size << "\"" << std::endl;
+    }
+    else
+    {
+        std::cout << sig_base64 << std::endl;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     std::string private_key_file;
+    std::string filename;
 
     argparse::ArgumentParser program("winsparkle-tool", WIN_SPARKLE_VERSION_STRING);
     program.add_description("WinSparkle companion tool");
@@ -176,6 +212,25 @@ int main(int argc, char* argv[])
         .required()
         .store_into(private_key_file);
     program.add_subparser(public_key_cmd);
+
+    argparse::ArgumentParser sign_cmd("sign", "", argparse::default_arguments::help);
+    sign_cmd.add_description("sign an update file with EdDSA");
+    sign_cmd.add_argument("-f", "--private-key-file")
+        .help("file with the private key")
+        .metavar("KEYFILE")
+        .required()
+        .store_into(private_key_file);
+    sign_cmd.add_argument("-v", "--verbose")
+        .help("be verbose in output")
+        .default_value(false)
+        .implicit_value(true)
+        .store_into(g_verbose);
+    sign_cmd.add_argument("filename")
+        .help("file to sign")
+        .metavar("FILENAME")
+        .required()
+        .store_into(filename);
+    program.add_subparser(sign_cmd);
 
     try
     {
@@ -203,6 +258,11 @@ int main(int argc, char* argv[])
         {
             print_public_key(load_private_key(private_key_file));
         }
+        else if (program.is_subcommand_used(sign_cmd))
+        {
+            sign_update(load_private_key(private_key_file), filename);
+        }
+    }
     catch (const std::exception& e)
     {
         std::cerr << e.what() << std::endl;
