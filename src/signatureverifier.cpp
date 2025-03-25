@@ -333,8 +333,7 @@ void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, 
         throw BadSignatureException("Missing EdDSA signature!");
 
     CFile f(_wfopen(filename.c_str(), L"rb"));
-    if (!f)
-    if (ferror(f))
+    if (!f || ferror(f))
         throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
     fseek(f, 0, SEEK_END);
