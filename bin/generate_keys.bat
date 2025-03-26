@@ -23,7 +23,7 @@ FOR %%i IN ("dsa_priv.pem" "dsa_pub.pem") DO (
 echo[
 echo Generated two files:
 echo dsa_priv.pem: your private key. Keep it secret and don't share it!
-echo dsa_pub.pem: public counterpart to include in youe app.
+echo dsa_pub.pem: public counterpart to include in your app.
 
 echo BACK UP YOUR PRIVATE KEY AND KEEP IT SAFE!
 echo If you lose it, your users will be unable to upgrade!
