@@ -99,14 +99,26 @@ KeyData load_private_key(const std::string& private_key_file)
     file.close();
 
     auto seed = base64_decode(seed_str);
-    if (seed.size() != 32)
+    if (seed.size() == 32)
     {
-        throw std::runtime_error("Invalid private key size");
+        KeyData key;
+        ed25519_create_keypair(key.public_key, key.private_key, seed.data());
+        return key;
     }
-
-    KeyData key;
-    ed25519_create_keypair(key.public_key, key.private_key, seed.data());
-    return key;
+    else if (seed.size() == 64 + 32)
+    {
+        // For compatibility with Mac Sparkle, accept private keys in its older format,
+        // where concatenated output of ed25519_create_keypair() was stored. Newer versions
+        // and WinSparkle store the seed only.
+        KeyData key;
+        std::copy(seed.begin(), seed.begin() + 64, key.private_key);
+        std::copy(seed.begin() + 64, seed.end(), key.public_key);
+        return key;
+    }
+    else
+    {
+        throw std::runtime_error("Invalid private key");
+    }
 }
 
 
