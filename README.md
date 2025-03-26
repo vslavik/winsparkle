@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="128" src="https://github.com/vslavik/winsparkle/raw/refs/heads/devel/new-icon/artwork/WinSparkle.svg" alt="WinSparkle"/>
+  <img height="128" src="https://github.com/vslavik/winsparkle/raw/refs/heads/master/artwork/WinSparkle.svg" alt="WinSparkle"/>
 </p>
 
 WinSparkle
