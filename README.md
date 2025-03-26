@@ -77,7 +77,7 @@ with DSA private key, using SHA1 digest.
 WinSparkle provides tools to generate keys and sign the update using OpenSSL.
 
 You need `openssl.exe` available on Windows to use those tools (available as
-[precompiled binary][OpenSSL binaries]).
+[precompiled binary](https://wiki.openssl.org/index.php/Binaries)).
 
 Alternatively, you can generate keys and sign your updates even on macOS or Linux,
 using [tools provided by Sparkle project](https://github.com/sparkle-project/Sparkle/tree/master/bin).
@@ -108,25 +108,3 @@ to your appcast file:
 
 Download the sources archive and have a look at the
 [examples/](https://github.com/vslavik/winsparkle/tree/master/examples) folder.
-
-
- Using latest development versions
------------------------------------
-
-If you want to stay at the bleeding edge and use the latest, not yet released,
-version of WinSparkle, you can get its sources from public repository.
-WinSparkle uses git and and the sources are hosted on GitHub at
-https://github.com/vslavik/winsparkle
-
-WinSparkle uses submodules for some dependencies, so you have to initialize
-them after checking the tree out:
-
-    $ git clone https://github.com/vslavik/winsparkle.git
-    $ cd winsparkle
-    $ git submodule init
-    $ git submodule update
-
-Then compile WinSparkle as described above; no extra steps are required.
-
-[OpenSSL source]: https://www.openssl.org/source/
-[OpenSSL binaries]: https://wiki.openssl.org/index.php/Binaries
