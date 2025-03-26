@@ -321,9 +321,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="psdk\dsa_pub.pem" />
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="psdk\app_psdk.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

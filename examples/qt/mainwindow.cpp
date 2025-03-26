@@ -41,11 +41,11 @@ void MainWindow::initWinSparkle()
     win_sparkle_set_appcast_url("https://winsparkle.org/example/appcast.xml");
     win_sparkle_set_app_details(L"winsparkle.org", L"WinSparkle Qt Example", L"1.0");
 
-    // Set DSA public key used to verify update's signature.
+    // Set EdDSA public key used to verify update's signature.
     // This is na example how to provide it from external source (i.e. from Qt
     // resource). See the "psdk" example and its .rc file for an example how to
     // provide the key using Windows resource.
-    win_sparkle_set_dsa_pub_pem(reinterpret_cast<const char *>(QResource(":/pem/dsa_pub.pem").data()));
+    win_sparkle_set_eddsa_public_key("payYa5ap0XtF8HWR4AYBdCIcXWtJZPen7bJqFcqlp7o=");
 
     // Initialize the updater and possibly show some UI
     win_sparkle_init();
