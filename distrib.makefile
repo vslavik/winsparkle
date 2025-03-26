@@ -27,8 +27,8 @@ binary_files := \
 	ARM64/Release/WinSparkle.pdb \
 	AUTHORS COPYING NEWS README.md
 binary_tools := \
-	bin/sign_update.bat \
-	bin/generate_keys.bat \
+	bin/legacy_sign_update.bat \
+	bin/legacy_generate_keys.bat \
 	x64/Release/winsparkle-tool.exe
 
 
