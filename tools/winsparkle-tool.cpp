@@ -187,10 +187,55 @@ void sign_update(const KeyData& key, const std::string& filename)
     }
 }
 
+
+bool verify_signature(const std::string& pubkey_base64, const std::string& signature_base64, const std::string& filename)
+{
+    auto pubkey = base64_decode(pubkey_base64);
+    if (pubkey.size() != 32)
+    {
+        throw std::runtime_error("Invalid public key");
+    }
+
+    auto signature = base64_decode(signature_base64);
+    if (signature.size() != 64)
+    {
+        throw std::runtime_error("Invalid signature");
+    }
+
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
+    if (!file)
+    {
+        throw std::runtime_error("Failed to open file");
+    }
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<uint8_t> buffer(size);
+    if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
+    {
+        throw std::runtime_error("Failed to read file");
+    }
+
+    if (ed25519_verify(signature.data(), buffer.data(), buffer.size(), pubkey.data()))
+    {
+        std::cout << "Valid signature." << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Failed: signature is invalid." << std::endl;
+        return false;
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
     std::string private_key_file;
     std::string filename;
+    std::string pubkey;
+    std::string signature;
 
     argparse::ArgumentParser program("winsparkle-tool", WIN_SPARKLE_VERSION_STRING);
     program.add_description("WinSparkle companion tool");
@@ -232,6 +277,25 @@ int main(int argc, char* argv[])
         .store_into(filename);
     program.add_subparser(sign_cmd);
 
+    argparse::ArgumentParser verify_cmd("verify", "", argparse::default_arguments::help);
+    verify_cmd.add_description("verify EdDSA signature of a file");
+    verify_cmd.add_argument("-p", "--public-key")
+        .help("public key")
+        .metavar("PUBKEY")
+        .required()
+        .store_into(pubkey);
+    verify_cmd.add_argument("-s", "--signature")
+        .help("signature to verify")
+        .metavar("SIGNATURE")
+        .required()
+        .store_into(signature);
+    verify_cmd.add_argument("filename")
+        .help("file to verify")
+        .metavar("FILENAME")
+        .required()
+        .store_into(filename);
+    program.add_subparser(verify_cmd);
+
     try
     {
         program.parse_args(argc, argv);
@@ -261,6 +325,11 @@ int main(int argc, char* argv[])
         else if (program.is_subcommand_used(sign_cmd))
         {
             sign_update(load_private_key(private_key_file), filename);
+        }
+        else if (program.is_subcommand_used(verify_cmd))
+        {
+            if (!verify_signature(pubkey, signature, filename))
+                return 1;
         }
     }
     catch (const std::exception& e)
