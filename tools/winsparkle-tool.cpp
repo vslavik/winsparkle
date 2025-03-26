@@ -178,7 +178,7 @@ void sign_update(const KeyData& key, const std::string& filename)
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    std::vector<uint8_t> buffer(size);
+    std::vector<uint8_t> buffer(static_cast<size_t>(size));
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
     {
         throw std::runtime_error("Failed to read file");
@@ -223,7 +223,7 @@ bool verify_signature(const std::string& pubkey_base64, const std::string& signa
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    std::vector<uint8_t> buffer(size);
+    std::vector<uint8_t> buffer(static_cast<size_t>(size));
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
     {
         throw std::runtime_error("Failed to read file");
