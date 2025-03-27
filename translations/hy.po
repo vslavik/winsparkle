@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2024-12-02 18:00\n"
+"PO-Revision-Date: 2025-03-27 09:02\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Armenian\n"
 "Language: hy_AM\n"
@@ -27,7 +27,7 @@ msgstr "Ծրագրի թարմացում"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Notes de version:"
+msgstr "Թարմացման նկարագրությունը."
 
 #: src/ui.cpp:539
 msgid "Skip this version"
@@ -44,19 +44,19 @@ msgstr "Տեղադրել արդիացումը"
 #: src/ui.cpp:667
 #, c-format
 msgid "%s cannot be restarted."
-msgstr "%s-ը չի կարող վերագործարկվել"
+msgstr "%s-ը չի կարող վերագործարկվել։"
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Համոզվեք, որ չունեք չպահպանված փաստաթուղթ և կրկին փորձեք:"
+msgstr "Համոզվեք, որ չունեք չպահպանված փաստաթուղթ և փորձեք նորից:"
 
 #: src/ui.cpp:677
 msgid "Launching the installer..."
-msgstr "Բացում է տեղակայիչը..."
+msgstr "Բացվում է ծրագրի տեղադրման մեկնարկիչը..."
 
 #: src/ui.cpp:683
 msgid "Failed to launch the installer."
-msgstr "Չհաջողվեց բացել տեղակայիչը:"
+msgstr "Չհաջողվեց բացել ծրագրի տեղադրման մեկնարկիչը։"
 
 #: src/ui.cpp:726
 msgid "Checking for updates..."
