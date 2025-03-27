@@ -1,3 +1,16 @@
+
+Version 0.9.0
+-------------
+
+- Added support for EdDSA signatures.
+- Added winsparkle-tool for performing signing operations.
+- Deprecated DSA signatures. They are still supported, but will be removed in
+  a future release and migrating to EdDSA a.s.a.p. is strongly recommended.
+  DSA signing scripts are still included in the repository, but wee renamed to
+  legacy_*.bat to indicate their status.
+- WinSparkle has a new updater icon.
+
+
 Version 0.8.3
 -------------
 
