@@ -43,6 +43,7 @@ std::wstring Settings::ms_appName;
 std::wstring Settings::ms_appVersion;
 std::wstring Settings::ms_appBuildVersion;
 std::string  Settings::ms_DSAPubKey;
+std::string  Settings::ms_EdDSAPubKey;
 std::map<std::string, std::string> Settings::ms_httpHeaders;
 
 win_sparkle_config_methods_t Settings::ms_configMethods = GetDefaultConfigMethods();
@@ -349,6 +350,13 @@ void Settings::SetDSAPubKeyPem(const std::string &pem)
     CriticalSectionLocker lock(ms_csVars);
     SignatureVerifier::VerifyDSAPubKeyPem(pem);
     ms_DSAPubKey = pem;
+}
+
+void Settings::SetEdDSAPubKey(const std::string& pubkey_base64)
+{
+    CriticalSectionLocker lock(ms_csVars);
+    SignatureVerifier::VerifyEdDSAPubKey(pubkey_base64);
+    ms_EdDSAPubKey = pubkey_base64;
 }
 
 } // namespace winsparkle

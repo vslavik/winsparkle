@@ -17,16 +17,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="psdk\app_psdk.c">
+    <ClCompile Include="winsparkle-tool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="psdk\app_psdk.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="psdk\app_psdk.manifest" />
   </ItemGroup>
 </Project>

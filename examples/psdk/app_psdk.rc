@@ -15,8 +15,8 @@ appicon ICON "winui_logo.ico"
 // Get updates from this appcast feed:
 FeedURL     APPCAST     {"https://winsparkle.org/example/appcast.xml"}
 
-// And verify signature using DSA public key:
-DSAPub      DSAPEM      "dsa_pub.pem"
+// And verify signature using EdDSA public key:
+EdDSAPub    EDDSA       {"payYa5ap0XtF8HWR4AYBdCIcXWtJZPen7bJqFcqlp7o="}
 
 // Version information; this, too, is used by WinSparkle
 1 VERSIONINFO

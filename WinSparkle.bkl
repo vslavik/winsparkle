@@ -48,6 +48,9 @@ shared-library WinSparkle {
     includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;
     deps += WinSparkle_wx;
 
+    includedirs += 3rdparty/ed25519/src;
+    deps += WinSparkle_ed25519;
+
     libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet shlwapi;
 
     defines += BUILDING_WIN_SPARKLE;
@@ -93,5 +96,7 @@ shared-library WinSparkle {
         translations/translations.rc
     }
 }
+
+submodule tools/tools.bkl;
 
 submodule examples/examples.bkl;

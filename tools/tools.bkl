@@ -1,0 +1,12 @@
+
+msvs.solutionfile = tools.sln;
+
+includedirs += ../include ../3rdparty/ed25519/src ../3rdparty/argparse/include;
+
+program winsparkle-tool {
+    deps += WinSparkle_ed25519;
+
+    sources {
+        winsparkle-tool.cpp
+    }
+}

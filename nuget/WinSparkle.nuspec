@@ -25,7 +25,9 @@
         <file src="..\Release\WinSparkle.dll" target="runtimes\win-x86\native\" />
         <file src="..\x64\Release\WinSparkle.dll" target="runtimes\win-x64\native\" />
         <file src="..\ARM64\Release\WinSparkle.dll" target="runtimes\win-arm64\native\" />
+        <file src="..\ARM64\Release\winsparkle-tool.exe" target="tools" />
         <file src="WinSparkle.targets" target="build\native\" />
+        <file src="WinSparkle.props" target="build" />
         <file src="..\*.md" target="" />
         <file src="..\COPYING" target="COPYING" />
     </files>

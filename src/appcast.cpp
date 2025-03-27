@@ -180,6 +180,7 @@ void trim_whitespace(std::string& s)
 #define ATTR_VERSION    NS_SPARKLE_NAME("version")
 #define ATTR_SHORTVERSION NS_SPARKLE_NAME("shortVersionString")
 #define ATTR_DSASIGNATURE NS_SPARKLE_NAME("dsaSignature")
+#define ATTR_EDDSASIGNATURE NS_SPARKLE_NAME("edSignature")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
 #define ATTR_ARGUMENTS  NS_SPARKLE_NAME("installerArguments")
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
@@ -286,6 +287,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
 
                 if (strcmp(name, ATTR_URL) == 0)
                     enclosure.DownloadURL = value;
+                else if (strcmp(name, ATTR_EDDSASIGNATURE) == 0)
+                    enclosure.EdDsaSignature = value;
                 else if (strcmp(name, ATTR_DSASIGNATURE) == 0)
                     enclosure.DsaSignature = value;
                 else if (strcmp(name, ATTR_OS) == 0)

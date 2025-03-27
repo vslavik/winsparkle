@@ -59,6 +59,9 @@ inline void LogError(const std::string& msg)
     LogError(msg.c_str());
 }
 
+/// Logs usage warning
+void LogWarning(const char *msg);
+
 
 /**
     Helper macro for catching exceptions in DLL API interface.
