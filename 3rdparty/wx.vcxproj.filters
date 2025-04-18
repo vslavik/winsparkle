@@ -581,4 +581,7 @@
   <ItemGroup>
     <None Include="..\packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="wxWidgets\misc\msvc\wxWidgets.natvis" />
+  </ItemGroup>
 </Project>
