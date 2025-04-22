@@ -298,7 +298,7 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
 
 void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 {
-    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    const std::string pubkey = Base64ToBin(pubkey_base64);
     if (pubkey.size() != 32)
     {
         throw BadSignatureException("Invalid public key size.");
