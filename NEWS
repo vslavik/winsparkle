@@ -1,4 +1,10 @@
 
+Version 0.9.1
+-------------
+
+- Correctly validate public key passed to win_sparkle_set_eddsa_public_key().
+
+
 Version 0.9.0
 -------------
 
