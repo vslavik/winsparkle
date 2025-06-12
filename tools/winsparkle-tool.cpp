@@ -57,7 +57,10 @@ std::string base64_encode(const uint8_t* data, size_t len)
     {
         throw std::runtime_error("Failed to encode as base64");
     }
-
+    else if (str.size() > base64_len)
+    {
+        str.resize(base64_len);
+    }
     return str;
 }
 
