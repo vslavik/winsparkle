@@ -54,7 +54,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
             LANGID lang = 0;
             if (IsWindowsVistaOrGreater())
             {
-                auto f_GetThreadUILanguage = LOAD_DYNAMIC_FUNC(GetThreadUILanguage, kernel32);
+                LANGID (*f_GetThreadUILanguage)() = (LANGID (*)())LOAD_DYNAMIC_FUNC(GetThreadUILanguage, kernel32);
                 if (f_GetThreadUILanguage)
                     lang = f_GetThreadUILanguage();
             }

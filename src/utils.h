@@ -102,17 +102,16 @@ inline bool IsWindowsVistaOrGreater()
 // Dynamic loading of symbols that may be unavailable on earlier
 // versions of Windows
 
-template<typename T>
-inline T* LoadDynamicFunc(const char *func, const char *dll)
+static HANDLE LoadDynamicFunc(const char *func, const char *dll)
 {
     HMODULE mod = GetModuleHandleA(dll);
     if (!mod)
 		return NULL;
-    return reinterpret_cast<T*>(GetProcAddress(mod, func));
+    return (HANDLE)GetProcAddress(mod, func);
 }
 
 #define LOAD_DYNAMIC_FUNC(func, dll) \
-    LoadDynamicFunc<decltype(func)>(#func, #dll)
+    LoadDynamicFunc(#func, #dll)
 
 
 // Check for insecure URLs

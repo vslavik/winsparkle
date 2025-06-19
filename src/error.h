@@ -28,6 +28,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <string>
 
 namespace winsparkle
 {

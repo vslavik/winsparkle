@@ -34,6 +34,10 @@
 #include <openssl/pem.h>
 #include <openssl/sha.h>
 
+#if OPENSSL_VERSION_MAJOR == 3
+#include <openssl/evp.h>
+#endif
+
 #include <ed25519.h>
 
 #include <stdexcept>
@@ -194,7 +198,19 @@ public:
 
         DSAPub pubKey(Settings::GetDSAPubKeyPem());
 
+#if OPENSSL_VERSION_MAJOR == 3
+        int code = EVP_PKEY_verify_init(pubKey);
+
+        if (code == -1) // OpenSSL error
+            throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
+
+        if (code != 1)
+            throw BadSignatureException();
+
+        code = EVP_PKEY_verify(pubKey, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size());
+#else
         const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size(), pubKey);
+#endif
 
         if (code == -1) // OpenSSL error
             throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
@@ -234,6 +250,46 @@ private:
 public:
     class DSAPub
     {
+#if OPENSSL_VERSION_MAJOR == 3
+        EVP_PKEY *dsa;
+        EVP_PKEY_CTX *ctx;
+
+        DSAPub(const DSAPub &);
+        DSAPub &operator=(const DSAPub &);
+
+    public:
+        DSAPub(const std::string &pem_key)
+            : dsa(NULL)
+        {
+            BIOWrap bio(pem_key);
+            if (!PEM_read_bio_PUBKEY(bio, &dsa, NULL, NULL))
+            {
+                throw std::invalid_argument("Cannot read DSA public key from PEM");
+            }
+
+            ctx = EVP_PKEY_CTX_new(dsa, NULL);
+            if (ctx == NULL)
+            {
+                throw std::invalid_argument("Cannot make DSA public key context");
+            }
+        }
+
+        operator EVP_PKEY*()
+        {
+            return dsa;
+        }
+
+        operator EVP_PKEY_CTX*()
+        {
+            return ctx;
+        }
+
+        ~DSAPub()
+        {
+            if (dsa)
+                EVP_PKEY_free(dsa);
+        }
+#else
         DSA *dsa;
 
         DSAPub(const DSAPub &);
@@ -260,7 +316,7 @@ public:
             if (dsa)
                 DSA_free(dsa);
         }
-
+#endif
     }; // DSAWrap
 
 }; // TinySSL

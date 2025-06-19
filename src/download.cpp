@@ -104,7 +104,9 @@ std::wstring MakeUserAgent()
     userAgent += L" (Win64)";
 #else
     // If we're running a 32bit process, check if we're on 64bit Windows OS:
-    auto f_IsWow64Process = LOAD_DYNAMIC_FUNC(IsWow64Process, kernel32);
+    BOOL (*f_IsWow64Process)(
+      HANDLE,
+      PBOOL)  = (BOOL (*)(HANDLE, PBOOL))LOAD_DYNAMIC_FUNC(IsWow64Process, kernel32);
     if( f_IsWow64Process )
     {
         BOOL wow64 = FALSE;
@@ -340,7 +342,7 @@ void DownloadFile(const std::string& url, IDownloadSink* sink, Thread* onThread,
         ibuf.lpvBuffer = buffer;
         ibuf.dwBufferLength = sizeof(buffer);
 
-        if (!InternetReadFileEx(conn, &ibuf, IRF_ASYNC | IRF_NO_WAIT, NULL))
+        if (!InternetReadFileEx(conn, &ibuf, IRF_ASYNC | IRF_NO_WAIT, (DWORD_PTR)NULL))
         {
             if (GetLastError() != ERROR_IO_PENDING)
                 throw Win32Exception();

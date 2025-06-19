@@ -1,0 +1,53 @@
+# GCC makefile for WinSparkle
+# Copyright (C) 2015, 2016 Renato Silva
+# This file is licensed under the same terms as WinSparkle
+
+all: libwinsparkle.a WinSparkle.dll winsparkle-tool.exe example-psdk.exe
+
+clean:
+	rm -f *.a *.exe *.dll *.o src/*.o tools/*.o examples/psdk/*.o
+
+translations.o: translations/translations.rc
+	@for file in translations/*.po; do\
+		msgfmt $$file -o "$${file/%po/mo}"; \
+	done
+	windres -o translations.o translations/translations.rc
+
+winsparkleres.o: src/winsparkle.rc
+	windres -o winsparkleres.o src/winsparkle.rc
+
+app_psdkres.o: examples/psdk/app_psdk.rc
+	windres -o app_psdkres.o examples/psdk/app_psdk.rc
+
+%.o: %.c
+	$(CC) -g3 -std=c11 -c -mthreads -Iinclude -I/c/vcpkg/installed/x86-mingw-static/include -I. -D_WIN32_WINNT=0x501 -DUNICODE -D_UNICODE -DBUILDING_WIN_SPARKLE -o $@ $<
+
+%.o: %.cpp
+	$(CXX) -g3 -std=c++17 -c -mthreads -Iinclude -I/c/vcpkg/installed/x86-mingw-static/include -I. -D_WIN32_WINNT=0x501 -DUNICODE -D_UNICODE -DBUILDING_WIN_SPARKLE -o $@ $<
+
+src/appcast.o: src/appcast.cpp
+src/appcontroller.o: src/appcontroller.cpp
+src/dll_api.o: src/dll_api.cpp
+src/dllmain.o: src/dllmain.cpp
+src/download.o: src/download.cpp
+src/error.o: src/error.cpp
+src/settings.o: src/settings.cpp
+src/signatureverifier.o: src/signatureverifier.cpp
+src/threads.o: src/threads.cpp
+src/updatechecker.o: src/updatechecker.cpp
+src/ui.o: src/ui.cpp
+src/updatedownloader.o: src/updatedownloader.cpp
+tools/winsparkle-tool.o: tools/winsparkle-tool.cpp
+examples/psdk/winsparkle-tool.o: examples/psdk/app_psdk.cpp
+
+libwinsparkle.a: src/appcast.o src/appcontroller.o src/dll_api.o src/dllmain.o src/download.o src/error.o src/settings.o src/signatureverifier.o src/threads.o src/updatechecker.o src/ui.o src/updatedownloader.o
+	ar rcs libwinsparkle.a src/appcast.o src/appcontroller.o src/dll_api.o src/dllmain.o src/download.o src/error.o src/settings.o src/signatureverifier.o src/threads.o src/updatechecker.o src/ui.o src/updatedownloader.o
+
+WinSparkle.dll: src/appcast.o src/appcontroller.o src/dll_api.o src/dllmain.o src/download.o src/error.o src/settings.o src/signatureverifier.o src/threads.o src/updatechecker.o src/ui.o src/updatedownloader.o translations.o winsparkleres.o
+	$(CXX) -g3 -nodefaultlibs -static-libgcc -static-libstdc++ -shared -mthreads -o $@ src/appcast.o src/appcontroller.o src/dll_api.o src/dllmain.o src/download.o src/error.o src/settings.o src/signatureverifier.o src/threads.o src/updatechecker.o src/ui.o src/updatedownloader.o translations.o winsparkleres.o -Wl,--out-implib,libwinsparkle.dll.a -L/c/vcpkg/installed/x86-mingw-static/lib -lwxmsw33u_webview -lwxmsw33u_core -lwxbase33u_xml -lwxmsw33u_html -lwxbase33u -lkernel32 -lgdi32 -luxtheme -lole32 -loleaut32 -luuid -lgdiplus -lwininet -lnanosvgrast -lpng16 -lpng -ltiff -lnanosvg -lzlib -lcomctl32 -lexpat -loleacc -lwinspool -led25519 -lmsimg32 -lexpat -lcrypto -lssl -lcrypt32 -lwininet -lversion -lole32 -loleaut32 -lrpcrt4 -luuid -lws2_32 -lcomdlg32 -lshlwapi -static -lstdc++ -lsupc++ -lmingw32 -lmingwex -static -lpthread -static -lgcc -lgcc_eh -lmsvcrt -lkernel32 -luser32 -ladvapi32 -lshell32 -lkernel32 -lmingwex -lmingw32 -lcrtdll
+
+winsparkle-tool.exe: tools/winsparkle-tool.o
+	$(CXX) -g3 -nodefaultlibs -static-libgcc -static-libstdc++ -mthreads -o $@ tools/winsparkle-tool.o -L/c/vcpkg/installed/x86-mingw-static/lib -led25519 -lcrypto -static -lstdc++ -lsupc++ -lmingw32 -lmingwex -static -lpthread -static -lgcc -lgcc_eh -lmsvcrt -lkernel32 -luser32 -ladvapi32 -lshell32 -lkernel32 -lmingwex -lmingw32 -lcrypt32
+
+example-psdk.exe: examples/psdk/app_psdk.o app_psdkres.o
+	$(CXX) -g3 -nodefaultlibs -static-libgcc -static-libstdc++ -mthreads -o $@ examples/psdk/app_psdk.o app_psdkres.o -L. -lwinsparkle.dll -static -lstdc++ -lsupc++ -lmingw32 -lmingwex -static -lpthread -static -lgcc -lgcc_eh -lmsvcrt -lkernel32 -luser32 -ladvapi32 -lshell32 -lkernel32 -lmingwex -lmingw32 -mwindows

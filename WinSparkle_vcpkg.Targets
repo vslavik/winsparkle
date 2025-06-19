@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         ToolsVersion="4.0">
+
+  <PropertyGroup>
+    <Msgfmt>$(GettextToolsDir)msgfmt.exe -c</Msgfmt>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TranslationFiles Include="translations\*.po" />
+    <CompiledTranslationFiles Include="translations\*.mo" />
+  </ItemGroup>
+
+  <Target Name="CopyTranslationFiles" BeforeTargets="ResourceCompile"
+          Inputs="@(TranslationFiles)"
+          Outputs="@(TranslationFiles->'translations\%(Filename).mo')">
+    <Message Importance="High" Text="Compiling translations..." />
+    <Exec Command='$(Msgfmt) -o "translations\%(TranslationFiles.Filename).mo" @(TranslationFiles)' />
+  </Target>
+
+  <Target Name="CleanMOs" AfterTargets="Clean">
+    <Delete Files="@(CompiledTranslationFiles)" />
+  </Target>
+
+</Project>

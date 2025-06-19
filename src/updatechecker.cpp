@@ -36,7 +36,8 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
-#include <winsparkle.h>
+
+#include "winsparkle.h"
 
 using namespace std;
 

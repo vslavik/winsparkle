@@ -23,6 +23,9 @@
  *
  */
 
+#define _WINSOCKAPI_ 1
+#define _WINSOCK2API_ 1
+
 #include "ui.h"
 #include "settings.h"
 #include "error.h"
@@ -98,7 +101,13 @@ wxIcon LoadNamedIcon(HMODULE module, const wchar_t *iconName, int size)
 {
     HICON hIcon = NULL;
 
-    auto f_LoadIconWithScaleDown = LOAD_DYNAMIC_FUNC(LoadIconWithScaleDown, comctl32);
+    HRESULT (*f_LoadIconWithScaleDown)(HINSTANCE, PCWSTR, int, int, HICON *) = (HRESULT(*)(
+        HINSTANCE,
+        PCWSTR,
+        int,
+        int,
+        HICON *
+    ))LOAD_DYNAMIC_FUNC(LoadIconWithScaleDown, comctl32);
     if (f_LoadIconWithScaleDown)
     {
         if (FAILED(f_LoadIconWithScaleDown(module, iconName, size, size, &hIcon)))
@@ -1156,6 +1165,12 @@ private:
     void InitWindow();
     void ShowWindow();
 
+    void RethrowStoredException();
+    void OnUnhandledException();
+    bool OnExceptionInMainLoop();
+    bool StoreCurrentException();
+    void CallEventHandler(wxEvtHandler* handler, wxEventFunctor& functor, wxEvent& event) const;
+    void HandleEvent(wxEvtHandler* handler, wxEventFunction func, wxEvent& event) const;
     void OnWindowClose(wxCloseEvent& event);
     void OnTerminate(wxThreadEvent& event);
     void OnShowCheckingUpdates(wxThreadEvent& event);
@@ -1216,7 +1231,11 @@ bool App::OnInit()
     }
     else if (langset.langid != 0)
     {
-        auto f_LCIDToLocaleName = LOAD_DYNAMIC_FUNC(LCIDToLocaleName, kernel32);
+        int (*f_LCIDToLocaleName)(LCID, LPWSTR, int, DWORD) = (int (*)(
+            LCID,
+            LPWSTR,
+            int,
+            DWORD))LOAD_DYNAMIC_FUNC(LCIDToLocaleName, kernel32);
         if (f_LCIDToLocaleName)
         {
             WCHAR strNameBuffer[LOCALE_NAME_MAX_LENGTH];
@@ -1285,6 +1304,115 @@ void App::OnWindowClose(wxCloseEvent& event)
     event.Skip();
 }
 
+static std::exception_ptr gs_storedException;
+
+void App::RethrowStoredException()
+{
+    if (gs_storedException)
+    {
+        std::exception_ptr storedException;
+        std::swap(storedException, gs_storedException);
+
+        std::rethrow_exception(storedException);
+    }
+}
+
+void App::OnUnhandledException()
+{
+    // we're called from an exception handler so we can re-throw the exception
+    // to recover its type
+    wxString what;
+    try
+    {
+        throw;
+    }
+    catch (std::exception& e)
+    {
+#ifdef wxNO_RTTI
+        what.Printf("standard exception with message \"%s\"", e.what());
+#else
+        what.Printf("standard exception of type \"%s\" with message \"%s\"",
+            typeid(e).name(), e.what());
+#endif
+    }
+    catch (...)
+    {
+        what = "unknown exception";
+    }
+
+    wxMessageOutputBest().Printf(
+        "Unhandled %s; terminating %s.\n",
+        what,
+        wxIsMainThread() ? "the application" : "the thread in which it happened"
+    );
+}
+
+bool App::StoreCurrentException()
+{
+    if (gs_storedException)
+    {
+        // We can't store more than one exception currently: while we could
+        // support this by just using a vector<exception_ptr>, it shouldn't be
+        // actually necessary because we should never have more than one active
+        // exception anyhow.
+        return false;
+    }
+
+    gs_storedException = std::current_exception();
+
+    return true;
+}
+
+bool App::OnExceptionInMainLoop()
+{
+    // ask the user about what to do: use the Win32 API function here as it
+    // could be dangerous to use any wxWidgets code in this state
+    switch (
+        ::MessageBox
+        (
+            NULL,
+            wxT("An unhandled exception occurred. Press \"Abort\" to \
+terminate the program,\r\n\
+\"Retry\" to exit the program normally and \"Ignore\" to try to continue."),
+wxT("Unhandled exception"),
+MB_ABORTRETRYIGNORE |
+MB_ICONERROR |
+MB_TASKMODAL
+)
+)
+    {
+    case IDABORT:
+        throw;
+
+    default:
+        wxFAIL_MSG(wxT("unexpected MessageBox() return code"));
+        wxFALLTHROUGH;
+
+    case IDRETRY:
+        return false;
+
+    case IDIGNORE:
+        return true;
+    }
+}
+
+void App::CallEventHandler(wxEvtHandler* handler, wxEventFunctor& functor, wxEvent& event) const
+{
+    // If the functor holds a method then, for backward compatibility, call
+// HandleEvent():
+    wxEventFunction eventFunction = functor.GetEvtMethod();
+
+    if (eventFunction)
+        HandleEvent(handler, eventFunction, event);
+    else
+        functor(handler, event);
+}
+
+void App::HandleEvent(wxEvtHandler* handler, wxEventFunction func, wxEvent& event) const
+{
+    // by default, simply call the handler
+    (handler->*func)(event);
+}
 
 void App::OnTerminate(wxThreadEvent&)
 {

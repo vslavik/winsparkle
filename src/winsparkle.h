@@ -39,19 +39,7 @@
 extern "C" {
 #endif
 
-#ifdef BUILDING_WIN_SPARKLE
-    #ifdef _MSC_VER
-        #define WIN_SPARKLE_API __declspec(dllexport)
-    #else
-        #define WIN_SPARKLE_API __attribute__((dllexport))
-    #endif
-#else
-    #ifdef _MSC_VER
-        #define WIN_SPARKLE_API __declspec(dllimport)
-    #else
-        #define WIN_SPARKLE_API __attribute__((dllimport))
-    #endif
-#endif
+#define WIN_SPARKLE_API
 
 #if defined(__has_cpp_attribute)
     #if __has_cpp_attribute(deprecated)

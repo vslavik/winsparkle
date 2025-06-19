@@ -1,0 +1,102 @@
+
+toolsets = msvs;
+
+// Common settings:
+win32-crt-linkage = static;
+archs = x86 x86_64;
+
+defines += _CRT_SECURE_NO_WARNINGS;
+
+// Build binaries compatible with Windows XP (SP3) -- it's still useful for
+// installer stuff like WinSparkle.dll
+//msvs.option.Configuration.PlatformToolset = v140_xp;
+msvs.option.Configuration.XPDeprecationWarning = false;
+
+if ( $(arch) == x86 ) {
+    // VS2015/2017 generates thread-safe statics by default, but it's incompatible
+    // with Windows XP when used in DLLs
+    compiler-options += "/Zc:threadSafeInit-";
+    // For maximum compatibility, don't use SSE2, (very) old 32bit CPUs don't have it:
+    msvs.option.ClCompile.EnableEnhancedInstructionSet = NoExtensions;
+}
+
+if ( $(config) == Release ) {
+    msvs.option.Configuration.WholeProgramOptimization = true;
+    msvs.option.ClCompile.Optimization = MinSpace;
+    msvs.option.ClCompile.FavorSizeOrSpeed = Size;
+    msvs.option.ClCompile.WholeProgramOptimization = true;
+    msvs.option.ClCompile.StringPooling = true;
+    msvs.option.ClCompile.FunctionLevelLinking = true;
+    msvs.option.Link.OptimizeReferences = true;
+    msvs.option.Link.EnableCOMDATFolding = true;
+    msvs.option.Link.LinkTimeCodeGeneration = UseLinkTimeCodeGeneration;
+}
+
+// 3rd party library dependencies:
+submodule 3rdparty/dependencies.bkl;
+
+shared-library WinSparkle {
+    msvs.option.Globals.WindowsTargetPlatformVersion = 10.0;
+
+    defines += XML_STATIC;
+    includedirs += 3rdparty/expat/expat/lib;
+    deps += WinSparkle_expat;
+
+    includedirs += 3rdparty/openssl-win32;
+    deps += WinSparkle_libcrypto;
+
+    includedirs += 3rdparty/wxWidgets_setup_h 3rdparty/wxWidgets/include;
+    deps += WinSparkle_wx;
+
+    includedirs += 3rdparty/ed25519/src;
+    deps += WinSparkle_ed25519;
+
+    libs += comctl32 kernel32 user32 comctl32 rpcrt4 version wininet shlwapi;
+
+    defines += BUILDING_WIN_SPARKLE;
+
+    // Public API headers:
+    headers {
+        include/winsparkle.h
+        include/winsparkle-version.h
+    }
+
+    includedirs += include;
+
+    // Private headers:
+    headers {
+        src/appcast.h
+        src/appcontroller.h
+        src/download.h
+        src/error.h
+        src/settings.h
+        src/threads.h
+        src/ui.h
+        src/updatechecker.h
+        src/updatedownloader.h
+        src/utils.h
+        src/signatureverifier.h
+    }
+
+    sources {
+        src/appcast.cpp
+        src/appcontroller.cpp
+        src/dll_api.cpp
+        src/dllmain.cpp
+        src/download.cpp
+        src/error.cpp
+        src/settings.cpp
+        src/threads.cpp
+        src/ui.cpp
+        src/updatechecker.cpp
+        src/updatedownloader.cpp
+        src/signatureverifier.cpp
+
+        src/winsparkle.rc
+        translations/translations.rc
+    }
+}
+
+submodule tools/tools.bkl;
+
+submodule examples/examples.bkl;
