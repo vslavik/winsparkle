@@ -14,7 +14,7 @@ translations.o: translations/translations.rc
 	windres -o translations.o translations/translations.rc
 
 winsparkleres.o: src/winsparkle.rc
-	windres -o winsparkleres.o src/winsparkle.rc
+	windres -Iinclude -o winsparkleres.o src/winsparkle.rc
 
 app_psdkres.o: examples/psdk/app_psdk.rc
 	windres -o app_psdkres.o examples/psdk/app_psdk.rc
