@@ -168,6 +168,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\Debug %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
@@ -190,6 +192,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\x64\Debug %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
@@ -212,6 +216,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\ARM64\Debug %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
@@ -244,6 +250,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\Release %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
@@ -274,6 +282,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\x64\Release %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
@@ -304,6 +314,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>winsparkle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LIBPATH:..\ARM64\Release %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>psdk/app_psdk.manifest</AdditionalManifestFiles>
