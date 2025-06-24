@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2024-12-02 18:00\n"
+"PO-Revision-Date: 2025-06-24 15:52\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -23,11 +23,11 @@ msgstr ""
 
 #: src/ui.cpp:325 src/ui.cpp:668 src/ui.cpp:684
 msgid "Software Update"
-msgstr "Mise à jour du Logiciel"
+msgstr "Mise à jour du logiciel"
 
 #: src/ui.cpp:513
 msgid "Release notes:"
-msgstr "Notes de version :"
+msgstr "Notes de version :"
 
 #: src/ui.cpp:539
 msgid "Skip this version"
