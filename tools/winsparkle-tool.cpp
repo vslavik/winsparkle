@@ -70,6 +70,9 @@ std::vector<uint8_t> base64_decode(const std::string& base64)
         throw std::runtime_error("Failed to decode base64 string");
     }
 
+    if (size == 0)
+        return {};
+
     std::vector<uint8_t> bin(size);
     if (!CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, (BYTE*)&bin[0], &size, NULL, NULL))
     {
