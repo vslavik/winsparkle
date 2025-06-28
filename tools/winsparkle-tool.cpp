@@ -52,7 +52,8 @@ std::string base64_encode(const uint8_t* data, size_t len)
         throw std::runtime_error("Failed to encode as base64");
     }
 
-    std::string str(base64_len, '\0');
+    // base64_len includes the null terminator, the actual string length is one less
+    std::string str(base64_len - 1, '\0');
     if (!CryptBinaryToStringA(data, (DWORD)len, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, str.data(), &base64_len))
     {
         throw std::runtime_error("Failed to encode as base64");
