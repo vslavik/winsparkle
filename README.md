@@ -111,7 +111,7 @@ to your appcast file:
 
 For example:
 ```
-$ winsparkle-tool sign --verbose --file private.key Updater.exe
+$ winsparkle-tool sign --verbose --private-key-file private.key Updater.exe
 sparkle:edSignature="JhQ69mgRxjNxS35zmMu6bMd9UlkCC/tkCiSR4SXQOfBwwH1FkqYSgNyT5dbWjnw5F1c/6/LqbCGw+WckvJiOBw==" length="1736832"
 ```
 
