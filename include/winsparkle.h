@@ -276,7 +276,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build);
 
 /**
-    Set custom HTTP header for appcast checks.
+    Set custom HTTP header for appcast checks and update downloads.
 
     @since 0.7
 
