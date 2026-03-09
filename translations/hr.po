@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: winsparkle\n"
 "POT-Creation-Date: 2019-10-06 14:19+0200\n"
-"PO-Revision-Date: 2024-12-02 18:00\n"
+"PO-Revision-Date: 2026-03-09 17:49\n"
 "Last-Translator: Václav Slavík <vaclav@slavik.io>\n"
 "Language-Team: Croatian\n"
 "Language: hr_HR\n"
@@ -48,7 +48,7 @@ msgstr "Nije moguće ponovo pokrenuti %s."
 
 #: src/ui.cpp:670
 msgid "Make sure that you don't have any unsaved documents and try again."
-msgstr "Provjeri da ne postoje nespremljeni dokumenti i pokušaj ponovno."
+msgstr "Provjeri da nemaš nespremljenih dokumenata i pokušaj ponovo."
 
 #: src/ui.cpp:677
 msgid "Launching the installer..."
@@ -73,7 +73,7 @@ msgstr "Koristiš najnoviju verziju!"
 #: src/ui.cpp:761
 #, c-format
 msgid "%s %s is currently the newest version available."
-msgstr "%s %s je trenutno najnovija dostupna verzija."
+msgstr "%s %s je trenutačno najnovija dostupna verzija."
 
 #: src/ui.cpp:774
 msgid "Close"
@@ -121,7 +121,7 @@ msgstr "Spremno za instaliranje."
 
 #: src/ui.cpp:1105
 msgid "Check for updates automatically?"
-msgstr "Automatski provjeri nadogradnje?"
+msgstr "Automatski tražiti nadogradnje?"
 
 #: src/ui.cpp:1115
 #, c-format
@@ -130,7 +130,7 @@ msgstr "Želiš li da %s automatski potraži nadogradnje? Nadogradnje možeš i 
 
 #: src/ui.cpp:1129
 msgid "Check automatically"
-msgstr "Automatska provjera"
+msgstr "Traži automatski"
 
 #: src/ui.cpp:1134
 msgid "Don't check"
