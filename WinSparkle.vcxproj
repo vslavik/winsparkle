@@ -171,7 +171,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;runtimeobject.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Delay-load the WinRT runtime so WinSparkle.dll still loads on pre-Win10
+           systems (the MSIX install path is gated at runtime and never touches
+           these there). Verify the exact set with `dumpbin /imports`. -->
+      <DelayLoadDLLs>api-ms-win-core-winrt-l1-1-0.dll;api-ms-win-core-winrt-string-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-1.dll;api-ms-win-core-winrt-roparameterizediid-l1-1-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -191,7 +195,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;runtimeobject.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Delay-load the WinRT runtime so WinSparkle.dll still loads on pre-Win10
+           systems (the MSIX install path is gated at runtime and never touches
+           these there). Verify the exact set with `dumpbin /imports`. -->
+      <DelayLoadDLLs>api-ms-win-core-winrt-l1-1-0.dll;api-ms-win-core-winrt-string-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-1.dll;api-ms-win-core-winrt-roparameterizediid-l1-1-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -211,7 +219,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;kernel32.lib;user32.lib;rpcrt4.lib;version.lib;wininet.lib;shlwapi.lib;runtimeobject.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Delay-load the WinRT runtime so WinSparkle.dll still loads on pre-Win10
+           systems (the MSIX install path is gated at runtime and never touches
+           these there). Verify the exact set with `dumpbin /imports`. -->
+      <DelayLoadDLLs>api-ms-win-core-winrt-l1-1-0.dll;api-ms-win-core-winrt-string-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-1.dll;api-ms-win-core-winrt-roparameterizediid-l1-1-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -314,6 +326,10 @@
     <ClCompile Include="src\updatechecker.cpp" />
     <ClCompile Include="src\updatedownloader.cpp" />
     <ClCompile Include="src\signatureverifier.cpp" />
+    <ClCompile Include="src\msix.cpp">
+      <!-- C++/WinRT (Windows.Management.Deployment) requires C++17. -->
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\winsparkle.h" />
@@ -329,6 +345,7 @@
     <ClInclude Include="src\updatedownloader.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\signatureverifier.h" />
+    <ClInclude Include="src\msix.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\winsparkle.rc" />

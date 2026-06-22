@@ -183,6 +183,7 @@ void trim_whitespace(std::string& s)
 #define ATTR_EDDSASIGNATURE NS_SPARKLE_NAME("edSignature")
 #define ATTR_OS         NS_SPARKLE_NAME("os")
 #define ATTR_ARGUMENTS  NS_SPARKLE_NAME("installerArguments")
+#define ATTR_INSTALLER_TYPE NS_SPARKLE_NAME("installerType")
 #define NODE_VERSION      ATTR_VERSION        // These can be nodes or
 #define NODE_SHORTVERSION ATTR_SHORTVERSION   // attributes.
 #define NODE_DSASIGNATURE ATTR_DSASIGNATURE
@@ -295,6 +296,8 @@ void XMLCALL OnStartElement(void *data, const char *name, const char **attrs)
                     enclosure.OS = value;
                 else if (strcmp(name, ATTR_ARGUMENTS) == 0)
                     enclosure.InstallerArguments = value;
+                else if (strcmp(name, ATTR_INSTALLER_TYPE) == 0)
+                    enclosure.InstallerType = value;
 
                 // legacy syntax where version info was on enclosure, not item:
                 else if (strcmp(name, ATTR_VERSION) == 0)

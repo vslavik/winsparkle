@@ -29,6 +29,7 @@
 #include "updatechecker.h"
 #include "updatedownloader.h"
 #include "appcontroller.h"
+#include "msix.h"
 
 #define wxNO_NET_LIB
 #define wxNO_XML_LIB
@@ -156,6 +157,9 @@ struct EventPayload
     std::wstring updateFile;
     bool         installAutomatically;
     ErrorCode    error;
+    int          installPercent;
+    bool         installSuccess;
+    std::wstring installError;
 };
 
 
@@ -430,7 +434,13 @@ public:
     // update download progress
     void DownloadProgress(size_t downloaded, size_t total);
     // change state into "update downloaded"
-    void StateUpdateDownloaded(const std::wstring& updateFile, const std::string &installerArguments);
+    void StateUpdateDownloaded(const std::wstring& updateFile, const std::string &installerArguments, const std::string &installerType);
+    // change state into "installing update" (silent MSIX install)
+    void StateInstalling();
+    // update silent MSIX install progress (0..100)
+    void InstallProgress(int percent);
+    // silent MSIX install finished (success -> shut down & relaunch; failure -> show error)
+    void StateInstallFinished(bool success, const std::wstring& errorText);
 
 private:
     void EnablePulsing(bool enable);
@@ -474,6 +484,8 @@ private:
     wxString m_updateFile;
     // space separated arguments to update file (only valid after StateUpdateDownloaded)
     std::string m_installerArguments;
+    // installer type hint, e.g. "msix" (only valid after StateUpdateDownloaded)
+    std::string m_installerType;
     // downloader (only valid between OnInstall and OnUpdateDownloaded)
     UpdateDownloader* m_downloader;
     // whether the update should be installed without prompting the user
@@ -680,6 +692,17 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
                             wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
         dlg.SetExtendedMessage(_("Make sure that you don't have any unsaved documents and try again."));
         dlg.ShowModal();
+        return;
+    }
+
+    // MSIX/MSIXBundle packages cannot be installed silently via ShellExecuteEx
+    // (the shell would launch the App Installer GUI). Install them through the OS
+    // deployment API instead, showing progress in this dialog. Completion is
+    // handled asynchronously in StateInstallFinished().
+    if ( wxString(m_installerType.c_str()).IsSameAs("msix", false) )
+    {
+        StateInstalling();
+        StartMsixInstall(m_updateFile.ToStdWstring());
         return;
     }
 
@@ -983,7 +1006,92 @@ void UpdateDialog::DownloadProgress(size_t downloaded, size_t total)
 }
 
 
-void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const std::string& installerArguments)
+void UpdateDialog::StateInstalling()
+{
+    LayoutChangesGuard guard(this);
+
+    SetMessage(_("Installing update..."));
+
+    EnablePulsing(false);
+    m_progress->SetRange(100);
+    m_progress->SetValue(0);
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    SHOW(m_progressLabel);
+    HIDE(m_closeButtonSizer);
+    HIDE(m_runInstallerButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
+}
+
+
+void UpdateDialog::InstallProgress(int percent)
+{
+    if ( percent < 0 )
+        percent = 0;
+    else if ( percent > 100 )
+        percent = 100;
+
+    if ( m_progress->GetRange() != 100 )
+        m_progress->SetRange(100);
+    m_progress->SetValue(percent);
+
+    wxString label = wxString::Format("%d%%", percent);
+    if ( label != m_progressLabel->GetLabel() )
+        m_progressLabel->SetLabel(label);
+
+    Refresh();
+    Update();
+}
+
+
+void UpdateDialog::StateInstallFinished(bool success, const std::wstring& errorText)
+{
+    if ( success )
+    {
+        // The package is staged; shutting down lets Windows swap the files and
+        // (thanks to RegisterApplicationRestart) relaunch the app afterwards.
+        m_closeInitiatedByUpdater = true;
+        Close();
+        ApplicationController::RequestShutdown();
+        return;
+    }
+
+    // Installation failed: inform the user and return to the "ready to install"
+    // state so they can retry or close the dialog.
+    {
+        wxMessageDialog dlg(this,
+            _("Failed to install the update."),
+            _("Software Update"),
+            wxOK | wxOK_DEFAULT | wxICON_EXCLAMATION);
+        if ( !errorText.empty() )
+            dlg.SetExtendedMessage(wxString(errorText.c_str()));
+        dlg.ShowModal();
+    }
+
+    LayoutChangesGuard guard(this);
+
+    SetMessage(_("Ready to install."));
+
+    m_progress->SetRange(1);
+    m_progress->SetValue(1);
+
+    m_runInstallerButton->SetDefault();
+
+    HIDE(m_heading);
+    SHOW(m_progress);
+    HIDE(m_progressLabel);
+    HIDE(m_closeButtonSizer);
+    SHOW(m_runInstallerButtonSizer);
+    HIDE(m_releaseNotesSizer);
+    HIDE(m_updateButtonsSizer);
+    MakeResizable(false);
+}
+
+
+void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const std::string& installerArguments, const std::string& installerType)
 {
     m_downloader->Join();
     delete m_downloader;
@@ -991,6 +1099,7 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
 
     m_updateFile = updateFile;
     m_installerArguments = installerArguments;
+    m_installerType = installerType;
 
     if ( m_installAutomatically )
     {
@@ -1152,6 +1261,12 @@ const int MSG_DOWNLOAD_PROGRESS = wxNewId();
 // Inform the UI that update download finished
 const int MSG_UPDATE_DOWNLOADED = wxNewId();
 
+// Inform the UI about silent MSIX install progress
+const int MSG_INSTALL_PROGRESS = wxNewId();
+
+// Inform the UI that a silent MSIX install finished
+const int MSG_INSTALL_FINISHED = wxNewId();
+
 // Tell the UI to ask for permission to check updates
 const int MSG_ASK_FOR_PERMISSION = wxNewId();
 
@@ -1183,6 +1298,8 @@ private:
     void OnUpdateError(wxThreadEvent& event);
     void OnDownloadProgress(wxThreadEvent& event);
     void OnUpdateDownloaded(wxThreadEvent& event);
+    void OnInstallProgress(wxThreadEvent& event);
+    void OnInstallFinished(wxThreadEvent& event);
     void OnAskForPermission(wxThreadEvent& event);
 
 private:
@@ -1218,6 +1335,8 @@ App::App()
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateError, this, MSG_UPDATE_ERROR);
     Bind(wxEVT_COMMAND_THREAD, &App::OnDownloadProgress, this, MSG_DOWNLOAD_PROGRESS);
     Bind(wxEVT_COMMAND_THREAD, &App::OnUpdateDownloaded, this, MSG_UPDATE_DOWNLOADED);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnInstallProgress, this, MSG_INSTALL_PROGRESS);
+    Bind(wxEVT_COMMAND_THREAD, &App::OnInstallFinished, this, MSG_INSTALL_FINISHED);
     Bind(wxEVT_COMMAND_THREAD, &App::OnAskForPermission, this, MSG_ASK_FOR_PERMISSION);
 }
 
@@ -1355,7 +1474,25 @@ void App::OnUpdateDownloaded(wxThreadEvent& event)
     if ( m_win )
     {
         EventPayload payload(event.GetPayload<EventPayload>());
-        m_win->StateUpdateDownloaded(payload.updateFile, payload.appcast.enclosure.InstallerArguments);
+        m_win->StateUpdateDownloaded(payload.updateFile, payload.appcast.enclosure.InstallerArguments, payload.appcast.enclosure.InstallerType);
+    }
+}
+
+void App::OnInstallProgress(wxThreadEvent& event)
+{
+    if ( m_win )
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->InstallProgress(payload.installPercent);
+    }
+}
+
+void App::OnInstallFinished(wxThreadEvent& event)
+{
+    if ( m_win )
+    {
+        EventPayload payload(event.GetPayload<EventPayload>());
+        m_win->StateInstallFinished(payload.installSuccess, payload.installError);
     }
 }
 
@@ -1546,6 +1683,27 @@ void UI::NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &a
     payload.updateFile = updateFile;
     payload.appcast = appcast;
     uit.App().SendMsg(MSG_UPDATE_DOWNLOADED, &payload);
+}
+
+
+/*static*/
+void UI::NotifyInstallProgress(int percent)
+{
+    UIThreadAccess uit;
+    EventPayload payload;
+    payload.installPercent = percent;
+    uit.App().SendMsg(MSG_INSTALL_PROGRESS, &payload);
+}
+
+
+/*static*/
+void UI::NotifyInstallFinished(bool success, const std::wstring& errorText)
+{
+    UIThreadAccess uit;
+    EventPayload payload;
+    payload.installSuccess = success;
+    payload.installError = errorText;
+    uit.App().SendMsg(MSG_INSTALL_FINISHED, &payload);
 }
 
 
