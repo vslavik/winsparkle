@@ -51,6 +51,9 @@
 #include "utils.h"
 
 #include <winrt/Windows.Foundation.h>
+// Required for the IIterable<Uri> parameter of AddPackageAsync(); without it the
+// parameter type is incomplete and the overload won't resolve.
+#include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Management.Deployment.h>
 
 #include <string>
