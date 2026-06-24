@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build DLL
-    runs-on: windows-latest
+    runs-on: windows-2022
     strategy:
       matrix:
         platform: [Win32, x64, ARM64]
