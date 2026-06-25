@@ -49,6 +49,7 @@
 #include <shlwapi.h>
 
 #include "utils.h"
+#include "threads.h"
 
 #include <winrt/Windows.Foundation.h>
 // Required for the IIterable<Uri> parameter of AddPackageAsync(); without it the
@@ -58,7 +59,6 @@
 
 #include <string>
 #include <stdexcept>
-#include <thread>
 
 // The WinRT runtime imports are delay-loaded (see the /DELAYLOAD entries in the
 // project file) so that WinSparkle.dll still loads on Windows versions that
@@ -166,14 +166,49 @@ void InstallWorker(std::wstring packagePath)
         winrt::uninit_apartment();
 }
 
+
+// This deliberately does not run on the UI thread: that thread is a
+// single-threaded COM apartment (wxWidgets initializes it via OleInitialize), and
+// the blocking DeploymentOperation::get() call in InstallWorker() is illegal there
+// -- C++/WinRT asserts on it in debug builds and it would stall the message pump
+// (deadlock-prone) in release builds. This worker initializes a multi-threaded
+// apartment instead, where the blocking wait is legal and safe.
+//
+// Fire-and-forget: the thread self-destructs once Run() returns
+// (IsJoinable() == false), matching the previous detached-thread behavior.
+class MsixInstallThread : public Thread
+{
+public:
+    explicit MsixInstallThread(const std::wstring& packagePath)
+        : Thread("WinSparkle MSIX installer"), m_packagePath(packagePath)
+    {
+    }
+
+protected:
+    void Run() override
+    {
+        // No initialization that Start() must wait for, so signal readiness
+        // immediately; the deployment below can take a long time and must not
+        // block the (UI) thread that called Start().
+        SignalReady();
+        InstallWorker(m_packagePath);
+    }
+
+    bool IsJoinable() const override { return false; }
+
+private:
+    std::wstring m_packagePath;
+};
+
 } // anonymous namespace
 
 
 void StartMsixInstall(const std::wstring& packagePath)
 {
-    // The deployment runs off the UI thread; progress and completion are reported
-    // back asynchronously via UI::NotifyInstall*().
-    std::thread(InstallWorker, packagePath).detach();
+    // The deployment runs off the UI thread (see MsixInstallThread); progress and
+    // completion are reported back asynchronously via UI::NotifyInstall*(). The
+    // thread is fire-and-forget and deletes itself when finished.
+    (new MsixInstallThread(packagePath))->Start();
 }
 
 } // namespace winsparkle

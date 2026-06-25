@@ -699,7 +699,7 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     // (the shell would launch the App Installer GUI). Install them through the OS
     // deployment API instead, showing progress in this dialog. Completion is
     // handled asynchronously in StateInstallFinished().
-    if ( wxString(m_installerType.c_str()).IsSameAs("msix", false) )
+    if ( m_installerType == "msix" )
     {
         StateInstalling();
         StartMsixInstall(m_updateFile.ToStdWstring());
