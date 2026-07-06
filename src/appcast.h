@@ -77,6 +77,10 @@ struct Appcast
         // Arguments passed on the the updater executable
         std::string InstallerArguments;
 
+        // Installer type hint (e.g. "msix" to install via the OS deployment API
+        // instead of launching the file with ShellExecuteEx). Empty = default.
+        std::string InstallerType;
+
 		bool IsValid() const { return !DownloadURL.empty(); }
     };
 

@@ -95,6 +95,19 @@ public:
     static void NotifyUpdateDownloaded(const std::wstring& updateFile, const Appcast &appcast);
 
     /**
+        Notifies the UI about progress of a silent MSIX installation (0..100).
+     */
+    static void NotifyInstallProgress(int percent);
+
+    /**
+        Notifies the UI that a silent MSIX installation finished.
+
+        On success, the application is shut down (and relaunched by Windows). On
+        failure, @a errorText describes what went wrong.
+     */
+    static void NotifyInstallFinished(bool success, const std::wstring& errorText);
+
+    /**
         Shows the WinSparkle window in "checking for updates..." state.
      */
     static void ShowCheckingUpdates();

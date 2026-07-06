@@ -80,7 +80,8 @@ set(SOURCES
   ${SOURCE_DIR}/threads.cpp
   ${SOURCE_DIR}/ui.cpp
   ${SOURCE_DIR}/updatechecker.cpp
-  ${SOURCE_DIR}/updatedownloader.cpp)
+  ${SOURCE_DIR}/updatedownloader.cpp
+  ${SOURCE_DIR}/msix.cpp)
 
 set(PUBLIC_HEADERS
   ${ROOT_DIR}/include/winsparkle.h

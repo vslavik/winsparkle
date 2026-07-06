@@ -1,3 +1,10 @@
+Version 0.9.4
+-------------
+
+- Added silent installation of MSIX/MSIXBundle updates. Mark the enclosure with
+  sparkle:installerType="msix" and WinSparkle installs it via the OS deployment
+  API (no App Installer GUI), shows install progress, and relaunches the app.
+
 Version 0.9.3
 -------------
 
