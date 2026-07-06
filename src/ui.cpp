@@ -289,6 +289,26 @@ protected:
     virtual WXHINSTANCE GetModule() const { return UI::GetDllHINSTANCE(); }
 };
 
+
+enum WebBrowserSourceKind
+{
+    WebBrowserSourceNone,
+    WebBrowserSourceRemote,
+    WebBrowserSourceInline
+};
+
+struct WebBrowserState
+{
+    WebBrowserSourceKind SourceKind = WebBrowserSourceNone;
+    bool PageLoaded = false;
+
+    void Reset(WebBrowserSourceKind kind)
+    {
+        PageLoaded = false;
+        SourceKind = kind;
+    }
+};
+
 } // anonymous namespace
 
 
@@ -412,6 +432,7 @@ const int ID_REMIND_LATER = wxNewId();
 const int ID_INSTALL = wxNewId();
 const int ID_RUN_INSTALLER = wxNewId();
 
+
 class UpdateDialog : public WinSparkleDialog
 {
 public:
@@ -482,8 +503,8 @@ private:
     bool m_errorOccurred;
     // whether window closure was updater-initiated (i.e. not caused by user)
     bool m_closeInitiatedByUpdater;
-    // whether the web browser has loaded the release notes
-    bool m_webBrowserPageLoaded;
+    // browser state in process of loading the release notes
+    WebBrowserState m_webBrowserState;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -497,7 +518,6 @@ UpdateDialog::UpdateDialog()
     m_installAutomatically = false;
     m_errorOccurred = false;
     m_closeInitiatedByUpdater = false;
-    m_webBrowserPageLoaded = false;
 
     m_heading = new wxStaticText(this, wxID_ANY, "");
     SetHeadingFont(m_heading);
@@ -1036,9 +1056,52 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         sizer->Add(m_webBrowser, wxSizerFlags(1).Expand());
         m_browserParent->SetSizer(sizer);
 
+        // The subsequent code's purpose to is to reliably ensure that external links in the release
+        // notes are opened in the default browser, and not in the embedded web view. This is surprisingly
+        // complicated, because we need to ensure that the release notes page itself won't open
+        // externally as well. And the two supported backends (MSIE and Edge) behave wildly differently.
+        //
+        // Edge:
+        //
+        //    ReleaseNotesURL:
+        //        1. wxEVT_WEBVIEW_NAVIGATING(ReleaseNotesURL)
+        //        2. wxEVT_WEBVIEW_LOADED(ReleaseNotesURL)
+        //
+        //    Description only (inline notes):
+        //        1. wxEVT_WEBVIEW_NAVIGATING("data:text/html;...")
+        //        2. wxEVT_WEBVIEW_LOADED("about:blank")
+        //
+        // MSIE:
+        //
+        //    ReleaseNotesURL:
+        //        1. wxEVT_WEBVIEW_LOADED("about:blank")
+        //        2. wxEVT_WEBVIEW_NAVIGATING(ReleaseNotesURL)
+        //        3. wxEVT_WEBVIEW_LOADED(ReleaseNotesURL)
+        //
+        //    Description only (inline notes):
+        //        1. wxEVT_WEBVIEW_LOADED("")
+        //
+        // To further complicate matters, the ReleaseNotesURL page may be a redirect, triggering
+        // a chain of navigating events before eventually landing at loaded.
+
         m_webBrowser->Bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent& evt)
             {
-                this->m_webBrowserPageLoaded = true;
+                switch (this->m_webBrowserState.SourceKind)
+                {
+                    case WebBrowserSourceInline:
+                        // for inline release notes, loaded event means the page is ready:
+                        this->m_webBrowserState.PageLoaded = true;
+                        break;
+
+                    case WebBrowserSourceRemote:
+                        // for remote, we need to filter out internal events like about:blank:
+                        if (evt.GetURL().starts_with("http"))
+                            this->m_webBrowserState.PageLoaded = true;
+                        break;
+
+                    case WebBrowserSourceNone:
+                        break;
+                }
             });
 
         // Open all links in the default browser once the documented is loaded.
@@ -1046,23 +1109,23 @@ void UpdateDialog::ShowReleaseNotes(const Appcast& info)
         // as well, as we can only "hijack" the event once the release notes page was loaded
         m_webBrowser->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& evt)
 			{
-				auto& url = evt.GetURL();
-                if (this->m_webBrowserPageLoaded && url.starts_with("http"))
+                auto& url = evt.GetURL();
+                if (this->m_webBrowserState.PageLoaded && url.starts_with("http"))
                 {
                     wxLaunchDefaultBrowser(url);
                     evt.Veto();
                 }
-			});
+            });
     }
 
-    m_webBrowserPageLoaded = false;
-
-    if( !info.ReleaseNotesURL.empty() )
+    if (!info.ReleaseNotesURL.empty())
     {
+        m_webBrowserState.Reset(WebBrowserSourceRemote);
         m_webBrowser->LoadURL(info.ReleaseNotesURL);
     }
     else if ( !info.Description.empty() )
     {
+        m_webBrowserState.Reset(WebBrowserSourceInline);
         m_webBrowser->SetPage(wxString::FromUTF8(info.Description), "");
     }
 
