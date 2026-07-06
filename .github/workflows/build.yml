@@ -5,7 +5,8 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build DLL
-    runs-on: windows-latest
+    # Use the Windows 2022 image because Visual Studio 2022 is required.
+    runs-on: windows-2022
     strategy:
       matrix:
         platform: [Win32, x64, ARM64]
@@ -17,6 +18,9 @@ jobs:
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
+      with:
+        # Use VS2022 because newer MSVC runtimes no longer support Windows 7/8/8.1.
+        vs-version: '[17.0,18.0)'
 
     - name: Restore dependency packages
       run: nuget restore
