@@ -152,16 +152,17 @@ wxIcon GetApplicationIcon(int size)
 struct EventPayload
 {
     Appcast      appcast;
-    size_t       sizeDownloaded, sizeTotal;
+    size_t       sizeDownloaded = 0;
+    size_t       sizeTotal = 0;
     std::wstring updateFile;
     bool         installAutomatically;
-    ErrorCode    error;
+    ErrorCode    error = Err_Generic;
 };
 
 
 struct EnumProcessWindowsData
 {
-    DWORD process_id;
+    DWORD process_id = 0;
     wxRect biggest;
 };
 
