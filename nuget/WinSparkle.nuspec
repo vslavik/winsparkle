@@ -16,13 +16,13 @@
 
     <files>
         <file src="..\include\*.h" target="build\native\include\" />
-        <file src="..\Release\WinSparkle.dll" target="build\native\Win32\" />
-        <file src="..\Release\WinSparkle.lib" target="build\native\Win32\" />
+        <file src="..\Win32\Release\WinSparkle.dll" target="build\native\Win32\" />
+        <file src="..\Win32\Release\WinSparkle.lib" target="build\native\Win32\" />
         <file src="..\x64\Release\WinSparkle.dll" target="build\native\x64\" />
         <file src="..\x64\Release\WinSparkle.lib" target="build\native\x64\" />
         <file src="..\ARM64\Release\WinSparkle.dll" target="build\native\ARM64\" />
         <file src="..\ARM64\Release\WinSparkle.lib" target="build\native\ARM64\" />
-        <file src="..\Release\WinSparkle.dll" target="runtimes\win-x86\native\" />
+        <file src="..\Win32\Release\WinSparkle.dll" target="runtimes\win-x86\native\" />
         <file src="..\x64\Release\WinSparkle.dll" target="runtimes\win-x64\native\" />
         <file src="..\ARM64\Release\WinSparkle.dll" target="runtimes\win-arm64\native\" />
         <file src="..\x64\Release\winsparkle-tool.exe" target="tools" />

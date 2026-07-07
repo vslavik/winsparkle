@@ -1,5 +1,6 @@
-[Dd]ebug*
-[Rr]elease*
+x64/
+Win32/
+ARM64/
 *.ncb
 *.suo
 *.sdf

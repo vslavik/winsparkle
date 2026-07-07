@@ -92,22 +92,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>..\$(Configuration)\WinSparkle_expat\</IntDir>
+    <OutDir>..\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>..\$(Configuration)\WinSparkle_expat\</IntDir>
+    <OutDir>..\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <IntDir>..\$(Platform)\$(Configuration)\WinSparkle_expat\</IntDir>
+    <IntDir>..\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
