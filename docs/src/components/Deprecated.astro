@@ -1,0 +1,13 @@
+---
+import { Badge } from '@astrojs/starlight/components';
+
+const { text = 'Deprecated', variant = 'caution' } = Astro.props;
+---
+
+<span class="deprecated-badge"><Badge text={text} variant={variant} /></span>
+
+<style>
+	.deprecated-badge {
+		margin-left: 0.5rem;
+	}
+</style>

@@ -2,13 +2,16 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import lucode from 'lucode-starlight';
+import { cleanHeadingSlugs } from './src/plugins/clean-heading-slugs.mjs';
 
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		cleanHeadingSlugs(),
 		starlight({
 			title: 'WinSparkle',
 			lastUpdated: true,
+			customCss: ['./src/styles/custom.css'],
   			editLink: {
     			baseUrl: 'https://github.com/vslavik/winsparkle/edit/master/docs/',
   			},

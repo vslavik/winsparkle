@@ -1,0 +1,17 @@
+.sl-markdown-content {
+	--inline-code-background: color-mix(in oklab, currentColor 6%, transparent);
+}
+
+:root[data-theme='dark'] .sl-markdown-content {
+	--inline-code-background: color-mix(in oklab, currentColor 15%, transparent);
+}
+
+:root[data-theme='dark'] {
+	--code-background: color-mix(in oklab, var(--foreground) 15%, var(--background));
+}
+
+.sl-markdown-content :not(pre) > code {
+	background: var(--inline-code-background);
+	border-radius: 0.25rem;
+	padding: 0.125em 0.3em;
+}
