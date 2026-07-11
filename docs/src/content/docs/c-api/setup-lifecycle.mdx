@@ -1,0 +1,353 @@
+---
+title: Setup and Lifecycle
+description: Initialize and shut down WinSparkle from a C or C++ application.
+sidebar:
+  order: 10
+---
+
+import ApiFunction from '../../../components/ApiFunction.astro';
+import Deprecated from '../../../components/Deprecated.astro';
+import Since from '../../../components/Since.astro';
+
+These functions start and stop WinSparkle in the host application. Configure
+WinSparkle before calling [win_sparkle_init()](#win_sparkle_init) then clean it up while the
+application is still shutting down normally.
+
+
+## Initialization functions
+
+
+### <ApiFunction /> win_sparkle_init()
+
+```c
+void win_sparkle_init(void);
+```
+
+Starts WinSparkle.
+
+If WinSparkle is configured to check for updates on startup, proceeds to
+perform the check. You should call this function when your app is
+initialized and shows its main window; not sooner.
+
+:::note
+Make sure to call any [setup functions](#basic-setup) you need before calling this function.
+:::
+
+:::note
+This call doesn't block and returns almost immediately. If an update is
+available, the respective UI is shown later from a separate thread.
+:::
+
+See also: [win_sparkle_cleanup()](#win_sparkle_cleanup)
+
+
+### <ApiFunction /> win_sparkle_cleanup()
+```c
+void win_sparkle_cleanup(void);
+```
+
+Cleans up after WinSparkle.
+
+Should be called by the app when it's shutting down. Cancels any pending
+Sparkle operations and shuts down its helper threads.
+
+
+## Basic setup
+
+These functions configure WinSparkle. They must be called before [win_sparkle_init()](#win_sparkle_init) to have any effect.
+Alternatively, you can set the same values in Windows resources, which is the preferred way for most applications.
+
+
+### <ApiFunction /> win_sparkle_set_appcast_url()
+
+```c
+void win_sparkle_set_appcast_url(const char *url);
+```
+
+Sets URL for the app's appcast.
+
+Only http and https schemes are supported.
+
+If this function isn't called by the app, the URL is obtained from Windows
+resource named `FeedURL` of type `APPCAST`.
+
+**Parameter:** `url` is the URL of the appcast.
+
+:::note
+Always use HTTPS feeds, do not use unencrypted HTTP! This is necessary to
+prevent both leaking user information and preventing various MITM attacks.
+:::
+
+:::note
+See [Appcast Feeds](https://github.com/vslavik/winsparkle/wiki/Appcast-Feeds)
+for more information about appcast feeds.
+:::
+
+
+### <ApiFunction /> win_sparkle_set_app_details()
+
+```c
+void win_sparkle_set_app_details(
+    const wchar_t *company_name,
+    const wchar_t *app_name,
+    const wchar_t *app_version);
+```
+
+Sets application metadata.
+
+Normally, these are taken from `VERSIONINFO` / `StringFileInfo` resources,
+but if your application doesn't use them for some reason, using this function
+is an alternative.
+
+**Parameters:**
+
+- `company_name` is the company name of the vendor.
+- `app_name` is the application name. This is both shown to the user and used
+  in HTTP User-Agent header.
+- `app_version` is the version of the app, as string, e.g. `"1.2"` or
+  `"1.2rc1"`.
+
+:::note
+`company_name` and `app_name` are used to determine the location of
+WinSparkle settings in registry:
+`HKCU\Software\<company_name>\<app_name>\WinSparkle`.
+:::
+
+See also: [win_sparkle_set_app_build_version()](#win_sparkle_set_app_build_version)
+
+<Since version="0.3" />
+
+
+### <ApiFunction /> win_sparkle_set_app_build_version()
+
+```c
+void win_sparkle_set_app_build_version(const wchar_t *build);
+```
+
+Sets application build version number.
+
+This is the internal version number that is not normally shown to the user.
+It can be used for finer granularity than official release versions, e.g. for
+interim builds.
+
+If this function is called, then the provided build number is used for
+comparing versions; it is compared to the `version` attribute in the appcast
+and corresponds to MacOS Sparkle's `CFBundleVersion` handling. If used, then the
+appcast must also contain the `shortVersionString` attribute with
+human-readable display version string. The version passed to
+[win_sparkle_set_app_details()](#win_sparkle_set_app_details) corresponds to
+this and is used for display.
+
+See also: [win_sparkle_set_app_details()](#win_sparkle_set_app_details)
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_set_eddsa_public_key()
+
+```c
+int win_sparkle_set_eddsa_public_key(const char *pubkey);
+```
+
+Sets EdDSA public key.
+
+Only base64 encoded format is supported.
+
+Public key will be used to verify EdDSA signature of the update file. It will
+be set only if it contains valid EdDSA public key.
+
+If this function isn't called by the app, public key is obtained from Windows
+resource named `EdDSAPub` of type `EDDSA`.
+
+:::note
+If this function is called, DSA public key set with
+[win_sparkle_set_dsa_pub_pem()](#win_sparkle_set_dsa_pub_pem) or present in
+the resources will be ignored; so will DSA signatures in the appcast.
+:::
+
+**Parameter:** `pubkey` is the EdDSA public key in base64 encoded format.
+
+**Returns:** `1` if valid EdDSA public key provided, `0` otherwise.
+
+<Since version="0.9.0" />
+
+
+### <ApiFunction /> win_sparkle_set_dsa_pub_pem() <Deprecated />
+
+```c
+int win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem);
+```
+
+Sets DSA public key.
+
+Only PEM format is supported.
+
+Public key will be used to verify DSA signature of the update file. PEM data
+will be set only if it contains valid DSA public key.
+
+If this function isn't called by the app, public key is obtained from Windows
+resource named `DSAPub` of type `DSAPEM`.
+
+:::caution[Deprecated]
+DSA signatures are deprecated and will be removed in a future version. Migrate
+over to EdDSA (ed25519), see
+[Upgrading from DSA to EdDSA signatures](https://github.com/vslavik/winsparkle/wiki/Upgrading-from-DSA-to-EdDSA-signatures).
+:::
+
+**Parameter:** `dsa_pub_pem` is the DSA public key in PEM format.
+
+**Returns:** `1` if valid DSA public key provided, `0` otherwise.
+
+See also: [win_sparkle_set_eddsa_public_key()](#win_sparkle_set_eddsa_public_key)
+
+<Since version="0.6.0" />
+
+
+## UI language
+
+These functions set user interface language. They must be called before
+[win_sparkle_init()](#win_sparkle_init) to have any effect. If none of them is
+called, WinSparkle detects the UI language automatically.
+
+
+### <ApiFunction /> win_sparkle_set_lang()
+
+```c
+void win_sparkle_set_lang(const char *lang);
+```
+
+Sets UI language from its ISO code.
+
+This function must be called before [win_sparkle_init()](#win_sparkle_init).
+
+**Parameter:** `lang` is an ISO 639 language code with an optional ISO 3166
+country code, e.g. `"fr"`, `"pt-PT"`, `"pt-BR"` or `"pt_BR"`, as used e.g. by
+[GetThreadPreferredUILanguages()](https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getthreadpreferreduilanguages)
+too.
+
+See also: [win_sparkle_set_langid()](#win_sparkle_set_langid)
+
+<Since version="0.5" />
+
+
+### <ApiFunction /> win_sparkle_set_langid()
+
+```c
+void win_sparkle_set_langid(unsigned short lang);
+```
+
+Sets UI language from its Win32 LANGID code.
+
+This function must be called before [win_sparkle_init()](#win_sparkle_init).
+
+**Parameter:** `lang` is the language code (`LANGID`) as created by the
+`MAKELANGID` macro or returned by e.g.
+[GetThreadUILanguage()](https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getthreaduilanguage).
+
+See also: [win_sparkle_set_lang()](#win_sparkle_set_lang)
+
+<Since version="0.5" />
+
+
+## Advanced configuration
+
+
+### <ApiFunction /> win_sparkle_set_http_header()
+
+```c
+void win_sparkle_set_http_header(const char *name, const char *value);
+```
+
+Set custom HTTP header for appcast checks and update downloads.
+
+See also: [win_sparkle_clear_http_headers()](#win_sparkle_clear_http_headers)
+
+<Since version="0.7" />
+
+
+### <ApiFunction /> win_sparkle_clear_http_headers()
+
+```c
+void win_sparkle_clear_http_headers(void);
+```
+
+Clears all custom HTTP headers previously added using
+[win_sparkle_set_http_header()](#win_sparkle_set_http_header).
+
+See also: [win_sparkle_set_http_header()](#win_sparkle_set_http_header)
+
+<Since version="0.7" />
+
+
+### <ApiFunction /> win_sparkle_set_registry_path()
+
+```c
+void win_sparkle_set_registry_path(const char *path);
+```
+
+Set the registry path where settings will be stored.
+
+Normally, these are stored in
+`HKCU\Software\<company_name>\<app_name>\WinSparkle`, but if your application
+needs to store the data elsewhere for some reason, using this function is an
+alternative.
+
+Note that `path` is relative to HKCU/HKLM root and the root is not part of it.
+For example:
+
+```c
+win_sparkle_set_registry_path("Software\\My App\\Updates");
+```
+
+**Parameter:** `path` is the registry path where settings will be stored.
+
+<Since version="0.3" />
+
+
+### <ApiFunction /> win_sparkle_set_config_methods()
+
+```c
+typedef struct
+{
+  int (__cdecl *config_read)(
+    const char *name, wchar_t *buf, size_t len,
+    void *user_data);
+  void (__cdecl *config_write)(
+    const char *name, const wchar_t *value,
+    void *user_data);
+  void (__cdecl *config_delete)(
+    const char *name,
+    void *user_data);
+  void *user_data;
+} win_sparkle_config_methods_t;
+
+void win_sparkle_set_config_methods(win_sparkle_config_methods_t *cfg);
+```
+
+Override WinSparkle's configuration read, write and delete functions.
+
+By default, WinSparkle will read, write and delete configuration values by
+interacting directly with Windows Registry. If you want to manage configuration
+by yourself, or if you don't want to let WinSparkle write settings directly to
+the Windows Registry, you can provide your own functions to read, write and
+delete configuration.
+
+**Parameter:** `config_methods` contains your own configuration read, write and
+delete functions. Pass `NULL` to let WinSparkle continue to use its default
+functions.
+
+The `win_sparkle_config_methods_t` struct contains pointers to functions for reading and manipulating settings. The `user_data` field is an arbitrary pointer that will be passed to your functions, so you can use it to pass any context:
+
+| Field | Description |
+| --- | --- |
+| `config_read` | Copies config value named `name` to the buffer pointed by `buf`. Returns `TRUE` on success, `FALSE` on failure. |
+| `config_write` | Writes `value` as config value `name`'s new value. |
+| `config_delete` | Deletes config value named `name`. |
+| `user_data` | Arbitrary data which will be passed to the above functions. WinSparkle will not read or alter it. |
+
+:::note
+There's no guarantee about the thread from which these functions are called.
+Make sure your functions are thread-safe.
+:::
+
+<Since version="0.7" />

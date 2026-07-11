@@ -30,6 +30,10 @@ export default defineConfig({
 					],
 				},
 				{
+					label: 'C API',
+					items: [{ autogenerate: { directory: 'c-api' } }],
+				},
+				{
 					label: 'Reference',
 					items: [{ autogenerate: { directory: 'reference' } }],
 				},

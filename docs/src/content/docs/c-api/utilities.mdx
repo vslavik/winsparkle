@@ -1,0 +1,32 @@
+---
+title: Utilities
+description: Utility helpers for working with the WinSparkle C API.
+sidebar:
+  order: 40
+---
+
+import ApiConstant from '../../../components/ApiConstant.astro';
+import ApiFunction from '../../../components/ApiFunction.astro';
+
+## Version checking
+
+### <ApiFunction /> WIN_SPARKLE_CHECK_VERSION()
+
+```c
+#define WIN_SPARKLE_CHECK_VERSION(major, minor, micro)
+```
+
+Checks if the WinSparkle version is at least `major.minor.micro` at compile time.
+This macro can be used in preprocessor conditionals to, typically, conditionally use newer APIs:
+
+```c
+#if WIN_SPARKLE_CHECK_VERSION(0, 5, 0)
+    win_sparkle_check_update_with_ui_and_install();
+#else
+    win_sparkle_check_update_with_ui();
+#endif
+```
+
+### <ApiConstant /> WIN_SPARKLE_VERSION_STRING
+
+Preprocessor constant that expands to a string containing the WinSparkle version in the form of e.g. `"0.9.3"`.

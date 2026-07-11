@@ -1,0 +1,172 @@
+---
+title: Checking for Updates
+description: Configure automatic update checks and trigger checks manually.
+sidebar:
+  order: 20
+---
+
+import ApiFunction from '../../../components/ApiFunction.astro';
+import Since from '../../../components/Since.astro';
+
+By default, WinSparkle checks for updates automatically on startup according to
+the user's preferences and configured interval. Applications can customize this
+behavior, inspect the stored checking settings, or trigger explicit checks from
+UI such as a *Check for updates...* menu item.
+
+## Automatic check settings
+
+
+### <ApiFunction /> win_sparkle_set_automatic_check_for_updates()
+
+```c
+void win_sparkle_set_automatic_check_for_updates(int state);
+```
+
+Sets whether updates are checked automatically or only through a manual call.
+
+If disabled, [win_sparkle_check_update_with_ui()](#win_sparkle_check_update_with_ui)
+must be used explicitly.
+
+**Parameter:** `state` is `1` to have updates checked automatically, `0`
+otherwise.
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_get_automatic_check_for_updates()
+
+```c
+int win_sparkle_get_automatic_check_for_updates(void);
+```
+
+Gets the automatic update checking state.
+
+**Returns:** `1` if updates are set to be checked automatically, `0` otherwise.
+
+:::note
+Defaults to `0` when not yet configured, as happens on first start.
+:::
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_set_update_check_interval()
+
+```c
+void win_sparkle_set_update_check_interval(int interval);
+```
+
+Sets the automatic update interval.
+
+**Parameter:** `interval` is the interval in seconds between checks for
+updates. The minimum update interval is 3600 seconds, i.e. 1 hour.
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_get_update_check_interval()
+
+```c
+int win_sparkle_get_update_check_interval(void);
+```
+
+Gets the automatic update interval in seconds.
+
+**Returns:** the automatic update interval in seconds. Default value is one day.
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_get_last_check_time()
+
+```c
+time_t win_sparkle_get_last_check_time(void);
+```
+
+Gets the time for the last update check.
+
+**Returns:** the time of the last update check. Default value is `-1`,
+indicating that the update check has never run.
+
+<Since version="0.4" />
+
+
+## Manual checks
+
+
+### <ApiFunction /> win_sparkle_check_update_with_ui()
+
+```c
+void win_sparkle_check_update_with_ui(void);
+```
+
+Checks if an update is available, showing progress UI to the user.
+
+Normally, WinSparkle checks for updates on startup and only shows its UI when
+it finds an update. If the application disables this behavior, it can hook this
+function to "Check for updates..." menu item.
+
+When called, background thread is started to check for updates. A small window
+is shown to let the user know the progress. If no update is found, the user is
+told so. If there is an update, the usual "update available" window is shown.
+
+This function returns immediately.
+
+:::note
+Because this function is intended for manual, user-initiated checks for
+updates, it ignores "Skip this version" even if the user checked it previously.
+:::
+
+See also: [win_sparkle_check_update_without_ui()](#win_sparkle_check_update_without_ui)
+
+
+### <ApiFunction /> win_sparkle_check_update_with_ui_and_install()
+
+```c
+void win_sparkle_check_update_with_ui_and_install(void);
+```
+
+Checks if an update is available, showing progress UI to the user and
+immediately installing the update if one is available.
+
+This is useful for the case when users should almost always use the newest
+version of your software. When called, WinSparkle will check for updates
+showing a progress UI to the user. If an update is found the update prompt
+will be skipped and the update will be installed immediately.
+
+If your application expects to do something after checking for updates you may
+wish to use
+[win_sparkle_set_did_not_find_update_callback()](/c-api/callbacks/#win_sparkle_set_did_not_find_update_callback)
+and
+[win_sparkle_set_update_cancelled_callback()](/c-api/callbacks/#win_sparkle_set_update_cancelled_callback).
+
+See also: [win_sparkle_set_did_find_update_callback()](/c-api/callbacks/#win_sparkle_set_did_find_update_callback),
+[win_sparkle_set_update_cancelled_callback()](/c-api/callbacks/#win_sparkle_set_update_cancelled_callback)
+
+<Since version="0.5" />
+
+
+### <ApiFunction /> win_sparkle_check_update_without_ui()
+
+```c
+void win_sparkle_check_update_without_ui(void);
+```
+
+Checks if an update is available.
+
+No progress UI is shown to the user when checking. If an update is available,
+the usual "update available" window is shown; this function is not completely
+UI-less.
+
+Use with caution, it usually makes more sense to use the automatic update
+checks on interval option or manual check with visible UI.
+
+This function returns immediately.
+
+:::note
+This function respects "Skip this version" choice by the user.
+:::
+
+See also: [win_sparkle_check_update_with_ui()](#win_sparkle_check_update_with_ui)
+
+<Since version="0.4" />
