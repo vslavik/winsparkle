@@ -1043,10 +1043,6 @@ void UpdateDialog::InstallProgress(int percent)
     m_progress->SetRange(100);
     m_progress->SetValue(percent);
 
-    wxString label = wxString::Format("%d%%", percent);
-    if ( label != m_progressLabel->GetLabel() )
-        m_progressLabel->SetLabel(label);
-
     Refresh();
     Update();
 }
