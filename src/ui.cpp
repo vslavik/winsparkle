@@ -1019,13 +1019,11 @@ void UpdateDialog::StateInstalling()
 
     SetMessage(_("Installing update..."));
 
-    EnableAutoPulsing(false);
-    m_progress->SetRange(100);
-    m_progress->SetValue(0);
+    EnableAutoPulsing(true);
 
     HIDE(m_heading);
     SHOW(m_progress);
-    SHOW(m_progressLabel);
+    HIDE(m_progressLabel);
     HIDE(m_closeButtonSizer);
     HIDE(m_runInstallerButtonSizer);
     HIDE(m_releaseNotesSizer);
@@ -1041,8 +1039,8 @@ void UpdateDialog::InstallProgress(int percent)
     else if ( percent > 100 )
         percent = 100;
 
-    if ( m_progress->GetRange() != 100 )
-        m_progress->SetRange(100);
+    EnableAutoPulsing(false);
+    m_progress->SetRange(100);
     m_progress->SetValue(percent);
 
     wxString label = wxString::Format("%d%%", percent);
