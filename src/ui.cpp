@@ -443,7 +443,7 @@ public:
     void StateInstallFinished(bool success, const std::wstring& errorText);
 
 private:
-    void EnablePulsing(bool enable);
+    void EnableAutoPulsing(bool enable);
     void OnTimer(wxTimerEvent& event);
     void OnCloseButton(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
@@ -496,6 +496,8 @@ private:
     bool m_closeInitiatedByUpdater;
     // whether the web browser has loaded the release notes
     bool m_webBrowserPageLoaded;
+    // whether the progress bar shows animated indeterminate state
+    bool m_progressAutoPulsing = false;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -595,8 +597,13 @@ UpdateDialog::UpdateDialog()
 }
 
 
-void UpdateDialog::EnablePulsing(bool enable)
+void UpdateDialog::EnableAutoPulsing(bool enable)
 {
+    if (enable == m_progressAutoPulsing)
+        return;
+
+    m_progressAutoPulsing = enable;
+
     if ( enable && !m_timer.IsRunning() )
         m_timer.Start(100);
     else if ( !enable && m_timer.IsRunning() )
@@ -782,7 +789,7 @@ void UpdateDialog::StateCheckingUpdates()
     SetMessage(_("Checking for updates..."));
 
     m_closeButton->SetLabel(_("Cancel"));
-    EnablePulsing(true);
+    EnableAutoPulsing(true);
 
     HIDE(m_heading);
     SHOW(m_progress);
@@ -830,7 +837,7 @@ void UpdateDialog::StateNoUpdateFound(bool installAutomatically)
 
     m_closeButton->SetLabel(_("Close"));
     m_closeButton->SetDefault();
-    EnablePulsing(false);
+    EnableAutoPulsing(false);
 
     SHOW(m_heading);
     HIDE(m_progress);
@@ -865,7 +872,7 @@ void UpdateDialog::StateUpdateError(ErrorCode err)
 
     m_closeButton->SetLabel(_("Cancel"));
     m_closeButton->SetDefault();
-    EnablePulsing(false);
+    EnableAutoPulsing(false);
 
     SHOW(m_heading);
     HIDE(m_progress);
@@ -924,7 +931,7 @@ void UpdateDialog::StateUpdateAvailable(const Appcast& info, bool installAutomat
             showRelnotes ? RELNOTES_WIDTH : MESSAGE_AREA_WIDTH
         );
 
-        EnablePulsing(false);
+        EnableAutoPulsing(false);
 
         m_installButton->SetDefault();
 
@@ -962,7 +969,7 @@ void UpdateDialog::StateDownloading()
     SetMessage(_("Downloading update..."));
 
     m_closeButton->SetLabel(_("Cancel"));
-    EnablePulsing(false);
+    EnableAutoPulsing(false);
 
     HIDE(m_heading);
     SHOW(m_progress);
@@ -1012,7 +1019,7 @@ void UpdateDialog::StateInstalling()
 
     SetMessage(_("Installing update..."));
 
-    EnablePulsing(false);
+    EnableAutoPulsing(false);
     m_progress->SetRange(100);
     m_progress->SetValue(0);
 
