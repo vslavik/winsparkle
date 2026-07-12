@@ -117,7 +117,7 @@ void InstallWorker(std::wstring packagePath)
 
         // Register for automatic restart *before* applying the update, so that
         // Windows relaunches the app after ForceApplicationShutdown swaps files.
-        ::RegisterApplicationRestart(nullptr, 0);
+        ::RegisterApplicationRestart(L"", RESTART_NO_CRASH | RESTART_NO_HANG | RESTART_NO_REBOOT);
 
         namespace deploy = winrt::Windows::Management::Deployment;
 
