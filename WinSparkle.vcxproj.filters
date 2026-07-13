@@ -56,6 +56,9 @@
     <ClInclude Include="src\signatureverifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\msix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
@@ -94,6 +97,9 @@
     <ClCompile Include="src\signatureverifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\msix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\winsparkle.rc">
@@ -106,5 +112,6 @@
   <ItemGroup>
     <None Include="WinSparkle.Targets" />
     <None Include="packages.config" />
+    <None Include="WinSparkle.WinRT.props" />
   </ItemGroup>
 </Project>

@@ -60,14 +60,6 @@
 #include <string>
 #include <stdexcept>
 
-// The WinRT runtime imports are delay-loaded (see the /DELAYLOAD entries in the
-// project file) so that WinSparkle.dll still loads on Windows versions that
-// predate MSIX. runtimeobject.lib provides the Ro*/Windows*String imports that
-// the C++/WinRT projection calls into; if a future SDK requires windowsapp.lib
-// instead, adjust the project's linker inputs accordingly.
-#pragma comment(lib, "runtimeobject.lib")
-#pragma comment(lib, "shlwapi.lib")
-
 namespace winsparkle
 {
 

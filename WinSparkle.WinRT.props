@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <Link>
+      <!--
+        C++/WinRT calls WinRT runtime functions that are not available on
+        pre-Windows 10 systems. Delay-load those WinRT runtime imports so
+        WinSparkle.dll still loads there; the MSIX code checks availability
+        before calling into WinRT code.
+
+        runtimeobject.lib provides the Ro*/Windows*String imports used by the
+        C++/WinRT projection. If a future SDK requires windowsapp.lib instead,
+        adjust these linker inputs accordingly.
+
+        Keep DelayLoadDLLs in sync with the built binary; verify the exact set
+        with:
+
+            dumpbin /imports WinSparkle.dll
+      -->
+      <AdditionalDependencies>runtimeobject.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>api-ms-win-core-winrt-l1-1-0.dll;api-ms-win-core-winrt-error-l1-1-1.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
