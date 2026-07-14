@@ -34,8 +34,8 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'c-api' } }],
 				},
 				{
-					label: 'Reference',
-					items: [{ autogenerate: { directory: 'reference' } }],
+					label: 'Appendix',
+					items: [{ autogenerate: { directory: 'appendix' } }],
 				},
 			],
 		}),
