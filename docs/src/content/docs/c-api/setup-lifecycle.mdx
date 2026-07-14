@@ -345,6 +345,8 @@ The `win_sparkle_config_methods_t` struct contains pointers to functions for rea
 | `config_delete` | Deletes config value named `name`. |
 | `user_data` | Arbitrary data which will be passed to the above functions. WinSparkle will not read or alter it. |
 
+If any of the configuration action (read, write or delete)'s function pointers are `NULL`, WinSparkle will use the default function for that action.
+
 :::note
 There's no guarantee about the thread from which these functions are called.
 Make sure your functions are thread-safe.
