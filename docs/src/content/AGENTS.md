@@ -6,6 +6,8 @@
 - Preserve semantic markup from the header comments. For example, convert `@note` blocks to Starlight note markup instead of flattening them into ordinary paragraphs.
 - Preserve important `@see` references as explicit links in the docs.
 - Do not use backticks in section headings.
+- Use sidebar order numbers in multiples of 10, for example `10`, `20`, `30`, to leave room for future insertions.
+- Use italics for user-visible UI labels, not bold.
 - Function link text must include trailing parentheses, for example `[win_sparkle_cleanup()](#win_sparkle_cleanup)`.
 - Use the <Since> component to indicate the version in which a function was added, for example `<Since version="0.9" />`. `<Since>` must be the last thing in a function's docs text.
 - Use <ApiFunction /> for function names in headings, for example `### <ApiFunction /> win_sparkle_cleanup()`.
