@@ -1,0 +1,20 @@
+# Lychee link checker configuration
+root_dir = "dist"
+index_files = ["index.html"]
+
+include_fragments = "anchor-only"
+
+max_redirects = 5
+max_retries = 3
+timeout = 20
+
+require_https = true
+
+cache = true
+max_cache_age = "1d"
+
+# Accept 200-299 and 429 (rate limit) as valid; 403 is returned by e.g. DeepL.com
+accept = [200, 429, 403]
+
+# Skip 404 page canonical URL (has bad canonical URL, don't care)
+exclude_path = ["dist/404.html"]

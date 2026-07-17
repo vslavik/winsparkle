@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "check-links": "lychee ./dist",
     "preview": "astro preview",
     "astro": "astro"
   },

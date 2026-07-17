@@ -1,0 +1,40 @@
+name: Build and check docs
+
+on:
+  push:
+    paths:
+    - 'docs/**'
+  pull_request:
+    paths:
+    - 'docs/**'
+
+jobs:
+  build-and-check:
+    name: Build docs and check links
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Build docs
+      uses: withastro/action@v6
+      with:
+        path: docs
+        package-manager: pnpm
+
+    - name: Restore lychee cache
+      uses: actions/cache@v4
+      with:
+        path: docs/.lycheecache
+        key: cache-docs-lychee-${{ github.sha }}
+        restore-keys: cache-docs-lychee-
+
+    - name: Check links
+      uses: lycheeverse/lychee-action@v2
+      with:
+        workingDirectory: docs
+        args: |
+          ./dist
+          --verbose
+        fail: true

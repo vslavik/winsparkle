@@ -21,3 +21,4 @@ packages
 pascal/lib/
 pascal/backup/
 .vs
+.lycheecache
