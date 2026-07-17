@@ -13,7 +13,7 @@ applications.**
 
 WinSparkle is heavily inspired by the Sparkle framework for Mac
 written by Andy Matuschak and others, to the point of sharing the same
-updates format (appcasts) and having very similar user interface.
+update format (appcasts) and having a very similar user interface.
 
 See https://winsparkle.org for more information about WinSparkle.
 
@@ -25,7 +25,7 @@ the [winsparkle.h header](https://github.com/vslavik/winsparkle/blob/master/incl
 -------------------------
 
 The easiest way to use WinSparkle is to either download the prebuilt `WinSparkle.dll`
-binary from releases or use the `WinSparkle` [NuGet package](https://www.nuget.org/packages/WinSparkle/).
+binary from the releases or use the `WinSparkle` [NuGet package](https://www.nuget.org/packages/WinSparkle/).
 Prebuilt binaries are available for x86, x64 and arm64 platforms.
 
 
@@ -62,15 +62,15 @@ There are also unsupported CMake build files in the cmake directory.
 ----------------
 
 Updates must be cryptographically signed to prevent tampering. WinSparkle uses the same mechanism for signing and signature verification
-as [Sparkle Project](https://sparkle-project.org/documentation/#dsa-signatures) does. Its tools and verification methods are fully compatible.
+as the [Sparkle Project](https://sparkle-project.org/documentation/#dsa-signatures) does. Its tools and verification methods are fully compatible.
 
-Signatures use the EdDSA algorithm with the Ed25519 curve. The public key is included in the app and enclosures in the appcast must have a signature attached to them.
+Signatures use the EdDSA algorithm with the Ed25519 curve. The public key is included in the app, and enclosures in the appcast must have a signature attached to them.
 
 Older DSA-based signatures are also supported, but they are deprecated and will be removed in a future version. [Upgrade your app to EdDSA](https://github.com/vslavik/winsparkle/wiki/Upgrading-from-DSA-to-EdDSA-signatures) if you still use DSA.
 
 ### Companion tool
 
-WinSparkle provides a companion tool, `winsparkle-tool`, to generate keys and sign your updates using EdDSA signatures. This tool is included in the binary package under `bin` directory, in NuGet package (in `tools` directory, pointed to by `$(WinSparkleTool)` property), or you can be compile it from sources.
+WinSparkle provides a companion tool, `winsparkle-tool`, to generate keys and sign your updates using EdDSA signatures. This tool is included in the binary package under the `bin` directory, in the NuGet package (in the `tools` directory, pointed to by the `$(WinSparkleTool)` property), or you can compile it from source.
 
 See the output of `winsparkle-tool --help` for more information.
 
@@ -78,7 +78,7 @@ See the output of `winsparkle-tool --help` for more information.
 
 1. First, make yourself a pair of EdDSA keys, using `winsparkle-tool generate-key`. This needs to be done only once.
 2. Back up your private key (eddsa_priv.pem) and keep it safe. You don’t want anyone else getting it, and if you lose it, you will not be able to issue any new updates!
-3. Add your public key to your project either as Windows resource or by calling `win_sparkle_set_eddsa_public_key()`
+3. Add your public key to your project either as a Windows resource or by calling `win_sparkle_set_eddsa_public_key()`
 
 For example:
 ```
@@ -97,12 +97,12 @@ or use the API to set it:
 
 ### Sign your update
 
-When your update is ready (e.g. `Updater.exe`), sign it and include signature
-to your appcast file:
+When your update is ready (e.g. `Updater.exe`), sign it and include the signature
+in your appcast file:
 
  - Sign: `winsparkle-tool sign -f private.key Updater.exe`
- - Add standard output of previous command as `sparkle:edSignature` attribute
- of `enclosure` node of your appcast file.
+ - Add the standard output of the previous command as the `sparkle:edSignature`
+ attribute of the `enclosure` node in your appcast file.
 
 For example:
 ```

@@ -40,7 +40,7 @@ recommends setting `length` to 0 in case a publisher can't determine the
 enclosure's size.
 
 See [Sparkle documentation](https://sparkle-project.org/documentation/publishing/)
-for detailed information about the feed format. Currently not all options are
+for detailed information about the feed format. Not all options are currently
 supported by WinSparkle. See below for additional supported extensions.
 
 ## Publishing the Appcast
@@ -55,7 +55,7 @@ Always serve the appcast, release notes, and downloads over HTTPS. WinSparkle ca
 
 ### Specifying minimum OS version
 
-Minimum required Windows version can be set by providing
+The minimum required Windows version can be set by providing
 `<sparkle:minimumSystemVersion>`, same as on Mac. The value is interpreted as a
 tuple of 1-3 numbers, _major[.minor[.build]]_. Components except _major_ are
 optional and default to 0. Standard Windows versioning is used, for example
@@ -83,8 +83,8 @@ both macOS and Windows in a single appcast. WinSparkle adopts and respects
 | --- | --- |
 | `windows` | Any Windows download. |
 | `windows-x86` | 32-bit Windows download. |
-| `windows-x64` | 64-bit Windows download. Notice that this will only be used by 64-bit WinSparkle.dll, it does _not_ check the OS bitness. In other words, 32-bit WinSparkle.dll will not use this item even if running on 64-bit Windows in WoW64 mode. |
-| `windows-arm64` | ARM64 Windows download. The same comment as for `windows-x64` applies. |
+| `windows-x64` | 64-bit Windows download. Notice that this will only be used by 64-bit WinSparkle.dll; it does _not_ check the OS bitness. In other words, 32-bit WinSparkle.dll will not use this item even if running on 64-bit Windows in WoW64 mode. |
+| `windows-arm64` | ARM64 Windows download. The same note as for `windows-x64` applies. |
 | `macos` | Any macOS download. This requires Sparkle 1.18.1 or later. |
 
 ### Installer Arguments

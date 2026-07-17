@@ -83,7 +83,7 @@ Gets the automatic update interval in seconds.
 time_t win_sparkle_get_last_check_time(void);
 ```
 
-Gets the time for the last update check.
+Gets the time of the last update check.
 
 **Returns:** the time of the last update check. Default value is `-1`,
 indicating that the update check has never run.
@@ -100,14 +100,14 @@ indicating that the update check has never run.
 void win_sparkle_check_update_with_ui(void);
 ```
 
-Checks if an update is available, showing progress UI to the user.
+Checks if an update is available, showing a progress UI to the user.
 
 Normally, WinSparkle checks for updates on startup and only shows its UI when
 it finds an update. If the application disables this behavior, it can hook this
-function to "Check for updates..." menu item.
+function to a "Check for updates..." menu item.
 
-When called, background thread is started to check for updates. A small window
-is shown to let the user know the progress. If no update is found, the user is
+When called, a background thread is started to check for updates. A small window
+is shown to let the user know about the progress. If no update is found, the user is
 told so. If there is an update, the usual "update available" window is shown.
 
 This function returns immediately.
@@ -126,15 +126,15 @@ See also: [win_sparkle_check_update_without_ui()](#win_sparkle_check_update_with
 void win_sparkle_check_update_with_ui_and_install(void);
 ```
 
-Checks if an update is available, showing progress UI to the user and
+Checks if an update is available, showing a progress UI to the user and
 immediately installing the update if one is available.
 
 This is useful for the case when users should almost always use the newest
 version of your software. When called, WinSparkle will check for updates
-showing a progress UI to the user. If an update is found the update prompt
+showing a progress UI to the user. If an update is found, the update prompt
 will be skipped and the update will be installed immediately.
 
-If your application expects to do something after checking for updates you may
+If your application expects to do something after checking for updates, you may
 wish to use
 [win_sparkle_set_did_not_find_update_callback()](/c-api/callbacks/#win_sparkle_set_did_not_find_update_callback)
 and
@@ -159,7 +159,7 @@ the usual "update available" window is shown; this function is not completely
 UI-less.
 
 Use with caution, it usually makes more sense to use the automatic update
-checks on interval option or manual check with visible UI.
+checks or a manual check with visible UI.
 
 This function returns immediately.
 

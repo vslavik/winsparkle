@@ -9,7 +9,7 @@ sidebar:
 import { Steps } from '@astrojs/starlight/components';
 
 This document describes how to migrate apps that used older, now deprecated DSA
-signatures, to EdDSA without disruptions.
+signatures to EdDSA without disruptions.
 
 ## Add EdDSA signatures
 
@@ -17,7 +17,7 @@ signatures, to EdDSA without disruptions.
 
 1. Update WinSparkle bundled with the app to 0.9.0 or newer.
 
-2. Generate EdDSA key pair, using `winsparkle-tool generate-key` (you can also use Sparke's key file, as they are compatible).
+2. Generate an EdDSA key pair using `winsparkle-tool generate-key` (you can also use Sparkle's key file, as they are compatible).
 
 3. Add the EdDSA public key to the app, using
    [win_sparkle_set_eddsa_public_key()](/c-api/setup-lifecycle/#win_sparkle_set_eddsa_public_key)
@@ -45,9 +45,9 @@ options:
 
 1. Wait sufficiently long, until almost all users upgrade, or you don't care
    that some are left behind.
-2. Change appcast feed URL in the new version of the app and stop publishing
+2. Change the appcast feed URL in the new version of the app and stop publishing
    updates to the old URL. This will require users on old versions to update to
-   future new versions in two steps: by first updating to the last DSA-signed
+   future versions in two steps: by first updating to the last DSA-signed
    version in the old feed, then updating from it to the latest version
    available on the new feed.
 
@@ -56,14 +56,14 @@ Or don't, and continue signing with DSA indefinitely.
 :::note
 WinSparkle will ignore both the DSA key and DSA signatures if it was
 provided with an EdDSA public key. This means that continuing to sign with DSA does not
-reduce security of new versions of your app.
+reduce the security of new versions of your app.
 :::
 
 ## Additional links
 
-1. Mac [Sparkle's docs on the subject](https://sparkle-project.org/documentation/eddsa-migration/)
+1. macOS [Sparkle's docs on the subject](https://sparkle-project.org/documentation/eddsa-migration/)
    with feed examples.
-2. Discussion of DSA's worse security: e.g.
+2. Discussion of DSA's weaker security: e.g.
    [here](https://crypto.stackexchange.com/questions/16582/how-insecure-is-a-signature-based-on-dsa-with-dss1-sha1-in-reality),
    [here](https://security.stackexchange.com/questions/5096/rsa-vs-dsa-for-ssh-authentication-keys)
    or

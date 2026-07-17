@@ -22,7 +22,7 @@ The official WinSparkle binaries are compiled for Windows 7 and later.
 
 ## Companion tool
 
-WinSparkle provides a companion tool, `winsparkle-tool`, for [signing operations](#security-and-signing) and more. This tool is included in the binary package under the `bin` directory, in NuGet package (in tools directory, pointed to by the `$(WinSparkleTool)` property), or you can compile it from sources.
+WinSparkle provides a companion tool, `winsparkle-tool`, for [signing operations](#security-and-signing) and more. This tool is included in the binary package under the `bin` directory, in the NuGet package (in the tools directory, pointed to by the `$(WinSparkleTool)` property), or you can compile it from source code.
 
 See the output of `winsparkle-tool --help` for more information.
 
@@ -35,7 +35,7 @@ Your application includes a public EdDSA key, and the update binary is signed wi
 
 ### Generating EdDSA Keys
 
-First, make yourself a pair of EdDSA keys, using `winsparkle-tool generate-key`. This needs to be done only once:
+First, generate a pair of EdDSA keys using `winsparkle-tool generate-key`. This needs to be done only once:
 
 ```
 $ winsparkle-tool generate-key --file private.key
