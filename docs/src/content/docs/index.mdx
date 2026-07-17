@@ -1,18 +1,32 @@
 ---
-title: WinSparkle
-description: Guides and API reference for integrating WinSparkle update checks into Windows applications.
-tableOfContents: false
-editUrl: false
+title: WinSparkle Docs
+description: Documentation for WinSparkle updater library
 lastUpdated: false
-hero:
-  announcement:
-    text: App updates for Windows
-    link: https://github.com/vslavik/winsparkle
-  tagline: Add automatic update checks to Windows desktop applications.
-  actions:
-    - text: Read the docs
-      link: /guides/integrating-winsparkle/
-    - text: Download releases
-      link: https://github.com/vslavik/winsparkle/releases
-      variant: minimal
+editUrl: false
 ---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Start Here
+
+Introductory topics for WinSparkle cover the most important aspects of using the library. If you are new to WinSparkle or Sparkle, start with the following guides:
+
+<CardGrid>
+  <Card title="Understand the UX" icon="open-book">
+    [User Experience](/appendix/user-experience/) shows how updates are presented to users.
+  </Card>
+  <Card title="Integrate the library" icon="rocket">
+    [Integrating WinSparkle](/guides/integrating-winsparkle/) covers library integration and configuration.
+  </Card>
+  <Card title="Publish updates" icon="setting">
+    Read [introduction into publishing app updates](/guides/publishing-updates) to understand appcasts.
+  </Card>
+</CardGrid>
+
+## Reference
+
+<CardGrid>
+  <Card title="C API reference" icon="open-book">
+    Dive into [WinSparkle C API](/c-api/setup-lifecycle/) details.
+  </Card>
+</CardGrid>
