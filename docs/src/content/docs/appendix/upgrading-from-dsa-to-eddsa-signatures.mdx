@@ -17,17 +17,19 @@ signatures, to EdDSA without disruptions.
 
 1. Update WinSparkle bundled with the app to 0.9.0 or newer.
 
-2. Replace calls to
-   [win_sparkle_set_dsa_pub_pem()](/c-api/setup-lifecycle/#win_sparkle_set_dsa_pub_pem)
-   or use of the `DSAPub` resource with
+2. Generate EdDSA key pair, using `winsparkle-tool generate-key` (you can also use Sparke's key file, as they are compatible).
+
+3. Add the EdDSA public key to the app, using
    [win_sparkle_set_eddsa_public_key()](/c-api/setup-lifecycle/#win_sparkle_set_eddsa_public_key)
-   or `EdDSAPub` respectively, using a new EdDSA key.
+   or `EdDSAPub` resource.
 
-3. Remove DSA public key from the application.
+4. Remove calls to
+   [win_sparkle_set_dsa_pub_pem()](/c-api/setup-lifecycle/#win_sparkle_set_dsa_pub_pem)
+   or use of the `DSAPub` resource and the DSA public key from the application.
 
-4. Release the new version.
+5. Release the new version.
 
-5. Going forward, add `sparkle:edSignature` to appcast enclosures *in addition
+6. Going forward, add `sparkle:edSignature` to appcast enclosures *in addition
    to* existing `sparkle:dsaSignature`.
 
 </Steps>
