@@ -10,6 +10,7 @@ export default defineConfig({
 		cleanHeadingSlugs(),
 		starlight({
 			title: 'WinSparkle',
+			favicon: 'https://winsparkle.org/favicon.svg',
 			lastUpdated: true,
 			customCss: ['./src/styles/custom.css'],
   			editLink: {
