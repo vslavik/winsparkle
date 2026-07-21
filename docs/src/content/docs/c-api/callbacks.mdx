@@ -1,0 +1,263 @@
+---
+title: Callbacks
+description: Events for customizing WinSparkle update behavior.
+sidebar:
+  order: 30
+---
+
+import ApiConstant from '../../../components/ApiConstant.astro';
+import ApiFunction from '../../../components/ApiFunction.astro';
+import Since from '../../../components/Since.astro';
+
+Callbacks let applications observe update events and customize parts of the
+update flow. Use them to report updater errors, react when updates are found or
+dismissed, coordinate application shutdown before running an installer, or take
+over handling of a downloaded installer.
+
+
+## Error callbacks
+
+
+### <ApiFunction /> win_sparkle_set_error_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_error_callback_t)();
+
+void win_sparkle_set_error_callback(
+  win_sparkle_error_callback_t callback
+);
+```
+
+Sets a callback to be called when the updater encounters an error.
+
+<Since version="0.5" />
+
+
+## Shutdown callbacks
+
+
+### <ApiFunction /> win_sparkle_set_can_shutdown_callback()
+
+```c
+typedef int (__cdecl *win_sparkle_can_shutdown_callback_t)();
+
+void win_sparkle_set_can_shutdown_callback(
+  win_sparkle_can_shutdown_callback_t callback
+);
+```
+
+Sets a callback for querying the application if it can be closed.
+
+This callback will be called to ask the host if it's ready to shut down,
+before attempting to launch the installer. The callback returns `TRUE` if
+the host application can be safely shut down or `FALSE` if not, e.g. because
+the user has unsaved documents.
+
+:::note
+There's no guarantee about the thread from which the callback is called,
+except that it certainly won't be called from the app's main thread. Make sure
+the callback is thread-safe.
+:::
+
+See also: [win_sparkle_set_shutdown_request_callback()](#win_sparkle_set_shutdown_request_callback)
+
+<Since version="0.4" />
+
+
+### <ApiFunction /> win_sparkle_set_shutdown_request_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_shutdown_request_callback_t)();
+
+void win_sparkle_set_shutdown_request_callback(
+  win_sparkle_shutdown_request_callback_t callback
+);
+```
+
+Sets a callback for shutting down the application.
+
+This callback will be called to ask the host to shut down immediately after
+launching the installer. Its implementation should gracefully terminate the
+application.
+
+It will only be called if the call to the callback set with
+[win_sparkle_set_can_shutdown_callback()](#win_sparkle_set_can_shutdown_callback)
+returns `TRUE`.
+
+:::note
+There's no guarantee about the thread from which the callback is called,
+except that it certainly won't be called from the app's main thread. Make sure
+the callback is thread-safe.
+:::
+
+See also: [win_sparkle_set_can_shutdown_callback()](#win_sparkle_set_can_shutdown_callback)
+
+<Since version="0.4" />
+
+
+## Update result callbacks
+
+
+### <ApiFunction /> win_sparkle_set_did_find_update_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_did_find_update_callback_t)();
+
+void win_sparkle_set_did_find_update_callback(
+  win_sparkle_did_find_update_callback_t callback
+);
+```
+
+Sets a callback to be called when the updater finds an update.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+as it allows you to perform some action after WinSparkle checks for updates.
+
+See also: [win_sparkle_set_did_not_find_update_callback()](#win_sparkle_set_did_not_find_update_callback),
+[win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+
+<Since version="0.5" />
+
+
+### <ApiFunction /> win_sparkle_set_did_not_find_update_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_did_not_find_update_callback_t)();
+
+void win_sparkle_set_did_not_find_update_callback(
+  win_sparkle_did_not_find_update_callback_t callback
+);
+```
+
+Sets a callback to be called when the updater does not find an update.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+as it allows you to perform some action after WinSparkle checks for updates.
+
+See also: [win_sparkle_set_did_find_update_callback()](#win_sparkle_set_did_find_update_callback),
+[win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+
+<Since version="0.5" />
+
+
+### <ApiFunction /> win_sparkle_set_update_cancelled_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_update_cancelled_callback_t)();
+
+void win_sparkle_set_update_cancelled_callback(
+  win_sparkle_update_cancelled_callback_t callback
+);
+```
+
+Sets a callback to be called when the user cancels an update, e.g. by closing the
+window, skipping an update or cancelling a download. This callback is not called
+when there's no update to install or an error occurs.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+as it allows you to perform some action when the installation is interrupted.
+
+See also: [win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install),
+[win_sparkle_set_update_dismissed_callback()](#win_sparkle_set_update_dismissed_callback)
+
+<Since version="0.5" />
+
+
+### <ApiFunction /> win_sparkle_set_update_skipped_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_update_skipped_callback_t)();
+
+void win_sparkle_set_update_skipped_callback(
+  win_sparkle_update_skipped_callback_t callback
+);
+```
+
+Sets a callback to be called when the user skips an update.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui)
+or similar functions, as it allows you to perform some action when the update is skipped.
+
+See also: [win_sparkle_check_update_with_ui_and_install()](/c-api/checking/#win_sparkle_check_update_with_ui_and_install)
+
+<Since version="0.8" />
+
+
+### <ApiFunction /> win_sparkle_set_update_postponed_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_update_postponed_callback_t)();
+
+void win_sparkle_set_update_postponed_callback(
+  win_sparkle_update_postponed_callback_t callback
+);
+```
+
+Sets a callback to be called when the user postpones an update, by pressing the
+"Remind me later" button.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui)
+or similar functions, as it allows you to perform some action when the download is
+postponed.
+
+See also: [win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui)
+
+<Since version="0.8" />
+
+
+### <ApiFunction /> win_sparkle_set_update_dismissed_callback()
+
+```c
+typedef void (__cdecl *win_sparkle_update_dismissed_callback_t)();
+
+void win_sparkle_set_update_dismissed_callback(
+  win_sparkle_update_dismissed_callback_t callback
+);
+```
+
+Sets a callback to be called when the user dismisses (closes) the update dialog,
+including when there were no updates or an error occurred. See
+[win_sparkle_set_update_cancelled_callback()](#win_sparkle_set_update_cancelled_callback)
+for a subtly different callback that may be more appropriate.
+
+This is useful in combination with
+[win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui)
+or similar functions, as it allows you to perform some action when the update dialog is
+closed.
+
+See also: [win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui),
+[win_sparkle_set_update_cancelled_callback()](#win_sparkle_set_update_cancelled_callback)
+
+<Since version="0.8" />
+
+
+## Installer callbacks
+
+
+### <ApiFunction /> win_sparkle_set_user_run_installer_callback()
+
+```c
+typedef int (__cdecl *win_sparkle_user_run_installer_callback_t)(const wchar_t *path);
+
+void win_sparkle_set_user_run_installer_callback(
+  win_sparkle_user_run_installer_callback_t callback
+);
+```
+
+Sets a callback to be called when the update payload is downloaded and ready to be
+executed or handled in some other manner.
+
+The callback returns:
+
+| Return value | Meaning |
+| --- | --- |
+| `1` | The file was handled by the callback. |
+| `0` | The file was not handled by the callback, so WinSparkle's default handling will take place. |
+| `WINSPARKLE_RETURN_ERROR` | An error occurred. |
+
+<Since version="0.8" />

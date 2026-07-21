@@ -1,0 +1,23 @@
+<span class="api-marker" aria-hidden="true">
+	<slot />
+</span>
+
+<style>
+	.api-marker {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 0;
+		color: #7a4bd1;
+		line-height: 1;
+		vertical-align: middle;
+	}
+
+	.api-marker :global(svg) {
+		flex: none;
+	}
+
+	:global(html[data-theme='dark']) .api-marker {
+		color: #d2a8ff;
+	}
+</style>

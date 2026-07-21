@@ -1,0 +1,61 @@
+---
+title: Getting Started
+description: Basics of how WinSparkle works.
+sidebar:
+  order: 1
+---
+
+WinSparkle shares its update checking mechanism with
+[Sparkle](https://sparkle-project.org/) on macOS. It reads information about
+available versions from an [appcast feed](/guides/publishing-updates/). Appcasts are simply RSS 2.0 feeds with some extensions
+and don't require a server-side component. They're just files that the app periodically downloads and
+checks for new updates.
+
+## Deployment
+
+WinSparkle is designed to be as easy to integrate as humanly possible. The only thing you need to do is to include the single `WinSparkle.dll` file with your application and [call a few functions from your code](/guides/integrating-winsparkle/). The DLL has no external dependencies, not even the CRT redistributables.
+
+:::note[OS requirements]
+The official WinSparkle binaries are compiled for Windows 7 and later.
+:::
+
+
+## Companion tool
+
+WinSparkle provides a companion tool, `winsparkle-tool`, for [signing operations](#security-and-signing) and more. This tool is included in the binary package under the `bin` directory, in the NuGet package (in the tools directory, pointed to by the `$(WinSparkleTool)` property), or you can compile it from source code.
+
+See the output of `winsparkle-tool --help` for more information.
+
+
+## Security and signing
+
+To prevent malicious updates from being installed, every update must be *signed*.
+
+Your application includes a public EdDSA key, and the update binary is signed with the corresponding private key. WinSparkle verifies the signature of the downloaded update before installing it. If the signature is invalid, the update is rejected.
+
+### Generating EdDSA Keys
+
+First, generate a pair of EdDSA keys using `winsparkle-tool generate-key`. This needs to be done only once:
+
+```
+$ winsparkle-tool generate-key --file private.key
+Private key saved to private.key
+Public key: pXAx0wfi8kGbeQln11+V4R3tCepSuLXeo7LkOeudc/U=
+
+Add the public key to the resource file like this:
+
+    EdDSAPub EDDSA {"pXAx0wfi8kGbeQln11+V4R3tCepSuLXeo7LkOeudc/U="}
+
+or use the API to set it:
+
+    win_sparkle_set_eddsa_public_key(
+        "pXAx0wfi8kGbeQln11+V4R3tCepSuLXeo7LkOeudc/U=");
+```
+
+The tool's output shows how to add the public key to your application too, as either a resource or direct API call;
+more on that [later](/guides/integrating-winsparkle/).
+
+:::caution
+ Back up your private key securely and keep it safe.
+ You don't want anyone else getting it, and if you lose it, you will not be able to issue any new updates!
+:::

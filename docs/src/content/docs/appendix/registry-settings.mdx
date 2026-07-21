@@ -1,0 +1,48 @@
+---
+title: Registry Settings
+description: Registry values WinSparkle reads and writes.
+sidebar:
+  order: 100
+---
+
+WinSparkle stores update-checking preferences and some internal state in the
+`Software\<VENDOR>\<APPNAME>\WinSparkle` registry key. You can change the
+location with
+[win_sparkle_set_registry_path()](/c-api/setup-lifecycle/#win_sparkle_set_registry_path).
+
+WinSparkle writes and deletes values under `HKEY_CURRENT_USER`. When reading,
+it tries `HKEY_CURRENT_USER` first and then `HKEY_LOCAL_MACHINE`, making it
+possible to set defaults globally.
+
+Prefer the public C API where possible. For update-checking preferences, use
+the functions on [Checking for Updates](/c-api/checking/).
+
+
+## User-visible settings
+
+| Key | C type | Description |
+| --- | --- | --- |
+| `CheckForUpdates` | `bool` | Whether WinSparkle should check for updates. See [win_sparkle_set_automatic_check_for_updates()](/c-api/checking/#win_sparkle_set_automatic_check_for_updates) and [win_sparkle_get_automatic_check_for_updates()](/c-api/checking/#win_sparkle_get_automatic_check_for_updates). |
+| `LastCheckTime` | `time_t` | Time of the last update check. See [win_sparkle_get_last_check_time()](/c-api/checking/#win_sparkle_get_last_check_time). |
+| `UpdateInterval` | `int` | Check interval in seconds, with a minimum of one hour. See [win_sparkle_set_update_check_interval()](/c-api/checking/#win_sparkle_set_update_check_interval) and [win_sparkle_get_update_check_interval()](/c-api/checking/#win_sparkle_get_update_check_interval). |
+
+:::note
+All values are stored as `REG_SZ`, no matter what their logical type is.
+Boolean values are stored as `0` or `1`.
+:::
+
+### Internal state data
+
+Additionally, the following settings are used internally:
+
+| Key | C type | Description |
+| --- | --- | --- |
+| `SkipThisVersion` | `string` | If the user skipped an update, the version to ignore is stored here, e.g. `1.4.3`. |
+| `DidRunOnce` | `bool` | Whether the app was launched at least once already. |
+| `UpdateTempDir` | `string` | Temporary directory containing a downloaded update payload. WinSparkle uses this to remove leftovers on startup, then deletes the value. |
+
+:::caution
+Internal values are implementation details and may change or disappear at any
+time. They are documented here for troubleshooting and transparency, not as a
+supported configuration interface.
+:::

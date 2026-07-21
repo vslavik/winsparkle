@@ -1,0 +1,176 @@
+---
+title: Integrating WinSparkle
+description: Add WinSparkle to an application and start update checks.
+sidebar:
+  order: 10
+---
+
+WinSparkle uses [appcast feeds](/guides/publishing-updates/) to get
+information about available updates.
+Once you have a working appcast feed, follow the steps below to integrate
+WinSparkle in your app.
+
+## Native C/C++ applications
+
+### 1. Add WinSparkle library
+
+WinSparkle is distributed as a single self-contained DLL, `WinSparkle.dll`,
+with no additional dependencies, not even the C runtime. Its native API is
+written in pure C to achieve maximum compatibility with all Windows compilers.
+In order to use the library, include its header:
+
+```c
+#include <winsparkle.h>
+```
+
+If your compiler is Visual C++, then this is all you have to do: the compiler
+will pick up `WinSparkle.lib` import library automatically, assuming it's on the
+linker search path. With other compilers, you'll have to create an import
+library for the DLL and add it to the linker's libraries list.
+
+### 2. Set up application metadata
+
+Similarly to its Mac counterpart, WinSparkle uses application metadata for
+information about the app's current version, name, and company name. In the
+Windows world, this information is stored in
+[VERSIONINFO resources](https://learn.microsoft.com/windows/win32/menurc/versioninfo-resource).
+In particular, the following `StringFileInfo` fields are of interest and
+should be set to correct values:
+
+- `ProductName`
+- `ProductVersion`
+- `CompanyName`
+
+The [PSDK example](https://github.com/vslavik/winsparkle/tree/master/examples/psdk)
+included with WinSparkle has
+[an example resource file](https://github.com/vslavik/winsparkle/blob/master/examples/psdk/app_psdk.rc).
+
+Alternatively, you can provide all this information with
+[win_sparkle_set_app_details()](/c-api/setup-lifecycle/#win_sparkle_set_app_details).
+
+### 3. Initialize WinSparkle
+
+Your app must call [win_sparkle_init()](/c-api/setup-lifecycle/#win_sparkle_init)
+somewhere to initialize WinSparkle and perform the check. The best place to do
+it is as soon after startup as possible, but no sooner than the app's main
+window is shown. WinSparkle may show its UI soon after this call, so it's
+important that the user can immediately associate its updates popup window with
+your app.
+
+Before calling [win_sparkle_init()](/c-api/setup-lifecycle/#win_sparkle_init),
+you must set the appcast URL with
+[win_sparkle_set_appcast_url()](/c-api/setup-lifecycle/#win_sparkle_set_appcast_url)
+and the public key with
+[win_sparkle_set_eddsa_public_key()](/c-api/setup-lifecycle/#win_sparkle_set_eddsa_public_key):
+
+```c
+// Initialize WinSparkle as soon as the app itself is initialized, right
+// before entering the event loop:
+win_sparkle_set_appcast_url("https://winsparkle.org/example/appcast.xml");
+win_sparkle_set_eddsa_public_key("base64-encoded-public-key");
+win_sparkle_init();
+```
+
+Finally, you should shut WinSparkle down cleanly when the app exits:
+
+```c
+win_sparkle_cleanup();
+```
+
+If your application has a _Check for updates_ menu item or button, call
+[win_sparkle_check_update_with_ui()](/c-api/checking/#win_sparkle_check_update_with_ui)
+from that command handler:
+
+```c
+win_sparkle_check_update_with_ui();
+```
+
+## Managed code / .NET / C# applications
+
+The mechanism for use with managed code applications is approximately the same.
+
+### 1. Add a reference to WinSparkle
+
+In your project, add a reference to the WinSparkle DLL. Don't forget that you
+might want to place it in your project's bin/debug and bin/release directories.
+Remember to include it as one of the copied files if you're building a
+setup/deployment project.
+
+### 2. Create a wrapper for the WinSparkle methods you are going to call
+
+```csharp
+using System;
+using System.Runtime.InteropServices;
+
+static class WinSparkle
+{
+    [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_init();
+
+    [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_cleanup();
+
+    [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_set_appcast_url(string url);
+
+    [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_set_eddsa_public_key(string publicKey);
+
+    [DllImport("WinSparkle.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_set_app_details(
+        string companyName,
+        string appName,
+        string appVersion);
+
+    [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void win_sparkle_check_update_with_ui();
+}
+```
+
+This code cannot be compiled with the `/clr:pure` flag. Check _Project
+Properties -> General -> Common Language Runtime Support_.
+
+### 3. Add code to your .NET application to call WinSparkle functions
+
+```csharp
+public Form1()
+{
+    InitializeComponent();
+
+    WinSparkle.win_sparkle_set_appcast_url("https://example.com/appcast.xml");
+    WinSparkle.win_sparkle_set_eddsa_public_key("base64-encoded-public-key");
+    WinSparkle.win_sparkle_set_app_details("Company", "App", "Version");
+
+    // Start automatic update checks.
+    WinSparkle.win_sparkle_init();
+}
+
+private void Form1_button1_click(object sender, EventArgs e)
+{
+    // Invoke manual update check from button or menu click.
+    WinSparkle.win_sparkle_check_update_with_ui();
+}
+
+private void Form1_Closed(object sender, EventArgs e)
+{
+    // Stop automatic update checks and release native resources.
+    WinSparkle.win_sparkle_cleanup();
+}
+```
+
+### Setting VERSIONINFO resources
+
+For version metadata, .NET applications can use assembly version attributes,
+for example:
+
+```csharp
+[assembly: AssemblyFileVersion("1.0.7.0")]
+```
+
+Remember that WinSparkle uses this version when comparing the running
+application to updates in the appcast.
+
+Note that when running your application under the debugger, the name of the
+application displayed in the WinSparkle dialog may be the name of your
+development environment. When run outside the debugger, the name will be the
+name of your application.
