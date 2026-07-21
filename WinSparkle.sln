@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinSparkle_ed25519", "3rdpa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winsparkle-tool", "tools\winsparkle-tool.vcxproj", "{D8272125-E9E4-5642-BC3E-112C4FC6D397}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winsparkle-tests", "tests\winsparkle-tests.vcxproj", "{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -121,6 +123,18 @@ Global
 		{D8272125-E9E4-5642-BC3E-112C4FC6D397}.Release|Win32.Build.0 = Release|Win32
 		{D8272125-E9E4-5642-BC3E-112C4FC6D397}.Release|x64.ActiveCfg = Release|x64
 		{D8272125-E9E4-5642-BC3E-112C4FC6D397}.Release|x64.Build.0 = Release|x64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|ARM64.Build.0 = Debug|ARM64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|Win32.Build.0 = Debug|Win32
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|x64.ActiveCfg = Debug|x64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Debug|x64.Build.0 = Debug|x64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|ARM64.ActiveCfg = Release|ARM64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|ARM64.Build.0 = Release|ARM64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|Win32.ActiveCfg = Release|Win32
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|Win32.Build.0 = Release|Win32
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|x64.ActiveCfg = Release|x64
+		{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
