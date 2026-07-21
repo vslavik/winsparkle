@@ -16,9 +16,9 @@ binary_arch  := $(binary_base).zip
 binary_files := \
 	include/winsparkle.h \
 	include/winsparkle-version.h \
-	Release/WinSparkle.dll \
-	Release/WinSparkle.lib \
-	Release/WinSparkle.pdb \
+	Win32/Release/WinSparkle.dll \
+	Win32/Release/WinSparkle.lib \
+	Win32/Release/WinSparkle.pdb \
 	x64/Release/WinSparkle.dll \
 	x64/Release/WinSparkle.lib \
 	x64/Release/WinSparkle.pdb \
