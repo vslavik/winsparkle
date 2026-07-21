@@ -1,3 +1,12 @@
+Version 0.9.4
+-------------
+
+- Fixed regression where release notes URLs opened in the default browser
+  instead of loading inline in the embedded web view on systems with only
+  legacy MSIE.
+- Added support for Visual Studio 2026.
+
+
 Version 0.9.3
 -------------
 
