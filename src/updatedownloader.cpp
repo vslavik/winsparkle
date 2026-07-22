@@ -205,6 +205,7 @@ void UpdateDownloader::Run()
     }
     catch ( ... )
     {
+        CleanLeftovers();  // remove potentially corrupted file
         UI::NotifyUpdateError();
         throw;
     }
