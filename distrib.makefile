@@ -41,7 +41,7 @@ $(binary_arch): $(binary_files)
 	@mkdir $(binary_base)
 	@mkdir -p $(binary_base)/bin
 	@mkdir -p $(binary_base)/include
-	@mkdir -p $(binary_base)/Release
+	@mkdir -p $(binary_base)/Win32/Release
 	@mkdir -p $(binary_base)/x64/Release
 	@mkdir -p $(binary_base)/ARM64/Release
 	for i in $(binary_files); do cp -a $$i $(binary_base)/$$i ; done
