@@ -118,10 +118,7 @@ jobs:
           path: ARM64/Debug
 
       - name: Run tests
-        shell: cmd
-        run: |
-          call "%ProgramFiles%\Microsoft Visual Studio\18\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=arm64
-          ARM64\Debug\winsparkle-tests.exe
+        run: .\ARM64\Debug\winsparkle-tests.exe
 
   build-nuget:
     name: Build NuGet package
