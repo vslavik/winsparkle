@@ -172,7 +172,7 @@ public:
     {
     }
 
-    void VerifyDSASHA1Signature(const std::wstring &filename, const std::string &signature)
+    bool VerifyDSASHA1Signature(const std::wstring &filename, const std::string &signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
 
@@ -197,10 +197,9 @@ public:
         const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size(), pubKey);
 
         if (code == -1) // OpenSSL error
-            throw BadSignatureException(ERR_error_string(ERR_get_error(), nullptr));
+            throw std::runtime_error(ERR_error_string(ERR_get_error(), nullptr));
 
-        if (code != 1)
-            throw BadSignatureException();
+        return code == 1;
     }
 
 private:
@@ -301,36 +300,27 @@ void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
     const std::string pubkey = Base64ToBin(pubkey_base64);
     if (pubkey.size() != 32)
     {
-        throw BadSignatureException("Invalid public key size.");
+        throw std::invalid_argument("Invalid public key size.");
     }
 }
 
-void SignatureVerifier::VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64)
-{
-    try
-    {
-        if (signature_base64.size() == 0)
-            throw BadSignatureException("Missing DSA signature!");
-        TinySSL::inst().VerifyDSASHA1Signature(filename, Base64ToBin(signature_base64));
-    }
-    catch (BadSignatureException&)
-    {
-        throw;
-    }
-    catch (const std::exception &e)
-    {
-        throw BadSignatureException(e.what());
-    }
-    catch (...)
-    {
-        throw BadSignatureException();
-    }
-}
-
-void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64)
+bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename)
 {
     if (signature_base64.size() == 0)
-        throw BadSignatureException("Missing EdDSA signature!");
+    {
+        LogError("Missing DSA signature!");
+        return false;
+    }
+    return TinySSL::inst().VerifyDSASHA1Signature(filename, Base64ToBin(signature_base64));
+}
+
+bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename)
+{
+    if (signature_base64.size() == 0)
+    {
+        LogError("Missing EdDSA signature!");
+        return false;
+    }
 
     CFile f(_wfopen(filename.c_str(), L"rb"));
     if (!f || ferror(f))
@@ -351,21 +341,22 @@ void SignatureVerifier::VerifyEdDSASignatureValid(const std::wstring& filename, 
     const std::string signature = Base64ToBin(signature_base64);
     if (signature.size() != 64)
     {
-        throw BadSignatureException("Invalid signature size.");
+        LogError("Invalid signature size.");
+        return false;
     }
 
     const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
     if (pubkey.size() != 32)
     {
-        throw BadSignatureException("Invalid public key size.");
+        LogError("Invalid public key size.");
+        return false;
     }
 
     int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
                                 payload.data(),
                                 payload.size(),
                                 reinterpret_cast<const unsigned char*>(pubkey.data()));
-    if (result != 1)
-        throw BadSignatureException();
+    return result == 1;
 }
 
 } // namespace winsparkle

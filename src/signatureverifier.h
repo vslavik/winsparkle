@@ -32,13 +32,6 @@
 namespace winsparkle
 {
 
-class BadSignatureException : public std::runtime_error
-{
-public:
-    BadSignatureException() : std::runtime_error("Invalid update signature") {}
-    BadSignatureException(const std::string& msg) : std::runtime_error("Invalid update signature: " + msg) {}
-};
-
 class SignatureVerifier
 {
 public:
@@ -50,12 +43,12 @@ public:
 
     // Verify DSA signature of SHA1 hash of the file. Equivalent to:
     // openssl dgst -sha1 -binary < filename | openssl dgst -sha1 -verify dsa_pub.pem -signature signature.bin
-    // Throws BadSignatureException on failure.
-    static void VerifyDSASHA1SignatureValid(const std::wstring &filename, const std::string &signature_base64);
+    // Returns true if the signature is valid, false otherwise.
+    static bool IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename);
 
     // Verify EdDSA signature of the file.
-    // Throws BadSignatureException on failure.
-    static void VerifyEdDSASignatureValid(const std::wstring& filename, const std::string& signature_base64);
+    // Returns true if the signature is valid, false otherwise.
+    static bool IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename);
 };
 
 } // namespace winsparkle

@@ -180,14 +180,15 @@ void UpdateDownloader::Run()
       DownloadFile(m_appcast.enclosure.DownloadURL, &sink, this, Settings::GetHttpHeadersString());
       sink.Close();
 
+      bool signatureValid = true;
       if (Settings::HasEdDSAPubKey())
       {
-          SignatureVerifier::VerifyEdDSASignatureValid(sink.GetFilePath(), m_appcast.enclosure.EdDsaSignature);
+          signatureValid = SignatureVerifier::IsEdDSASignatureValid(m_appcast.enclosure.EdDsaSignature, sink.GetFilePath());
       }
       else if (Settings::HasDSAPubKeyPem())
       {
           LogWarning("Using deprecated DSA signature. Please update your app to use EdDSA.");
-          SignatureVerifier::VerifyDSASHA1SignatureValid(sink.GetFilePath(), m_appcast.enclosure.DsaSignature);
+          signatureValid = SignatureVerifier::IsDSASHA1SignatureValid(m_appcast.enclosure.DsaSignature, sink.GetFilePath());
       }
       else
       {
@@ -195,13 +196,14 @@ void UpdateDownloader::Run()
           LogError("Using unsigned updates!");
       }
 
+      if (!signatureValid)
+      {
+          CleanLeftovers();  // remove potentially corrupted file
+          UI::NotifyUpdateError(Err_BadSignature);
+          return;
+      }
+
       UI::NotifyUpdateDownloaded(sink.GetFilePath(), m_appcast);
-    }
-    catch (BadSignatureException&)
-    {
-        CleanLeftovers();  // remove potentially corrupted file
-        UI::NotifyUpdateError(Err_BadSignature);
-        throw;
     }
     catch ( ... )
     {
