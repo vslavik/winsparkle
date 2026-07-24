@@ -183,12 +183,12 @@ void UpdateDownloader::Run()
       bool signatureValid = true;
       if (Settings::HasEdDSAPubKey())
       {
-          signatureValid = SignatureVerifier::IsEdDSASignatureValid(m_appcast.enclosure.EdDsaSignature, sink.GetFilePath());
+          signatureValid = SignatureVerifier::IsEdDSASignatureValid(Settings::GetEdDSAPubKey(), m_appcast.enclosure.EdDsaSignature, sink.GetFilePath());
       }
       else if (Settings::HasDSAPubKeyPem())
       {
           LogWarning("Using deprecated DSA signature. Please update your app to use EdDSA.");
-          signatureValid = SignatureVerifier::IsDSASHA1SignatureValid(m_appcast.enclosure.DsaSignature, sink.GetFilePath());
+          signatureValid = SignatureVerifier::IsDSASHA1SignatureValid(Settings::GetDSAPubKeyPem(), m_appcast.enclosure.DsaSignature, sink.GetFilePath());
       }
       else
       {

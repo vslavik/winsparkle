@@ -26,7 +26,6 @@
 #include "signatureverifier.h"
 
 #include "error.h"
-#include "settings.h"
 #include "utils.h"
 
 #include <openssl/dsa.h>
@@ -172,7 +171,7 @@ public:
     {
     }
 
-    bool VerifyDSASHA1Signature(const std::wstring &filename, const uint8_t* buffer, size_t length, const std::string &signature)
+    bool VerifyDSASHA1Signature(const std::string& dsa_pubkey_pem, const std::wstring& filename, const uint8_t *buffer, size_t length, const std::string& signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
 
@@ -205,7 +204,7 @@ public:
             }
         }
 
-        DSAPub pubKey(Settings::GetDSAPubKeyPem());
+        DSAPub pubKey(dsa_pubkey_pem);
 
         const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size(), pubKey);
 
@@ -304,7 +303,7 @@ std::string Base64ToBin(const std::string &base64)
 
 } // anonynous
 
-void SignatureVerifier::VerifyDSAPubKeyPem(const std::string &pem)
+void SignatureVerifier::VerifyDSAPubKeyPem(const std::string& pem)
 {
     // DSAPub::DSAPub() throw if not valid
     TinySSL::DSAPub dsa_pub(pem);
@@ -320,17 +319,17 @@ void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
     }
 }
 
-bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length)
+bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const uint8_t *buffer, size_t length)
 {
-    return TinySSL::inst().VerifyDSASHA1Signature(std::wstring(), buffer, length, Base64ToBin(signature_base64));
+    return TinySSL::inst().VerifyDSASHA1Signature(dsa_pubkey_pem, std::wstring(), buffer, length, Base64ToBin(signature_base64));
 }
 
-bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename)
+bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const std::wstring& filename)
 {
-    return TinySSL::inst().VerifyDSASHA1Signature(filename, nullptr, 0, Base64ToBin(signature_base64));
+    return TinySSL::inst().VerifyDSASHA1Signature(dsa_pubkey_pem, filename, nullptr, 0, Base64ToBin(signature_base64));
 }
 
-bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length)
+bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const uint8_t *buffer, size_t length)
 {
     if (signature_base64.size() == 0)
     {
@@ -345,7 +344,7 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base6
         return false;
     }
 
-    const std::string pubkey = Base64ToBin(Settings::GetEdDSAPubKey());
+    const std::string pubkey = Base64ToBin(pubkey_base64);
     if (pubkey.size() != 32)
     {
         LogError("Invalid public key size.");
@@ -358,7 +357,7 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base6
     return result == 1;
 }
 
-bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename)
+bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const std::wstring& filename)
 {
     CFile f(_wfopen(filename.c_str(), L"rb"));
     if (!f || ferror(f))
@@ -376,7 +375,7 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base6
     if (bytes_read != size || ferror(f))
         throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
-    return IsEdDSASignatureValid(signature_base64, payload.data(), payload.size());
+    return IsEdDSASignatureValid(pubkey_base64, signature_base64, payload.data(), payload.size());
 }
 
 } // namespace winsparkle

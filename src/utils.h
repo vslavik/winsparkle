@@ -31,6 +31,9 @@
 #include <string>
 #include <string.h>
 
+#include <windows.h>
+
+
 namespace winsparkle
 {
 

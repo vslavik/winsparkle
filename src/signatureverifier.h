@@ -45,13 +45,13 @@ public:
     // Verify DSA signature of SHA1 hash of the file. Equivalent to:
     // openssl dgst -sha1 -binary < filename | openssl dgst -sha1 -verify dsa_pub.pem -signature signature.bin
     // Returns true if the signature is valid, false otherwise.
-    static bool IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename);
-    static bool IsDSASHA1SignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length);
+    static bool IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const std::wstring& filename);
+    static bool IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const uint8_t *buffer, size_t length);
 
     // Verify EdDSA signature of the file.
     // Returns true if the signature is valid, false otherwise.
-    static bool IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename);
-    static bool IsEdDSASignatureValid(const std::string& signature_base64, const uint8_t *buffer, size_t length);
+    static bool IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const std::wstring& filename);
+    static bool IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const uint8_t *buffer, size_t length);
 };
 
 } // namespace winsparkle
