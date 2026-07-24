@@ -26,6 +26,7 @@
 #ifndef _signatureverifier_h_
 #define _signatureverifier_h_
 
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 
@@ -45,10 +46,12 @@ public:
     // openssl dgst -sha1 -binary < filename | openssl dgst -sha1 -verify dsa_pub.pem -signature signature.bin
     // Returns true if the signature is valid, false otherwise.
     static bool IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename);
+    static bool IsDSASHA1SignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length);
 
     // Verify EdDSA signature of the file.
     // Returns true if the signature is valid, false otherwise.
     static bool IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename);
+    static bool IsEdDSASignatureValid(const std::string& signature_base64, const uint8_t *buffer, size_t length);
 };
 
 } // namespace winsparkle

@@ -172,16 +172,29 @@ public:
     {
     }
 
-    bool VerifyDSASHA1Signature(const std::wstring &filename, const std::string &signature)
+    bool VerifyDSASHA1Signature(const std::wstring &filename, const uint8_t* buffer, size_t length, const std::string &signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
+
+        if (signature.empty())
+        {
+            LogError("Missing DSA signature!");
+            return false;
+        }
 
         {
             WinCryptRSAContext ctx;
             // SHA1 of file
             {
                 WinCryptSHA1Hash hash(ctx);
-                hash.hashFile(filename);
+                if (buffer)
+                {
+                    hash.hashData(buffer, length);
+                }
+                else
+                {
+                    hash.hashFile(filename);
+                }
                 hash.sha1Val(sha1);
             }
             // SHA1 of SHA1 of file
@@ -266,6 +279,9 @@ public:
 
 std::string Base64ToBin(const std::string &base64)
 {
+    if (base64.empty())
+        return std::string();
+
     DWORD nDestinationSize = 0;
     std::string bin;
 
@@ -304,39 +320,23 @@ void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
     }
 }
 
-bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename)
+bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length)
 {
-    if (signature_base64.size() == 0)
-    {
-        LogError("Missing DSA signature!");
-        return false;
-    }
-    return TinySSL::inst().VerifyDSASHA1Signature(filename, Base64ToBin(signature_base64));
+    return TinySSL::inst().VerifyDSASHA1Signature(std::wstring(), buffer, length, Base64ToBin(signature_base64));
 }
 
-bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename)
+bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string &signature_base64, const std::wstring &filename)
+{
+    return TinySSL::inst().VerifyDSASHA1Signature(filename, nullptr, 0, Base64ToBin(signature_base64));
+}
+
+bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const uint8_t* buffer, size_t length)
 {
     if (signature_base64.size() == 0)
     {
         LogError("Missing EdDSA signature!");
         return false;
     }
-
-    CFile f(_wfopen(filename.c_str(), L"rb"));
-    if (!f || ferror(f))
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-
-    fseek(f, 0, SEEK_END);
-    long lsize = ftell(f);
-    if (lsize < 0)
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-    size_t size = static_cast<size_t>(lsize);
-    rewind(f);
-
-    std::vector<unsigned char> payload(size);
-    size_t bytes_read = fread(payload.data(), 1, (size_t)size, f);
-    if (bytes_read != size || ferror(f))
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
 
     const std::string signature = Base64ToBin(signature_base64);
     if (signature.size() != 64)
@@ -353,10 +353,30 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base6
     }
 
     int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
-                                payload.data(),
-                                payload.size(),
+                                buffer, length,
                                 reinterpret_cast<const unsigned char*>(pubkey.data()));
     return result == 1;
+}
+
+bool SignatureVerifier::IsEdDSASignatureValid(const std::string& signature_base64, const std::wstring& filename)
+{
+    CFile f(_wfopen(filename.c_str(), L"rb"));
+    if (!f || ferror(f))
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
+
+    fseek(f, 0, SEEK_END);
+    long lsize = ftell(f);
+    if (lsize < 0)
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
+    size_t size = static_cast<size_t>(lsize);
+    rewind(f);
+
+    std::vector<unsigned char> payload(size);
+    size_t bytes_read = fread(payload.data(), 1, (size_t)size, f);
+    if (bytes_read != size || ferror(f))
+        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
+
+    return IsEdDSASignatureValid(signature_base64, payload.data(), payload.size());
 }
 
 } // namespace winsparkle
