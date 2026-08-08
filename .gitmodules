@@ -4,9 +4,6 @@
 [submodule "3rdparty/expat"]
 	path = 3rdparty/expat
 	url = https://github.com/libexpat/libexpat.git
-[submodule "3rdparty/openssl"]
-	path = 3rdparty/openssl
-	url = https://github.com/openssl/openssl.git
 [submodule "3rdparty/ed25519"]
 	path = 3rdparty/ed25519
 	url = https://github.com/orlp/ed25519.git

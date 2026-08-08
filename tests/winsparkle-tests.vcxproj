@@ -265,9 +265,6 @@
     <ProjectReference Include="..\3rdparty\ed25519.vcxproj">
       <Project>{6a5fb0fa-2a9c-5a84-aa43-7814dc08d5b2}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\3rdparty\libcrypto.vcxproj">
-      <Project>{a0326e8b-57a0-548e-ab4a-2db2b6704d70}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\WinSparkle.vcxproj">
       <Project>{524cccf2-61ea-5b64-a1d9-ff5497027b5f}</Project>
     </ProjectReference>

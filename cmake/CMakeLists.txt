@@ -38,16 +38,12 @@ set(CONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
 set(CMAKE_DEBUG_POSTFIX "d")
 
 set(EXPAT_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/expat/expat/lib")
-set(OPENSSL_INCLUDE_DIRS "${ROOT_DIR}/3rdparty/openssl-win32")
 
 # bundled expat
 add_subdirectory(expat)
 
 # bundled wxWidgets
 add_subdirectory(wxWidgets)
-
-# bundled crypto
-add_subdirectory(crypto)
 
 # WinSparkle
 set(SOURCE_DIR ${ROOT_DIR}/src)
@@ -104,7 +100,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/common_res.o
 
 list(APPEND SOURCES ${CMAKE_CURRENT_BINARY_DIR}/common_res.o)
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat> $<TARGET_OBJECTS:crypto>)
+add_library(${PROJECT_NAME} SHARED ${SOURCES} $<TARGET_OBJECTS:wxWidgets> $<TARGET_OBJECTS:expat>)
 
 target_link_libraries(${PROJECT_NAME} wininet version rpcrt4 comctl32 crypt32 wsock32 ws2_32 uxtheme shlwapi "${WEBVIEW2_LOADER_LIB}")
 
