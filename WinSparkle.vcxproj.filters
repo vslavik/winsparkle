@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\DSA">
+      <UniqueIdentifier>{9a4b8aae-5008-4889-bdbf-2947e5f6fad6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\winsparkle.h">
@@ -63,6 +66,18 @@
     <ClInclude Include="src\base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\dsa\der.h">
+      <Filter>Source Files\DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dsa\dsa-verify.h">
+      <Filter>Source Files\DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dsa\sha1.h">
+      <Filter>Source Files\DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dsa\mp_math.h">
+      <Filter>Source Files\DSA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
@@ -100,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="src\signatureverifier.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsa\der.c">
+      <Filter>Source Files\DSA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsa\dsa-verify.c">
+      <Filter>Source Files\DSA</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsa\mp_math.c">
+      <Filter>Source Files\DSA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

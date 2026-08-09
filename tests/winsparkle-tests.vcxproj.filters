@@ -9,6 +9,9 @@
     <ClCompile Include="..\src\error.cpp">
       <Filter>Library Subset</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\dsa\der.c" />
+    <ClCompile Include="..\src\dsa\dsa-verify.c" />
+    <ClCompile Include="..\src\dsa\mp_math.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

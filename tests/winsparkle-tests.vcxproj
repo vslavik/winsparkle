@@ -242,6 +242,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\dsa\der.c" />
+    <ClCompile Include="..\src\dsa\dsa-verify.c" />
+    <ClCompile Include="..\src\dsa\mp_math.c" />
     <ClCompile Include="..\src\error.cpp" />
     <ClCompile Include="..\src\signatureverifier.cpp" />
     <ClCompile Include="dsa.cpp" />
