@@ -57,6 +57,9 @@
     <ClInclude Include="src\wrapwin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\mmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">

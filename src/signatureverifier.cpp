@@ -27,7 +27,7 @@
 #include "signatureverifier.h"
 
 #include "error.h"
-#include "utils.h"
+#include "mmap.h"
 
 #include <openssl/dsa.h>
 #include <openssl/err.h>
@@ -37,7 +37,6 @@
 #include <ed25519.h>
 
 #include <stdexcept>
-#include <vector>
 
 #include "wrapwin.h"
 #include <wincrypt.h>
@@ -51,26 +50,6 @@ namespace winsparkle
 
 namespace
 {
-
-class CFile
-{
-    FILE *f;
-    CFile(const CFile &);
-    CFile &operator=(const CFile &);
-public:
-    CFile(FILE *file): f(file) {}
-
-    operator FILE*()
-    {
-        return f;
-    }
-
-    ~CFile()
-    {
-        if (f)
-            fclose(f);
-    }
-};
 
 class WinCryptRSAContext
 {
@@ -127,24 +106,6 @@ public:
             throw Win32Exception("Failed to hash data");
     }
 
-    void hashFile(const std::wstring &filename)
-    {
-        CFile f(_wfopen(filename.c_str(), L"rb"));
-        if (!f)
-            throw std::runtime_error(WideToAnsi(L"Failed to open file " + filename));
-
-        const int BUF_SIZE = 8192;
-        unsigned char buf[BUF_SIZE];
-
-        while (size_t read_bytes = fread(buf, 1, BUF_SIZE, f))
-        {
-            hashData(buf, read_bytes);
-        }
-
-        if (ferror(f))
-            throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-    }
-
     void sha1Val(unsigned char(&sha1)[SHA_DIGEST_LENGTH])
     {
         DWORD hash_len = SHA_DIGEST_LENGTH;
@@ -172,7 +133,7 @@ public:
     {
     }
 
-    bool VerifyDSASHA1Signature(const std::string& dsa_pubkey_pem, const std::wstring& filename, const uint8_t *buffer, size_t length, const std::string& signature)
+    bool VerifyDSASHA1Signature(const std::string& dsa_pubkey_pem, const uint8_t *buffer, size_t length, const std::string& signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
 
@@ -187,14 +148,7 @@ public:
             // SHA1 of file
             {
                 WinCryptSHA1Hash hash(ctx);
-                if (buffer)
-                {
-                    hash.hashData(buffer, length);
-                }
-                else
-                {
-                    hash.hashFile(filename);
-                }
+                hash.hashData(buffer, length);
                 hash.sha1Val(sha1);
             }
             // SHA1 of SHA1 of file
@@ -329,22 +283,18 @@ bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pe
         return false;
     }
 
-    return TinySSL::inst().VerifyDSASHA1Signature(dsa_pubkey_pem, std::wstring(), buffer, length, signature);
+    return TinySSL::inst().VerifyDSASHA1Signature(dsa_pubkey_pem, buffer, length, signature);
 }
 
 bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const std::wstring& filename)
 {
-    std::string signature;
-    try
-    {
-        signature = Base64ToBin(signature_base64);
-    }
-    catch (const std::invalid_argument&)
-    {
-        return false;
-    }
-
-    return TinySSL::inst().VerifyDSASHA1Signature(dsa_pubkey_pem, filename, nullptr, 0, signature);
+    return WithMappedFile
+    (
+        filename,
+        [&](const uint8_t* buffer, size_t length) {
+            return IsDSASHA1SignatureValid(dsa_pubkey_pem, signature_base64, buffer, length);
+        }
+    );
 }
 
 bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const uint8_t *buffer, size_t length)
@@ -386,23 +336,13 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, 
 
 bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const std::wstring& filename)
 {
-    CFile f(_wfopen(filename.c_str(), L"rb"));
-    if (!f || ferror(f))
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-
-    fseek(f, 0, SEEK_END);
-    long lsize = ftell(f);
-    if (lsize < 0)
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-    size_t size = static_cast<size_t>(lsize);
-    rewind(f);
-
-    std::vector<unsigned char> payload(size);
-    size_t bytes_read = fread(payload.data(), 1, (size_t)size, f);
-    if (bytes_read != size || ferror(f))
-        throw std::runtime_error(WideToAnsi(L"Failed to read file " + filename));
-
-    return IsEdDSASignatureValid(pubkey_base64, signature_base64, payload.data(), payload.size());
+    return WithMappedFile
+           (
+               filename,
+               [&](const uint8_t *buffer, size_t length) {
+                   return IsEdDSASignatureValid(pubkey_base64, signature_base64, buffer, length);
+               }
+           );
 }
 
 } // namespace winsparkle

@@ -240,6 +240,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\error.cpp" />
     <ClCompile Include="winsparkle-tool.cpp" />
   </ItemGroup>
   <ItemGroup>

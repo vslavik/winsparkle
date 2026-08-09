@@ -33,6 +33,7 @@
 #include <stdexcept>
 #include <string>
 
+#include "mmap.h"
 #include "wrapwin.h"
 #include <wincrypt.h>
 #ifdef _MSC_VER
@@ -172,29 +173,24 @@ void generate_key(const std::string& private_key_file)
 
 void sign_update(const KeyData& key, const std::string& filename)
 {
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-    if (!file)
-    {
-        throw std::runtime_error("Failed to open file for reading");
-    }
+    uint8_t signature[64] = {};
+    size_t file_size = 0;
 
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector<uint8_t> buffer(static_cast<size_t>(size));
-    if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
-    {
-        throw std::runtime_error("Failed to read file");
-    }
-
-    uint8_t signature[64];
-    ed25519_sign(signature, buffer.data(), buffer.size(), key.public_key, key.private_key);
+    WithMappedFile
+    (
+        filename,
+        [&signature, &key, &file_size](const uint8_t* buffer, size_t length)
+        {
+            ed25519_sign(signature, buffer, length, key.public_key, key.private_key);
+            file_size = length;
+        }
+    );
 
     auto sig_base64 = base64_encode(signature, sizeof(signature));
 
     if (g_verbose)
     {
-        std::cout << "sparkle:edSignature=\"" << sig_base64 << "\" length=\"" << size << "\"" << std::endl;
+        std::cout << "sparkle:edSignature=\"" << sig_base64 << "\" length=\"" << file_size << "\"" << std::endl;
     }
     else
     {
@@ -217,22 +213,16 @@ bool verify_signature(const std::string& pubkey_base64, const std::string& signa
         throw std::runtime_error("Invalid signature");
     }
 
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-    if (!file)
-    {
-        throw std::runtime_error("Failed to open file");
-    }
+    bool is_ok = WithMappedFile
+                 (
+                     filename,
+                     [&signature, &pubkey](const uint8_t* buffer, size_t length)
+                     {
+                         return ed25519_verify(signature.data(), buffer, length, pubkey.data());
+                     }
+                 );
 
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::vector<uint8_t> buffer(static_cast<size_t>(size));
-    if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
-    {
-        throw std::runtime_error("Failed to read file");
-    }
-
-    if (ed25519_verify(signature.data(), buffer.data(), buffer.size(), pubkey.data()))
+    if (is_ok)
     {
         std::cout << "Valid signature." << std::endl;
         return true;

@@ -287,6 +287,7 @@
     <ClInclude Include="src\appcontroller.h" />
     <ClInclude Include="src\download.h" />
     <ClInclude Include="src\error.h" />
+    <ClInclude Include="src\mmap.h" />
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\threads.h" />
     <ClInclude Include="src\ui.h" />
