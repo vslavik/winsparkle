@@ -29,7 +29,7 @@
 
 #include "der.h"
 #include "dsa-verify.h"
-#include "mp_math.h"
+#include "tommath.h"
 
 #define SHA1_IMPLEMENTATION
 #include "sha1.h"
@@ -43,7 +43,7 @@ static int _dsa_verify_hash(mp_int* hash, mp_int* keyP, mp_int* keyQ, mp_int* ke
         return DSA_GENERIC_ERROR;
 
     // Check 0 < r < q and 0 < s < q
-    if (mp_iszero(r) == MP_YES || mp_iszero(s) == MP_YES || mp_cmp(r, keyQ) != MP_LT || mp_cmp(s, keyQ) != MP_LT)
+    if (mp_iszero(r) || mp_iszero(s) || mp_cmp(r, keyQ) != MP_LT || mp_cmp(s, keyQ) != MP_LT)
     {
         mp_clear_multi(&w, &v, &u1, &u2, NULL);
         return DSA_SIGNATURE_PARAM_ERROR;
@@ -150,7 +150,7 @@ int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t p
     }
 
     // Read hash, verify data
-    MP_OP(mp_read_unsigned_bin(&hash, sha1, sizeof(SHA1_t)));
+    MP_OP(mp_from_ubin(&hash, sha1, sizeof(SHA1_t)));
 
     ret = _dsa_verify_hash(&hash, &keyP, &keyQ, &keyG, &keyY, &r, &s);
 

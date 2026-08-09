@@ -205,7 +205,7 @@ int parse_der_pubkey(const unsigned char* der, size_t len, mp_int* keyP, mp_int*
                     if (!_parse_length(&der, end, &length))
                         return 0;
 
-                    if (mp_read_unsigned_bin(keyP, der, length) != MP_OKAY)
+                    if (mp_from_ubin(keyP, der, length) != MP_OKAY)
                         return 0;
 
                     der += length;
@@ -218,7 +218,7 @@ int parse_der_pubkey(const unsigned char* der, size_t len, mp_int* keyP, mp_int*
                     if (!_parse_length(&der, end, &length))
                         return 0;
 
-                    if (mp_read_unsigned_bin(keyQ, der, length) != MP_OKAY)
+                    if (mp_from_ubin(keyQ, der, length) != MP_OKAY)
                         return 0;
 
                     der += length;
@@ -231,7 +231,7 @@ int parse_der_pubkey(const unsigned char* der, size_t len, mp_int* keyP, mp_int*
                     if (!_parse_length(&der, end, &length))
                         return 0;
 
-                    if (mp_read_unsigned_bin(keyG, der, length) != MP_OKAY)
+                    if (mp_from_ubin(keyG, der, length) != MP_OKAY)
                         return 0;
 
                     der += length;
@@ -255,7 +255,7 @@ int parse_der_pubkey(const unsigned char* der, size_t len, mp_int* keyP, mp_int*
                 if (!_parse_length(&der, end, &length))
                     return 0;
 
-                return (mp_read_unsigned_bin(keyY, der, length) == MP_OKAY);
+                return (mp_from_ubin(keyY, der, length) == MP_OKAY);
             }
         }
     }
@@ -280,7 +280,7 @@ int parse_der_signature(const unsigned char* der, size_t len, mp_int* r, mp_int*
             if (!_parse_length(&der, end, &length))
                 return 0;
 
-            if (mp_read_unsigned_bin(r, der, length) != MP_OKAY)
+            if (mp_from_ubin(r, der, length) != MP_OKAY)
                 return 0;
 
             der += length;
@@ -293,7 +293,7 @@ int parse_der_signature(const unsigned char* der, size_t len, mp_int* r, mp_int*
             if (!_parse_length(&der, end, &length))
                 return 0;
 
-            return (mp_read_unsigned_bin(s, der, length) == MP_OKAY);
+            return (mp_from_ubin(s, der, length) == MP_OKAY);
         }
     }
 

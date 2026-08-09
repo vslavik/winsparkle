@@ -75,9 +75,6 @@
     <ClInclude Include="src\dsa\sha1.h">
       <Filter>Source Files\DSA</Filter>
     </ClInclude>
-    <ClInclude Include="src\dsa\mp_math.h">
-      <Filter>Source Files\DSA</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appcast.cpp">
@@ -120,9 +117,6 @@
       <Filter>Source Files\DSA</Filter>
     </ClCompile>
     <ClCompile Include="src\dsa\dsa-verify.c">
-      <Filter>Source Files\DSA</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dsa\mp_math.c">
       <Filter>Source Files\DSA</Filter>
     </ClCompile>
   </ItemGroup>

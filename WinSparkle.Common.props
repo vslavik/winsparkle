@@ -11,6 +11,7 @@
             $(MSBuildThisFileDirectory)3rdparty\config;
             $(MSBuildThisFileDirectory)3rdparty\expat\expat\lib;
             $(MSBuildThisFileDirectory)3rdparty\ed25519\src;
+            $(MSBuildThisFileDirectory)3rdparty\libtommath;
             $(MSBuildThisFileDirectory)3rdparty\wxWidgets\include;
             %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

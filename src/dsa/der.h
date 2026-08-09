@@ -28,7 +28,7 @@
 
 #include <stddef.h>
 
-#include "mp_math.h"
+#include "tommath.h"
 
 /**
  * @brief Returns an upper bound of the number of bytes used by a base-64 encoded string
