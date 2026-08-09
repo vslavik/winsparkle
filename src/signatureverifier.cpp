@@ -28,6 +28,7 @@
 
 #include "error.h"
 #include "mmap.h"
+#include "base64.h"
 
 #include <openssl/dsa.h>
 #include <openssl/err.h>
@@ -44,6 +45,7 @@
 #ifdef _MSC_VER
 #pragma comment(lib, "crypt32.lib")
 #endif
+
 
 namespace winsparkle
 {
@@ -133,7 +135,7 @@ public:
     {
     }
 
-    bool VerifyDSASHA1Signature(const std::string& dsa_pubkey_pem, const uint8_t *buffer, size_t length, const std::string& signature)
+    bool VerifyDSASHA1Signature(const std::string& dsa_pubkey_pem, const uint8_t *buffer, size_t length, const std::vector<uint8_t>& signature)
     {
         unsigned char sha1[SHA_DIGEST_LENGTH];
 
@@ -161,7 +163,7 @@ public:
 
         DSAPub pubKey(dsa_pubkey_pem);
 
-        const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), (const unsigned char*)signature.c_str(), (int)signature.size(), pubKey);
+        const int code = DSA_verify(0, sha1, ARRAYSIZE(sha1), signature.data(), (int)signature.size(), pubKey);
 
         return code == 1;
     }
@@ -228,32 +230,8 @@ public:
 
 }; // TinySSL
 
-std::string Base64ToBin(const std::string &base64)
-{
-    if (base64.empty())
-        return std::string();
+} // anonynous namespace
 
-    DWORD nDestinationSize = 0;
-    std::string bin;
-
-    bool ok = false;
-
-    if (CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, NULL, &nDestinationSize, NULL, NULL))
-    {
-        bin.resize(nDestinationSize);
-        if (CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, (BYTE *)&bin[0], &nDestinationSize, NULL, NULL))
-        {
-            ok = true;
-        }
-    }
-
-    if (!ok)
-        throw std::invalid_argument("Failed to decode base64 string");
-
-    return bin;
-}
-
-} // anonynous
 
 void SignatureVerifier::VerifyDSAPubKeyPem(const std::string& pem)
 {
@@ -264,7 +242,7 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string& pem)
 
 void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 {
-    const std::string pubkey = Base64ToBin(pubkey_base64);
+    const std::vector<uint8_t> pubkey = DecodeBase64(pubkey_base64);
     if (pubkey.size() != 32)
     {
         throw std::invalid_argument("Invalid public key size.");
@@ -273,10 +251,10 @@ void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 
 bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const uint8_t *buffer, size_t length)
 {
-    std::string signature;
+    std::vector<uint8_t> signature;
     try
     {
-        signature = Base64ToBin(signature_base64);
+        signature = DecodeBase64(signature_base64);
     }
     catch (const std::invalid_argument&)
     {
@@ -305,10 +283,10 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, 
         return false;
     }
 
-    std::string signature;
+    std::vector<uint8_t> signature;
     try
     {
-        signature = Base64ToBin(signature_base64);
+        signature = DecodeBase64(signature_base64);
     }
     catch (const std::invalid_argument&)
     {
@@ -321,16 +299,14 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, 
         return false;
     }
 
-    const std::string pubkey = Base64ToBin(pubkey_base64);
+    const std::vector<uint8_t> pubkey = DecodeBase64(pubkey_base64);
     if (pubkey.size() != 32)
     {
         LogError("Invalid public key size.");
         return false;
     }
 
-    int result = ed25519_verify(reinterpret_cast<const unsigned char*>(signature.data()),
-                                buffer, length,
-                                reinterpret_cast<const unsigned char*>(pubkey.data()));
+    int result = ed25519_verify(signature.data(), buffer, length, pubkey.data());
     return result == 1;
 }
 

@@ -285,6 +285,7 @@
     <ClInclude Include="include\winsparkle-version.h" />
     <ClInclude Include="src\appcast.h" />
     <ClInclude Include="src\appcontroller.h" />
+    <ClInclude Include="src\base64.h" />
     <ClInclude Include="src\download.h" />
     <ClInclude Include="src\error.h" />
     <ClInclude Include="src\mmap.h" />

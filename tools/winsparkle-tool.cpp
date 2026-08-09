@@ -33,55 +33,14 @@
 #include <stdexcept>
 #include <string>
 
+#include "base64.h"
 #include "mmap.h"
-#include "wrapwin.h"
-#include <wincrypt.h>
-#ifdef _MSC_VER
-#pragma comment(lib, "crypt32.lib")
-#endif
+
+
+using namespace winsparkle;
 
 
 bool g_verbose = false;
-
-
-std::string base64_encode(const uint8_t* data, size_t len)
-{
-    DWORD base64_len = 0;
-    if (!CryptBinaryToStringA(data, (DWORD)len, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, NULL, &base64_len))
-    {
-        throw std::runtime_error("Failed to encode as base64");
-    }
-
-    // base64_len includes the null terminator, the actual string length is one less
-    std::string str(base64_len - 1, '\0');
-    if (!CryptBinaryToStringA(data, (DWORD)len, CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, str.data(), &base64_len))
-    {
-        throw std::runtime_error("Failed to encode as base64");
-    }
-
-    return str;
-}
-
-std::vector<uint8_t> base64_decode(const std::string& base64)
-{
-    DWORD size = 0;
-
-    if (!CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, NULL, &size, NULL, NULL))
-    {
-        throw std::runtime_error("Failed to decode base64 string");
-    }
-
-    if (size == 0)
-        return {};
-
-    std::vector<uint8_t> bin(size);
-    if (!CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, (BYTE*)&bin[0], &size, NULL, NULL))
-    {
-        throw std::runtime_error("Failed to decode base64 string");
-    }
-
-    return bin;
-}
 
 
 struct KeyData
@@ -102,7 +61,7 @@ KeyData load_private_key(const std::string& private_key_file)
     file >> seed_str;
     file.close();
 
-    auto seed = base64_decode(seed_str);
+    auto seed = DecodeBase64(seed_str);
     if (seed.size() == 32)
     {
         KeyData key;
@@ -128,7 +87,7 @@ KeyData load_private_key(const std::string& private_key_file)
 
 void print_public_key(const KeyData& key)
 {
-    auto pubkey = base64_encode(key.public_key, sizeof(key.public_key));
+    auto pubkey = EncodeBase64(key.public_key, sizeof(key.public_key));
 
     std::cout
         << "Public key: " << pubkey << std::endl
@@ -163,7 +122,7 @@ void generate_key(const std::string& private_key_file)
     {
         throw std::runtime_error("Failed to open file for writing");
     }
-    file << base64_encode(seed, sizeof(seed));
+    file << EncodeBase64(seed, sizeof(seed));
     file.close();
 
     std::cout << "Private key saved to " << private_key_file << std::endl;
@@ -186,7 +145,7 @@ void sign_update(const KeyData& key, const std::string& filename)
         }
     );
 
-    auto sig_base64 = base64_encode(signature, sizeof(signature));
+    auto sig_base64 = EncodeBase64(signature, sizeof(signature));
 
     if (g_verbose)
     {
@@ -201,13 +160,13 @@ void sign_update(const KeyData& key, const std::string& filename)
 
 bool verify_signature(const std::string& pubkey_base64, const std::string& signature_base64, const std::string& filename)
 {
-    auto pubkey = base64_decode(pubkey_base64);
+    auto pubkey = DecodeBase64(pubkey_base64);
     if (pubkey.size() != 32)
     {
         throw std::runtime_error("Invalid public key");
     }
 
-    auto signature = base64_decode(signature_base64);
+    auto signature = DecodeBase64(signature_base64);
     if (signature.size() != 64)
     {
         throw std::runtime_error("Invalid signature");
