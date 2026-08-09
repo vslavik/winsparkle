@@ -283,31 +283,29 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, 
         return false;
     }
 
-    std::vector<uint8_t> signature;
     try
     {
-        signature = DecodeBase64(signature_base64);
+        auto signature = DecodeBase64(signature_base64);
+
+        if (signature.size() != 64)
+        {
+            LogError("Invalid signature size.");
+            return false;
+        }
+
+        const std::vector<uint8_t> pubkey = DecodeBase64(pubkey_base64);
+        if (pubkey.size() != 32)
+        {
+            LogError("Invalid public key size.");
+            return false;
+        }
+
+        return ed25519_verify(signature.data(), buffer, length, pubkey.data()) == 1;
     }
     catch (const std::invalid_argument&)
     {
         return false;
     }
-
-    if (signature.size() != 64)
-    {
-        LogError("Invalid signature size.");
-        return false;
-    }
-
-    const std::vector<uint8_t> pubkey = DecodeBase64(pubkey_base64);
-    if (pubkey.size() != 32)
-    {
-        LogError("Invalid public key size.");
-        return false;
-    }
-
-    int result = ed25519_verify(signature.data(), buffer, length, pubkey.data());
-    return result == 1;
 }
 
 bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const std::wstring& filename)
