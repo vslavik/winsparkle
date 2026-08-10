@@ -75,55 +75,6 @@ error:
     return DSA_GENERIC_ERROR;
 }
 
-int dsa_verify_blob(const unsigned char* data, size_t data_len, const char* pubkey, const char* sig)
-{
-    SHA1_t sha1sum;
-    SHA1(sha1sum, data, data_len);
-
-    return dsa_verify_hash(sha1sum, pubkey, sig);
-}
-
-int dsa_verify_hash(const SHA1_t sha1, const char* pubkey, const char* sig)
-{
-    SHA1_t sha1sum;
-    SHA1(sha1sum, (const unsigned char*)sha1, sizeof(SHA1_t));
-
-    size_t key_len = strlen(pubkey);
-    size_t sig_len = strlen(sig);
-
-    if (sig_len > 1000)
-        return DSA_SIGNATURE_PARAM_ERROR;
-
-    int ret = DSA_GENERIC_ERROR;
-    unsigned char* key_der = malloc(BASE64_DECODE_OUT_SIZE(key_len));
-    unsigned char* sig_der = malloc(BASE64_DECODE_OUT_SIZE(sig_len));
-    if (!key_der || !sig_der)
-    {
-        ret = DSA_GENERIC_ERROR;
-        goto error;
-    }
-
-    if((key_len = pem2der(pubkey, key_len, key_der)) == 0)
-    {
-        ret = DSA_KEY_FORMAT_ERROR;
-        goto error;
-    }
-
-    if((sig_len = base64_decode(sig, sig_len, sig_der)) == 0)
-    {
-        ret = DSA_SIGNATURE_FORMAT_ERROR;
-        goto error;
-    }
-
-    ret = dsa_verify_hash_der(sha1sum, key_der, key_len, sig_der, sig_len);
-
-error:
-    free(key_der);
-    free(sig_der);
-
-    return ret;
-}
-
 int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
                         const unsigned char* pubkey, size_t pubkey_len,
                         const unsigned char* sig, size_t sig_len)
