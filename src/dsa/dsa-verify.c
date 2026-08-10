@@ -124,6 +124,19 @@ error:
     return ret;
 }
 
+int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
+                        const unsigned char* pubkey, size_t pubkey_len,
+                        const unsigned char* sig, size_t sig_len)
+{
+    SHA1_t sha1sum;
+    SHA1(sha1sum, data, data_len);
+
+    SHA1_t sha1sum_of_sum;
+    SHA1(sha1sum_of_sum, (const unsigned char*)sha1sum, sizeof(SHA1_t));
+
+    return dsa_verify_hash_der(sha1sum_of_sum, pubkey, pubkey_len, sig, sig_len);
+}
+
 int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t pubkey_len, const unsigned char* sig, size_t sig_len)
 {
     if (sig_len > 1000)

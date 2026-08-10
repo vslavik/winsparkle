@@ -104,6 +104,28 @@ int dsa_verify_hash(const SHA1_t sha1, const char* pubkey, const char* sig);
  */
 int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t pubkey_len, const unsigned char* sig, size_t sig_len);
 
+/**
+ * Verify a given blob.
+ *
+ * This function verifies a blob of data using the given public key and signature,
+ * provided in binary DER format.
+ *
+ * @param data        Pointer to the beginning of the data blob
+ * @param data_len    Length of the data blob
+ * @param pubkey      Binary DER representation of the public key
+ * @param pubkey_len  Length of the public key
+ * @param sig         Binary DER representation of the signature of the file
+ * @param sig_len     Length of the signature
+ *
+ * @returns Returns 1 (@ref DSA_VERIFICATION_OK) on success, 0 (@ref DSA_VERIFICATION_FAILED)
+ * on verification failure or any of @ref DSA_GENERIC_ERROR, @ref DSA_KEY_FORMAT_ERROR,
+ * @ref DSA_KEY_PARAM_ERROR, @ref DSA_SIGN_FORMAT_ERROR or @ref DSA_SIGN_PARAM_ERROR
+ * on error.
+ */
+int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
+                        const unsigned char* pubkey, size_t pubkey_len,
+                        const unsigned char* sig, size_t sig_len);
+
 #ifdef __cplusplus
 }
 #endif

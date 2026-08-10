@@ -43,7 +43,8 @@ void SignatureVerifier::VerifyDSAPubKeyPem(const std::string& pem)
 {
     if (pem.empty())
         throw std::invalid_argument("Invalid public key size.");
-    // FIXME: barebones verification
+    // at least check that the key is valid PEM:
+    auto der = DecodePEMToDER(pem);
 }
 
 void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
@@ -57,7 +58,25 @@ void SignatureVerifier::VerifyEdDSAPubKey(const std::string& pubkey_base64)
 
 bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const uint8_t *buffer, size_t length)
 {
-    return dsa_verify_blob(buffer, length, dsa_pubkey_pem.c_str(), signature_base64.c_str()) == DSA_VERIFICATION_OK;
+    try
+    {
+        if (signature_base64.size() == 0 || signature_base64.size() > 1000)
+        {
+            LogError("Malformed DSA signature.");
+            return false;
+        }
+
+        auto pubkey = DecodePEMToDER(dsa_pubkey_pem);
+        auto signature = DecodeBase64(signature_base64);
+        if (pubkey.empty() || signature.empty())
+            return false;
+
+        return dsa_verify_blob_der(buffer, length, pubkey.data(), pubkey.size(), signature.data(), signature.size()) == DSA_VERIFICATION_OK;
+    }
+    catch (const std::invalid_argument&)
+    {
+        return false;
+    }
 }
 
 bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pem, const std::string& signature_base64, const std::wstring& filename)
