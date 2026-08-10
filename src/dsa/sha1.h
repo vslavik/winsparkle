@@ -243,10 +243,10 @@ void SHA1_input(SHA1_CTX* context, const unsigned char* data, size_t len)
     size_t i = 0;
     uint32_t j = context->count[0];
 
-    if ((context->count[0] += len << 3) < j)
+    if ((context->count[0] += (uint32_t)len << 3) < j)
         context->count[1]++;
 
-    context->count[1] += (len >> 29);
+    context->count[1] += ((uint32_t)len >> 29);
     j = (j >> 3) & 63;
 
     if ((j + len) > 63)
