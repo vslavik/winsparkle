@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props" Condition="Exists('packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props')" />
+  <Import Project="packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props" Condition="Exists('packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props')" />
+  <Import Project="packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props" Condition="Exists('packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props')" />
   <Import Project="packages\Gettext.Tools.0.26.0\build\Gettext.Tools.props" Condition="Exists('packages\Gettext.Tools.0.26.0\build\Gettext.Tools.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
@@ -334,6 +337,9 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="WinSparkle.targets" />
     <Import Project="packages\Microsoft.Web.WebView2.1.0.3967.48\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3967.48\build\native\Microsoft.Web.WebView2.targets')" />
+    <Import Project="packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.targets" Condition="Exists('packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.targets')" />
+    <Import Project="packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.targets" Condition="Exists('packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.targets')" />
+    <Import Project="packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.targets" Condition="Exists('packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -341,5 +347,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\Gettext.Tools.0.26.0\build\Gettext.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Gettext.Tools.0.26.0\build\Gettext.Tools.props'))" />
     <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.3967.48\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.3967.48\build\native\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.targets'))" />
   </Target>
 </Project>
