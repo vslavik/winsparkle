@@ -40,13 +40,13 @@ static int _dsa_verify_hash(mp_int* hash, mp_int* keyP, mp_int* keyQ, mp_int* ke
 {
     mp_int w, v, u1, u2;
     if (mp_init_multi(&w, &v, &u1, &u2, NULL) != MP_OKAY)
-        return DSA_GENERIC_ERROR;
+        return DSA_VERIFICATION_FAILED;
 
     // Check 0 < r < q and 0 < s < q
     if (mp_iszero(r) || mp_iszero(s) || mp_cmp(r, keyQ) != MP_LT || mp_cmp(s, keyQ) != MP_LT)
     {
         mp_clear_multi(&w, &v, &u1, &u2, NULL);
-        return DSA_SIGNATURE_PARAM_ERROR;
+        return DSA_VERIFICATION_FAILED;
     }
 
     // w := s^-1 mod q
@@ -72,7 +72,7 @@ static int _dsa_verify_hash(mp_int* hash, mp_int* keyP, mp_int* keyQ, mp_int* ke
 
 error:
     mp_clear_multi(&w, &v, &u1, &u2, NULL);
-    return DSA_GENERIC_ERROR;
+    return DSA_VERIFICATION_FAILED;
 }
 
 int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
@@ -91,27 +91,21 @@ int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
 int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t pubkey_len, const unsigned char* sig, size_t sig_len)
 {
     if (sig_len > 1000)
-        return DSA_SIGNATURE_PARAM_ERROR;
+        return DSA_VERIFICATION_FAILED;
 
     // Parse public key
     mp_int keyP, keyQ, keyG, keyY, r, s, hash;
     if (mp_init_multi(&keyP, &keyQ, &keyG, &keyY, &r, &s, &hash, NULL) != MP_OKAY)
-        return DSA_GENERIC_ERROR;
+        return DSA_VERIFICATION_FAILED;
 
-    int ret = DSA_GENERIC_ERROR;
+    int ret = DSA_VERIFICATION_FAILED;
 
     if (parse_der_pubkey(pubkey, pubkey_len, &keyP, &keyQ, &keyG, &keyY) == 0)
-    {
-        ret = DSA_KEY_PARAM_ERROR;
         goto error;
-    }
 
     // Parse signature
     if (parse_der_signature(sig, sig_len, &r, &s) == 0)
-    {
-        ret = DSA_SIGNATURE_PARAM_ERROR;
         goto error;
-    }
 
     // Read hash, verify data
     MP_OP(mp_from_ubin(&hash, sha1, sizeof(SHA1_t)));

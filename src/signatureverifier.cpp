@@ -71,7 +71,7 @@ bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pe
         if (pubkey.empty() || signature.empty())
             return false;
 
-        return dsa_verify_blob_der(buffer, length, pubkey.data(), pubkey.size(), signature.data(), signature.size()) == DSA_VERIFICATION_OK;
+        return dsa_verify_blob_der(buffer, length, pubkey.data(), pubkey.size(), signature.data(), signature.size()) != 0;
     }
     catch (const std::invalid_argument&)
     {
@@ -115,7 +115,7 @@ bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, 
             return false;
         }
 
-        return ed25519_verify(signature.data(), buffer, length, pubkey.data()) == 1;
+        return ed25519_verify(signature.data(), buffer, length, pubkey.data()) != 0;
     }
     catch (const std::invalid_argument&)
     {

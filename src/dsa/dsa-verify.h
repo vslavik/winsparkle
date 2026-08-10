@@ -36,11 +36,6 @@ enum
 {
     DSA_VERIFICATION_OK        =  1, ///< Verification successful
     DSA_VERIFICATION_FAILED    =  0, ///< Verification failed
-    DSA_GENERIC_ERROR          = -1, ///< Generic error, verification was not performed
-    DSA_KEY_FORMAT_ERROR       = -2, ///< Invalid public key format
-    DSA_KEY_PARAM_ERROR        = -3, ///< Invalid/missing public key parameters
-    DSA_SIGNATURE_FORMAT_ERROR = -4, ///< Invalid signature format
-    DSA_SIGNATURE_PARAM_ERROR  = -5  ///< Invalid/missing signature parameters
 };
 
 #ifdef __cplusplus
@@ -59,9 +54,7 @@ extern "C" {
  * @param sig_len     Length of the signature
  *
  * @returns Returns 1 (@ref DSA_VERIFICATION_OK) on success, 0 (@ref DSA_VERIFICATION_FAILED)
- * on verification failure or any of @ref DSA_GENERIC_ERROR, @ref DSA_KEY_FORMAT_ERROR,
- * @ref DSA_KEY_PARAM_ERROR, @ref DSA_SIGN_FORMAT_ERROR or @ref DSA_SIGN_PARAM_ERROR
- * on error.
+ * on verification failure or error.
  */
 int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t pubkey_len, const unsigned char* sig, size_t sig_len);
 
@@ -79,9 +72,7 @@ int dsa_verify_hash_der(const SHA1_t sha1, const unsigned char* pubkey, size_t p
  * @param sig_len     Length of the signature
  *
  * @returns Returns 1 (@ref DSA_VERIFICATION_OK) on success, 0 (@ref DSA_VERIFICATION_FAILED)
- * on verification failure or any of @ref DSA_GENERIC_ERROR, @ref DSA_KEY_FORMAT_ERROR,
- * @ref DSA_KEY_PARAM_ERROR, @ref DSA_SIGN_FORMAT_ERROR or @ref DSA_SIGN_PARAM_ERROR
- * on error.
+ * on verification failure or error.
  */
 int dsa_verify_blob_der(const unsigned char* data, size_t data_len,
                         const unsigned char* pubkey, size_t pubkey_len,
