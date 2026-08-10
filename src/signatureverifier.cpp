@@ -277,16 +277,15 @@ bool SignatureVerifier::IsDSASHA1SignatureValid(const std::string& dsa_pubkey_pe
 
 bool SignatureVerifier::IsEdDSASignatureValid(const std::string& pubkey_base64, const std::string& signature_base64, const uint8_t *buffer, size_t length)
 {
-    if (signature_base64.size() == 0)
-    {
-        LogError("Missing EdDSA signature!");
-        return false;
-    }
-
     try
     {
-        auto signature = DecodeBase64(signature_base64);
+        if (signature_base64.size() == 0 || signature_base64.size() > 1000)
+        {
+            LogError("Malformed EdDSA signature.");
+            return false;
+        }
 
+        auto signature = DecodeBase64(signature_base64);
         if (signature.size() != 64)
         {
             LogError("Invalid signature size.");
