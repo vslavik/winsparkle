@@ -64,28 +64,43 @@ inline std::string EncodeBase64(const uint8_t* data, size_t len)
     return str;
 }
 
-inline std::vector<uint8_t> DecodeBase64(const std::string& base64)
+namespace detail
 {
-    if (base64.empty())
+
+inline std::vector<uint8_t> Decode(const std::string& encoded, DWORD flags)
+{
+    if (encoded.empty())
         return {};
 
     DWORD size = 0;
 
-    if (!CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, NULL, &size, NULL, NULL))
+    if (!CryptStringToBinaryA(encoded.data(), (DWORD)encoded.size(), flags, NULL, &size, NULL, NULL))
     {
-        throw std::invalid_argument("Failed to decode base64 string");
+        throw std::invalid_argument("Failed to decode base64 data");
     }
 
     if (size == 0)
         return {};
 
     std::vector<uint8_t> bin(size);
-    if (!CryptStringToBinaryA(&base64[0], (DWORD)base64.size(), CRYPT_STRING_BASE64, (BYTE*)&bin[0], &size, NULL, NULL))
+    if (!CryptStringToBinaryA(encoded.data(), (DWORD)encoded.size(), flags, bin.data(), &size, NULL, NULL))
     {
-        throw std::invalid_argument("Failed to decode base64 string");
+        throw std::invalid_argument("Failed to decode base64 data");
     }
 
     return bin;
+}
+
+} // namespace detail
+
+inline std::vector<uint8_t> DecodeBase64(const std::string& base64)
+{
+    return detail::Decode(base64, CRYPT_STRING_BASE64);
+}
+
+inline std::vector<uint8_t> DecodePEMToDER(const std::string& pem)
+{
+    return detail::Decode(pem, CRYPT_STRING_BASE64HEADER);
 }
 
 } // namespace winsparkle

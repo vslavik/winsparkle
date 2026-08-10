@@ -5,21 +5,21 @@
       <Configuration>Debug</Configuration>
       <Platform>ARM64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|ARM64">
-      <Configuration>Release</Configuration>
-      <Platform>ARM64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -27,78 +27,66 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{025992B2-2AE0-4A3C-8A25-3A75AB6702A0}</ProjectGuid>
+    <ProjectGuid>{A0326E8B-57A0-548E-AB4A-2DB2B6704D70}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>winsparkle-tests</RootNamespace>
-    <ProjectName>winsparkle-tests</ProjectName>
-    <WindowsTargetPlatformVersion Condition="$(VisualStudioVersion)&gt;=16">10.0</WindowsTargetPlatformVersion>
+    <RootNamespace>WinSparkle_libtommath</RootNamespace>
+    <ProjectName>WinSparkle_libtommath</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="..\WinSparkle.Toolset.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\WinSparkle.Common.props" />
-    <Import Project="winsparkle-tests.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -125,17 +113,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <EnableEnhancedInstructionSet Condition="$(VisualStudioVersion)&lt;16">NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -143,14 +130,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -158,14 +144,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -175,10 +160,9 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='14'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(VisualStudioVersion)'=='15'">/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
@@ -188,7 +172,7 @@
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -201,17 +185,16 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -224,17 +207,16 @@
       <Optimization>MinSpace</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -242,46 +224,81 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\dsa\der.c" />
-    <ClCompile Include="..\src\dsa\dsa-verify.c" />
-    <ClCompile Include="..\src\error.cpp" />
-    <ClCompile Include="..\src\signatureverifier.cpp" />
-    <ClCompile Include="dsa.cpp" />
-    <ClCompile Include="eddsa.cpp" />
+    <ClCompile Include="libtommath\bn_cutoffs.c" />
+    <ClCompile Include="libtommath\bn_mp_2expt.c" />
+    <ClCompile Include="libtommath\bn_mp_abs.c" />
+    <ClCompile Include="libtommath\bn_mp_add.c" />
+    <ClCompile Include="libtommath\bn_mp_clamp.c" />
+    <ClCompile Include="libtommath\bn_mp_clear.c" />
+    <ClCompile Include="libtommath\bn_mp_clear_multi.c" />
+    <ClCompile Include="libtommath\bn_mp_cmp.c" />
+    <ClCompile Include="libtommath\bn_mp_cmp_d.c" />
+    <ClCompile Include="libtommath\bn_mp_cmp_mag.c" />
+    <ClCompile Include="libtommath\bn_mp_copy.c" />
+    <ClCompile Include="libtommath\bn_mp_count_bits.c" />
+    <ClCompile Include="libtommath\bn_mp_div.c" />
+    <ClCompile Include="libtommath\bn_mp_div_2.c" />
+    <ClCompile Include="libtommath\bn_mp_div_2d.c" />
+    <ClCompile Include="libtommath\bn_mp_dr_is_modulus.c" />
+    <ClCompile Include="libtommath\bn_mp_dr_reduce.c" />
+    <ClCompile Include="libtommath\bn_mp_dr_setup.c" />
+    <ClCompile Include="libtommath\bn_mp_exch.c" />
+    <ClCompile Include="libtommath\bn_mp_exptmod.c" />
+    <ClCompile Include="libtommath\bn_mp_from_ubin.c" />
+    <ClCompile Include="libtommath\bn_mp_grow.c" />
+    <ClCompile Include="libtommath\bn_mp_init.c" />
+    <ClCompile Include="libtommath\bn_mp_init_copy.c" />
+    <ClCompile Include="libtommath\bn_mp_init_multi.c" />
+    <ClCompile Include="libtommath\bn_mp_init_size.c" />
+    <ClCompile Include="libtommath\bn_mp_invmod.c" />
+    <ClCompile Include="libtommath\bn_mp_lshd.c" />
+    <ClCompile Include="libtommath\bn_mp_mod.c" />
+    <ClCompile Include="libtommath\bn_mp_mod_2d.c" />
+    <ClCompile Include="libtommath\bn_mp_montgomery_calc_normalization.c" />
+    <ClCompile Include="libtommath\bn_mp_montgomery_reduce.c" />
+    <ClCompile Include="libtommath\bn_mp_montgomery_setup.c" />
+    <ClCompile Include="libtommath\bn_mp_mul.c" />
+    <ClCompile Include="libtommath\bn_mp_mul_2.c" />
+    <ClCompile Include="libtommath\bn_mp_mul_2d.c" />
+    <ClCompile Include="libtommath\bn_mp_mul_d.c" />
+    <ClCompile Include="libtommath\bn_mp_mulmod.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_2k.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_2k_l.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_2k_setup.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_2k_setup_l.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_is_2k.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_is_2k_l.c" />
+    <ClCompile Include="libtommath\bn_mp_reduce_setup.c" />
+    <ClCompile Include="libtommath\bn_mp_rshd.c" />
+    <ClCompile Include="libtommath\bn_mp_set.c" />
+    <ClCompile Include="libtommath\bn_mp_sqr.c" />
+    <ClCompile Include="libtommath\bn_mp_sub.c" />
+    <ClCompile Include="libtommath\bn_mp_zero.c" />
+    <ClCompile Include="libtommath\bn_s_mp_add.c" />
+    <ClCompile Include="libtommath\bn_s_mp_balance_mul.c" />
+    <ClCompile Include="libtommath\bn_s_mp_div_3.c" />
+    <ClCompile Include="libtommath\bn_s_mp_exptmod.c" />
+    <ClCompile Include="libtommath\bn_s_mp_exptmod_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_invmod_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_invmod_slow.c" />
+    <ClCompile Include="libtommath\bn_s_mp_karatsuba_mul.c" />
+    <ClCompile Include="libtommath\bn_s_mp_karatsuba_sqr.c" />
+    <ClCompile Include="libtommath\bn_s_mp_montgomery_reduce_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_mul_digs.c" />
+    <ClCompile Include="libtommath\bn_s_mp_mul_digs_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_mul_high_digs.c" />
+    <ClCompile Include="libtommath\bn_s_mp_mul_high_digs_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_sqr.c" />
+    <ClCompile Include="libtommath\bn_s_mp_sqr_fast.c" />
+    <ClCompile Include="libtommath\bn_s_mp_sub.c" />
+    <ClCompile Include="libtommath\bn_s_mp_toom_mul.c" />
+    <ClCompile Include="libtommath\bn_s_mp_toom_sqr.c" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="payload-empty.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="payload1.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="payload2.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\3rdparty\ed25519.vcxproj">
-      <Project>{6a5fb0fa-2a9c-5a84-aa43-7814dc08d5b2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\libtommath.vcxproj">
-      <Project>{a0326e8b-57a0-548e-ab4a-2db2b6704d70}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\WinSparkle.vcxproj">
-      <Project>{524cccf2-61ea-5b64-a1d9-ff5497027b5f}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ClInclude Include="libtommath\tommath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.8\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.targets" Condition="Exists('..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.8\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.8\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.8\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.targets'))" />
-  </Target>
 </Project>
