@@ -336,8 +336,7 @@ typedef struct win_sparkle_config_methods_tag {
     write settings directly to the Windows Registry, you can provide your own functions
     to read, write and delete configuration.
 
-    If any configuration action's function pointer (read, write or delete) is NULL,
-    WinSparkle will use the default function for that action.
+    If @a config_methods is not NULL, all three function pointers must be set.
 
     @param config_methods  Your own configuration read, write and delete functions.
                            Pass NULL to let WinSparkle continue to use its default functions.

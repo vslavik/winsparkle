@@ -225,6 +225,12 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_config_methods(win_sparkle_config_m
 {
     try
     {
+        if (config_methods &&
+            (!config_methods->config_read || !config_methods->config_write || !config_methods->config_delete))
+        {
+            LogError("All configuration callback function pointers must be set; WinSparkle will crash if any are NULL.");
+        }
+
         Settings::SetConfigMethods(config_methods);
     }
     CATCH_ALL_EXCEPTIONS

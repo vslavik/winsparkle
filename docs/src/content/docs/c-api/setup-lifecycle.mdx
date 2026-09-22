@@ -336,7 +336,7 @@ delete configuration.
 
 **Parameter:** `config_methods` contains your own configuration read, write and
 delete functions. Pass `NULL` to let WinSparkle continue to use its default
-functions.
+functions. If `config_methods` is not `NULL`, all three function pointers must be set.
 
 The `win_sparkle_config_methods_t` struct contains pointers to functions for reading and manipulating settings. The `user_data` field is an arbitrary pointer that will be passed to your functions, so you can use it to pass any context:
 
@@ -347,7 +347,6 @@ The `win_sparkle_config_methods_t` struct contains pointers to functions for rea
 | `config_delete` | Deletes the config value named `name`. |
 | `user_data` | Arbitrary data that will be passed to the above functions. WinSparkle will not read or alter it. |
 
-If any configuration action's function pointer (read, write or delete) is `NULL`, WinSparkle will use the default function for that action.
 
 :::note
 There's no guarantee about the thread from which these functions are called.
