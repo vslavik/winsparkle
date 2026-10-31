@@ -708,9 +708,16 @@ void UpdateDialog::OnRunInstaller(wxCommandEvent&)
     // handled asynchronously in StateInstallFinished().
     if ( m_installerType == "msix" )
     {
-        StateInstalling();
-        StartMsixInstall(m_updateFile.ToStdWstring());
-        return;
+        if ( !ApplicationController::HasUserRunInstallerCallback() )
+        {
+            StateInstalling();
+            StartMsixInstall(m_updateFile.ToStdWstring());
+            return;
+        }
+
+        LogError("----------------------------");
+        LogError("*** BUILT-IN MSIX HANDLING DISABLED: a user installer callback is registered ***");
+        LogError("----------------------------");
     }
 
     wxBusyCursor bcur;

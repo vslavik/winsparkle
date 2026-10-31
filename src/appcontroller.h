@@ -157,6 +157,12 @@ public:
         ms_cbUserRunInstaller = callback;
     }
 
+    static bool HasUserRunInstallerCallback()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        return ms_cbUserRunInstaller != NULL;
+    }
+
     //@}
 
 private:
