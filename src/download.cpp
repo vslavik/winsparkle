@@ -236,8 +236,6 @@ void DownloadFile(const std::string& url, IDownloadSink* sink, Thread* onThread,
     // as we need the most up-to-date information.
     if ( flags & Download_NoProxyCache )
         dwFlags |= INTERNET_FLAG_PRAGMA_NOCACHE;
-    if ( urlc.nScheme == INTERNET_SCHEME_HTTPS )
-        dwFlags |= INTERNET_FLAG_SECURE;
 
     InetHandle conn;
 
