@@ -65,6 +65,19 @@ public:
         return ms_appcastURL;
     }
 
+    /// Newest version the app may be offered; empty for no limit.
+    static std::string GetMaxAppVersion()
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        return ms_maxAppVersion;
+    }
+
+    static void SetMaxAppVersion(const char *version)
+    {
+        CriticalSectionLocker lock(ms_csVars);
+        ms_maxAppVersion = version ? version : "";
+    }
+
     /// Return application name
     static std::wstring GetAppName()
     {
@@ -378,6 +391,7 @@ private:
 
     static Lang         ms_lang;
     static std::string  ms_appcastURL;
+    static std::string  ms_maxAppVersion;
     static std::string  ms_registryPath;
     static std::wstring ms_companyName;
     static std::wstring ms_appName;
