@@ -150,6 +150,15 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_appcast_url(const char *url)
     CATCH_ALL_EXCEPTIONS
 }
 
+WIN_SPARKLE_API void __cdecl win_sparkle_set_max_app_version(const char *version)
+{
+    try
+    {
+        Settings::SetMaxAppVersion(version);
+    }
+    CATCH_ALL_EXCEPTIONS
+}
+
 WIN_SPARKLE_API int __cdecl win_sparkle_set_dsa_pub_pem(const char *dsa_pub_pem)
 {
     try
