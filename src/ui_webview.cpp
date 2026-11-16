@@ -53,6 +53,8 @@ void EmbeddedWebView::EnsureBrowser()
     // https://github.com/wxWidgets/wxWidgets/issues/14768
     m_browser = wxWebView::New(this, wxID_ANY, "about:blank", wxDefaultPosition, GetClientSize());
 
+    m_browser->SetBackgroundColour(GetBackgroundColour());
+
     auto sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(m_browser, wxSizerFlags(1).Expand());
     this->SetSizer(sizer);
