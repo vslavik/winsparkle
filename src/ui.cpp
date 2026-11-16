@@ -24,6 +24,8 @@
  */
 
 #include "ui.h"
+
+#include "ui_webview.h"
 #include "settings.h"
 #include "error.h"
 #include "updatechecker.h"
@@ -52,11 +54,7 @@
 #include <wx/timer.h>
 #include <wx/settings.h>
 #include <wx/msgdlg.h>
-#include <wx/webview.h>
-#include <wx/msw/webview_ie.h>
 
-#include <exdisp.h>
-#include <mshtml.h>
 #include <commctrl.h>
 #include <shellapi.h>
 
@@ -184,7 +182,7 @@ BOOL CALLBACK EnumProcessWindowsCallback(HWND handle, LPARAM lParam)
     RECT rwin;
     GetWindowRect(handle, &rwin);
     if (MonitorFromRect(&rwin, MONITOR_DEFAULTTONULL) == NULL)
-        return TRUE; // window is offscreen 
+        return TRUE; // window is offscreen
 
     wxRect r(rwin.left, rwin.top, rwin.right - rwin.left, rwin.bottom - rwin.top);
     if (r.width * r.height > data.biggest.width * data.biggest.height)
@@ -288,26 +286,6 @@ class DllTranslationsLoader : public wxResourceTranslationsLoader
 {
 protected:
     virtual WXHINSTANCE GetModule() const { return UI::GetDllHINSTANCE(); }
-};
-
-
-enum WebBrowserSourceKind
-{
-    WebBrowserSourceNone,
-    WebBrowserSourceRemote,
-    WebBrowserSourceInline
-};
-
-struct WebBrowserState
-{
-    WebBrowserSourceKind SourceKind = WebBrowserSourceNone;
-    bool PageLoaded = false;
-
-    void Reset(WebBrowserSourceKind kind)
-    {
-        PageLoaded = false;
-        SourceKind = kind;
-    }
 };
 
 } // anonymous namespace
@@ -487,8 +465,7 @@ private:
     wxButton     *m_installButton;
     wxSizer      *m_updateButtonsSizer;
     wxSizer      *m_releaseNotesSizer;
-    wxPanel      *m_browserParent;
-    wxWebView    *m_webBrowser;
+    EmbeddedWebView *m_webView;
 
     // current appcast data (only valid after StateUpdateAvailable())
     Appcast m_appcast;
@@ -504,8 +481,6 @@ private:
     bool m_errorOccurred;
     // whether window closure was updater-initiated (i.e. not caused by user)
     bool m_closeInitiatedByUpdater;
-    // browser state in process of loading the release notes
-    WebBrowserState m_webBrowserState;
 
     static const int RELNOTES_WIDTH = 460;
     static const int RELNOTES_HEIGHT = 200;
@@ -541,15 +516,11 @@ UpdateDialog::UpdateDialog()
     SetBoldFont(notesLabel);
     m_releaseNotesSizer->Add(notesLabel, wxSizerFlags().Border(wxTOP, PX(10)));
 
-    m_browserParent = new wxPanel(this, wxID_ANY,
-                                  wxDefaultPosition,
-                                  wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
-    m_browserParent->SetBackgroundColour(*wxWHITE);
-    m_webBrowser = NULL;
+    m_webView = new EmbeddedWebView(this, wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
 
     m_releaseNotesSizer->Add
                          (
-                             m_browserParent,
+                             m_webView,
                              wxSizerFlags(1).Expand().Border(wxTOP, PX(10))
                          );
 
@@ -1042,92 +1013,13 @@ void UpdateDialog::StateUpdateDownloaded(const std::wstring& updateFile, const s
 
 void UpdateDialog::ShowReleaseNotes(const Appcast& info)
 {
-    if ( !m_webBrowser )
-    {
-        wxBusyCursor busy;
-
-        if (!wxWebView::IsBackendAvailable(wxWebViewBackendEdge))
-            wxWebViewIE::MSWSetEmulationLevel(wxWEBVIEWIE_EMU_IE11);
-        // Note that about:blank is used so that subsequent SetPage() call doesn't fail with
-        // MSIE. See https://github.com/vslavik/winsparkle/issues/155 and
-        // https://github.com/wxWidgets/wxWidgets/issues/14768
-        m_webBrowser = wxWebView::New(m_browserParent, wxID_ANY, "about:blank",
-                                      wxDefaultPosition, wxSize(PX(RELNOTES_WIDTH), PX(RELNOTES_HEIGHT)));
-        auto sizer = new wxBoxSizer(wxVERTICAL);
-        sizer->Add(m_webBrowser, wxSizerFlags(1).Expand());
-        m_browserParent->SetSizer(sizer);
-
-        // The subsequent code's purpose to is to reliably ensure that external links in the release
-        // notes are opened in the default browser, and not in the embedded web view. This is surprisingly
-        // complicated, because we need to ensure that the release notes page itself won't open
-        // externally as well. And the two supported backends (MSIE and Edge) behave wildly differently.
-        //
-        // Edge:
-        //
-        //    ReleaseNotesURL:
-        //        1. wxEVT_WEBVIEW_NAVIGATING(ReleaseNotesURL)
-        //        2. wxEVT_WEBVIEW_LOADED(ReleaseNotesURL)
-        //
-        //    Description only (inline notes):
-        //        1. wxEVT_WEBVIEW_NAVIGATING("data:text/html;...")
-        //        2. wxEVT_WEBVIEW_LOADED("about:blank")
-        //
-        // MSIE:
-        //
-        //    ReleaseNotesURL:
-        //        1. wxEVT_WEBVIEW_LOADED("about:blank")
-        //        2. wxEVT_WEBVIEW_NAVIGATING(ReleaseNotesURL)
-        //        3. wxEVT_WEBVIEW_LOADED(ReleaseNotesURL)
-        //
-        //    Description only (inline notes):
-        //        1. wxEVT_WEBVIEW_LOADED("")
-        //
-        // To further complicate matters, the ReleaseNotesURL page may be a redirect, triggering
-        // a chain of navigating events before eventually landing at loaded.
-
-        m_webBrowser->Bind(wxEVT_WEBVIEW_LOADED, [this](wxWebViewEvent& evt)
-            {
-                switch (this->m_webBrowserState.SourceKind)
-                {
-                    case WebBrowserSourceInline:
-                        // for inline release notes, loaded event means the page is ready:
-                        this->m_webBrowserState.PageLoaded = true;
-                        break;
-
-                    case WebBrowserSourceRemote:
-                        // for remote, we need to filter out internal events like about:blank:
-                        if (evt.GetURL().starts_with("http"))
-                            this->m_webBrowserState.PageLoaded = true;
-                        break;
-
-                    case WebBrowserSourceNone:
-                        break;
-                }
-            });
-
-        // Open all links in the default browser once the documented is loaded.
-        // Note that wxEVT_WEBVIEW_NAVIGATING is emitted for redirects during page loading
-        // as well, as we can only "hijack" the event once the release notes page was loaded
-        m_webBrowser->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& evt)
-			{
-                auto& url = evt.GetURL();
-                if (this->m_webBrowserState.PageLoaded && url.starts_with("http"))
-                {
-                    wxLaunchDefaultBrowser(url);
-                    evt.Veto();
-                }
-            });
-    }
-
     if (!info.ReleaseNotesURL.empty())
     {
-        m_webBrowserState.Reset(WebBrowserSourceRemote);
-        m_webBrowser->LoadURL(info.ReleaseNotesURL);
+        m_webView->LoadURL(info.ReleaseNotesURL);
     }
     else if ( !info.Description.empty() )
     {
-        m_webBrowserState.Reset(WebBrowserSourceInline);
-        m_webBrowser->SetPage(wxString::FromUTF8(info.Description), "");
+        m_webView->SetContent(wxString::FromUTF8(info.Description));
     }
 
     SetWindowStyleFlag(GetWindowStyleFlag() | wxRESIZE_BORDER);

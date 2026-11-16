@@ -281,6 +281,7 @@
     <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\threads.cpp" />
     <ClCompile Include="src\ui.cpp" />
+    <ClCompile Include="src\ui_webview.cpp" />
     <ClCompile Include="src\updatechecker.cpp" />
     <ClCompile Include="src\updatedownloader.cpp" />
     <ClCompile Include="src\signatureverifier.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\threads.h" />
     <ClInclude Include="src\ui.h" />
+    <ClInclude Include="src\ui_webview.h" />
     <ClInclude Include="src\updatechecker.h" />
     <ClInclude Include="src\updatedownloader.h" />
     <ClInclude Include="src\utils.h" />

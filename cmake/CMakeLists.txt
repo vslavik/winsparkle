@@ -75,6 +75,7 @@ set(SOURCES
   ${SOURCE_DIR}/signatureverifier.cpp
   ${SOURCE_DIR}/threads.cpp
   ${SOURCE_DIR}/ui.cpp
+  ${SOURCE_DIR}/ui_webview.cpp
   ${SOURCE_DIR}/updatechecker.cpp
   ${SOURCE_DIR}/updatedownloader.cpp)
 
