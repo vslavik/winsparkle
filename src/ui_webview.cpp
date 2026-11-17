@@ -119,6 +119,12 @@ void EmbeddedWebView::EnsureBrowser()
                 evt.Veto();
             }
         });
+
+    // Links with target="_blank" generate a separate event.
+    m_browser->Bind(wxEVT_WEBVIEW_NEWWINDOW, [](wxWebViewEvent& evt)
+        {
+            wxLaunchDefaultBrowser(evt.GetURL());
+        });
 }
 
 void EmbeddedWebView::LoadURL(const wxString& url)
