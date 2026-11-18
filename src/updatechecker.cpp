@@ -232,6 +232,19 @@ void UpdateChecker::PerformUpdateCheck()
 
         auto all = Appcast::Load(appcast_xml.data);
 
+        // Leave out versions newer than the app may be offered
+        // (win_sparkle_set_max_app_version), so the newest allowed one is picked.
+        const std::string maxVersion = Settings::GetMaxAppVersion();
+        if (!maxVersion.empty())
+        {
+            all.erase
+            (
+                std::remove_if(all.begin(), all.end(),
+                    [&](const Appcast& a) { return CompareVersions(a.Version, maxVersion) > 0; }),
+                all.end()
+            );
+        }
+
         if (all.empty())
         {
             // No applicable updates in the feed.
