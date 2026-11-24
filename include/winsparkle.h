@@ -276,6 +276,27 @@ WIN_SPARKLE_API void __cdecl win_sparkle_set_app_details(const wchar_t *company_
 WIN_SPARKLE_API void __cdecl win_sparkle_set_app_build_version(const wchar_t *build);
 
 /**
+    Sets the newest version the app may be offered.
+
+    Appcast items whose version is newer than @a version (compared the same
+    way as the app's own version, see win_sparkle_set_app_build_version())
+    are ignored before WinSparkle picks the newest item. An older item can
+    then be offered and installed when the newest one isn't allowed, for
+    example when a license includes updates only up to some release. This
+    corresponds to implementing macOS Sparkle's bestValidUpdateInAppcast:
+    delegate method to cap the version.
+
+    May be called at any time, also after win_sparkle_init(); the next check
+    uses the new value. NULL or an empty string removes the limit (the
+    default).
+
+    @param version  Newest allowed version (UTF-8), or NULL.
+
+    @since 0.9.5
+ */
+WIN_SPARKLE_API void __cdecl win_sparkle_set_max_app_version(const char *version);
+
+/**
     Sets a custom HTTP header for appcast checks and update downloads.
 
     @since 0.7

@@ -107,6 +107,8 @@ procedure win_sparkle_set_app_details(company_name, app_name, app_version: PWide
   cdecl; external WinSparkleLib;
 procedure win_sparkle_set_app_build_version(build: PWideChar);
   cdecl; external WinSparkleLib;
+procedure win_sparkle_set_max_app_version(version: PChar);
+  cdecl; external WinSparkleLib;
 procedure win_sparkle_set_registry_path(path: PChar); cdecl; external WinSparkleLib;
 procedure win_sparkle_set_automatic_check_for_updates(state: longbool);
   cdecl; external WinSparkleLib;

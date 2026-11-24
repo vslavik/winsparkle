@@ -142,6 +142,32 @@ See also: [win_sparkle_set_app_details()](#win_sparkle_set_app_details)
 
 <Since version="0.4" />
 
+### <ApiFunction /> win_sparkle_set_max_app_version()
+
+```c
+void win_sparkle_set_max_app_version(const char *version);
+```
+
+Sets the newest version the app may be offered.
+
+Appcast items whose version is newer than `version` (compared the same way as
+the app's own version, see
+[win_sparkle_set_app_build_version()](#win_sparkle_set_app_build_version)) are
+ignored before WinSparkle picks the newest item. An older item can then be
+offered and installed when the newest one isn't allowed, for example when a
+license includes updates only up to some release. This corresponds to
+implementing macOS Sparkle's `bestValidUpdateInAppcast:` delegate method to cap
+the version.
+
+May be called at any time, also after
+[win_sparkle_init()](#win_sparkle_init); the next check uses the new value.
+`NULL` or an empty string removes the limit (the default).
+
+See also: [win_sparkle_set_app_build_version()](#win_sparkle_set_app_build_version)
+
+<Since version="0.9.5" />
+
+
 
 ### <ApiFunction /> win_sparkle_set_eddsa_public_key()
 
